@@ -4,6 +4,8 @@ Part of [Contribution and realm contract](https://github.com/dvcol/devkit-extens
 
 Compare the same inspector: it publishes a JSON view and adds debugger actions when a debugger provider is available. Both snippets run in a provider entry. The renderer mounts the published JSON in its own UI entry. Content, page and native implementation entries remain separately packaged in either design.
 
+Follow-up: the owner prefers host management, requires definition/runtime separation, and asked whether the whole unit should be called a contribution. The [revised proposal](./005-plugin-definition-runtime.md) recommends plugins that supply typed contributions, removes the generic feature/handler layer and `whenAvailableAgain`, and supersedes the blanket permission-loss teardown interpretation below. Names and lifecycle signatures remain under review.
+
 ## Shared code in both versions
 
 `jsonViews`, `actionRegistry` and `debuggerCommands` are imported explicit descriptors. Both versions use exactly the same `installInspector` and `installDebuggerTools` functions.

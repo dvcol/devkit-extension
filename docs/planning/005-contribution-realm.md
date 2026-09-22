@@ -54,6 +54,8 @@ Proposed identity rule: compare the declared contract identity/version at runtim
 
 ## Second decision: who owns optional feature lifetimes
 
+The owner leans toward host-managed activation and requires definition modules separate from core runtime. The [revised definition/runtime proposal](./005-plugin-definition-runtime.md) recommends plugin for the installable unit and contribution for what it adds. It removes the generic feature/handler grouping and `whenAvailableAgain`, and distinguishes binding loss from operation unavailability. The older sketch below is comparison context, not an accepted contract.
+
 Recommend independently managed features within a contribution. A feature is the smallest group of registrations with shared execution requirements and a shared cleanup lifetime. A simple contribution has one feature. A mixed contribution can have a view feature and a debugger feature.
 
 The host activates a feature only when its required capabilities and execution context are available. Failure or loss of a required capability ends that feature's registrations. Other independently eligible features remain active. A JSON view can still explain why its debugger controls are unavailable.
