@@ -2,6 +2,8 @@
 
 Proposal for [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5). The owner selected explicit imported descriptors and requires definition modules to stay separate from the core runtime. Host-managed lifecycle is their preference, pending a concrete contract. The names and signatures below remain proposed.
 
+Follow-up: the owner requested a complete glossary and diagrams for provider/client runtimes, adapters and execution contexts. The [architecture and declaration proposal](./005-architecture-contract.md) removes the `definePluginEntry` wrapper, separates client-safe action contracts from executable contributions, and maps the physical contexts explicitly. That newer packet supersedes the entry/setup shape below; names and signatures remain under review.
+
 ## Separate the things we are naming
 
 The earlier `defineContribution` sketch described an entire installable tool, its entry modules and its activation. Calling all of that a contribution obscures what the tool adds to its host. Recommend the following vocabulary:
