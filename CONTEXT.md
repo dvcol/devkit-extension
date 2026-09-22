@@ -41,8 +41,12 @@ An operation or related set of operations offered by a provider, with an explici
 _Avoid_: Browser property existence
 
 **Capability descriptor**:
-The explicit contract for a capability, distinct from a provider implementation or its current availability.
+The explicit contract for a capability, identifying its version and operation schemas independently of a provider implementation or its current availability.
 _Avoid_: Implementation, capability instance
+
+**Contract version**:
+A numeric revision of a capability contract, distinct from the release version of a package containing it.
+_Avoid_: Package version, inferred compatibility range
 
 **Target**:
 The subject of an operation, such as a particular inspected tab or document. A replacement document is a different target generation even when the tab remains the same.

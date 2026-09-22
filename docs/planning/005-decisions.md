@@ -34,7 +34,7 @@ The owner explicitly requires the agreed architecture to be recorded in `GLOSSAR
 
 The Q8 clarification is stricter than the offered recommendation, which also allowed fallback after confirmation that execution never started. The accepted rule removes that exception. A separately requested invocation starts a new routing decision; the SDK must not silently create one to replay the dispatched call. The detailed definition of dispatch, connection races and outcomes remains in [Provider discovery and routing](https://github.com/dvcol/devkit-extension/issues/7), subject to this boundary.
 
-The Q10 clarification supersedes unconditional rejection, but does not yet select reference counting, shared disposal handles or ownership transfer.
+The Q10 clarification superseded unconditional rejection at this stage of the interview. Round 3 below revisits the exception in favor of simpler duplicate handling. No shared ownership policy was accepted.
 
 ### Two different identity rules
 
@@ -45,9 +45,53 @@ The Q10 clarification supersedes unconditional rejection, but does not yet selec
 
 Different providers can implement the same capability. The duplicate check is local to the provider's owning registry, not a global prohibition across the host. A serialized remote description cannot prove local pointer equality.
 
-Portable installation already accepts service definitions. The next decision is whether the duplicate exception compares that definition object before setup, or the running API object produced by setup. Comparing the definition is recommended because a registry can reject a different recipe before it creates resources. This recommendation is not yet accepted.
+Portable installation already accepts service definitions. The round 2 proposal compared that definition object before setup, instead of comparing the running API object produced by setup. It was not accepted and is superseded as the working recommendation by round 3's proposal to remove the exception entirely.
 
-Allowing two owners to install the same definition also requires explicit disposal semantics. A recommended proposal is one constructed service with a separate ownership lease per installation; disposing one lease leaves the other installation active. A stricter alternative permits repeated references only within one owner. Neither policy follows automatically from reference equality. HMR creates a new object and therefore needs an explicit replacement lifecycle; structural equality must not bypass duplicate checks.
+Shared ownership leases were also only a recommendation. Removing the identity exception removes the need for that sharing mechanism. HMR replacement still requires an explicit lifecycle; neither object identity nor structural equality is a replacement policy.
+
+## Interview round 3: owner decisions and revised proposal
+
+| Question | Owner answer | Consequence and status |
+| --- | --- | --- |
+| Q11: Object identity | Suggested dropping the identity check for simplicity; duplicate definitions should fail at setup, or warn and drop the later registration under a strictness option | Revise the working proposal to reject duplicate definition registrations without comparing definition or running API references. The common strict/warn policy is the next confirmation point. |
+| Q12: Shared ownership | See Q11 | Do not add shared installation leases while pursuing the simpler duplicate policy. A skipped registration must not gain ownership of the existing service. |
+| Q13: Schema interface | Standard Schema | Accepted. Public wire declarations use Standard Schema. Transformation semantics and serializable schema export remain open. |
+| Q14: Contract versions | Numeric contract version, exact match for now; use the same strictness toggle to warn when relaxed | Accepted numeric versions and exact matching. Shared strictness behavior is requested. Whether warning means skipping an incompatible candidate or allowing its use needs explicit clarification. |
+| Q15: Setup failure | B, with appropriate errors in logs and, where possible, the UI | Accepted. Clean up the failed contribution and make its dependents unavailable. Keep independent contributions active. Report the failure in logs and expose it for UI presentation where a client is available. |
+
+### Proposed common strictness policy
+
+Use a host option such as `strict: true`, enabled by default, for duplicate registration and contract mismatch diagnostics. This table is a recommendation awaiting owner confirmation, not permission to silently redefine relaxed behavior.
+
+| Condition | Strict mode | Relaxed mode | Registry or execution effect in both modes |
+| --- | --- | --- | --- |
+| A service slot is already registered in this provider | Fail the incoming registration with a typed error | Warn and return an explicit skipped result | Preserve the existing registration and owner; do not run the incoming setup or return an owning handle for the existing service |
+| A candidate capability contract version differs from the requested numeric version | Report the mismatch as an error to the affected resolution attempt | Warn and expose an incompatible/unavailable candidate | Do not bind or invoke the incompatible implementation |
+
+Apply duplicate checks during startup registration as well as runtime installation, before the incoming setup callback creates resources. The proposed rule rejects the same definition object too; it needs no pointer comparison. One provider's duplicate rule does not prevent a different provider from implementing the same capability.
+
+The existing registration wins only within a known registration order. Concurrent startup declarations require deterministic admission rather than choosing whichever asynchronous setup finishes first. The exact startup conflict grouping and failure result belong in the complete registration API review.
+
+Only inspect a version mismatch when resolving or installing the relevant contract; advertising an unrelated version must not fail the entire host. A host may select another compatible provider before dispatch when the existing routing policy permits it. An exact provider pin and the prohibition on routing after dispatch still apply. Relaxed mode changes error handling, not the exact-match rule.
+
+This proposal introduces no implicit service sharing, ownership transfer, replacement or use of an incompatible contract. Actual setup failures retain Q15's failure behavior in either mode. HMR replacement and async cleanup remain explicit lifecycle decisions.
+
+### Failure reporting into logs and UI
+
+The accepted requirement is observable failure without removing independent contributions. The proposed integration records the failed contribution's status and a serializable diagnostic identifying its provider, plugin, contribution and lifecycle phase. Runtime logs report the failure; an attached client can render the same diagnostic. A later UI mount reads current failure status, so an error before panel creation is not lost merely because no UI listener existed.
+
+Keep the original native exception in its owning execution. Pass a serializable diagnostic through the existing status/transport integration, rather than requiring a separate diagnostics backend or a renderer to make setup work. The exact status, error and subscription signatures remain part of the complete API sketch. Lifecycle failure reporting does not itself settle how individual operation calls return or throw errors.
+
+```mermaid
+flowchart LR
+  Failure["Contribution setup fails"] --> Cleanup["Clean up failed contribution"]
+  Cleanup --> Dependents["Dependent contributions unavailable"]
+  Failure --> Status["Contribution failure status and diagnostic"]
+  Status --> Logs["Runtime error log"]
+  Status --> Client["Current or later attached UI"]
+```
+
+Independent contributions keep running. A status view that itself requires the failed service is a dependent contribution and cannot be used as the only failure display. The host's generic failure presentation must remain independent of that service.
 
 ## Correction to the earlier implementation-selection question
 
@@ -85,14 +129,13 @@ Adding a realm requires an exported descriptor and an adapter/integration that a
 
 The next interview must clarify:
 
-- Whether the duplicate exception compares service-definition references or the API object returned by setup.
-- Whether the same reference can be installed by different owners, and who releases the resulting service.
-- Which schema interface the declarations accept. [Verified upstream schema behavior](./005-declaration-alignment.md#schema-boundary-evidence) informs that choice.
-- How descriptors express supported contract versions without relying on object identity or guessing compatibility.
-- Whether a hard activation failure rolls back the whole plugin or only the affected declaration and its dependents.
+- Confirm the proposed common strictness policy, including removal of the identity exception, default strict mode, skipping duplicates and keeping mismatched contracts unavailable when warnings are enabled.
+- Whether Standard Schema checks original values or supplies transformed/defaulted values to handlers and callers. [Verified upstream schema behavior](./005-declaration-alignment.md#schema-boundary-evidence) informs that choice.
+- Whether JSON Schema export is mandatory for every public definition or required only by integrations needing schema inspection.
+- Whether restoration of a required capability automatically reactivates dependent declarations, while setup failures require explicit retry.
 
-Later declaration questions include schema normalization and metadata export after selecting a schema interface, local/remote context typing in the complete API sketch, and async teardown/replacement after settling ownership and failure units. The routing ticket retains detailed policy resolution, dispatch races and outcomes. Accepted answers must be consolidated into the canonical architecture documents once the core review is complete.
+The complete API review must specify registration/skip results, operation errors, schema input/output typing, diagnostics and local/remote context narrowing. Async teardown and replacement follow the final ownership/strictness and reactivation rules. The routing ticket retains detailed policy resolution, dispatch races and outcomes. Accepted answers must be consolidated into the canonical architecture documents once the core review is complete.
 
 ## Status
 
-The contract remains open. No SDK runtime, canonical architecture declaration or routing implementation is delivered by this decision ledger. The latest decisions fix routing at dispatch and refine duplicate rejection with an exact-reference exception. Remaining ownership and declaration choices still require owner review.
+The contract remains open. No SDK runtime, canonical architecture declaration or routing implementation is delivered by this decision ledger. Standard Schema, numeric exact contract versions and isolated setup failures with logs/UI reporting are accepted. The next review confirms simplified duplicates and shared strictness, schema behavior and reactivation.
