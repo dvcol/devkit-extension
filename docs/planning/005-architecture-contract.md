@@ -4,6 +4,8 @@ Working proposal for [Contribution and realm contract](https://github.com/dvcol/
 
 This packet supersedes the earlier two-step `definePluginEntry`/`definePlugin` authoring sketch. There is one plugin definition. Executable script references remain explicit where a real execution boundary requires separate packaging.
 
+Follow-up: the owner challenged the mixed contribution list, imperative-only service registration and amount of abstraction. The [declaration and upstream-alignment proposal](./005-declaration-alignment.md) recommends dedicated properties, a shared startup/dynamic service definition and installation into existing host contexts. It supersedes those authoring/bootstrap recommendations below; the glossary and execution diagrams remain review context.
+
 ## Correct the relationships first
 
 A **capability** is a service contract. A **provider instance** offers an implementation of that contract. A **realm** describes the environment family; it does not execute or implement anything. A provider only advertises capabilities it can actually implement in eligible contexts.
