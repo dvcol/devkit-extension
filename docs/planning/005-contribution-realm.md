@@ -1,6 +1,6 @@
 # Contribution and realm contract: review packet
 
-Status: proposed, awaiting the project owner's architectural choices. This is preparation for [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5), not an accepted public API or SDK implementation. The canonical decision will live in the issue's eventual resolution comment.
+Status: explicit descriptors selected by the project owner; activation style and the full contract remain under discussion. This is preparation for [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5), not an accepted public API or SDK implementation. The canonical decision will live in the issue's eventual resolution comment.
 
 ## Grounding and settled constraints
 
@@ -16,7 +16,7 @@ The glossary records only the settled distinctions. The `Feature` grouping below
 
 ## First decision: how packages extend the API
 
-Recommend explicit imported contract descriptors. A downstream package exports a descriptor carrying its stable identity/version and TypeScript operation types. Providers register implementations against it. Consumers import that same contract to obtain a typed binding. No central realm union or global TypeScript augmentation is required.
+The project owner selected explicit imported contract descriptors on 2026-09-23. A downstream package exports a descriptor carrying its stable identity/version and TypeScript operation types. Providers register implementations against it. Consumers import that same contract to obtain a typed binding. No central realm union or global TypeScript augmentation is required.
 
 Illustrative shape only:
 
@@ -47,7 +47,7 @@ The alternative is declaration merging: downstream packages augment a global cap
 
 | Choice | Downstream author experience | Tradeoff |
 | --- | --- | --- |
-| Explicit descriptors, recommended | Import the capability/realm contract being used; register implementations explicitly | More visible imports; local types and runtime declarations stay together |
+| Explicit descriptors, selected | Import the capability/realm contract being used; register implementations explicitly | More visible imports; local types and runtime declarations stay together |
 | Declaration merging | Extend a shared type map; call APIs through known string keys | Convenient completion; ambient extensions can collide or appear available in compilation without a runtime registration |
 
 Proposed identity rule: compare the declared contract identity/version at runtime, never JavaScript object identity across separately bundled copies. Reject ambiguous duplicate implementations within the same provider registration scope. Version compatibility and schema consistency still require an explicit policy after the authoring model is chosen.
@@ -180,9 +180,10 @@ Each applicable row must execute on standalone Devframe, Vite DevTools, Chromium
 
 These are obligations for [Examples and API coverage contract](https://github.com/dvcol/devkit-extension/issues/14), not claims that those examples exist. Its independent inventory/registry checker must reject missing links or unsupported cells mislabeled as supported.
 
-## Decisions needed now
+## Decision status
 
-1. Use explicit imported capability/realm descriptors, or a globally augmented TypeScript registry? Recommend explicit descriptors.
-2. Let the host manage independent feature lifetimes within a contribution, or leave partial activation and optional-capability cleanup inside one contribution setup function? Recommend independent feature lifetimes, with one feature for simple contributions.
+Explicit imported capability/realm descriptors are selected. Global declaration merging is not the primary extension mechanism. This selection does not approve descriptor signatures or version negotiation policy.
 
-After those answers, settle concrete signatures, version compatibility, dependency failure propagation, async disposal and reactivation rules. Final user review still precedes closing the contract. No dependent contract is silently resolved by this packet.
+Activation remains open. The owner requested [concrete sketches of both styles](./005-activation-comparison.md) before choosing host-managed features or one author-managed setup function.
+
+After that answer, settle concrete signatures, version compatibility, dependency failure propagation, async disposal and reactivation rules. Final user review still precedes closing the contract. No dependent contract is silently resolved by this packet.

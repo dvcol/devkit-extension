@@ -28,6 +28,10 @@ _Avoid_: Realm, contribution
 An operation or related set of operations offered by a provider, with an explicit availability outcome for the relevant context and target.
 _Avoid_: Browser property existence
 
+**Capability descriptor**:
+The explicit contract for a capability, distinct from a provider implementation or its current availability.
+_Avoid_: Implementation, capability instance
+
 **Target**:
 The subject of an operation, such as a particular inspected tab or document. A replacement document is a different target generation even when the tab remains the same.
 _Avoid_: Provider, UI surface
