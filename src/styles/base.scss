@@ -1,0 +1,110 @@
+@use './reset';
+
+/* color palette from <https://github.com/vuejs/theme> */
+:root,
+:host {
+  /* height */
+  --full-height: 100dvh;
+  --half-height: 50dvh;
+
+  /** safe area */
+  --safe-area-inset-top: env(safe-area-inset-top);
+  --safe-area-inset-right: env(safe-area-inset-right);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --safe-area-inset-left: env(safe-area-inset-left);
+
+  /** width */
+  --full-width: 100dvw;
+  --half-width: 50dvw;
+
+  /* font variables */
+  --font-size-xxs: 0.625rem;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+
+  /* background color variables */
+  --bg-blur: 1px;
+  --bg-blur-4: 4px;
+  --bg-blur-20: 20px;
+  --bg-blur-40: 40px;
+  --bg-blur-hover: var(--bg-blur-20);
+  --bg-black: rgb(0 0 0);
+  --bg-black-20: rgb(0 0 0 / 20%);
+  --bg-black-30: rgb(0 0 0 / 30%);
+  --bg-black-50: rgb(0 0 0 / 50%);
+  --bg-black-60: rgb(0 0 0 / 60%);
+  --bg-black-70: rgb(0 0 0 / 70%);
+  --bg-black-80: rgb(0 0 0 / 80%);
+  --bg-black-90: rgb(0 0 0 / 90%);
+  --bg-black-soft: rgb(24 24 24);
+  --bg-black-soft-70: rgb(24 24 24 / 70%);
+  --bg-black-soft-80: rgb(24 24 24 / 80%);
+  --bg-black-soft-90: rgb(24 24 24 / 90%);
+  --bg-black-softer: rgb(34 34 34);
+  --bg-black-softer-50: rgb(34 34 34 / 50%);
+  --bg-black-softer-55: rgb(34 34 34 / 55%);
+  --bg-black-softer-60: rgb(34 34 34 / 60%);
+  --bg-black-softer-80: rgb(34 34 34 / 80%);
+  --bg-black-softer-90: rgb(34 34 34 / 90%);
+  --bg-black-softest: rgb(40 40 40);
+  --bg-color-primary: rgb(24 42 36);
+  --bg-color-primary-80: rgb(24 42 36 / 80%);
+  --bg-color-success: var(--bg-color-primary);
+  --bg-color-success-80: var(--bg-color-primary-80);
+  --bg-color-info: rgb(22 35 42);
+  --bg-color-info-80: rgb(22 35 42 / 80%);
+  --bg-color-warning: rgb(43 37 25);
+  --bg-color-warning-80: rgb(43 37 25 / 80%);
+  --bg-color-error: rgb(45 27 28);
+  --bg-color-error-80: rgb(45 27 28 / 80%);
+
+  /* ui color variables */
+  --white: rgb(255 255 255);
+  --white-soft: #f8f8f8;
+  --white-mute: #f2f2f2;
+  --white-10: rgb(255 255 255 / 10%);
+  --white-15: rgb(255 255 255 / 15%);
+  --white-50: rgb(255 255 255 / 50%);
+  --white-70: rgb(255 255 255 / 70%);
+  --white-80: rgb(255 255 255 / 80%);
+  --black: #181818;
+  --code-grey: rgb(228 228 228 / 20%);
+  --border-grey: rgb(70 70 70);
+  --border-white: rgb(255 255 255 / 20%);
+  --color-primary: #63e2b7;
+  --color-primary-lighter: #7fe7c4;
+  --color-primary-disabled: #548272;
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 40%, black 60%);
+  --color-primary-focus: rgb(99 226 183 / 10%);
+  --color-info: #70c0e8;
+  --color-info-dark: color-mix(in srgb, var(--color-info) 40%, black 60%);
+  --color-disabled: rgb(255 255 255 / 6%);
+  --text-color-disabled: rgb(255 255 255 / 38%);
+  --color-warning: #f2c97d;
+  --color-warning-lighter: #f5d599;
+  --color-error: #e88080;
+  --color-error-dark: color-mix(in srgb, var(--color-error) 40%, black 60%);
+  --color-error-lighter: #e98b8b;
+
+  /* Transforms */
+  --n-bezier: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Bow shadows */
+  --image-box-shadow: 0 0 20px 9px rgb(255 255 255 / 10%);
+  --image-box-shadow-hover: 0 0 20px 9px rgb(255 255 255 / 18%);
+  --card-box-shadow: 0 1px 2px -2px rgb(0 0 0 / 24%), 0 3px 6px 0 rgb(0 0 0 / 18%), 0 5px 12px 4px rgb(0 0 0 / 12%);
+
+  @media (display-mode: standalone) {
+    /* height */
+    --full-height: 100vh;
+    --half-height: 50vh;
+
+    /** width */
+    --full-width: 100vw;
+    --half-width: 50vw;
+  }
+}

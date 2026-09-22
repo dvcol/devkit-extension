@@ -1,0 +1,90 @@
+name: 📦 Release - Tag, Release, Publish and Deploy
+run-name: 📦 Release - ${{ inputs.tag-name || github.sha || github.ref }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag-name:
+        description: Tag name
+        required: false
+        type: string
+      skip-npm:
+        description: Skip npm publish
+        required: false
+        type: boolean
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    name: 📦 Tag and release commit
+    runs-on: ubuntu-latest
+
+    outputs:
+      tag-name: ${{ steps.push-tag.outputs.tag_name }}
+      commit-hash: ${{ steps.push-tag.outputs.commit_hash }}
+
+    steps:
+      - name: ⛙ Checkout branch ${{ github.ref }}
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.CI_TOKEN }}
+
+      - name: 🧱 Install
+        uses: ./.github/actions/install
+
+      - name: 🏷️ Release
+        run: |
+          # =================  🏷️ Release =================
+
+          # setup git credentials
+          git config user.name "GitHub Release Bot"
+          git config user.email "<>"
+
+          # generate release
+          pnpm run release
+
+      - name: ⛙ Push to remote
+        id: push-tag
+        run: |
+          # ================= ⛙ Remote =================
+
+          # Check status
+          git status
+          git diff --color -U0 | cat
+
+          # push changes
+          git push origin --follow-tags
+
+          tag_name=$(git describe --abbrev=0 --match 'v*')
+          commit_hash=$(git rev-parse HEAD)
+
+          echo "Pushing tag: ${tag_name}"
+          echo "Pushing commit: ${commit_hash}"
+
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
+          echo "commit_hash=${commit_hash}" >> "$GITHUB_OUTPUT"
+
+  publish:
+    name: ☁️ Publish
+    needs: release
+    uses: ./.github/workflows/publish.yml
+    secrets: inherit
+    with:
+      commit-hash: ${{ needs.release.outputs.commit-hash }}
+      tag-name: ${{ inputs.tag-name || needs.release.outputs.tag-name }}
+      skip-npm: ${{ inputs.skip-npm }}
+
+  deploy:
+    name: 🚀 Deploy
+    needs: publish
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

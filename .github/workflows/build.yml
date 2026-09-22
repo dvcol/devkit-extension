@@ -1,0 +1,80 @@
+name: 🚧 Build - Build sources
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-extension:
+    name: 🔌 Build Extension
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⛙ Checkout branch ${{ github.ref }}
+        uses: actions/checkout@v6
+
+      - name: 🚧 Build
+        uses: ./.github/actions/build
+
+  build-web:
+    name: ☁️ Build Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⛙ Checkout branch ${{ github.ref }}
+        uses: actions/checkout@v6
+
+      - name: 🚧 Build
+        uses: ./.github/actions/build
+        with:
+          script: 'build:web'
+
+  test:
+    name: 🧪 Unit Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⛙ Checkout branch ${{ github.ref }}
+        uses: actions/checkout@v6
+
+      - name: 🧱 Install
+        uses: ./.github/actions/install
+
+      - name: 🧪 Unit tests
+        run: |
+          # ================= 🧪 Unit tests =================
+          pnpm run test:unit
+
+  lint:
+    name: 🧹 Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⛙ Checkout branch ${{ github.ref }}
+        uses: actions/checkout@v6
+
+      - name: 🧱 Install
+        uses: ./.github/actions/install
+
+      - name: 🧱 Versions
+        run: |
+          # =================  🔍 Versions  =================
+          pnpm exec eslint --version
+          pnpm exec prettier --version
+          pnpm exec stylelint --version
+
+      - name: 🧹 Eslint
+        run: |
+          # =================  🧹 Eslint  =================
+          pnpm run lint
+
+      - name: 🪄 Stylelint
+        run: |
+          # =================  🪄 Stylelint  =================
+          pnpm run style

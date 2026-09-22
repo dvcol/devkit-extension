@@ -1,0 +1,88 @@
+@mixin hover-background(
+  $from: var(--custom-bg-color, var(--bg-color)),
+  $to: var(--custom-bg-color-hover, var(--bg-color-hover)),
+  $blur: var(--custom-bg-blur, var(--bg-blur)),
+  $blur-hover: var(--custom-bg-blur-hover, var(--bg-blur-hover)),
+  $transition: 0.5s var(--n-bezier),
+  $transition-prop: all
+) {
+  background: $from;
+  // stylelint-disable-next-line property-no-vendor-prefix -- necessary for safari
+  -webkit-backdrop-filter: blur($blur);
+  backdrop-filter: blur($blur);
+  transition: $transition-prop $transition;
+  will-change: color, background, background-color, backdrop-filter, box-shadow,
+    border-color, scale, opacity, backdrop-filter;
+
+  &:active,
+  &:hover {
+    background: $to;
+    // stylelint-disable-next-line property-no-vendor-prefix -- necessary for safari
+    -webkit-backdrop-filter: blur($blur-hover);
+    backdrop-filter: blur($blur-hover);
+  }
+}
+
+
+@mixin hover-background-only(
+  $from: var(--custom-bg-color, var(--bg-color)),
+  $to: var(--custom-bg-color-hover, var(--bg-color-hover)),
+) {
+  background: $from;
+
+  &:active,
+  &:hover {
+    background: $to;
+  }
+}
+
+@mixin progress-background(
+  $color: var(--progress-color, var(--color-primary)),
+  $rail: var(--rail-color, var(--color-primary-focus)),
+  $progress: var(--progress, 0%),
+) {
+  background: linear-gradient(
+                  to right,
+                  $color 0%,
+                  $color var(--progress, 0%),
+                  $rail $progress,
+                  $rail 100%
+  );
+}
+
+@mixin hover-box-shadow($transition: 0.5s var(--n-bezier), $box-shadow: var(--image-box-shadow-hover)) {
+  transition: box-shadow $transition;
+
+  &:active,
+  &:focus-within,
+  &:hover {
+    box-shadow: $box-shadow;
+  }
+}
+
+@mixin transition-show-hide-height($transition: var(--n-bezier), $padding: 12px) {
+  &.hidden {
+    max-height: 0;
+    margin-top: -#{$padding};
+    overflow: hidden;
+    opacity: 0;
+    transition:
+            scale 0.5s $transition,
+            opacity 0.5s $transition,
+            max-height 0.25s $transition,
+            margin-top 0.5s $transition;
+    scale: 0.95;
+
+    &.show {
+      max-height: var(--full-height, 100dvh);
+      margin-top: initial;
+      opacity: 1;
+      transition:
+              scale 0.5s $transition,
+              opacity 0.5s $transition,
+              max-height 0.25s $transition,
+              margin-top 0.25s $transition;
+      scale: 1;
+    }
+  }
+}

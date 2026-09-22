@@ -1,0 +1,38 @@
+// Pwa safe areas
+$safe-area-inset-top: var(--safe-area-inset-top);
+$safe-area-inset-right: var(--safe-area-inset-right);
+$safe-area-inset-bottom: var(--safe-area-inset-bottom);
+$safe-area-inset-left: var(--safe-area-inset-left);
+
+// Element heights
+$header-navbar-height: 2.75rem;
+$safe-navbar-height: calc(#{$header-navbar-height} + #{$safe-area-inset-top});
+$header-drawer-height: 3.5rem;
+$header-open-drawer-height: calc(#{$safe-navbar-height} + #{$header-drawer-height});
+$main-content-height: calc(var(--full-height) - #{$safe-navbar-height});
+
+// Navbar transition
+$navbar-transition: 0.5s var(--n-bezier);
+$navbar-transition-visible: 0.25s var(--n-bezier);
+$navbar-transition-delay: 0.5s;
+$navbar-transition-delay-visible: 0s;
+
+@mixin navbar-transition(
+  $transition: height $navbar-transition,
+  $transition-visible: height $navbar-transition-visible,
+  $navbar-transition-delay: $navbar-transition-delay,
+  $navbar-transition-delay-visible: $navbar-transition-delay-visible
+) {
+  transition: $transition;
+  transition-delay: $navbar-transition-delay;
+
+  &.drawer-visible {
+    height: $header-drawer-height;
+    transition: $transition-visible;
+    transition-delay: $navbar-transition-delay-visible;
+  }
+
+  &:not(.has-drawer) {
+    transition-delay: $navbar-transition-delay-visible;
+  }
+}
