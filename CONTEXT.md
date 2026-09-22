@@ -5,15 +5,27 @@ The shared language for contributions used through development-server and browse
 ## Language
 
 **Contribution**:
-A reusable feature definition that may contain a view, behavior, state, transforms, native integration, or a combination. A contribution can be useful without a view.
-_Avoid_: Panel, plugin instance
+An addition supplied by a plugin, such as an action, view, transform, script or service. Contributions share ownership terminology while retaining the behavior of their particular kind.
+_Avoid_: Whole plugin, mandatory mixed collection
+
+**Plugin**:
+A named collection of contributions installed and controlled together. A plugin may supply behavior, presentation, services, or a combination.
+_Avoid_: Browser extension, provider instance
+
+**Host**:
+The application composing providers, clients and their integrations. A host can use several providers across different realms at the same time.
+_Avoid_: Single backend, realm
+
+**Service definition**:
+A recipe for constructing an implementation of a capability. The same definition can be installed during startup or while its provider is running.
+_Avoid_: Capability contract, already-running service
 
 **Provider**:
 An identifiable instance offering capabilities to contributions. Two providers can offer the same capability while retaining different state and targets.
 _Avoid_: Realm, UI surface
 
 **Realm**:
-The declared environment family of a provider. A realm is distinct from a provider instance and from the particular place where its code executes.
+The declared environment family of a provider, such as a browser extension or a development server. Realm identity is distinct from the host integration and the particular place where code executes.
 _Avoid_: Execution context
 
 **Execution context**:
@@ -39,3 +51,7 @@ _Avoid_: Provider, UI surface
 **Native context**:
 The environment-specific resources available in the execution context that owns them. A remote description of that context does not contain those resources.
 _Avoid_: Remote native handle
+
+**Routing policy**:
+Rules for selecting provider instances for an operation using its target, caller input and declared preferences. Routing a call is distinct from constructing a service implementation.
+_Avoid_: Implementation installation, provider-state synchronization

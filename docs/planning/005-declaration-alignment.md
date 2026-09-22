@@ -4,6 +4,8 @@ Proposal for [Contribution and realm contract](https://github.com/dvcol/devkit-e
 
 This packet supersedes the heterogeneous `contributions` array as the recommended built-in authoring shape. It also supersedes imperative-only capability installation and the assumption that every host must expose a new generic provider runtime constructor. The earlier architecture diagrams remain useful descriptions of ownership and execution roles.
 
+Owner review update: [the decision ledger](./005-decisions.md) records accepted dedicated properties, definition-only portable installation inputs, schema-derived wire types and extensible realm families. The owner clarified that a host must support multiple realms and dynamic backend routing. Explicit implementation installation must not be read as selecting one fixed backend for that host.
+
 ## Recommendations
 
 | Question | Recommendation | Reason |
