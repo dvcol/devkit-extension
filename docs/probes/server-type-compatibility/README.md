@@ -1,5 +1,7 @@
 # Strict public server declaration compatibility
 
+**Correction, 2026-09-23:** This original replay was not independent: ancestor dependencies supplied cac even though its lockfile omitted that optional peer. Preserve these original files as historical evidence, but use the [corrected independent reproduction](../server-dependency-isolation/README.md) for the passing installation claim. It explicitly installs cac, rejects any ancestor `node_modules`, verifies local dependency resolution and passes all five checks.
+
 Executed on 2026-09-23 with Node 26.9.0, pnpm 12.5.1 and TypeScript 7.0.2. This is research evidence for issue 6, not an implemented server adapter or an accepted upstream patch.
 
 The original preview dependency lock reproduced six imports-only errors and ten with registry augmentation. `baseline-original.txt` and `augmented-original.txt` preserve those diagnostics. `entry-point-results.json` tests narrower public imports after installing the declared optional cac peer, before applying declaration patches.

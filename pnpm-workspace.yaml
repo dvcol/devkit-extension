@@ -5,7 +5,22 @@ packages:
 pmOnFail: error
 saveExact: true
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - devframe@1.0.0
+  - '@devframes/hub@1.0.0'
+  - '@devframes/json-render@1.0.0'
+  - '@vitejs/devtools-kit@0.7.5'
 trustPolicy: no-downgrade
 
 allowBuilds:
   esbuild: true
+
+patchedDependencies:
+  devframe@1.0.0: patches/devframe@1.0.0.patch
+  crossws@0.4.12: patches/crossws@0.4.12.patch
+  h3@2.0.1-rc.32: patches/h3@2.0.1-rc.32.patch
+
+packageExtensions:
+  devframe@1.0.0:
+    dependencies:
+      whenexpr: 0.1.2

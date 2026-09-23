@@ -83,9 +83,9 @@ const detachUpgrade = hub.attach(previewServer.httpServer);
 
 Do not use private package files, publicly named `internal` escape hatches, or a cast from `PreviewServer` to `ViteDevServer`. An actual kit context can expose its kit descriptor. A hub-only preview cannot advertise kit just because both share some methods.
 
-## Proposed minimal adapter API
+## Implemented local adapter API
 
-Install into an existing native hub or kit context. The initial standalone host is Devframe with its public hub; a lower-level bare Devframe context adapter is not implied by these signatures. Keep host construction, Vite configuration and the DevTools plugin model recognizable. The following names are proposed SDK exports; native names are actual upstream APIs.
+The private [`@devkit/server` package](../../packages/server/README.md) installs into an existing native hub or kit context. The initial standalone host is Devframe with its public hub; a lower-level bare Devframe context adapter is not implied by these signatures. Host construction, Vite configuration and the DevTools plugin model retain their native APIs. The simplified declarations below describe the implemented entry points; the package also exposes local `resolve`/`invoke`, explicit contribution-kind installers and an optional local diagnostic sink.
 
 ```ts
 interface ServerComposition {
@@ -197,9 +197,19 @@ This proves the public same-server attachment, not Vite DevTools preview, HMR, a
 
 Oxlint and the limited probe-source type check pass. Full declaration checking fails in upstream dependencies: six errors reproduce with imports only; four more scoped-state declaration errors appear with registry augmentation. [Validation output](../probes/server-preview/validation.json). These are explicit adoption blockers for a fully strict example. They do not justify a blanket `skipLibCheck` policy or a false passing conformance claim.
 
-A subsequent [strict declaration investigation](../research/server-type-compatibility.md) reproduces those errors and resolves the tested public hub/kit graph with exact-version declaration patches and dependency metadata corrections. A clean frozen-lock replay passes five TypeScript 7 configurations, including exact optional properties, checked indexed access and `skipLibCheck: false`. The patches leave runtime JavaScript byte-identical. This establishes a feasible strict dependency graph; it neither changes the original probe evidence nor implements the server adapter. External consumers still need a verified upstream release or an explicit distribution strategy for those fixes.
+A subsequent [strict declaration investigation](../research/server-type-compatibility.md) reproduces those errors and resolves the tested public hub/kit graph with exact-version declaration patches and dependency metadata corrections. The first replay's isolation claim was incorrect: it resolved cac from an ancestor directory because the attempted dependency extension did not install Devframe's optional peer. The [corrected independent replay](../probes/server-dependency-isolation/README.md) explicitly installs cac, checks every ancestor for dependency leakage and passes all five TypeScript 7 configurations with `skipLibCheck: false`. Original evidence remains preserved. The patches leave runtime JavaScript byte-identical. External consumers still need a verified upstream release or an explicit distribution strategy for those fixes.
 
 The preserved source is the exact executed experiment. Its lint evidence uses the recorded default Oxlint command. An additional broad pedantic audit reports two function-length warnings and one top-level-await preference; it is not represented as passing the eventual monorepo's strict lint policy. The probe's native registry augmentation demonstrates the released upstream API, not a change to the SDK's explicit-descriptor authoring decision.
+
+## Local adapter implementation proof
+
+The maintained server package passes 11 integration tests against genuine `createHubContext` and `createKitContext` instances. Both installers advertise the same `devserver` realm and `devkit.server` execution. Each installation creates a fresh incarnation. A shared native-context ownership guard prevents the two entry points from installing competing providers on the same context.
+
+The tests execute portable actions through native shared state, dynamically install/disable/enable/replace services and plugins, retain failed setup diagnostics, run a custom contribution-kind installer, reject strict duplicate startup before setup, and verify relaxed admission through the default diagnostic sink. Repeated disposal returns the same promise. Failed cleanup retains the reservation and prevents replacement.
+
+Disposal removes only adapter-owned registrations. Native shared state remains readable and mutable, an unrelated command still executes, and an actual loopback HTTP request succeeds after disposal. The genuine kit fixture exposes its kit, hub and Devframe descriptors without pretending to own a Vite development server. Strict TypeScript 7, type-aware Oxlint with warnings denied, Oxfmt, Vite bundling and declaration emission pass for the package.
+
+These are local, headless integration tests. They do not establish remote invocation, a discovery registry, authentication, Vite development/preview lifecycle wiring, browser rendering or extension parity. The existing preview probes above remain distinct evidence. The package is private while upstream declaration fixes and external distribution are unresolved.
 
 ## Watched-output and launcher proof
 

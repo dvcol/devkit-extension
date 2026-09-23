@@ -59,3 +59,20 @@ The installed manifests must contain the expected package names, exact Standard 
 A Vite browser build of the same consumer rejects external imports and any resolved module outside the consumer and the two installed `dist` directories. The core source map must refer only to its own portable source files, detecting inlined third-party code. The bundled consumer is then executed. This proves artifact resolution, declarations and this runtime scenario; it does not establish unimplemented host adapters, browser extension behavior or renderer conformance.
 
 The example check installs three tarballs with explicit overrides for their unpublished workspace dependencies. Both strict compiler configurations infer the example's action input and result, then execute its real action, capability and subscription disposal. A separate browser consumer imports only the example's shared contracts. Its resolved graph permits those contract chunks, core and Zod, rejects provider/runtime/Node/framework imports, and checks the example chunks' source origins. The bundled contract consumer executes valid and invalid schema cases. This verifies package separation without claiming real browser-host execution.
+
+## Server dependency declarations
+
+The private server integration uses the independently reviewed public `devframe@1.0.0`, `@devframes/hub@1.0.0` and `@vitejs/devtools-kit@0.7.5` releases. Registry verification on 2026-09-23 at 03:35 UTC confirmed they were still the latest releases and that their peer requirements matched this graph. The kit also requires `@devframes/json-render@1.0.0`.
+
+Four exact-version release-age exceptions allow this researched graph to install while the releases are less than two hours short of the existing 168-hour threshold. The global seven-day rule and `trustPolicy: no-downgrade` remain enabled. These exceptions contain neither wildcard ranges nor latest tags, so they do not exempt future releases.
+
+| Exact release                  | Published UTC           | Reaches seven days UTC  |
+| ------------------------------ | ----------------------- | ----------------------- |
+| `devframe@1.0.0`               | 2026-09-16 04:25:19.405 | 2026-09-23 04:25:19.405 |
+| `@devframes/hub@1.0.0`         | 2026-09-16 04:27:55.219 | 2026-09-23 04:27:55.219 |
+| `@devframes/json-render@1.0.0` | 2026-09-16 04:23:06.350 | 2026-09-23 04:23:06.350 |
+| `@vitejs/devtools-kit@0.7.5`   | 2026-09-16 05:04:00.797 | 2026-09-23 05:04:00.797 |
+
+Remove these four exceptions after their age thresholds are met. The preceding release-age check rejected exactly this cohort; unrelated releases remain subject to the normal policy.
+
+[Versioned declaration patches](../patches/README.md), a missing whenexpr dependency correction and the server's explicit cac dependency retain strict TypeScript 7 declaration checking. Devframe marks cac as an optional peer but imports its types unconditionally; adding it through a dependency extension did not install that peer. These fixes change no runtime JavaScript and adopt no experimental connection-isolation behavior. The server package must continue to use `skipLibCheck: false`. These repository-level patches support the private workspace integration; distributing a standalone adapter still requires verified upstream fixes or an explicit consumer patch policy.

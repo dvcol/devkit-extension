@@ -1,0 +1,36 @@
+diff --git a/dist/ws-server-y2R76aSW.d.mts b/dist/ws-server-y2R76aSW.d.mts
+--- a/dist/ws-server-y2R76aSW.d.mts
++++ b/dist/ws-server-y2R76aSW.d.mts
+@@ -1,7 +1,7 @@
+ import { a as ChannelOptions, n as BirpcGroup } from "./index-Bia1vKjL.mjs";
+ import { g as RpcFunctionDefinitionAny } from "./types-BmDbfHCx.mjs";
+ import { n as DevframeRpcConnection, t as DevframeNodeRpcSessionMeta } from "./session-r6PDixP6.mjs";
+-import { Hooks } from "crossws";
++import { Hooks } from "crossws/types";
+ import { NodeAdapter } from "crossws/adapters/node";
+ import { Buffer } from "node:buffer";
+ import { IncomingMessage, Server } from "node:http";
+diff --git a/dist/client/index.d.mts b/dist/client/index.d.mts
+--- a/dist/client/index.d.mts
++++ b/dist/client/index.d.mts
+@@ -165,7 +165,7 @@
+   };
+   /** Resolve a namespaced shared state. Bare keys resolve within this namespace. */
+   sharedState: {
+-    <T extends keyof ScopedSharedStates<NS> & string>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
++    <T extends Extract<keyof ScopedSharedStates<NS>, string>>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
+     <T extends Record<string, any> = Record<string, any>>(key: string, options?: RpcSharedStateGetOptions<T>): Promise<SharedState<T>>;
+   };
+   /** Streaming host scoped to this namespace. */
+diff --git a/dist/context--tVkJw3W.d.mts b/dist/context--tVkJw3W.d.mts
+--- a/dist/context--tVkJw3W.d.mts
++++ b/dist/context--tVkJw3W.d.mts
+@@ -893,7 +893,7 @@
+    * namespace; pass a fully-qualified key (containing `:`) to opt out.
+    */
+   sharedState: {
+-    <T extends keyof ScopedSharedStates<NS> & string>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
++    <T extends Extract<keyof ScopedSharedStates<NS>, string>>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
+     <T extends Record<string, any> = Record<string, any>>(key: string, options?: RpcSharedStateGetOptions<T>): Promise<SharedState<T>>;
+   };
+   /** Streaming host scoped to this namespace. */

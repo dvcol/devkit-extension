@@ -1,0 +1,22 @@
+{
+  "runtime": "v26.9.0",
+  "checkedAt": "2026-09-23T03:45:30.484Z",
+  "checkedAncestors": [
+    "/private/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T",
+    "/private/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp",
+    "/private/var/folders/4y",
+    "/private/var/folders",
+    "/private/var",
+    "/private",
+    "/"
+  ],
+  "ancestorNodeModulesAbsent": true,
+  "resolutions": {
+    "devframe": "node_modules/.pnpm/devframe@1.0.0_patch_hash=ffa0d25bd3f149d2a621176c73eb6297d351eaf49ef73b54a984d609b4449c75_cac@7.0.0_srvx@1.0.5/node_modules/devframe/dist/index.mjs",
+    "@devframes/hub/initiate": "node_modules/.pnpm/@devframes+hub@1.0.0_crossws@0.4.12_patch_hash=7da56550dc94db34785dcf6f291726999229a09d_201fcc70886912f3f0e6ce936a978513/node_modules/@devframes/hub/dist/node/initiate.mjs",
+    "@vitejs/devtools-kit/node": "node_modules/.pnpm/@vitejs+devtools-kit@0.7.5_cac@7.0.0_crossws@0.4.12_patch_hash=7da56550dc94db34785dcf6f_496fc6e8a78b93ab51973c75abc8ed93/node_modules/@vitejs/devtools-kit/dist/node/index.js",
+    "typescript": "node_modules/.pnpm/typescript@7.0.2/node_modules/typescript/lib/version.cjs",
+    "devframe -> cac": "node_modules/.pnpm/cac@7.0.0/node_modules/cac/dist/index.js",
+    "devframe -> whenexpr": "node_modules/.pnpm/whenexpr@0.1.2/node_modules/whenexpr/dist/index.mjs"
+  }
+}
