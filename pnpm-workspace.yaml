@@ -1,14 +1,11 @@
-minimumReleaseAge: 10080 # 7 days ; 7 × 24 × 60 = 10080.
+packages:
+  - packages/*
+  - examples/*
 
-shellEmulator: true
-
+pmOnFail: error
+saveExact: true
+minimumReleaseAge: 10080
 trustPolicy: no-downgrade
 
 allowBuilds:
-  '@parcel/watcher': true
-  electron: true
   esbuild: true
-
-ignoredBuiltDependencies:
-  - '@parcel/watcher'
-  - esbuild

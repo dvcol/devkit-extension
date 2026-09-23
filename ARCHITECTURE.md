@@ -14,16 +14,16 @@ The eventual monorepo uses pnpm/Turbo, Vite/Oxc, strict Oxlint rules and enforce
 
 ## Contracts, contributions and plugins
 
-| Element | Declaration | Runtime meaning |
-| --- | --- | --- |
-| Capability | Imported ID, mandatory positive integer contract version, operation schemas and target requirements | A service contract; does not imply availability |
-| Service | Capability descriptor plus execution assignment, requirements and setup recipe | Constructs an owned implementation of exactly that contract |
-| Action | Shared versioned descriptor plus a separate handler contribution | An invocable use case that can consume capabilities |
-| View | JSON definition, references and bindings | Published presentation, mounted by a renderer on a surface |
-| Transform | Kind-specific transform definition | Owned interception or transformation behavior |
-| Script | Packaged module and execution declaration | Runs in its actual background/content/page execution with target scope |
-| Plugin | Named lists of services, actions, views, transforms, scripts and custom extensions | Installed and controlled together, with independent contribution activation/failure |
-| Custom kind | Imported kind descriptor, payload schema and explicitly installed kind handler | Allows new kinds without arbitrary plugin fields or a closed core switch |
+| Element     | Declaration                                                                                         | Runtime meaning                                                                     |
+| ----------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Capability  | Imported ID, mandatory positive integer contract version, operation schemas and target requirements | A service contract; does not imply availability                                     |
+| Service     | Capability descriptor plus execution assignment, requirements and setup recipe                      | Constructs an owned implementation of exactly that contract                         |
+| Action      | Shared versioned descriptor plus a separate handler contribution                                    | An invocable use case that can consume capabilities                                 |
+| View        | JSON definition, references and bindings                                                            | Published presentation, mounted by a renderer on a surface                          |
+| Transform   | Kind-specific transform definition                                                                  | Owned interception or transformation behavior                                       |
+| Script      | Packaged module and execution declaration                                                           | Runs in its actual background/content/page execution with target scope              |
+| Plugin      | Named lists of services, actions, views, transforms, scripts and custom extensions                  | Installed and controlled together, with independent contribution activation/failure |
+| Custom kind | Imported kind descriptor, payload schema and explicitly installed kind handler                      | Allows new kinds without arbitrary plugin fields or a closed core switch            |
 
 A service always declares a capability contract and its version. There is no unversioned service, implicit latest version or required portable raw-object `provide`. Native APIs remain available in eligible native contexts.
 
@@ -60,16 +60,16 @@ An adapter integrates environment lifecycle, communication and implementations. 
 
 ## Placement and ownership
 
-| Piece | Role | Owns |
-| --- | --- | --- |
-| Extension background worker/document | Provider | Browser capability implementations, provider registrations and recovery coordination |
-| Isolated content script | Execution agent | Its document/frame resources and extension-side page bridge |
-| Injected MAIN-world script | Execution agent | Page-owned resources and a validated target-scoped bridge |
-| Extension DevTools page | Client bootstrap/local integration | Panel creation, inspected target integration and its native hooks |
-| Popup, options, panel, sidebar | Client and renderer | That document's connections, subscriptions and mounts |
-| Standalone Devframe server | Provider through adapter | Existing host integration and server contribution lifetimes |
-| Vite DevTools server | Provider through adapter | Existing Devframe/hub/kit context and eligible Vite integration |
-| Devframe/DevTools panel | Client and renderer | Panel mount and client subscriptions |
+| Piece                                | Role                               | Owns                                                                                 |
+| ------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------ |
+| Extension background worker/document | Provider                           | Browser capability implementations, provider registrations and recovery coordination |
+| Isolated content script              | Execution agent                    | Its document/frame resources and extension-side page bridge                          |
+| Injected MAIN-world script           | Execution agent                    | Page-owned resources and a validated target-scoped bridge                            |
+| Extension DevTools page              | Client bootstrap/local integration | Panel creation, inspected target integration and its native hooks                    |
+| Popup, options, panel, sidebar       | Client and renderer                | That document's connections, subscriptions and mounts                                |
+| Standalone Devframe server           | Provider through adapter           | Existing host integration and server contribution lifetimes                          |
+| Vite DevTools server                 | Provider through adapter           | Existing Devframe/hub/kit context and eligible Vite integration                      |
+| Devframe/DevTools panel              | Client and renderer                | Panel mount and client subscriptions                                                 |
 
 Closing a UI document does not dispose independent provider work. A content/page script is not a trusted provider merely because it can send a message. A worker termination cannot be treated as proof that JavaScript cleanup callbacks ran; recovery must re-establish ownership and target generation.
 
@@ -81,13 +81,13 @@ Every registration has an owner. Capability slots use `(provider ID, capability 
 
 Contract IDs are non-empty, case-sensitive identifiers. Contract versions are positive safe integers. Package versions do not select contracts. Pointer identity is irrelevant to duplicate admission, including when the very same definition object appears twice.
 
-| Condition | Default `strict: true` | Relaxed strictness |
-| --- | --- | --- |
-| Duplicate service slot | Reject incoming admission batch | Warn and skip the incoming service definition |
-| Requested contract version unavailable | Error diagnostic; incompatible binding remains unavailable | Warning diagnostic; incompatible binding remains unavailable |
-| Invalid declaration, unknown kind/field or dependency cycle | Reject admission batch | Still reject; strictness is not a bypass for declaration validation |
-| Setup throws after admission | Isolate failed contribution, invalidate dependents, report diagnostics | Same failure and cleanup behavior |
-| Cleanup fails or does not finish | Block replacement | Still block replacement |
+| Condition                                                   | Default `strict: true`                                                 | Relaxed strictness                                                  |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Duplicate service slot                                      | Reject incoming admission batch                                        | Warn and skip the incoming service definition                       |
+| Requested contract version unavailable                      | Error diagnostic; incompatible binding remains unavailable             | Warning diagnostic; incompatible binding remains unavailable        |
+| Invalid declaration, unknown kind/field or dependency cycle | Reject admission batch                                                 | Still reject; strictness is not a bypass for declaration validation |
+| Setup throws after admission                                | Isolate failed contribution, invalidate dependents, report diagnostics | Same failure and cleanup behavior                                   |
+| Cleanup fails or does not finish                            | Block replacement                                                      | Still block replacement                                             |
 
 A startup batch is the host's complete startup composition. A later plugin installation is one batch; installing a service directly is a one-definition batch. In strict mode, reject an invalid batch before any of its setup runs. Previously running installations remain intact. Reserve identities deterministically before asynchronous setup; completion speed never selects a duplicate winner. Within a declared startup plan, host service declarations precede plugin lists, and declaration-list order supplies conflict diagnostics. Activation follows dependency order, not incidental array or promise completion order.
 
@@ -101,12 +101,12 @@ Public JSON Schema export is needed only by integrations requiring schema inspec
 
 Ordinary operation/action calls return `Promise<Value>` and reject on failure. Stable error codes and `isOperationError` allow runtime narrowing; TypeScript does not specify a promise's rejection type. Availability and lifecycle status remain separately observable. Broadcast uses per-provider outcomes in the routing contract.
 
-| Call path | Provider behavior | Target and context |
-| --- | --- | --- |
-| `capabilities.invoke(contract, operation, input, options)` | Select for this invocation before dispatch | Common options contain the authoritative target and optional routing directive |
-| `capabilities.resolve(contract, options)` | Resolve a particular provider binding | Availability is a snapshot; an operation can still fail afterward |
-| `binding.api.operation(input, options)` | Use that binding's provider | No routing override that silently changes the binding's owner/context |
-| `actions.invoke(action, input, options)` | Select the action provider; its requirements bind there by default | Handler receives validated target, signal and its own local execution context |
+| Call path                                                  | Provider behavior                                                  | Target and context                                                             |
+| ---------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `capabilities.invoke(contract, operation, input, options)` | Select for this invocation before dispatch                         | Common options contain the authoritative target and optional routing directive |
+| `capabilities.resolve(contract, options)`                  | Resolve a particular provider binding                              | Availability is a snapshot; an operation can still fail afterward              |
+| `binding.api.operation(input, options)`                    | Use that binding's provider                                        | No routing override that silently changes the binding's owner/context          |
+| `actions.invoke(action, input, options)`                   | Select the action provider; its requirements bind there by default | Handler receives validated target, signal and its own local execution context  |
 
 A bound API stays pinned to its provider. A fresh routed invocation can select another provider before dispatch. Cross-provider orchestration is explicit. After dispatch, no timeout, disconnect or report that execution did not begin permits rerouting or automatic replay. A separately requested invocation starts a new decision.
 
@@ -209,17 +209,17 @@ stateDiagram-v2
 
 Readiness loss and setup failure are different. Compatible capability restoration can reactivate a waiting contribution. A setup exception stays failed until explicit retry; repeated availability notifications must not create a retry loop. A per-call permission/target failure does not automatically dispose a provider-wide service.
 
-| API/hook | Required behavior |
-| --- | --- |
-| `install(definition)` | Preflight/reserve, then complete the initial activation pass. Return admitted handle or relaxed skipped result. Waiting dependencies do not hang installation indefinitely. Strict admission errors reject. |
-| `handle.snapshot()` | Return current installation/child states and diagnostics; `admitted` is not a claim that every child is active. |
-| `handle.subscribe(listener)` | Deliver current snapshot on subscription and subsequent changes; return an idempotent unsubscribe. Listener failure is diagnosed without breaking runtime ownership. |
-| `handle.enable()` | Clear explicit disable and reconcile availability; return the settled current snapshot. |
-| `handle.disable()` | Stop new work, request cancellation and await owned teardown; keep declarations registered but inactive. |
-| `handle.retry(contributionId)` | Retry that failed setup explicitly if enabled; missing requirements leave it waiting. It cannot bypass cleanup-blocked status. |
-| `handle.dispose()` | Terminal, asynchronous teardown. Repeated calls observe the same teardown attempt; no duplicate cleanup. Reject/report incomplete cleanup and retain blocked state. |
-| `scope.onDispose(cleanup)` | Register activation-owned cleanup while the scope is open. Run in reverse acquisition order, attempt every cleanup, and report all failures. |
-| `replace(handle, definition)` | Preflight replacement first, keeping the old installation on invalid input. Stop old work, await cleanup, then activate the admitted successor. Ordinary install never replaces. |
+| API/hook                       | Required behavior                                                                                                                                                                                           |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `install(definition)`          | Preflight/reserve, then complete the initial activation pass. Return admitted handle or relaxed skipped result. Waiting dependencies do not hang installation indefinitely. Strict admission errors reject. |
+| `handle.snapshot()`            | Return current installation/child states and diagnostics; `admitted` is not a claim that every child is active.                                                                                             |
+| `handle.subscribe(listener)`   | Deliver current snapshot on subscription and subsequent changes; return an idempotent unsubscribe. Listener failure is diagnosed without breaking runtime ownership.                                        |
+| `handle.enable()`              | Clear explicit disable and reconcile availability; return the settled current snapshot.                                                                                                                     |
+| `handle.disable()`             | Stop new work, request cancellation and await owned teardown; keep declarations registered but inactive.                                                                                                    |
+| `handle.retry(contributionId)` | Retry that failed setup explicitly if enabled; missing requirements leave it waiting. It cannot bypass cleanup-blocked status.                                                                              |
+| `handle.dispose()`             | Terminal, asynchronous teardown. Repeated calls observe the same teardown attempt; no duplicate cleanup. Reject/report incomplete cleanup and retain blocked state.                                         |
+| `scope.onDispose(cleanup)`     | Register activation-owned cleanup while the scope is open. Run in reverse acquisition order, attempt every cleanup, and report all failures.                                                                |
+| `replace(handle, definition)`  | Preflight replacement first, keeping the old installation on invalid input. Stop old work, await cleanup, then activate the admitted successor. Ordinary install never replaces.                            |
 
 Initial setup failures are reflected in admitted handles, logs and diagnostics so callers can observe and retry them; they do not turn a partially active plugin into a successful all-active result. Aggregate installation state is `ready` only when every enabled, admitted child is active and there are no failure/skipped diagnostics requiring attention. `partial` reports mixed active/inactive or failed/skipped outcomes; `inactive` reports a clean installation with no active children.
 
@@ -243,35 +243,35 @@ The monorepo must contain runnable contribution, custom renderer, standalone Dev
 
 ## Domain boundaries and implementation sequence
 
-| Contract | Owns remaining decisions |
-| --- | --- |
-| [Server adapter contract](https://github.com/dvcol/devkit-extension/issues/6) | Exact public host factories, development/preview bindings, native contexts and middleware/transport cleanup |
-| [Provider discovery and routing](https://github.com/dvcol/devkit-extension/issues/7) | Routing-directive construction, callbacks/preferences/broadcast, discovery identity, dispatch races and cancellation outcomes |
-| [State scope and recovery](https://github.com/dvcol/devkit-extension/issues/8) | State declarations, scope, persistence, transport reconciliation and abrupt worker recovery |
-| [Permissions and trust](https://github.com/dvcol/devkit-extension/issues/9) | Authorization, wire validation/serialization, bridge trust and diagnostic exposure |
-| [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10) | Debugger operations, session/target ownership and supported adapters |
-| [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11) | Script modules, injection stages and HTML/HTTP transform contracts |
-| [Renderer and surface contract](https://github.com/dvcol/devkit-extension/issues/12) | JSON view/state/action integration, renderer replacement and surface mount APIs |
-| [Live preview and reload contract](https://github.com/dvcol/devkit-extension/issues/13) | Change matrix, build generations, cleanup/reset recovery and retained state across modes |
-| [Examples and API coverage contract](https://github.com/dvcol/devkit-extension/issues/14) | Complete monorepo example layout, every domain API/hook cell and real-host test enforcement |
-| [Portable contribution proof](https://github.com/dvcol/devkit-extension/issues/15) | End-to-end cross-host proof of the resolved contracts |
-| [Release and conformance contract](https://github.com/dvcol/devkit-extension/issues/16) | Package publication, compatibility baselines and release gates |
+| Contract                                                                                  | Owns remaining decisions                                                                                                      |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| [Server adapter contract](https://github.com/dvcol/devkit-extension/issues/6)             | Exact public host factories, development/preview bindings, native contexts and middleware/transport cleanup                   |
+| [Provider discovery and routing](https://github.com/dvcol/devkit-extension/issues/7)      | Routing-directive construction, callbacks/preferences/broadcast, discovery identity, dispatch races and cancellation outcomes |
+| [State scope and recovery](https://github.com/dvcol/devkit-extension/issues/8)            | State declarations, scope, persistence, transport reconciliation and abrupt worker recovery                                   |
+| [Permissions and trust](https://github.com/dvcol/devkit-extension/issues/9)               | Authorization, wire validation/serialization, bridge trust and diagnostic exposure                                            |
+| [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10)          | Debugger operations, session/target ownership and supported adapters                                                          |
+| [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11)   | Script modules, injection stages and HTML/HTTP transform contracts                                                            |
+| [Renderer and surface contract](https://github.com/dvcol/devkit-extension/issues/12)      | JSON view/state/action integration, renderer replacement and surface mount APIs                                               |
+| [Live preview and reload contract](https://github.com/dvcol/devkit-extension/issues/13)   | Change matrix, build generations, cleanup/reset recovery and retained state across modes                                      |
+| [Examples and API coverage contract](https://github.com/dvcol/devkit-extension/issues/14) | Complete monorepo example layout, every domain API/hook cell and real-host test enforcement                                   |
+| [Portable contribution proof](https://github.com/dvcol/devkit-extension/issues/15)        | End-to-end cross-host proof of the resolved contracts                                                                         |
+| [Release and conformance contract](https://github.com/dvcol/devkit-extension/issues/16)   | Package publication, compatibility baselines and release gates                                                                |
 
 Implement the settled declaration/core lifecycle contract first, preserving the existing upstream boundaries. Continue each adapter/domain as its required decisions and evidence become available. Keep commits and issue deliverables separated by ticket. The owner authorized continuing after architecture settlement until another decision requires input; that overrides the original single-ticket planning-session limit without inventing answers to later human-led decisions.
 
 ## Rejected alternatives
 
-| Alternative | Reason |
-| --- | --- |
-| One heterogeneous built-in `contributions` array | Dedicated properties provide clearer declaration typing and diagnostics |
-| Separate plugin-entry wrapper | Adds another identity/factory without a distinct ownership requirement |
-| Global declaration merging as the primary extension API | Imported descriptors keep contracts explicit and portable across bundles |
-| Pointer-equality duplicate exemption or shared install leases | Replaced by predictable conflict handling and one owner per registration |
-| Implicit contract version ranges | Exact numeric versions and explicit compatibility implementations are sufficient now |
-| Automatic fallback after dispatch | Can replay work or change its owner after execution may have begun |
-| Universal operation-result wrapper | Changes upstream ordinary call/return-schema semantics; use per-provider outcomes where routing needs them |
-| Schema transformations applied implicitly | Conflicts with the selected upstream guard-only behavior; authors normalize explicitly |
-| Mandatory JSON Schema conversion everywhere | Only schema-inspection integrations require export |
-| Parallel activation after cleanup timeout | Cannot establish that old registrations or native work ended |
+| Alternative                                                   | Reason                                                                                                     |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| One heterogeneous built-in `contributions` array              | Dedicated properties provide clearer declaration typing and diagnostics                                    |
+| Separate plugin-entry wrapper                                 | Adds another identity/factory without a distinct ownership requirement                                     |
+| Global declaration merging as the primary extension API       | Imported descriptors keep contracts explicit and portable across bundles                                   |
+| Pointer-equality duplicate exemption or shared install leases | Replaced by predictable conflict handling and one owner per registration                                   |
+| Implicit contract version ranges                              | Exact numeric versions and explicit compatibility implementations are sufficient now                       |
+| Automatic fallback after dispatch                             | Can replay work or change its owner after execution may have begun                                         |
+| Universal operation-result wrapper                            | Changes upstream ordinary call/return-schema semantics; use per-provider outcomes where routing needs them |
+| Schema transformations applied implicitly                     | Conflicts with the selected upstream guard-only behavior; authors normalize explicitly                     |
+| Mandatory JSON Schema conversion everywhere                   | Only schema-inspection integrations require export                                                         |
+| Parallel activation after cleanup timeout                     | Cannot establish that old registrations or native work ended                                               |
 
 The decision history and pinned upstream evidence remain in the planning packets. Canonical semantics in this document supersede their unselected alternatives.

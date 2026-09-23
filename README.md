@@ -1,68 +1,30 @@
-<h1 align="center">Welcome to <i>Web Extension Template</i></h1>
-<p>
-  <img src="https://img.shields.io/badge/pnpm-%3E%3D7.0.0-blue.svg" alt="pnpm verison" />
-  <img src="https://img.shields.io/badge/node-%3E%3D17.0.0-blue.svg" alt="node version" />
-  <a href="https://github.com/dvcol/web-extension-template#readme" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-  <a href="https://github.com/dvcol/web-extension-template/graphs/commit-activity" target="_blank">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
-  </a>
-  <a href="https://github.com/dvcol/web-extension-template/blob/master/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/github/license/dvcol/web-extension-template" />
-  </a>
- <a href="https://paypal.me/dvcol/5" target="_blank">
-    <img alt="donate" src="https://img.shields.io/badge/Donate%20€-PayPal-brightgreen.svg" />
-  </a>
-</p>
+# Devkit Extension
 
-> <Web Extension Template> description here
+A framework-neutral contribution SDK for development-server and WebExtension providers. The monorepo is being rebuilt from the former Vue extension template. The settled [architecture](./ARCHITECTURE.md), [glossary](./GLOSSARY.md) and [implementation map](https://github.com/dvcol/devkit-extension/issues/1) define the intended behavior. Host adapters, renderer integrations and browser examples remain implementation work.
 
-## Prerequisites
-
-- pnpm >=9.0.0
-- node >=20.0.0
-
-## Install
+Use Node 24 or newer and the pnpm version pinned in `package.json`.
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
+pnpm --filter @devkit/core build
+pnpm --filter @devkit/core typecheck
+pnpm --filter @devkit/core lint
+pnpm --filter @devkit/core test
+pnpm --filter @devkit/core format:check
 ```
 
-## Usage
+Packages live in `packages/*`, runnable host examples in `examples/*`. Vite builds JavaScript and TypeScript 7 emits declarations and checks source, tests and build configuration. Package builds must not import browser or server host dependencies into the portable core.
+
+Oxlint checks correctness, suspicious and pedantic rules as errors, plus explicit TypeScript, imports, promises and test rules. Type-aware linting is enabled. Warnings fail checks. Oxfmt controls formatting, and `format:check` fails on drift. See [tooling conventions](./docs/TOOLING.md) for the enforced rules, documented exceptions and review obligations.
 
 ```sh
-pnpm dev
+pnpm tooling:lint
+pnpm tooling:typecheck
+pnpm tooling:test
+pnpm exec oxfmt --write path/to/changed-file.ts
+pnpm exec oxfmt --check path/to/changed-file.ts
 ```
 
-See [package.json](https://github.com/dvcol/web-extension-template/blob/main/package.json) for other useful scripts.
+Keep local validation scoped to the changed package or dependency graph. `pnpm ci` is the full repository gate used by GitHub Actions. Historical probes under `docs/probes` preserve exact executed evidence and are separate from maintained packages and examples.
 
-## Run tests
-
-```sh
-pnpm test:unit
-```
-
-## Author
-
-- Github: [@dvcol](https://github.com/dvcol)
-
-## 🤝 Contributing
-
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/dvcol/web-extension-template/issues).
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
- <a href="https://paypal.me/dvcol/5" target="_blank">
-    <img alt="donate" src="https://img.shields.io/badge/Donate%20€-PayPal-brightgreen.svg" />
-  </a>
-
-## 📝 License
-
-This project is [MIT](https://github.com/dvcol/web-extension-template/blob/master/LICENSE) licensed.
-
----
-
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+The previous template's publishing and deployment workflows have been removed. Package publishing, browser-store releases and example deployment will be established through the release contract in [issue 16](https://github.com/dvcol/devkit-extension/issues/16).

@@ -1,0 +1,53 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "promise", "unicorn", "oxc", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "pedantic": "error"
+  },
+  "options": {
+    "typeAware": true,
+    "maxWarnings": 0,
+    "reportUnusedDisableDirectives": "error"
+  },
+  "ignorePatterns": ["**/dist/**", "**/coverage/**", "docs/probes/**", "docs/contracts/**"],
+  "rules": {
+    "typescript/no-explicit-any": "error",
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/no-unsafe-assignment": "error",
+    "typescript/no-unsafe-call": "error",
+    "typescript/no-unsafe-member-access": "error",
+    "typescript/no-unsafe-return": "error",
+    "import/no-cycle": "error",
+    "import/no-duplicates": "error",
+    "promise/param-names": "error",
+    "eslint/eqeqeq": ["error", "always"],
+    "eslint/no-nested-ternary": "error",
+    "vitest/prefer-expect-assertions": [
+      "error",
+      {
+        "onlyFunctionsWithAsyncKeyword": false,
+        "onlyFunctionsWithExpectInLoop": false,
+        "onlyFunctionsWithExpectInCallback": false
+      }
+    ],
+    "typescript/prefer-readonly-parameter-types": "off",
+    "typescript/no-unsafe-argument": "error",
+    "typescript/unbound-method": "error",
+    "typescript/return-await": ["error", "in-try-catch"],
+    "eslint/max-depth": ["error", 4],
+    "eslint/complexity": ["error", 15]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts"],
+      "rules": {
+        "vitest/max-expects": "off",
+        "eslint/max-lines-per-function": "off"
+      }
+    }
+  ]
+}
