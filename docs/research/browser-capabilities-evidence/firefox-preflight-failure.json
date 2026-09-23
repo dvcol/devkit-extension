@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-09-22T14:14:33.855Z",
+  "firefoxVersion": "Mozilla Firefox 156.0.1",
+  "cases": [
+    {
+      "filterPermission": true,
+      "reports": [
+        {
+          "kind": "isolated",
+          "isolatedAtStart": {
+            "marker": "isolated",
+            "messaging": "function"
+          },
+          "background": {
+            "kind": "background-reply",
+            "debuggerType": "undefined"
+          }
+        },
+        {
+          "kind": "page",
+          "parser": {
+            "main": "before-parser",
+            "mainMessaging": "undefined"
+          },
+          "text": "original-text",
+          "chunked": "original-café-世界",
+          "htmlBody": "original-html"
+        }
+      ],
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'original-text'\n- 'changed-text'\n\n    at runCase (file://<research-worktree>/docs/research/browser-capabilities-evidence/firefox-filtering.mjs:122:14)\n    at async file://<research-worktree>/docs/research/browser-capabilities-evidence/firefox-filtering.mjs:148:22"
+    },
+    {
+      "filterPermission": false,
+      "reports": [
+        {
+          "kind": "isolated",
+          "isolatedAtStart": {
+            "marker": "isolated",
+            "messaging": "function"
+          },
+          "background": {
+            "kind": "background-reply",
+            "debuggerType": "undefined"
+          }
+        },
+        {
+          "kind": "page",
+          "parser": {
+            "main": "before-parser",
+            "mainMessaging": "undefined"
+          },
+          "text": "original-text",
+          "chunked": "original-café-世界",
+          "htmlBody": "original-html"
+        }
+      ],
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 3\n\n    at runCase (file://<research-worktree>/docs/research/browser-capabilities-evidence/firefox-filtering.mjs:132:14)\n    at async file://<research-worktree>/docs/research/browser-capabilities-evidence/firefox-filtering.mjs:148:22"
+    }
+  ]
+}

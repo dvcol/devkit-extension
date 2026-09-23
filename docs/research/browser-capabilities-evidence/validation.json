@@ -1,0 +1,47 @@
+{
+  "validatedAt": "2026-09-22",
+  "syntax": {
+    "runtime": "Node26.9.0",
+    "commands": [
+      "node --check docs/research/browser-capabilities-evidence/chromium-coexistence.mjs",
+      "node --check docs/research/browser-capabilities-evidence/firefox-filtering.mjs",
+      "node --check docs/research/browser-capabilities-experiment.mjs"
+    ],
+    "exitCodes": [
+      0,
+      0,
+      0
+    ]
+  },
+  "lint": {
+    "version": "Oxlint1.85.0",
+    "scope": [
+      "chromium-coexistence.mjs",
+      "firefox-filtering.mjs"
+    ],
+    "configuration": "oxlint.json",
+    "categories": [
+      "correctness",
+      "suspicious"
+    ],
+    "denyWarnings": true,
+    "exitCode": 0
+  },
+  "integrity": {
+    "fourChromiumCasesPassed": true,
+    "nativeFrontendExistingConnectionValue": 54,
+    "extensionConnectionValue": 42,
+    "twoFirefoxCasesPassed": true,
+    "originalStableSuitePassed": true,
+    "temporaryPathsNormalized": true
+  },
+  "cleanup": {
+    "retainedGeneratedProfiles": false,
+    "ownedProfileProcessMatches": 0,
+    "note": "Initial sandboxed process-list query returned operation not permitted; approved read-only owned-profile query returned no matches. Browser copies remain excluded scratch for owner cleanup."
+  },
+  "limits": [
+    "JavaScript probes have no static TypeScript contract validation.",
+    "No natural background termination or real permission denial/revocation experiment was run."
+  ]
+}

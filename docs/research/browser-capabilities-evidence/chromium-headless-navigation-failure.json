@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-09-22T14:22:32.957Z",
+  "controller": "Node browser CDP plus explicit own extension control-page session; no inspected-target attachment or auto-attachment",
+  "cases": [
+    {
+      "order": "extension-first",
+      "interception": false,
+      "headless": true,
+      "events": [],
+      "httpRequests": [],
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/153.0.8010.52",
+        "revision": "@78e5e45d4bb41035e17ea4da2cc257f496416ac9",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+        "jsVersion": "15.3.76.13"
+      },
+      "extensions": {
+        "extensions": [
+          {
+            "id": "okdjcokjlnpkjndjgakddhoimnpejoni",
+            "name": "Isolated debugger coexistence audit",
+            "version": "0.0.1",
+            "path": "<research-worktree>/.browser-v2/coexistence-NKC06p/extension",
+            "enabled": true
+          }
+        ]
+      },
+      "initialTargets": {
+        "targetInfos": [
+          {
+            "targetId": "6976399C6C9E98D47A975A31F6F556EC",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "url": "chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "5DFD9E3033F81825AC0432F9D6FB9AE4"
+          },
+          {
+            "targetId": "4E90B39AC3CEC6BDAB9DB50DF9158588",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "url": "chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "5DFD9E3033F81825AC0432F9D6FB9AE4"
+          },
+          {
+            "targetId": "7EF2098D1E9D03B9BB240B686827722B",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://okdjcokjlnpkjndjgakddhoimnpejoni/background.js",
+            "url": "chrome-extension://okdjcokjlnpkjndjgakddhoimnpejoni/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "5DFD9E3033F81825AC0432F9D6FB9AE4"
+          },
+          {
+            "targetId": "DE0345FBAAEFC3BC7A1BE51E5B64735C",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "5DFD9E3033F81825AC0432F9D6FB9AE4"
+          },
+          {
+            "targetId": "365B63897481D6637D73C6B49E7A0A0D",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "5DFD9E3033F81825AC0432F9D6FB9AE4"
+          },
+          {
+            "targetId": "C4685EE618F29E3B202C929CD3370180",
+            "type": "page",
+            "title": "about:blank",
+            "url": "about:blank",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "5DFD9E3033F81825AC0432F9D6FB9AE4"
+          }
+        ]
+      },
+      "control": {
+        "targetId": "ABFF9803DD087114BCCC7B8D21FD0E9D",
+        "sessionId": "9B1B3C38497782855F8854726BA8C2AD"
+      },
+      "controlPreflight": {
+        "result": {
+          "type": "object",
+          "value": {
+            "ready": "complete",
+            "extension": "okdjcokjlnpkjndjgakddhoimnpejoni"
+          }
+        }
+      },
+      "initialization": {
+        "kind": "command-result",
+        "id": 1,
+        "command": "initialize",
+        "value": {
+          "tabId": 987523183
+        }
+      },
+      "status": "probe-failed",
+      "error": "Error: Timed out: fixture document complete\n    at waitFor (file://<research-worktree>/docs/research/browser-capabilities-evidence/chromium-coexistence.mjs:19:9)\n    at async runCase (file://<research-worktree>/docs/research/browser-capabilities-evidence/chromium-coexistence.mjs:206:28)\n    at async file://<research-worktree>/docs/research/browser-capabilities-evidence/chromium-coexistence.mjs:254:24",
+      "browserLogs": "\nDevTools listening on ws://127.0.0.1:57834/devtools/browser/d4211cc9-6184-403c-8e00-200c3c45423b\n[59323:46965236:0922/232233.536611:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965235:0922/232233.536939:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965236:0922/232233.537138:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965235:0922/232233.537186:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965236:0922/232233.537288:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965235:0922/232233.537329:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965236:0922/232233.537410:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965235:0922/232233.537449:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965236:0922/232233.537545:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[59323:46965235:0922/232233.537582:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n"
+    }
+  ]
+}

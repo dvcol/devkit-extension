@@ -1,0 +1,10 @@
+{
+  "env": {
+    "node": true,
+    "es2026": true
+  },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error"
+  }
+}

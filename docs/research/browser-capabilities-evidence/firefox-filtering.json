@@ -1,0 +1,154 @@
+{
+  "timestamp": "2026-09-22T14:25:23.280Z",
+  "firefoxVersion": "Mozilla Firefox 156.0.1",
+  "cases": [
+    {
+      "filterPermission": true,
+      "reports": [
+        {
+          "kind": "permissions",
+          "permissions": {
+            "origins": [
+              "http://127.0.0.1/*"
+            ],
+            "data_collection": [],
+            "permissions": [
+              "scripting",
+              "storage",
+              "webRequest",
+              "webRequestBlocking",
+              "webRequestFilterResponse"
+            ]
+          },
+          "filterType": "function"
+        },
+        {
+          "kind": "request-observed",
+          "path": "/fixture"
+        },
+        {
+          "kind": "filter-complete",
+          "path": "/fixture",
+          "chunkCount": 1,
+          "original": "<!doctype html><html><head><script>\nglobalThis.parserSnapshot = { main: globalThis.mainMarker, isolated: globalThis.isolatedMarker, mainMessaging: globalThis.mainMessaging, byteMarker: globalThis.byteTransformMarker };\nasync function runPageProbe() {\n  const text = await (await fetch('/text')).text();\n  const chunked = await (await fetch('/chunked')).text();\n  await fetch('/report', { method: 'POST', body: JSON.stringify({ kind: 'page', parser: globalThis.parserSnapshot, text, chunked, htmlBody: document.body.textContent.trim() }) });\n}\naddEventListener('load', () => { void runPageProbe(); }, { once: true });\n</script></head><body>original-html</body></html>",
+          "replacement": "<!doctype html><html><head><script>globalThis.byteTransformMarker = \"before-parser\";</script><script>\nglobalThis.parserSnapshot = { main: globalThis.mainMarker, isolated: globalThis.isolatedMarker, mainMessaging: globalThis.mainMessaging, byteMarker: globalThis.byteTransformMarker };\nasync function runPageProbe() {\n  const text = await (await fetch('/text')).text();\n  const chunked = await (await fetch('/chunked')).text();\n  await fetch('/report', { method: 'POST', body: JSON.stringify({ kind: 'page', parser: globalThis.parserSnapshot, text, chunked, htmlBody: document.body.textContent.trim() }) });\n}\naddEventListener('load', () => { void runPageProbe(); }, { once: true });\n</script></head><body>changed-html</body></html>"
+        },
+        {
+          "kind": "isolated",
+          "isolatedAtStart": {
+            "marker": "isolated",
+            "messaging": "function"
+          },
+          "background": {
+            "kind": "background-reply",
+            "debuggerType": "undefined"
+          }
+        },
+        {
+          "kind": "request-observed",
+          "path": "/text"
+        },
+        {
+          "kind": "filter-complete",
+          "path": "/text",
+          "chunkCount": 1,
+          "original": "original-text",
+          "replacement": "changed-text"
+        },
+        {
+          "kind": "request-observed",
+          "path": "/chunked"
+        },
+        {
+          "kind": "filter-complete",
+          "path": "/chunked",
+          "chunkCount": 3,
+          "original": "original-café-世界",
+          "replacement": "changed-café-世界"
+        },
+        {
+          "kind": "page",
+          "parser": {
+            "main": "before-parser",
+            "mainMessaging": "undefined",
+            "byteMarker": "before-parser"
+          },
+          "text": "changed-text",
+          "chunked": "changed-café-世界",
+          "htmlBody": "changed-html"
+        }
+      ],
+      "status": "passed"
+    },
+    {
+      "filterPermission": false,
+      "reports": [
+        {
+          "kind": "permissions",
+          "permissions": {
+            "origins": [
+              "http://127.0.0.1/*"
+            ],
+            "data_collection": [],
+            "permissions": [
+              "scripting",
+              "storage",
+              "webRequest",
+              "webRequestBlocking"
+            ]
+          },
+          "filterType": "function"
+        },
+        {
+          "kind": "request-observed",
+          "path": "/fixture"
+        },
+        {
+          "kind": "filter-rejected",
+          "path": "/fixture",
+          "error": "Error: Missing required \"webRequestFilterResponse\" permission"
+        },
+        {
+          "kind": "isolated",
+          "isolatedAtStart": {
+            "marker": "isolated",
+            "messaging": "function"
+          },
+          "background": {
+            "kind": "background-reply",
+            "debuggerType": "undefined"
+          }
+        },
+        {
+          "kind": "request-observed",
+          "path": "/text"
+        },
+        {
+          "kind": "filter-rejected",
+          "path": "/text",
+          "error": "Error: Missing required \"webRequestFilterResponse\" permission"
+        },
+        {
+          "kind": "request-observed",
+          "path": "/chunked"
+        },
+        {
+          "kind": "filter-rejected",
+          "path": "/chunked",
+          "error": "Error: Missing required \"webRequestFilterResponse\" permission"
+        },
+        {
+          "kind": "page",
+          "parser": {
+            "main": "before-parser",
+            "mainMessaging": "undefined"
+          },
+          "text": "original-text",
+          "chunked": "original-café-世界",
+          "htmlBody": "original-html"
+        }
+      ],
+      "status": "passed"
+    }
+  ]
+}

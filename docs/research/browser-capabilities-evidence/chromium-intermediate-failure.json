@@ -1,0 +1,265 @@
+{
+  "timestamp": "2026-09-22T14:20:13.670Z",
+  "controller": "Node browser CDP plus explicit own extension control-page session; no inspected-target attachment or auto-attachment",
+  "cases": [
+    {
+      "order": "extension-first",
+      "interception": false,
+      "events": [],
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/153.0.8010.52",
+        "revision": "@78e5e45d4bb41035e17ea4da2cc257f496416ac9",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+        "jsVersion": "15.3.76.13"
+      },
+      "extensions": {
+        "extensions": [
+          {
+            "id": "jdboaapgacdpefgejomfkgfaeindncpb",
+            "name": "Isolated debugger coexistence audit",
+            "version": "0.0.1",
+            "path": "<research-worktree>/.browser-v2/coexistence-YYHXg0/extension",
+            "enabled": true
+          }
+        ]
+      },
+      "initialTargets": {
+        "targetInfos": [
+          {
+            "targetId": "6D3D7014DD0D5FED101F82765CD01B4E",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "url": "chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "FCBE5BA04AFAAB7F796CB6E6AA2F13DA"
+          },
+          {
+            "targetId": "1CB1A63909CDE4760048DA21A2460A83",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "url": "chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "FCBE5BA04AFAAB7F796CB6E6AA2F13DA"
+          },
+          {
+            "targetId": "A6C607E6C7BA43937CED355189D8BEDB",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://jdboaapgacdpefgejomfkgfaeindncpb/background.js",
+            "url": "chrome-extension://jdboaapgacdpefgejomfkgfaeindncpb/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "FCBE5BA04AFAAB7F796CB6E6AA2F13DA"
+          },
+          {
+            "targetId": "A6755EC0C9505093B3FFAAB1FBA64CEB",
+            "type": "page",
+            "title": "about:blank",
+            "url": "about:blank",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "FCBE5BA04AFAAB7F796CB6E6AA2F13DA"
+          },
+          {
+            "targetId": "29AE0B8AB993B0B178131A1E8F70DBF3",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "FCBE5BA04AFAAB7F796CB6E6AA2F13DA"
+          },
+          {
+            "targetId": "F694376EF0C6F73BFE25D0EAA926C5E3",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "FCBE5BA04AFAAB7F796CB6E6AA2F13DA"
+          }
+        ]
+      },
+      "control": {
+        "targetId": "7342DCBBBAE7CC586B572DB68B8A2E1D",
+        "sessionId": "032FF02944EEC8832CCB7F9CEBE9DEEF"
+      },
+      "controlPreflight": {
+        "result": {
+          "type": "object",
+          "value": {
+            "ready": "complete",
+            "extension": "jdboaapgacdpefgejomfkgfaeindncpb"
+          }
+        }
+      },
+      "initialization": {
+        "kind": "command-result",
+        "id": 1,
+        "command": "initialize",
+        "value": {
+          "tabId": 443975732
+        }
+      },
+      "attachment": {
+        "kind": "command-result",
+        "id": 2,
+        "command": "attach",
+        "value": {
+          "attached": true
+        }
+      },
+      "frontend": {
+        "targetId": "B5987E9113CE7F56B3BEF822D313E053",
+        "type": "other",
+        "title": "",
+        "url": "devtools://devtools/bundled/devtools_app.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@78e5e45d4bb41035e17ea4da2cc257f496416ac9/&targetType=tab&can_dock=true&panel=network&isChromeForTesting=true",
+        "attached": false,
+        "canAccessOpener": false,
+        "browserContextId": "FCBE5BA04AFAAB7F796CB6E6AA2F13DA"
+      },
+      "afterBoth": {
+        "kind": "command-result",
+        "id": 3,
+        "command": "evaluate",
+        "value": {
+          "result": {
+            "description": "42",
+            "type": "number",
+            "value": 42
+          }
+        }
+      },
+      "cleanup": {
+        "kind": "command-result",
+        "id": 4,
+        "command": "detach",
+        "value": {
+          "detached": true
+        }
+      },
+      "status": "observed"
+    },
+    {
+      "order": "extension-first",
+      "interception": true,
+      "events": [],
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/153.0.8010.52",
+        "revision": "@78e5e45d4bb41035e17ea4da2cc257f496416ac9",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+        "jsVersion": "15.3.76.13"
+      },
+      "extensions": {
+        "extensions": [
+          {
+            "id": "fldepnnomlbmabldldeodjigplbbakgb",
+            "name": "Isolated debugger coexistence audit",
+            "version": "0.0.1",
+            "path": "<research-worktree>/.browser-v2/coexistence-Aj09Rw/extension",
+            "enabled": true
+          }
+        ]
+      },
+      "initialTargets": {
+        "targetInfos": [
+          {
+            "targetId": "87070DC72D1C9E61CFEFD1F95B0102A1",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "url": "chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "6865FDE2E4BBCD348AD9B0E96F3A74DD"
+          },
+          {
+            "targetId": "E20C8C84D1C37A2B0F7D6FCB357F4C18",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "url": "chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "6865FDE2E4BBCD348AD9B0E96F3A74DD"
+          },
+          {
+            "targetId": "102A4BA32340B057AD6032D1B260077C",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://fldepnnomlbmabldldeodjigplbbakgb/background.js",
+            "url": "chrome-extension://fldepnnomlbmabldldeodjigplbbakgb/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "6865FDE2E4BBCD348AD9B0E96F3A74DD"
+          },
+          {
+            "targetId": "2D0BDF42D1BE62CE6476BBFBBA17520B",
+            "type": "page",
+            "title": "",
+            "url": "about:blank",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "6865FDE2E4BBCD348AD9B0E96F3A74DD"
+          },
+          {
+            "targetId": "FEB66AF6607E4D25D88758713F693F26",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "6865FDE2E4BBCD348AD9B0E96F3A74DD"
+          },
+          {
+            "targetId": "1DF089D89F57B3AB16D77F2284DDA9B6",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "6865FDE2E4BBCD348AD9B0E96F3A74DD"
+          }
+        ]
+      },
+      "control": {
+        "targetId": "7DF6020FDABF865D1C6324F475643C82",
+        "sessionId": "F6328D74531A355FE5DB9470F8748F9B"
+      },
+      "controlPreflight": {
+        "result": {
+          "type": "object",
+          "value": {
+            "ready": "complete",
+            "extension": "fldepnnomlbmabldldeodjigplbbakgb"
+          }
+        }
+      },
+      "initialization": {
+        "kind": "command-result",
+        "id": 1,
+        "command": "initialize",
+        "value": {
+          "tabId": 663908830
+        }
+      },
+      "attachment": {
+        "kind": "command-result",
+        "id": 2,
+        "command": "attach",
+        "value": {
+          "attached": true
+        }
+      },
+      "fetchEnable": {
+        "kind": "command-result",
+        "id": 3,
+        "command": "enable-fetch",
+        "value": {}
+      },
+      "status": "probe-failed",
+      "error": "Error: Timed out: response pause\n    at waitFor (file://<research-worktree>/docs/research/browser-capabilities-evidence/chromium-coexistence.mjs:19:9)\n    at async runCase (file://<research-worktree>/docs/research/browser-capabilities-evidence/chromium-coexistence.mjs:213:7)\n    at async file://<research-worktree>/docs/research/browser-capabilities-evidence/chromium-coexistence.mjs:247:24",
+      "browserLogs": "\nDevTools listening on ws://127.0.0.1:57256/devtools/browser/a1c5ebdb-424e-4de3-896c-c4e3a342baf7\n"
+    }
+  ]
+}

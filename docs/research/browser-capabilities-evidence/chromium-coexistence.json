@@ -1,0 +1,906 @@
+{
+  "timestamp": "2026-09-22T14:27:33.025Z",
+  "controller": "Node browser CDP plus explicit own extension control-page session; no inspected-target attachment or auto-attachment",
+  "cases": [
+    {
+      "order": "extension-first",
+      "interception": false,
+      "headless": false,
+      "events": [],
+      "httpRequests": [
+        "/fixture",
+        "/favicon.ico",
+        "/.well-known/appspecific/com.chrome.devtools.json"
+      ],
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/153.0.8010.52",
+        "revision": "@78e5e45d4bb41035e17ea4da2cc257f496416ac9",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+        "jsVersion": "15.3.76.13"
+      },
+      "extensions": {
+        "extensions": [
+          {
+            "id": "kmbdlldgcopndmpfkmpdaohkblfmgkmf",
+            "name": "Isolated debugger coexistence audit",
+            "version": "0.0.1",
+            "path": "<research-worktree>/.browser-v2/coexistence-fFsHpt/extension",
+            "enabled": true
+          }
+        ]
+      },
+      "initialTargets": {
+        "targetInfos": [
+          {
+            "targetId": "35327C06F30C35864BF466F9A2B46388",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "url": "chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "C37F9FBEC34AA0A77789B808A1D378AA"
+          },
+          {
+            "targetId": "EF4D0DDF2381112724DFA1B422D0792C",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "url": "chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "C37F9FBEC34AA0A77789B808A1D378AA"
+          },
+          {
+            "targetId": "34555528D93FD7C401B91D0C56BE3236",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://kmbdlldgcopndmpfkmpdaohkblfmgkmf/background.js",
+            "url": "chrome-extension://kmbdlldgcopndmpfkmpdaohkblfmgkmf/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "C37F9FBEC34AA0A77789B808A1D378AA"
+          },
+          {
+            "targetId": "C091FFF4AF3DF11C102A969A44C73407",
+            "type": "page",
+            "title": "",
+            "url": "about:blank",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "C37F9FBEC34AA0A77789B808A1D378AA"
+          },
+          {
+            "targetId": "EFF266FB741248414F3DC646A2FBAFFD",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "C37F9FBEC34AA0A77789B808A1D378AA"
+          },
+          {
+            "targetId": "8250A93AD10507DD2D38152DA2A6A13B",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "C37F9FBEC34AA0A77789B808A1D378AA"
+          }
+        ]
+      },
+      "control": {
+        "targetId": "1DE0187B80D93CB882B0E968905CF5A3",
+        "sessionId": "7755061B5676855DBAF4902FF92FE850"
+      },
+      "controlPreflight": {
+        "result": {
+          "type": "object",
+          "value": {
+            "ready": "complete",
+            "extension": "kmbdlldgcopndmpfkmpdaohkblfmgkmf"
+          }
+        }
+      },
+      "initialization": {
+        "kind": "command-result",
+        "id": 1,
+        "command": "initialize",
+        "value": {
+          "tabId": 210599857
+        }
+      },
+      "loadedTab": {
+        "kind": "command-result",
+        "id": 3,
+        "command": "tab-status",
+        "value": {
+          "active": true,
+          "audible": false,
+          "autoDiscardable": true,
+          "discarded": false,
+          "frozen": false,
+          "groupId": -1,
+          "height": 1236,
+          "highlighted": true,
+          "id": 210599857,
+          "incognito": false,
+          "index": 2,
+          "lastAccessed": 1790087254206.765,
+          "mutedInfo": {
+            "muted": false
+          },
+          "pinned": false,
+          "selected": true,
+          "splitViewId": -1,
+          "status": "complete",
+          "title": "Isolated coexistence fixture",
+          "url": "http://127.0.0.1:59522/fixture",
+          "width": 1200,
+          "windowId": 210599854
+        }
+      },
+      "attachment": {
+        "kind": "command-result",
+        "id": 4,
+        "command": "attach",
+        "value": {
+          "attached": true
+        }
+      },
+      "frontend": {
+        "targetId": "A4E8DC8D3D992E1AD79550D2199496BE",
+        "type": "other",
+        "title": "",
+        "url": "devtools://devtools/bundled/devtools_app.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@78e5e45d4bb41035e17ea4da2cc257f496416ac9/&targetType=tab&can_dock=true&panel=network&isChromeForTesting=true",
+        "attached": false,
+        "canAccessOpener": false,
+        "browserContextId": "C37F9FBEC34AA0A77789B808A1D378AA"
+      },
+      "frontendReadiness": {
+        "ready": "complete",
+        "targets": [
+          {
+            "id": "main",
+            "url": "",
+            "type": "tab"
+          },
+          {
+            "id": "66F8E1E9F5D42E54C0C102577C256717",
+            "url": "http://127.0.0.1:59522/fixture",
+            "type": "frame"
+          }
+        ]
+      },
+      "frontendAfterBoth": {
+        "result": {
+          "type": "number",
+          "value": 54,
+          "description": "54"
+        },
+        "getError": {}
+      },
+      "afterBoth": {
+        "kind": "command-result",
+        "id": 5,
+        "command": "evaluate",
+        "value": {
+          "result": {
+            "description": "42",
+            "type": "number",
+            "value": 42
+          }
+        }
+      },
+      "cleanup": {
+        "kind": "command-result",
+        "id": 6,
+        "command": "detach",
+        "value": {
+          "detached": true
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "order": "extension-first",
+      "interception": true,
+      "headless": false,
+      "events": [
+        {
+          "kind": "paused",
+          "source": {
+            "tabId": 207964610
+          },
+          "url": "http://127.0.0.1:59528/body"
+        },
+        {
+          "kind": "request-result",
+          "value": [
+            {
+              "documentId": "DAD83083AAC9C27CAC088A8C3B89C17F",
+              "frameId": 0,
+              "result": {
+                "body": "transformed-response",
+                "status": 200
+              }
+            }
+          ]
+        }
+      ],
+      "httpRequests": [
+        "/fixture",
+        "/favicon.ico",
+        "/body",
+        "/.well-known/appspecific/com.chrome.devtools.json"
+      ],
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/153.0.8010.52",
+        "revision": "@78e5e45d4bb41035e17ea4da2cc257f496416ac9",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+        "jsVersion": "15.3.76.13"
+      },
+      "extensions": {
+        "extensions": [
+          {
+            "id": "jebmdaconggemjpheoikdfccdggkgalc",
+            "name": "Isolated debugger coexistence audit",
+            "version": "0.0.1",
+            "path": "<research-worktree>/.browser-v2/coexistence-CQTFI6/extension",
+            "enabled": true
+          }
+        ]
+      },
+      "initialTargets": {
+        "targetInfos": [
+          {
+            "targetId": "71E5FC45936518073804683AD239EC36",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "url": "chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "CD9B8DD3CF882250501C1D4DA365C638"
+          },
+          {
+            "targetId": "D6DEB52284E11707B9D1003D11035F28",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "url": "chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "CD9B8DD3CF882250501C1D4DA365C638"
+          },
+          {
+            "targetId": "DE4A8D7EDAB26DECE942ED188B1004EF",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://jebmdaconggemjpheoikdfccdggkgalc/background.js",
+            "url": "chrome-extension://jebmdaconggemjpheoikdfccdggkgalc/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "CD9B8DD3CF882250501C1D4DA365C638"
+          },
+          {
+            "targetId": "C2503E9EB3F4180DA45F2D4DF0976102",
+            "type": "page",
+            "title": "",
+            "url": "about:blank",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "CD9B8DD3CF882250501C1D4DA365C638"
+          },
+          {
+            "targetId": "70F41929393F2C5601CB2B014313AE07",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "CD9B8DD3CF882250501C1D4DA365C638"
+          },
+          {
+            "targetId": "1BC6A49BD59CA53A6CDBA1014904F3AE",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "CD9B8DD3CF882250501C1D4DA365C638"
+          }
+        ]
+      },
+      "control": {
+        "targetId": "4F07ECE961372AFBA792F5C3EA23F0F9",
+        "sessionId": "405CD018594123817CA30C3758583E5E"
+      },
+      "controlPreflight": {
+        "result": {
+          "type": "object",
+          "value": {
+            "ready": "complete",
+            "extension": "jebmdaconggemjpheoikdfccdggkgalc"
+          }
+        }
+      },
+      "initialization": {
+        "kind": "command-result",
+        "id": 1,
+        "command": "initialize",
+        "value": {
+          "tabId": 207964610
+        }
+      },
+      "loadedTab": {
+        "kind": "command-result",
+        "id": 2,
+        "command": "tab-status",
+        "value": {
+          "active": true,
+          "audible": false,
+          "autoDiscardable": true,
+          "discarded": false,
+          "frozen": false,
+          "groupId": -1,
+          "height": 1236,
+          "highlighted": true,
+          "id": 207964610,
+          "incognito": false,
+          "index": 2,
+          "lastAccessed": 1790087255797.341,
+          "mutedInfo": {
+            "muted": false
+          },
+          "pinned": false,
+          "selected": true,
+          "splitViewId": -1,
+          "status": "complete",
+          "title": "Isolated coexistence fixture",
+          "url": "http://127.0.0.1:59528/fixture",
+          "width": 1200,
+          "windowId": 207964607
+        }
+      },
+      "attachment": {
+        "kind": "command-result",
+        "id": 3,
+        "command": "attach",
+        "value": {
+          "attached": true
+        }
+      },
+      "fetchEnable": {
+        "kind": "command-result",
+        "id": 4,
+        "command": "enable-fetch",
+        "value": {}
+      },
+      "frontend": {
+        "targetId": "B0C715D62961442C179C6AAEDA9CCAA9",
+        "type": "other",
+        "title": "DevTools",
+        "url": "devtools://devtools/bundled/devtools_app.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@78e5e45d4bb41035e17ea4da2cc257f496416ac9/&targetType=tab&can_dock=true&panel=network&isChromeForTesting=true",
+        "attached": false,
+        "canAccessOpener": false,
+        "browserContextId": "CD9B8DD3CF882250501C1D4DA365C638"
+      },
+      "frontendReadiness": {
+        "ready": "complete",
+        "targets": [
+          {
+            "id": "main",
+            "url": "",
+            "type": "tab"
+          },
+          {
+            "id": "B22E463DF48EFE57CBCC0E30BD3CC872",
+            "url": "http://127.0.0.1:59528/fixture",
+            "type": "frame"
+          }
+        ]
+      },
+      "frontendAfterBoth": {
+        "result": {
+          "type": "number",
+          "value": 54,
+          "description": "54"
+        },
+        "getError": {}
+      },
+      "afterBoth": {
+        "kind": "command-result",
+        "id": 6,
+        "command": "evaluate",
+        "value": {
+          "result": {
+            "description": "42",
+            "type": "number",
+            "value": 42
+          }
+        }
+      },
+      "fulfillment": {
+        "kind": "command-result",
+        "id": 7,
+        "command": "fulfill",
+        "value": {
+          "original": {
+            "base64Encoded": true,
+            "body": "b3JpZ2luYWwtcmVzcG9uc2U="
+          }
+        }
+      },
+      "request": {
+        "kind": "request-result",
+        "value": [
+          {
+            "documentId": "DAD83083AAC9C27CAC088A8C3B89C17F",
+            "frameId": 0,
+            "result": {
+              "body": "transformed-response",
+              "status": 200
+            }
+          }
+        ]
+      },
+      "cleanup": {
+        "kind": "command-result",
+        "id": 8,
+        "command": "detach",
+        "value": {
+          "detached": true
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "order": "devtools-first",
+      "interception": false,
+      "headless": false,
+      "events": [],
+      "httpRequests": [
+        "/fixture",
+        "/favicon.ico",
+        "/.well-known/appspecific/com.chrome.devtools.json"
+      ],
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/153.0.8010.52",
+        "revision": "@78e5e45d4bb41035e17ea4da2cc257f496416ac9",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+        "jsVersion": "15.3.76.13"
+      },
+      "extensions": {
+        "extensions": [
+          {
+            "id": "ccijpcokogngdjajpbgnbohpfhgfngjp",
+            "name": "Isolated debugger coexistence audit",
+            "version": "0.0.1",
+            "path": "<research-worktree>/.browser-v2/coexistence-4uHX3W/extension",
+            "enabled": true
+          }
+        ]
+      },
+      "initialTargets": {
+        "targetInfos": [
+          {
+            "targetId": "F9980D39FEF789D7F91021923FDFE10A",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "url": "chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "D77FABC54B4AB423F7733297481BF6D4"
+          },
+          {
+            "targetId": "C9C629A6722BB3A9807C0AA0968DFF4D",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "url": "chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "D77FABC54B4AB423F7733297481BF6D4"
+          },
+          {
+            "targetId": "8EB93EBEFAD21FA8992E85562008082D",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://ccijpcokogngdjajpbgnbohpfhgfngjp/background.js",
+            "url": "chrome-extension://ccijpcokogngdjajpbgnbohpfhgfngjp/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "D77FABC54B4AB423F7733297481BF6D4"
+          },
+          {
+            "targetId": "46FF8B9CC9252CBCBB9366602ADAB69B",
+            "type": "page",
+            "title": "",
+            "url": "about:blank",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "D77FABC54B4AB423F7733297481BF6D4"
+          },
+          {
+            "targetId": "8712427E0F960198D6FC245B03811FF9",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "D77FABC54B4AB423F7733297481BF6D4"
+          },
+          {
+            "targetId": "B35765BF11822625F5D5FBDEEA3AEA1A",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "D77FABC54B4AB423F7733297481BF6D4"
+          }
+        ]
+      },
+      "control": {
+        "targetId": "48E5A1DF9ECB1145937A6FD18BC68D81",
+        "sessionId": "BE0C1B03268F2B4986C75E809CB0D316"
+      },
+      "controlPreflight": {
+        "result": {
+          "type": "object",
+          "value": {
+            "ready": "complete",
+            "extension": "ccijpcokogngdjajpbgnbohpfhgfngjp"
+          }
+        }
+      },
+      "initialization": {
+        "kind": "command-result",
+        "id": 1,
+        "command": "initialize",
+        "value": {
+          "tabId": 324595645
+        }
+      },
+      "loadedTab": {
+        "kind": "command-result",
+        "id": 3,
+        "command": "tab-status",
+        "value": {
+          "active": true,
+          "audible": false,
+          "autoDiscardable": true,
+          "discarded": false,
+          "frozen": false,
+          "groupId": -1,
+          "height": 1236,
+          "highlighted": true,
+          "id": 324595645,
+          "incognito": false,
+          "index": 2,
+          "lastAccessed": 1790087257751.521,
+          "mutedInfo": {
+            "muted": false
+          },
+          "pinned": false,
+          "selected": true,
+          "splitViewId": -1,
+          "status": "complete",
+          "title": "Isolated coexistence fixture",
+          "url": "http://127.0.0.1:59539/fixture",
+          "width": 1200,
+          "windowId": 324595642
+        }
+      },
+      "frontend": {
+        "targetId": "B033CA820A545A21D9A0CB4A63B36B6C",
+        "type": "other",
+        "title": "",
+        "url": "devtools://devtools/bundled/devtools_app.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@78e5e45d4bb41035e17ea4da2cc257f496416ac9/&targetType=tab&can_dock=true&panel=network&isChromeForTesting=true",
+        "attached": false,
+        "canAccessOpener": false,
+        "browserContextId": "D77FABC54B4AB423F7733297481BF6D4"
+      },
+      "frontendReadiness": {
+        "ready": "complete",
+        "targets": [
+          {
+            "id": "main",
+            "url": "",
+            "type": "tab"
+          },
+          {
+            "id": "5F9DFA765D929C3F0363B89F8079AE4E",
+            "url": "http://127.0.0.1:59539/fixture",
+            "type": "frame"
+          }
+        ]
+      },
+      "attachment": {
+        "kind": "command-result",
+        "id": 4,
+        "command": "attach",
+        "value": {
+          "attached": true
+        }
+      },
+      "frontendAfterBoth": {
+        "result": {
+          "type": "number",
+          "value": 54,
+          "description": "54"
+        },
+        "getError": {}
+      },
+      "afterBoth": {
+        "kind": "command-result",
+        "id": 5,
+        "command": "evaluate",
+        "value": {
+          "result": {
+            "description": "42",
+            "type": "number",
+            "value": 42
+          }
+        }
+      },
+      "cleanup": {
+        "kind": "command-result",
+        "id": 6,
+        "command": "detach",
+        "value": {
+          "detached": true
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "order": "devtools-first",
+      "interception": true,
+      "headless": false,
+      "events": [
+        {
+          "kind": "paused",
+          "source": {
+            "tabId": 762519754
+          },
+          "url": "http://127.0.0.1:59554/body"
+        },
+        {
+          "kind": "request-result",
+          "value": [
+            {
+              "documentId": "840D7AC927EE2530158AB4A8AC7198D4",
+              "frameId": 0,
+              "result": {
+                "body": "transformed-response",
+                "status": 200
+              }
+            }
+          ]
+        }
+      ],
+      "httpRequests": [
+        "/fixture",
+        "/favicon.ico",
+        "/.well-known/appspecific/com.chrome.devtools.json",
+        "/body"
+      ],
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/153.0.8010.52",
+        "revision": "@78e5e45d4bb41035e17ea4da2cc257f496416ac9",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+        "jsVersion": "15.3.76.13"
+      },
+      "extensions": {
+        "extensions": [
+          {
+            "id": "ioabnfkckcldipifanclkfajecboagfb",
+            "name": "Isolated debugger coexistence audit",
+            "version": "0.0.1",
+            "path": "<research-worktree>/.browser-v2/coexistence-Azm3KB/extension",
+            "enabled": true
+          }
+        ]
+      },
+      "initialTargets": {
+        "targetInfos": [
+          {
+            "targetId": "F21BBCFE02A0B4421FB5ABCBC772A131",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "url": "chrome-extension://nkeimhogjdpnpccoofpliimaahmaaome/thunk.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "4680E4A008BA34F8D43200CE7A29DE92"
+          },
+          {
+            "targetId": "40A7483EFE380A4FDA7BF1D6B0F455BA",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "url": "chrome-extension://glbjnfimcajjenihimblfaponejbkoph/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "4680E4A008BA34F8D43200CE7A29DE92"
+          },
+          {
+            "targetId": "61E6F181EDEC61A4ADA58703DFAD0829",
+            "type": "service_worker",
+            "title": "Service Worker chrome-extension://ioabnfkckcldipifanclkfajecboagfb/background.js",
+            "url": "chrome-extension://ioabnfkckcldipifanclkfajecboagfb/background.js",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "4680E4A008BA34F8D43200CE7A29DE92"
+          },
+          {
+            "targetId": "AF5A8762723C4F91CA3EFE722721B628",
+            "type": "page",
+            "title": "",
+            "url": "about:blank",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "4680E4A008BA34F8D43200CE7A29DE92"
+          },
+          {
+            "targetId": "30200C2BA7C8CF899751249B333102D4",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "4680E4A008BA34F8D43200CE7A29DE92"
+          },
+          {
+            "targetId": "67670E8ACCA9E4608066D3A860396272",
+            "type": "browser_ui",
+            "title": "Omnibox Popup",
+            "url": "chrome://omnibox-popup.top-chrome/",
+            "attached": false,
+            "canAccessOpener": false,
+            "browserContextId": "4680E4A008BA34F8D43200CE7A29DE92"
+          }
+        ]
+      },
+      "control": {
+        "targetId": "073EB87D26BF4EEBC054D566A8C260CD",
+        "sessionId": "CA17D7541D159B64DCD91F585931E1C5"
+      },
+      "controlPreflight": {
+        "result": {
+          "type": "object",
+          "value": {
+            "ready": "complete",
+            "extension": "ioabnfkckcldipifanclkfajecboagfb"
+          }
+        }
+      },
+      "initialization": {
+        "kind": "command-result",
+        "id": 1,
+        "command": "initialize",
+        "value": {
+          "tabId": 762519754
+        }
+      },
+      "loadedTab": {
+        "kind": "command-result",
+        "id": 3,
+        "command": "tab-status",
+        "value": {
+          "active": true,
+          "audible": false,
+          "autoDiscardable": true,
+          "discarded": false,
+          "frozen": false,
+          "groupId": -1,
+          "height": 1236,
+          "highlighted": true,
+          "id": 762519754,
+          "incognito": false,
+          "index": 2,
+          "lastAccessed": 1790087259495.729,
+          "mutedInfo": {
+            "muted": false
+          },
+          "pinned": false,
+          "selected": true,
+          "splitViewId": -1,
+          "status": "complete",
+          "title": "Isolated coexistence fixture",
+          "url": "http://127.0.0.1:59554/fixture",
+          "width": 1200,
+          "windowId": 762519751
+        }
+      },
+      "frontend": {
+        "targetId": "05B3965B57CFD47062591CD1BE9B36A7",
+        "type": "other",
+        "title": "",
+        "url": "devtools://devtools/bundled/devtools_app.html?remoteBase=https://chrome-devtools-frontend.appspot.com/serve_file/@78e5e45d4bb41035e17ea4da2cc257f496416ac9/&targetType=tab&can_dock=true&panel=network&isChromeForTesting=true",
+        "attached": false,
+        "canAccessOpener": false,
+        "browserContextId": "4680E4A008BA34F8D43200CE7A29DE92"
+      },
+      "frontendReadiness": {
+        "ready": "complete",
+        "targets": [
+          {
+            "id": "main",
+            "url": "",
+            "type": "tab"
+          },
+          {
+            "id": "A73534A7DC7D1675E205F9C790ABE6CB",
+            "url": "http://127.0.0.1:59554/fixture",
+            "type": "frame"
+          }
+        ]
+      },
+      "attachment": {
+        "kind": "command-result",
+        "id": 4,
+        "command": "attach",
+        "value": {
+          "attached": true
+        }
+      },
+      "fetchEnable": {
+        "kind": "command-result",
+        "id": 5,
+        "command": "enable-fetch",
+        "value": {}
+      },
+      "frontendAfterBoth": {
+        "result": {
+          "type": "number",
+          "value": 54,
+          "description": "54"
+        },
+        "getError": {}
+      },
+      "afterBoth": {
+        "kind": "command-result",
+        "id": 7,
+        "command": "evaluate",
+        "value": {
+          "result": {
+            "description": "42",
+            "type": "number",
+            "value": 42
+          }
+        }
+      },
+      "fulfillment": {
+        "kind": "command-result",
+        "id": 8,
+        "command": "fulfill",
+        "value": {
+          "original": {
+            "base64Encoded": true,
+            "body": "b3JpZ2luYWwtcmVzcG9uc2U="
+          }
+        }
+      },
+      "request": {
+        "kind": "request-result",
+        "value": [
+          {
+            "documentId": "840D7AC927EE2530158AB4A8AC7198D4",
+            "frameId": 0,
+            "result": {
+              "body": "transformed-response",
+              "status": 200
+            }
+          }
+        ]
+      },
+      "cleanup": {
+        "kind": "command-result",
+        "id": 9,
+        "command": "detach",
+        "value": {
+          "detached": true
+        }
+      },
+      "status": "passed"
+    }
+  ]
+}

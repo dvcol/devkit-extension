@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-09-22T13:32:16.330Z",
+  "assertions": [
+    "Static MAIN document_start precedes parser script; ISOLATED globals stay separate; MAIN has no runtime messaging",
+    "ISOLATED script can message extension and cannot directly access chrome.debugger",
+    "DNR changes request and response headers",
+    "Runtime.evaluate works through extension debugger; Browser.getVersion is rejected",
+    "Extension debugger Fetch Response-stage getResponseBody + fulfillRequest changes body and header",
+    "Response-stage HTML transform injects script before original parser script while preserving fixture body",
+    "Explicit detach after disabling Fetch restores original body",
+    "Injection into chrome://version is rejected"
+  ],
+  "observations": {
+    "parser": {
+      "main": "main-before-parser",
+      "order": [
+        "main"
+      ],
+      "mainRuntimeType": "undefined"
+    },
+    "isolated": [
+      {
+        "documentId": "E365D99824072B0A3B40A91CE4017175",
+        "frameId": 0,
+        "result": {
+          "debuggerType": "undefined",
+          "marker": "isolated",
+          "messaging": "function"
+        }
+      }
+    ],
+    "headers": {
+      "responseHeader": "extension-value",
+      "requestHeaders": {
+        "host": "127.0.0.1:63287",
+        "connection": "keep-alive",
+        "sec-ch-ua-platform": "\"macOS\"",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "http://127.0.0.1:63287/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "en-US,en;q=0.9",
+        "x-research": "extension-value"
+      }
+    },
+    "debugger": {
+      "evaluation": {
+        "result": {
+          "description": "42",
+          "type": "number",
+          "value": 42
+        }
+      },
+      "restrictedDomainError": "Error: {\"code\":-32601,\"message\":\"'Browser.getVersion' wasn't found\"}"
+    },
+    "transformation": {
+      "body": "transformed-body",
+      "transformedHeader": "yes"
+    },
+    "htmlTransformation": {
+      "marker": "before-original-parser",
+      "body": "original-html"
+    },
+    "afterDetach": "original-body",
+    "restrictedTarget": "Error: Cannot access a chrome:// URL",
+    "events": {
+      "events": [
+        {
+          "kind": "paused",
+          "url": "http://127.0.0.1:63287/body",
+          "body": {
+            "base64Encoded": true,
+            "body": "b3JpZ2luYWwtYm9keQ=="
+          }
+        },
+        {
+          "kind": "paused",
+          "url": "http://127.0.0.1:63287/html",
+          "body": {
+            "base64Encoded": true,
+            "body": "PCFkb2N0eXBlIGh0bWw+PGh0bWw+PGhlYWQ+PHNjcmlwdD5nbG9iYWxUaGlzLmh0bWxQYXJzZXJNYXJrZXIgPSBnbG9iYWxUaGlzLmluamVjdGVkSHRtbE1hcmtlciA/PyAibWlzc2luZyI7PC9zY3JpcHQ+PC9oZWFkPjxib2R5Pm9yaWdpbmFsLWh0bWw8L2JvZHk+PC9odG1sPg=="
+          }
+        }
+      ],
+      "errors": []
+    }
+  },
+  "browserVersion": "151.0.7922.34",
+  "status": "passed"
+}
