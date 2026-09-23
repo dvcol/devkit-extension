@@ -1,0 +1,19 @@
+{
+  "name": "production-generation-publication-probe",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "vite": "8.3.0",
+    "typescript": "7.0.2",
+    "@types/node": "26.6.2",
+    "oxlint": "1.85.0"
+  },
+  "scripts": {
+    "build:watch": "node build-watch.ts",
+    "preview": "node preview.ts",
+    "dev:production": "pnpm --workspace-concurrency=2 run \"/^(build:watch|preview)$/\"",
+    "probe": "node controller.ts",
+    "check": "tsc --noEmit",
+    "lint": "oxlint *.ts"
+  }
+}

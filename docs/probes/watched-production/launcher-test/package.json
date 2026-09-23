@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "probe:first": "node step.mjs first",
+    "probe:second": "node step.mjs second"
+  }
+}

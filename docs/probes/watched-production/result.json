@@ -1,0 +1,516 @@
+{
+  "startedAt": "2026-09-23T00:35:51.686Z",
+  "nodeVersion": "v26.9.0",
+  "packages": {
+    "vite": "8.3.0",
+    "pnpm": "12.5.1"
+  },
+  "packageManager": {
+    "executable": "/opt/homebrew/bin/pnpm",
+    "userAgent": "pnpm/12.5.1 npm/? node/? darwin arm64"
+  },
+  "launcher": "pnpm --workspace-concurrency=2 run /^(build:watch|preview)$/",
+  "raw": {
+    "initial": {
+      "build": {
+        "phase": "ready",
+        "attempt": 1,
+        "generation": "raw-current",
+        "error": null,
+        "processId": 83296
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64730/raw-current/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-DzjPocOV.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64730/raw-current/assets/index-DzjPocOV.js",
+            "status": 200,
+            "hash": "645d1d6635c1e1dea1dc71d2a51bb42f2f98bd5c17ca83484a8e975641b11698",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-one`;"
+          },
+          {
+            "url": "http://127.0.0.1:64730/raw-current/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "syntaxFailure": {
+      "build": {
+        "phase": "failed",
+        "attempt": 2,
+        "generation": "raw-current",
+        "error": "Build failed with 1 error:\n\n\u001b[31m[builtin:vite-transform] \u001b[0mUnexpected token\n   \u001b[38;5;246m╭\u001b[0m\u001b[38;5;246m─\u001b[0m\u001b[38;5;246m[\u001b[0m .runs/raw/fixture/main.ts:1:23 \u001b[38;5;246m]\u001b[0m\n   \u001b[38;5;246m│\u001b[0m\n \u001b[38;5;246m1 │\u001b[0m \u001b[38;5;249me\u001b[0m\u001b[38;5;249mx\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mb\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mk\u001b[0m\u001b[38;5;249me\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249m=\u001b[0m\u001b[38;5;249m \u001b[0m;\n \u001b[38;5;240m  │\u001b[0m                       ┬  \n \u001b[38;5;240m  │\u001b[0m                       ╰── \n\u001b[38;5;246m───╯\u001b[0m\n",
+        "processId": 83296
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64730/raw-current/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-DzjPocOV.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64730/raw-current/assets/index-DzjPocOV.js",
+            "status": 200,
+            "hash": "645d1d6635c1e1dea1dc71d2a51bb42f2f98bd5c17ca83484a8e975641b11698",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-one`;"
+          },
+          {
+            "url": "http://127.0.0.1:64730/raw-current/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "firstRecovery": {
+      "build": {
+        "phase": "ready",
+        "attempt": 3,
+        "generation": "raw-current",
+        "error": null,
+        "processId": 83296
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64730/raw-current/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-FxUQswdL.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64730/raw-current/assets/index-FxUQswdL.js",
+            "status": 200,
+            "hash": "ed245aea4b067228f4aa81b461d009bd3075d74a162cb1f94fd0552cff8c87b1",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-two`;"
+          },
+          {
+            "url": "http://127.0.0.1:64730/raw-current/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "lateFailure": {
+      "build": {
+        "phase": "failed",
+        "attempt": 4,
+        "generation": "raw-current",
+        "error": "Build failed with 1 error:\n\n[plugin bounded-generation-publication-probe]\nRolldownError: Intentional real generateBundle failure after output-directory preparation\n    at error (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/logs-DmYCAKcW.mjs:159:24)\n    at PluginContextImpl.error (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:111:10)\n    at PluginContextImpl.handler (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/build-watch.ts:41:16)\n    at PluginContextImpl.handler (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2/node_modules/vite/dist/node/chunks/node.js:34341:13)\n    at plugin (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:1711:17)\n    at plugin.<computed> (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:2128:18)",
+        "processId": 83296
+      },
+      "snapshot": {
+        "status": 404,
+        "url": "http://127.0.0.1:64730/raw-current/index.html",
+        "html": "",
+        "assets": []
+      }
+    },
+    "secondRecovery": {
+      "build": {
+        "phase": "ready",
+        "attempt": 5,
+        "generation": "raw-current",
+        "error": null,
+        "processId": 83296
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64730/raw-current/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-BYxanCaU.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64730/raw-current/assets/index-BYxanCaU.js",
+            "status": 200,
+            "hash": "aebe7667804d664d94e3452c29762fbc660fd94dfe6eed4af2a478f002334dd2",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-four`;"
+          },
+          {
+            "url": "http://127.0.0.1:64730/raw-current/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "watchEvents": [
+      {
+        "code": "START",
+        "attempt": 0,
+        "time": 1790123751913
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 0,
+        "time": 1790123751914
+      },
+      {
+        "code": "BUNDLE_END",
+        "attempt": 1,
+        "time": 1790123751945
+      },
+      {
+        "code": "END",
+        "attempt": 1,
+        "time": 1790123751946
+      },
+      {
+        "code": "START",
+        "attempt": 1,
+        "time": 1790123752035
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 1,
+        "time": 1790123752035
+      },
+      {
+        "code": "ERROR",
+        "attempt": 2,
+        "time": 1790123752040
+      },
+      {
+        "code": "END",
+        "attempt": 2,
+        "time": 1790123752041
+      },
+      {
+        "code": "START",
+        "attempt": 2,
+        "time": 1790123752143
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 2,
+        "time": 1790123752143
+      },
+      {
+        "code": "BUNDLE_END",
+        "attempt": 3,
+        "time": 1790123752151
+      },
+      {
+        "code": "END",
+        "attempt": 3,
+        "time": 1790123752152
+      },
+      {
+        "code": "START",
+        "attempt": 3,
+        "time": 1790123752251
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 3,
+        "time": 1790123752252
+      },
+      {
+        "code": "ERROR",
+        "attempt": 4,
+        "time": 1790123752262
+      },
+      {
+        "code": "END",
+        "attempt": 4,
+        "time": 1790123752263
+      },
+      {
+        "code": "START",
+        "attempt": 4,
+        "time": 1790123752358
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 4,
+        "time": 1790123752358
+      },
+      {
+        "code": "BUNDLE_END",
+        "attempt": 5,
+        "time": 1790123752366
+      },
+      {
+        "code": "END",
+        "attempt": 5,
+        "time": 1790123752367
+      }
+    ],
+    "cleanup": {
+      "builderAbsent": true,
+      "previewAbsent": true,
+      "connectionRefused": true,
+      "watcher": "{\n  \"processId\": 83296,\n  \"closed\": true\n}",
+      "preview": "{\n  \"processId\": 83297,\n  \"closed\": true,\n  \"listening\": false\n}"
+    }
+  },
+  "published": {
+    "initial": {
+      "build": {
+        "phase": "ready",
+        "attempt": 1,
+        "generation": "generation-83314-1",
+        "error": null,
+        "processId": 83314
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64739/generations/generation-83314-1/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-DzjPocOV.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-1/assets/index-DzjPocOV.js",
+            "status": 200,
+            "hash": "645d1d6635c1e1dea1dc71d2a51bb42f2f98bd5c17ca83484a8e975641b11698",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-one`;"
+          },
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-1/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "syntaxFailure": {
+      "build": {
+        "phase": "failed",
+        "attempt": 2,
+        "generation": "generation-83314-1",
+        "error": "Build failed with 1 error:\n\n\u001b[31m[builtin:vite-transform] \u001b[0mUnexpected token\n   \u001b[38;5;246m╭\u001b[0m\u001b[38;5;246m─\u001b[0m\u001b[38;5;246m[\u001b[0m .runs/published/fixture/main.ts:1:23 \u001b[38;5;246m]\u001b[0m\n   \u001b[38;5;246m│\u001b[0m\n \u001b[38;5;246m1 │\u001b[0m \u001b[38;5;249me\u001b[0m\u001b[38;5;249mx\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mb\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mk\u001b[0m\u001b[38;5;249me\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249m=\u001b[0m\u001b[38;5;249m \u001b[0m;\n \u001b[38;5;240m  │\u001b[0m                       ┬  \n \u001b[38;5;240m  │\u001b[0m                       ╰── \n\u001b[38;5;246m───╯\u001b[0m\n",
+        "processId": 83314
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64739/generations/generation-83314-1/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-DzjPocOV.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-1/assets/index-DzjPocOV.js",
+            "status": 200,
+            "hash": "645d1d6635c1e1dea1dc71d2a51bb42f2f98bd5c17ca83484a8e975641b11698",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-one`;"
+          },
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-1/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "firstRecovery": {
+      "build": {
+        "phase": "ready",
+        "attempt": 3,
+        "generation": "generation-83314-3",
+        "error": null,
+        "processId": 83314
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64739/generations/generation-83314-3/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-FxUQswdL.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-3/assets/index-FxUQswdL.js",
+            "status": 200,
+            "hash": "ed245aea4b067228f4aa81b461d009bd3075d74a162cb1f94fd0552cff8c87b1",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-two`;"
+          },
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-3/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "lateFailure": {
+      "build": {
+        "phase": "failed",
+        "attempt": 4,
+        "generation": "generation-83314-3",
+        "error": "Build failed with 1 error:\n\n[plugin bounded-generation-publication-probe]\nRolldownError: Intentional real generateBundle failure after output-directory preparation\n    at error (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/logs-DmYCAKcW.mjs:159:24)\n    at PluginContextImpl.error (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:111:10)\n    at PluginContextImpl.handler (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/build-watch.ts:41:16)\n    at PluginContextImpl.handler (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2/node_modules/vite/dist/node/chunks/node.js:34341:13)\n    at plugin (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:1711:17)\n    at plugin.<computed> (file:///private/tmp/devkit-wayfinder.WBc71a/production-generation.7fWHjk/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:2128:18)",
+        "processId": 83314
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64739/generations/generation-83314-3/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-FxUQswdL.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-3/assets/index-FxUQswdL.js",
+            "status": 200,
+            "hash": "ed245aea4b067228f4aa81b461d009bd3075d74a162cb1f94fd0552cff8c87b1",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-two`;"
+          },
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-3/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "secondRecovery": {
+      "build": {
+        "phase": "ready",
+        "attempt": 5,
+        "generation": "generation-83314-5",
+        "error": null,
+        "processId": 83314
+      },
+      "snapshot": {
+        "status": 200,
+        "url": "http://127.0.0.1:64739/generations/generation-83314-5/index.html",
+        "html": "<!doctype html><html><head><title>Watched publication probe</title>  <script type=\"module\" crossorigin src=\"./assets/index-BYxanCaU.js\"></script>\n  <link rel=\"stylesheet\" crossorigin href=\"./assets/index-CMyTA_u6.css\">\n</head><body><h1>Watched publication probe</h1></body></html>",
+        "assets": [
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-5/assets/index-BYxanCaU.js",
+            "status": 200,
+            "hash": "aebe7667804d664d94e3452c29762fbc660fd94dfe6eed4af2a478f002334dd2",
+            "body": "(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel=\"modulepreload\"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})(),document.body.dataset.generation=`good-four`;"
+          },
+          {
+            "url": "http://127.0.0.1:64739/generations/generation-83314-5/assets/index-CMyTA_u6.css",
+            "status": 200,
+            "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee",
+            "body": "body{color:#0a141e}\n"
+          }
+        ]
+      }
+    },
+    "originalGenerationAssetsStillAvailable": [
+      {
+        "url": "http://127.0.0.1:64739/generations/generation-83314-1/assets/index-DzjPocOV.js",
+        "status": 200,
+        "hash": "645d1d6635c1e1dea1dc71d2a51bb42f2f98bd5c17ca83484a8e975641b11698"
+      },
+      {
+        "url": "http://127.0.0.1:64739/generations/generation-83314-1/assets/index-CMyTA_u6.css",
+        "status": 200,
+        "hash": "1a81eedcc87f59d22a106f28f598883ac076625c7333f82310f8c83dd86d51ee"
+      }
+    ],
+    "watchEvents": [
+      {
+        "code": "START",
+        "attempt": 0,
+        "time": 1790123752911
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 0,
+        "time": 1790123752911
+      },
+      {
+        "code": "BUNDLE_END",
+        "attempt": 1,
+        "time": 1790123752940
+      },
+      {
+        "code": "END",
+        "attempt": 1,
+        "time": 1790123752940
+      },
+      {
+        "code": "START",
+        "attempt": 1,
+        "time": 1790123752991
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 1,
+        "time": 1790123752992
+      },
+      {
+        "code": "ERROR",
+        "attempt": 2,
+        "time": 1790123752996
+      },
+      {
+        "code": "END",
+        "attempt": 2,
+        "time": 1790123752997
+      },
+      {
+        "code": "START",
+        "attempt": 2,
+        "time": 1790123753097
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 2,
+        "time": 1790123753098
+      },
+      {
+        "code": "BUNDLE_END",
+        "attempt": 3,
+        "time": 1790123753106
+      },
+      {
+        "code": "END",
+        "attempt": 3,
+        "time": 1790123753107
+      },
+      {
+        "code": "START",
+        "attempt": 3,
+        "time": 1790123753206
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 3,
+        "time": 1790123753206
+      },
+      {
+        "code": "ERROR",
+        "attempt": 4,
+        "time": 1790123753218
+      },
+      {
+        "code": "END",
+        "attempt": 4,
+        "time": 1790123753218
+      },
+      {
+        "code": "START",
+        "attempt": 4,
+        "time": 1790123753311
+      },
+      {
+        "code": "BUNDLE_START",
+        "attempt": 4,
+        "time": 1790123753311
+      },
+      {
+        "code": "BUNDLE_END",
+        "attempt": 5,
+        "time": 1790123753320
+      },
+      {
+        "code": "END",
+        "attempt": 5,
+        "time": 1790123753321
+      }
+    ],
+    "cleanup": {
+      "builderAbsent": true,
+      "previewAbsent": true,
+      "connectionRefused": true,
+      "watcher": "{\n  \"processId\": 83314,\n  \"closed\": true\n}",
+      "preview": "{\n  \"processId\": 83313,\n  \"closed\": true,\n  \"listening\": false\n}"
+    }
+  },
+  "passed": true,
+  "finishedAt": "2026-09-23T00:35:53.615Z"
+}

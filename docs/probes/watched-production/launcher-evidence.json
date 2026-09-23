@@ -1,0 +1,22 @@
+{
+  "pnpmVersion": "12.5.1",
+  "executable": "/opt/homebrew/bin/pnpm",
+  "workspaceConcurrencyConfig": "undefined",
+  "controls": [
+    {
+      "command": "pnpm run --parallel /^probe:.+$/",
+      "file": "result.log",
+      "output": ". probe:first$ node step.mjs first\n. probe:first: first start 1790123603563\n. probe:first: first end 1790123604568\n. probe:first: Done\n. probe:second$ node step.mjs second\n. probe:second: second start 1790123604663\n. probe:second: second end 1790123605667\n. probe:second: Done\n"
+    },
+    {
+      "command": "pnpm run /^probe:.+$/",
+      "file": "result-plain.log",
+      "output": ". probe:second$ node step.mjs second\n. probe:first$ node step.mjs first\n. probe:second: second start 1790123626712\n. probe:first: first start 1790123626712\n. probe:second: second end 1790123627717\n. probe:first: first end 1790123627717\n. probe:second: Done\n. probe:first: Done\n"
+    },
+    {
+      "command": "pnpm --workspace-concurrency=2 run /^probe:.+$/",
+      "file": "result-concurrency-2.log",
+      "output": ". probe:second$ node step.mjs second\n. probe:first$ node step.mjs first\n. probe:second: second start 1790123627957\n. probe:first: first start 1790123627957\n. probe:second: second end 1790123628961\n. probe:first: first end 1790123628963\n. probe:second: Done\n. probe:first: Done\n"
+    }
+  ]
+}

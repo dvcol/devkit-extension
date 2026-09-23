@@ -11,12 +11,12 @@ The owner requires independently runnable `build:watch` and `preview`, plus `dev
   "scripts": {
     "build:watch": "node ./scripts/build-watch.ts",
     "preview": "node ./scripts/preview.ts",
-    "dev:production": "pnpm run --parallel \"/^(build:watch|preview)$/\""
+    "dev:production": "pnpm --workspace-concurrency=2 run \"/^(build:watch|preview)$/\""
   }
 }
 ```
 
-These are the intended example entry points, not commands present in the old root application scaffold. Each script must work alone. The combined command uses an exact anchored selector so it cannot select itself or unrelated scripts. pnpm documents regex script selection and parallel execution; the pinned feasibility environment is pnpm 12.5.1. [pnpm run](https://pnpm.io/cli/run#running-multiple-scripts).
+These are the intended example entry points, not commands present in the old root application scaffold. A finite timing check on pnpm 12.5.1 found that plain regex selection and `--workspace-concurrency=2` start both scripts concurrently, while adding `--parallel` serialized matched scripts inside this package. Use the verified regex/concurrency form, not that flag. Each script must work alone. The combined command uses an exact anchored selector so it cannot select itself or unrelated scripts. pnpm documents regex script selection and parallel execution; the pinned feasibility environment is pnpm 12.5.1. [pnpm run](https://pnpm.io/cli/run#running-multiple-scripts).
 
 Preview must tolerate starting before the first build completes. Until a successful generation exists, it exposes build status and reports assets unavailable. Once there is a complete build, an in-progress or failed rebuild leaves that generation available and exposes the current build failure. Merely avoiding deletion of `dist` does not prove that partially overwritten files cannot be served.
 
@@ -189,6 +189,16 @@ Oxlint and the limited probe-source type check pass. Full declaration checking f
 
 The preserved source is the exact executed experiment. Its lint evidence uses the recorded default Oxlint command. An additional broad pedantic audit reports two function-length warnings and one top-level-await preference; it is not represented as passing the eventual monorepo's strict lint policy. The probe's native registry augmentation demonstrates the released upstream API, not a change to the SDK's explicit-descriptor authoring decision.
 
+## Watched-output and launcher proof
+
+A second independent [executed probe](../probes/watched-production/README.md) runs actual Vite 8.3.0 build watching and preview through the selected `dev:production` script. Its [results](../probes/watched-production/result.json) retain response bodies, asset hashes, watcher events, status and shutdown evidence. The [finite launcher controls](../probes/watched-production/launcher-evidence.json) verify concurrent script starts with the exact command above.
+
+Direct serving of Vite's working output kept the old page after a syntax error but returned HTTP 404 after a real late `generateBundle` error. With separate staging and immutable published generations, both failures retained identical previous HTML, JavaScript and CSS. Successful recovery published a new complete generation; URLs belonging to the original generation still served matching hashes.
+
+The prototype snapshots completed output, then publishes the active generation only after the actual `BUNDLE_END` event. This is custom publication behavior built around public Vite hooks, not a built-in Vite transaction. Preview reports failed status through a real JSON endpoint while serving the last generation. Both watcher and preview close handles completed, their child processes exited and the former ports refused connections.
+
+This second probe passes TypeScript 7 strict checking with declaration checks enabled and the recorded default Oxlint command. It establishes local HTTP asset/status behavior and the pnpm launcher. It does not combine the live action/state backend from the first probe, render a failure overlay, prove backend generation compatibility or implement full HMR. Crash consistency, Windows, competing publishers, arbitrary application paths, generation cleanup and continuous concurrent request load remain implementation obligations. A fresh directory is required for reproduction; the bounded controller does not reuse prior generated fixture state.
+
 ## Required example and test inventory
 
 Every row applies to both server hosts where the feature is supported. Chromium and Firefox verify explicit unsupported outcomes for server-only APIs exposed through a common contract. Compile-only and mocked tests supplement real hosts.
@@ -214,6 +224,6 @@ Every row applies to both server hosts where the feature is supported. Chromium 
 
 The owner has settled independent scripts, their combined pnpm command, same-process preview/backend ownership as clarified in the discussion, and last-successful-build retention with failure status. One question is pending: when backend code cannot unload safely, may development tooling automatically restart the complete backend, briefly disconnecting other contributions and clients, or must it await an explicit restart?
 
-The full DevTools preview public composition and watched-output publication checks are investigations, not questions for the owner. Source/release inspection has identified the supported kit/custom-host seam and the default host’s preview mismatch; actual full DevTools shell behavior remains a separate proof obligation. Their findings must be incorporated before this ticket's resolution. The follow-on [Live preview and reload contract](https://github.com/dvcol/devkit-extension/issues/13) owns exact renderer/module/page update strategy and shutdown/reconnect sequencing; this ticket supplies lifecycle events and truthful native host bindings.
+The watched-output and launcher findings are incorporated above. Release inspection has identified the supported kit/custom-host seam and the default host’s preview mismatch. Full DevTools shell behavior still needs a separately scoped real-host proof; its absence is explicit, not a question for the owner to answer from memory. The follow-on [Live preview and reload contract](https://github.com/dvcol/devkit-extension/issues/13) owns exact renderer/module/page update strategy and shutdown/reconnect sequencing; this ticket supplies lifecycle events and truthful native host bindings.
 
 The issue remains open until the adapter declaration inventory is complete, the owner decision is incorporated and the Definition of Done is checked against the evidence. Complete production implementation and real-host matrix execution remain later work.

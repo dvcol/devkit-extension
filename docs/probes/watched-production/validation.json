@@ -1,0 +1,24 @@
+{
+  "commands": [
+    {
+      "command": "pnpm check",
+      "expanded": "tsc --noEmit",
+      "exitCode": 0,
+      "strict": true,
+      "skipLibCheck": false
+    },
+    {
+      "command": "pnpm lint",
+      "expanded": "oxlint *.ts",
+      "exitCode": 0,
+      "preset": "default rules"
+    },
+    {
+      "command": "pnpm probe",
+      "expanded": "node controller.ts",
+      "exitCode": 0
+    }
+  ],
+  "runtimeResult": "result.json",
+  "scope": "scratch fixture only"
+}
