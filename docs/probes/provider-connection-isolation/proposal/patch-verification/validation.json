@@ -1,0 +1,56 @@
+{
+  "date": "2026-09-23",
+  "prototypeOnly": true,
+  "tools": {
+    "node": "26.9.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.1",
+    "oxlint": "1.83.0",
+    "oxfmt": "0.68.0"
+  },
+  "execution": "Fresh scratch prepared by prepare.mjs from the installed frozen server-type fixture; commands scoped to copied prototype verification files.",
+  "checks": [
+    {
+      "command": "node prepare.mjs <frozen-fixture> <monorepo-root>",
+      "exitCode": 0,
+      "result": "Copied package, reused installed dependency links, patch --batch --fuzz=0 applied both files."
+    },
+    {
+      "command": "node_modules/.bin/vitest run --config vitest.config.ts",
+      "exitCode": 0,
+      "output": "Test Files  1 passed (1)\nTests  8 passed (8)"
+    },
+    {
+      "command": "node_modules/.bin/tsc --noEmit -p tsconfig.json",
+      "exitCode": 0,
+      "output": "",
+      "expectedTypeErrors": 2,
+      "skipLibCheck": false
+    },
+    {
+      "command": "node_modules/.bin/oxlint --config <monorepo-root>/.oxlintrc.json --type-aware --deny-warnings isolation.test.ts isolation.type-test.ts vitest.config.ts prepare.mjs",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": "node_modules/.bin/oxfmt --config <monorepo-root>/.oxfmtrc.json --check isolation.test.ts isolation.type-test.ts vitest.config.ts prepare.mjs tsconfig.json",
+      "exitCode": 0,
+      "output": "All matched files use the correct format."
+    },
+    {
+      "command": "node --check devframe/dist/client/index.mjs",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": "patch --batch --fuzz=0 -p1 -d <copy-of-pristine-client-files> -i devframe-1.0.0-isolate-connection.patch",
+      "exitCode": 0,
+      "output": "patching file 'dist/client/index.mjs'\npatching file 'dist/client/index.d.mts'"
+    }
+  ],
+  "limits": [
+    "Unit checks mock browser I/O boundaries; live transport/auth/state proof is retained separately under proposal/replay.",
+    "The complete copied package retains earlier declaration compatibility repairs from the frozen server-type fixture. The two-file isolation delta applies to pristine released files as well."
+  ],
+  "environment": "PATH=<verification-root>/node_modules/.bin:$PATH; the tooling directory must be on PATH so Oxlint can find tsgolint."
+}

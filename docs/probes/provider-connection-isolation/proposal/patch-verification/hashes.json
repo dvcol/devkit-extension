@@ -1,0 +1,32 @@
+{
+  "package": "devframe",
+  "version": "1.0.0",
+  "prototypeOption": "isolateConnection",
+  "files": {
+    "dist/client/index.mjs": {
+      "baselineSha256": "0e835386c35519d788ebcd6a7c091307d58fe9271cfca76320762b5cc53dc96e",
+      "patchedSha256": "c35899907efc22345e3c981815b05c602a1003af28ad4beb2a34a6b4abdc28a9",
+      "pristineSha256": "0e835386c35519d788ebcd6a7c091307d58fe9271cfca76320762b5cc53dc96e",
+      "baselineMatchesPristine": true,
+      "patchedPristineSha256": "c35899907efc22345e3c981815b05c602a1003af28ad4beb2a34a6b4abdc28a9",
+      "pristinePatchAppliedWithoutFuzz": true,
+      "replaySourceUnchanged": true,
+      "pristineSourceUnchanged": true
+    },
+    "dist/client/index.d.mts": {
+      "baselineSha256": "ee65069553be253575e08149250debf035623b611d2e368f957aa6cc37af08ca",
+      "patchedSha256": "557f6963ade4adc1840c1094eb6cb5c8a03a46f9bdaee8ef6bcfdff8a0e7f157",
+      "pristineSha256": "b5d8fa892d17cc3ccd0df976f537159f7147fb3a7c72fa29981bc9d89dcd096e",
+      "baselineMatchesPristine": false,
+      "patchedPristineSha256": "c1880729db50e293b191b64322534a8e7fdc09fc8eefa09a08eeecdac62c99d0",
+      "pristinePatchAppliedWithoutFuzz": true,
+      "replaySourceUnchanged": true,
+      "pristineSourceUnchanged": true
+    }
+  },
+  "prototypeOnly": true,
+  "dependencyResolutionNote": "The source replay package retains earlier declaration compatibility repairs outside this two-file delta; copied dependency links reuse installed modules, including optional cac from the parent probe installation.",
+  "baseline": "Installed frozen docs/probes/server-type-compatibility fixture with prior declaration repairs",
+  "pristine": "Released devframe@1.0.0 before declaration compatibility repairs",
+  "patchSha256": "e0baebea40617a45362f68709a58ebd8da51209e2c878c898c36320e44338308"
+}

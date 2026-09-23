@@ -1,0 +1,162 @@
+{
+  "mode": "shared",
+  "startedAt": "2026-09-23T02:55:08.511Z",
+  "passed": true,
+  "nodeVersion": "v26.9.0",
+  "packages": {
+    "devframe": "1.0.0",
+    "hub": "1.0.0",
+    "kit": "0.7.5",
+    "vite": "8.3.0"
+  },
+  "browser": {
+    "passed": true,
+    "mode": "shared",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "observations": {
+      "baseOnly": {
+        "requestedSecondBase": "/__endpoint-b/",
+        "firstMetadataPath": "/__endpoint-a/__connection.json",
+        "secondMetadataPath": "/__endpoint-a/__connection.json",
+        "firstReceipt": {
+          "endpoint": "endpointA",
+          "value": 1,
+          "credentialKind": "static"
+        },
+        "inheritedReceipt": {
+          "endpoint": "endpointA",
+          "value": 3,
+          "credentialKind": "static"
+        }
+      },
+      "explicit": {
+        "distinctCredentials": true,
+        "metadataA": "/__endpoint-a/__connection.json",
+        "metadataB": "/__endpoint-b/__connection.json",
+        "receiptA": {
+          "endpoint": "endpointA",
+          "value": 7,
+          "credentialKind": "static"
+        },
+        "receiptB": {
+          "endpoint": "endpointB",
+          "value": 10,
+          "credentialKind": "static"
+        },
+        "afterCredentialB": {
+          "endpoint": "endpointA",
+          "value": 7,
+          "credentialKind": "static"
+        }
+      },
+      "authentication": {
+        "codeExchangeSucceeded": true,
+        "isolatedEndpointB": false,
+        "broadcastObservationMilliseconds": 0,
+        "otherConnectionTokenChanged": true,
+        "sharedTokenEqual": true,
+        "existingReceiptB": {
+          "endpoint": "endpointB",
+          "value": 10,
+          "credentialKind": "static"
+        },
+        "receiptA": {
+          "endpoint": "endpointA",
+          "value": 7,
+          "credentialKind": "issued"
+        },
+        "freshConnectionUnauthorized": true,
+        "protectedCallRejected": true,
+        "handlerCountBefore": 2,
+        "handlerCountAfter": 2,
+        "restoredReceipt": {
+          "endpoint": "endpointB",
+          "value": 10,
+          "credentialKind": "static"
+        }
+      },
+      "closeIsolation": {
+        "closedCallRejected": true,
+        "statusA": "disconnected",
+        "statusB": "connected",
+        "survivingReceipt": {
+          "endpoint": "endpointB",
+          "value": 15,
+          "credentialKind": "static"
+        }
+      },
+      "finalClientStatuses": [
+        "disconnected",
+        "disconnected"
+      ]
+    },
+    "sharedStateValues": {
+      "endpointA": [
+        3,
+        7
+      ],
+      "endpointB": [
+        0,
+        10
+      ]
+    },
+    "expectedBackgroundErrors": []
+  },
+  "cleanup": {
+    "hubsClosed": true,
+    "previewStopped": true,
+    "errors": []
+  },
+  "serverValues": {
+    "endpointA": 7,
+    "endpointB": 15
+  },
+  "serverReceipts": [
+    {
+      "endpoint": "endpointA",
+      "value": 1,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointA",
+      "value": 3,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointA",
+      "value": 7,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointA",
+      "value": 7,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointA",
+      "value": 7,
+      "credentialKind": "issued"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 10,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 10,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 10,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 15,
+      "credentialKind": "static"
+    }
+  ],
+  "finishedAt": "2026-09-23T02:55:45.704Z"
+}

@@ -1,0 +1,102 @@
+--- a/dist/client/index.mjs
++++ b/dist/client/index.mjs
+@@ -481,9 +481,11 @@
+ * fetching `__connection.json` from the configured base URLs.
+ */
+ async function setupDevframeConnection(options = {}) {
++	const isolateConnection = options.isolateConnection === true;
++	const resolveAuthToken = isolateConnection ? (authToken) => authToken : readStoredAuthToken;
+ 	if (options.connection) {
+-		const connection = withAuthToken(options.connection, readStoredAuthToken(options.authToken ?? options.connection.authToken ?? options.connection.connectionMeta.authToken));
+-		storeConnection(connection);
++		const connection = withAuthToken(options.connection, resolveAuthToken(options.authToken ?? options.connection.authToken ?? options.connection.connectionMeta.authToken));
++		if (!isolateConnection) storeConnection(connection);
+ 		return connection;
+ 	}
+ 	const bases = Array.isArray(options.baseURL) ? options.baseURL : [options.baseURL ?? "./"];
+@@ -495,15 +497,15 @@
+ 			* supplied descriptor resolves from the caller's explicit base.
+ 			*/
+ 			metaBaseUrl: resolveMetaBaseUrl(bases[0] ?? "./"),
+-			authToken: readStoredAuthToken(options.authToken ?? options.connectionMeta.authToken)
++			authToken: resolveAuthToken(options.authToken ?? options.connectionMeta.authToken)
+ 		};
+-		storeConnection(connection);
++		if (!isolateConnection) storeConnection(connection);
+ 		return connection;
+ 	}
+-	const existing = getDevframeConnection();
++	const existing = isolateConnection ? void 0 : getDevframeConnection();
+ 	if (existing) {
+-		const connection = withAuthToken(existing, readStoredAuthToken(options.authToken ?? existing.authToken ?? existing.connectionMeta.authToken));
+-		storeConnection(connection);
++		const connection = withAuthToken(existing, resolveAuthToken(options.authToken ?? existing.authToken ?? existing.connectionMeta.authToken));
++		if (!isolateConnection) storeConnection(connection);
+ 		return connection;
+ 	}
+ 	const errors = [];
+@@ -523,9 +525,9 @@
+ 				* per-frame meta directs each frame SPA at the hub's own dump.
+ 				*/
+ 				metaBaseUrl: connectionMeta.baseUrl ? new URL(connectionMeta.baseUrl, loadedFrom).href : loadedFrom,
+-				authToken: readStoredAuthToken(options.authToken ?? connectionMeta.authToken)
++				authToken: resolveAuthToken(options.authToken ?? connectionMeta.authToken)
+ 			};
+-			storeConnection(connection);
++			if (!isolateConnection) storeConnection(connection);
+ 			return connection;
+ 		} catch (error) {
+ 			errors.push(error);
+@@ -1805,6 +1807,7 @@
+ 	throw new Error("[devframe] This server advertises no RPC transport (backend \"none\"), so there is nothing to connect to. Enable the WebSocket or SSE endpoint on the server, or use its static/MCP surfaces instead.");
+ }
+ async function getDevframeRpcClient(options = {}) {
++	const isolateConnection = options.isolateConnection === true;
+ 	const { baseURL = "./", rpcOptions = {}, cacheOptions = false } = options;
+ 	const events = createEventEmitter();
+ 	const bases = Array.isArray(baseURL) ? baseURL : [baseURL];
+@@ -1865,7 +1868,7 @@
+ 	});
+ 	let authChannel;
+ 	try {
+-		authChannel = new BroadcastChannel("devframe-auth");
++		if (!isolateConnection) authChannel = new BroadcastChannel("devframe-auth");
+ 	} catch {}
+ 	let bootstrapAuthPromise;
+ 	let bootstrapAuthSettled = false;
+@@ -1910,7 +1913,7 @@
+ 		ensureTrusted: mode.ensureTrusted,
+ 		requestTrust: mode.requestTrust,
+ 		requestTrustWithToken: async (token) => {
+-			storeAuthToken(token);
++			if (!isolateConnection) storeAuthToken(token);
+ 			connection = {
+ 				...connection,
+ 				authToken: token
+@@ -1920,7 +1923,7 @@
+ 		requestTrustWithCode: async (code) => {
+ 			const token = await mode.requestTrustWithCode(code);
+ 			if (!token) return false;
+-			storeAuthToken(token);
++			if (!isolateConnection) storeAuthToken(token);
+ 			connection = {
+ 				...connection,
+ 				authToken: token
+--- a/dist/client/index.d.mts
++++ b/dist/client/index.d.mts
+@@ -18,6 +18,15 @@
+   authToken?: string;
+ }
+ export interface SetupDevframeConnectionOptions {
++  /**
++   * Keep this connection and its credentials local to this client. Skips shared
++   * connection discovery, global/localStorage credential reads and writes, and
++   * cross-client authentication broadcasts. Explicit metadata and credentials,
++   * or metadata fetched from `baseURL`, still configure this connection.
++   *
++   * @default false
++   */
++  isolateConnection?: boolean;
+   /** Reuse a complete connection prepared in another viewer or JavaScript realm. */
+   connection?: DevframeConnection;
+   /** Use a pre-known descriptor while deriving its source URL from `baseURL`. */

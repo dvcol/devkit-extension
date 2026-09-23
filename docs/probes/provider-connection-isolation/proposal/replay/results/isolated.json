@@ -1,0 +1,167 @@
+{
+  "mode": "isolated",
+  "startedAt": "2026-09-23T02:55:11.401Z",
+  "passed": true,
+  "nodeVersion": "v26.9.0",
+  "packages": {
+    "devframe": "1.0.0",
+    "hub": "1.0.0",
+    "kit": "0.7.5",
+    "vite": "8.3.0"
+  },
+  "browser": {
+    "passed": true,
+    "mode": "isolated",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "observations": {
+      "baseOnly": {
+        "requestedSecondBase": "/__endpoint-b/",
+        "firstMetadataPath": "/__endpoint-a/__connection.json",
+        "secondMetadataPath": "/__endpoint-b/__connection.json",
+        "firstReceipt": {
+          "endpoint": "endpointA",
+          "value": 1,
+          "credentialKind": "static"
+        },
+        "inheritedReceipt": {
+          "endpoint": "endpointB",
+          "value": 2,
+          "credentialKind": "static"
+        }
+      },
+      "explicit": {
+        "distinctCredentials": true,
+        "metadataA": "/__endpoint-a/__connection.json",
+        "metadataB": "/__endpoint-b/__connection.json",
+        "receiptA": {
+          "endpoint": "endpointA",
+          "value": 5,
+          "credentialKind": "static"
+        },
+        "receiptB": {
+          "endpoint": "endpointB",
+          "value": 12,
+          "credentialKind": "static"
+        },
+        "afterCredentialB": {
+          "endpoint": "endpointA",
+          "value": 5,
+          "credentialKind": "static"
+        }
+      },
+      "authentication": {
+        "codeExchangeSucceeded": true,
+        "isolatedEndpointB": true,
+        "broadcastObservationMilliseconds": 250,
+        "otherConnectionTokenChanged": false,
+        "sharedTokenEqual": false,
+        "existingReceiptB": {
+          "endpoint": "endpointB",
+          "value": 12,
+          "credentialKind": "static"
+        },
+        "receiptA": {
+          "endpoint": "endpointA",
+          "value": 5,
+          "credentialKind": "issued"
+        },
+        "freshConnectionUnauthorized": false,
+        "protectedCallRejected": false,
+        "handlerCountBefore": 3,
+        "handlerCountAfter": 4,
+        "restoredReceipt": {
+          "endpoint": "endpointB",
+          "value": 12,
+          "credentialKind": "static"
+        }
+      },
+      "closeIsolation": {
+        "closedCallRejected": true,
+        "statusA": "disconnected",
+        "statusB": "connected",
+        "survivingReceipt": {
+          "endpoint": "endpointB",
+          "value": 17,
+          "credentialKind": "static"
+        }
+      },
+      "finalClientStatuses": [
+        "disconnected",
+        "disconnected"
+      ]
+    },
+    "sharedStateValues": {
+      "endpointA": [
+        1,
+        5
+      ],
+      "endpointB": [
+        2,
+        12
+      ]
+    },
+    "expectedBackgroundErrors": []
+  },
+  "cleanup": {
+    "hubsClosed": true,
+    "previewStopped": true,
+    "errors": []
+  },
+  "serverValues": {
+    "endpointA": 5,
+    "endpointB": 17
+  },
+  "serverReceipts": [
+    {
+      "endpoint": "endpointA",
+      "value": 1,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointA",
+      "value": 5,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointA",
+      "value": 5,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointA",
+      "value": 5,
+      "credentialKind": "issued"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 2,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 12,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 12,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 12,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 12,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointB",
+      "value": 17,
+      "credentialKind": "static"
+    }
+  ],
+  "finishedAt": "2026-09-23T02:55:50.497Z"
+}

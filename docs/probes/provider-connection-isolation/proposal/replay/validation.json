@@ -1,0 +1,40 @@
+{
+  "date": "2026-09-23",
+  "typecheck": {
+    "command": "node_modules/.bin/tsc --noEmit",
+    "exitCode": 0,
+    "typescript": "7.0.2",
+    "skipLibCheck": false,
+    "declarationGraph": "released dependencies with existing declaration repairs; prototype option inferred in structurally wider options value"
+  },
+  "lint": {
+    "command": "PATH=<implementation>/node_modules/.bin:/opt/homebrew/bin:/usr/bin:/bin oxlint --config <implementation>/.oxlintrc.json --type-aware --deny-warnings *.ts",
+    "exitCode": 0
+  },
+  "format": {
+    "command": "oxfmt --config <implementation>/.oxfmtrc.json --check <probe>/*.ts",
+    "exitCode": 0,
+    "output": "All matched files use the correct format. Eight TypeScript files checked."
+  },
+  "browserExecutions": {
+    "shared": {
+      "startedAt": "2026-09-23T02:55:08.511Z",
+      "finishedAt": "2026-09-23T02:55:45.704Z",
+      "exitCode": 0
+    },
+    "isolated": {
+      "startedAt": "2026-09-23T02:55:11.401Z",
+      "finishedAt": "2026-09-23T02:55:50.497Z",
+      "exitCode": 0
+    },
+    "mixed": {
+      "startedAt": "2026-09-23T02:55:11.654Z",
+      "finishedAt": "2026-09-23T02:55:55.016Z",
+      "exitCode": 0
+    }
+  },
+  "postExecutionChange": "probe.ts whitespace formatting only; exact executed version retained separately",
+  "cleanup": "Each runner awaited both hub closures and preview close; results record stopped listening with no cleanup errors.",
+  "secrets": "Fresh static and issued credentials and authorization codes stayed in scratch runtime/storage and are excluded.",
+  "independentReview": "Root inspected all three browser DOMs and server results, verified all three endpoints refused connections after cleanup, and closed owned browser tabs."
+}
