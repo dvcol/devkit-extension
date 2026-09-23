@@ -14,6 +14,8 @@ Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issu
 
 The provider descriptor extends the already reviewed core with a mandatory `incarnation: string`. Adapters mint it; declarations do not. A stable provider ID must be configured for the intended logical owner, rather than regenerated on every client connection.
 
+This metadata is implemented in core and the local runtime. Runtime admission rejects missing, empty and whitespace-only incarnations and freezes an identity snapshot before setup or asynchronous call validation. Eight focused ownership tests include two live providers sharing a logical ID: an old binding retains its original backend and rejects after disposal instead of switching to its successor. Contribution reactivation retains the incarnation. The complete affected core/runtime suites and packed-consumer gates also pass. This establishes local ownership behavior; remote discovery and selection remain unimplemented.
+
 ```ts
 // Illustrative metadata; these are not credentials or native transport handles.
 const beforeRestart = {
