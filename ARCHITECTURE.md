@@ -12,6 +12,21 @@ Executable contributions are assembled from packaged code at build time. Startup
 
 The monorepo uses pnpm/Turbo, Vite/Oxc, strict type-aware Oxlint and enforced Oxfmt formatting with TypeScript 7. The old frontend scaffold and active ESLint, Stylelint and Prettier integrations have been replaced. [Tooling conventions](./docs/TOOLING.md) record enforced checks and narrow exceptions; [migration gates](./docs/planning/016-tooling-migration.md) retain the required acceptance criteria. Default-rule feasibility probes do not satisfy these gates. Chromium and Firefox are the initial browser hosts. Development HMR and watched production builds with live preview have separate, explicit update/restart/reload behavior.
 
+### Host-managed build and reload
+
+The owner confirmed that normal server development follows Vite and the existing Devframe/DevTools host lifecycle. Vite owns compilation, module updates, watching and its server restart behavior. Its current pipeline uses Oxc transformations and Rolldown bundling. Experimental bundled development remains a development-server mode; it does not replace the separate production-build watcher and live preview workflow.
+
+Adapters install and dispose their own contributions through the host's supported lifecycle. Core does not supervise processes or automatically restart an embedding host after failed cleanup. A host-specific restart mechanism requires an actual integration need and an explicit ownership policy. Vite's in-process server restart is not proof that arbitrary plugin timers, callbacks or in-flight work stopped.
+
+| Workflow                                          | Host owns                                                | Adapter owns                                                    |
+| ------------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------- |
+| Vite development, including supported bundled dev | Module graph, HMR, HTTP server and normal server restart | Portable registrations, local native contexts and their cleanup |
+| Vite production build watch                       | Source watching and completed bundle output              | Build completion/status handoff where required                  |
+| Vite live preview                                 | HTTP server and serving completed built assets           | Attached live provider and owned subscriptions/middleware       |
+| Existing standalone Devframe/DevTools host        | Existing process, RPC/state services and host lifecycle  | Only the portable contributions installed into that host        |
+
+Last-successful-build publication concerns asset availability. It does not restore backend state or replay interrupted actions. The [server adapter contract](./docs/planning/006-server-adapter.md) and [reload contract](https://github.com/dvcol/devkit-extension/issues/13) retain the integration and verification obligations. [Vite build watching](https://vite.dev/guide/build#rebuild-on-files-changes), [Vite lifecycle hooks](https://vite.dev/guide/api-plugin#closeserver).
+
 ## Contracts, contributions and plugins
 
 | Element     | Declaration                                                                                         | Runtime meaning                                                                     |
@@ -225,7 +240,7 @@ Initial setup failures are reflected in admitted handles, logs and diagnostics s
 
 Cancellation is cooperative. Disposal must account for in-progress setup and owned work before claiming the activation ended. Fence generation-sensitive registrations so late completions cannot be published into a successor. Resources created outside the supplied ownership scope remain the author's responsibility and cannot be used as proof of successful conformance.
 
-Cleanup failure or non-completion blocks the successor even in relaxed mode. An adapter may recover through an explicit reset/reload only when it establishes that the old execution and registrations are gone. Resetting a whole shared provider may affect unrelated contributions and requires the reload contract's ownership policy; core does not authorize doing so automatically. A timer is not cleanup proof.
+Cleanup failure or non-completion blocks the successor even in relaxed mode. An adapter may recover through an explicit reset/reload only when it establishes that the old execution and registrations are gone. Normal updates use the native host lifecycle; there is no generic automatic whole-provider recovery controller. Resetting a whole shared provider may affect unrelated contributions and requires a separately justified host policy. A timer is not cleanup proof.
 
 ## Diagnostics and error contract
 

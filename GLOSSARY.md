@@ -51,6 +51,7 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 | Setup failure       | Failure while activating an admitted declaration                                              | Isolated from independent contributions; requires explicit retry                                  |
 | Cleanup blocked     | A lifecycle condition where the old activation has not been proven ended                      | Prevents replacement until cleanup or verified execution reset succeeds                           |
 | Replacement         | Explicitly ending an old installation/activation before admitting or activating its successor | Ordinary duplicate registration is never replacement                                              |
+| Host-managed reload | Updating or restarting through the existing host's supported module/server lifecycle          | Adapter cleanup remains necessary; a Vite server restart does not terminate its Node process      |
 
 ## Calls and presentation
 

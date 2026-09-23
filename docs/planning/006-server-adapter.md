@@ -1,6 +1,6 @@
 # Server adapter contract
 
-Working deliverable for [Server adapter contract](https://github.com/dvcol/devkit-extension/issues/6), based on the settled [core architecture](../../ARCHITECTURE.md). The process workflow and failed-build policy below are owner decisions. The adapter signatures and remaining reset choice are under review; this document does not claim completed SDK implementations.
+Working deliverable for [Server adapter contract](https://github.com/dvcol/devkit-extension/issues/6), based on the settled [core architecture](../../ARCHITECTURE.md). The owner has confirmed the process workflow, failed-build policy and host-managed lifecycle boundary below. Adapter implementation and domain-specific integration contracts remain in progress; this document does not claim complete host conformance.
 
 ## Accepted workflow
 
@@ -34,6 +34,16 @@ flowchart LR
 ```
 
 The last-successful-build rule concerns asset availability. It does not silently preserve arbitrary in-memory backend state or replay interrupted actions. Those are governed by the state and routing contracts.
+
+## Accepted reload ownership
+
+The owner confirmed the clarified boundary on 2026-09-23. Ordinary development updates and server restarts belong to Vite and the existing Devframe/DevTools integration. The SDK binds its registrations and cleanup to that lifecycle. There is no generic process supervisor or automatic whole-backend recovery mechanism in core, and permission for one is not a prerequisite for a thin adapter.
+
+`vite build --watch` uses Vite's Rolldown watcher with Oxc transformations. Experimental bundled dev retains Vite HMR and remains distinct from serving production-built files. `configureServer`, `closeServer`, `configurePreviewServer` and `closePreviewServer` are the relevant public Vite integration hooks in the verified 8.3 baseline. A normal `server.restart()` remains inside the Node process. Cleanup of owned timers, subscriptions, RPC registrations and in-flight work still belongs to the code that created them.
+
+Backend contribution code loaded during host setup is distinct from browser modules in Vite's module graph. The inspected upstream adapters do not universally replace arbitrary Node backend modules when files change. Integrate supported host updates or a documented host restart where appropriate; establish a narrower need before proposing additional restart machinery. Safe backend replacement still waits for old ownership to end. Incomplete cleanup stays observable and blocks replacement.
+
+The independently runnable build watcher and preview scripts remain accepted. Their lifecycle attachment does not prove backend-module HMR, and retaining a completed asset build does not prove backend recovery. [Vite lifecycle hooks](https://vite.dev/guide/api-plugin#closeserver), [bundled dev](https://vite.dev/blog/announcing-vite8-1), [build watching](https://vite.dev/guide/build#rebuild-on-files-changes).
 
 ## Public reuse boundary
 
@@ -168,7 +178,7 @@ Backend mode and asset mode are separate. In the real probe the live hub reports
 | Build starts | Publish building status; continue serving the last complete generation | Status UI observes current state, including when mounted late |
 | Build fails | Retain published generation; publish failure with build identity | Failure display does not depend on the failed tool contribution |
 | Build completes | Publish only a complete generation; emit asset-generation change | Reload contract chooses renderer/page reload and cached asset retention |
-| Backend code changes | Preflight successor, quiesce calls and dispose owned activation | Automatic whole-backend reset permission is the pending owner decision |
+| Backend code changes | Use the native host's supported update/restart lifecycle; preflight replacement and dispose owned activation before activating its successor | Reload contract supplies concrete host integration; no generic process reset |
 | Connection lost | Mark provider unavailable; reject pending calls with appropriate portable error | Routing never redispatches; state contract decides restoration |
 | Adapter disposal | Stop admitting new calls; cancel, await resources, remove owned registrations and attachment; preserve embedding server if not owned | Incomplete cleanup blocks successor |
 | Preview process exits | Stop live backend and HTTP, close watcher/status subscriptions; watcher process remains independently usable | Combined command must propagate shutdown to its children |
@@ -219,13 +229,13 @@ Every row applies to both server hosts where the feature is supported. Chromium 
 | Action/state/view integration | Shared contribution and renderer examples | Wire validation, real action result/error, subscriptions, view updates, remount and reconnect |
 | Request-time transforms/injection | Transform-only/page-only examples | Documented request stage, ordering, cancellation, unsupported stages, target validation |
 | Adapter/provider disposal | Both server examples | Unsubscribe, detach, native owned cleanup, repeated dispose, leaked-resource check, unrelated server remains live |
-| Full process restart | Development and production-development modes | Permission policy, verified old process exit, interrupted calls not replayed, new provider generation, state restoration only as declared |
+| Host restart | Development and production-development modes | Native lifecycle cleanup, no stale bindings or replay, fresh provider incarnation when backend is recreated; a process-level mechanism needs separate justification |
 | Snapshot output | Static example | Explicit static metadata, no false live actions/capabilities, no assumed preview lifecycle |
 
 ## Decision frontier
 
-The owner has settled independent scripts, their combined pnpm command, same-process preview/backend ownership as clarified in the discussion, and last-successful-build retention with failure status. One question is pending: when backend code cannot unload safely, may development tooling automatically restart the complete backend, briefly disconnecting other contributions and clients, or must it await an explicit restart?
+The owner has settled independent scripts, their combined pnpm command, same-process preview/backend ownership, last-successful-build retention with failure status and host-managed reloads. The former blanket question about automatic whole-backend restarts is withdrawn. It conflated normal Vite updates with exceptional cleanup failure. Neither a custom recovery controller nor permission for one blocks the initial adapter implementation.
 
 The watched-output and launcher findings are incorporated above. Release inspection has identified the supported kit/custom-host seam and the default host’s preview mismatch. Full DevTools shell behavior still needs a separately scoped real-host proof; its absence is explicit, not a question for the owner to answer from memory. The follow-on [Live preview and reload contract](https://github.com/dvcol/devkit-extension/issues/13) owns exact renderer/module/page update strategy and shutdown/reconnect sequencing; this ticket supplies lifecycle events and truthful native host bindings.
 
-The issue remains open until the adapter declaration inventory is complete, the owner decision is incorporated and the Definition of Done is checked against the evidence. Complete production implementation and real-host matrix execution remain later work.
+The issue remains open until the adapter declaration inventory and Definition of Done are checked against the evidence. Routing/state/security/renderer contracts still own their respective behavior. Complete production implementation and real-host matrix execution remain tracked work.
