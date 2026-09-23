@@ -1,0 +1,60 @@
+{
+  "startedAt": "2026-09-23T02:43:22.419Z",
+  "passed": false,
+  "nodeVersion": "v26.9.0",
+  "packages": {
+    "devframe": "1.0.0",
+    "hub": "1.0.0",
+    "kit": "0.7.5",
+    "vite": "8.3.0"
+  },
+  "browser": {
+    "passed": false,
+    "errorName": "TypeError",
+    "error": "Unexpected probe connection metadata",
+    "observations": {
+      "baseOnly": {
+        "requestedSecondBase": "/__endpoint-b/",
+        "firstMetadataPath": "/__endpoint-a/__connection.json",
+        "secondMetadataPath": "/__endpoint-a/__connection.json",
+        "firstReceipt": {
+          "endpoint": "endpointA",
+          "value": 1,
+          "credentialKind": "static"
+        },
+        "inheritedReceipt": {
+          "endpoint": "endpointA",
+          "value": 3,
+          "credentialKind": "static"
+        }
+      }
+    },
+    "sharedStateValues": {
+      "endpointA": [],
+      "endpointB": []
+    }
+  },
+  "error": "Expected values to be strictly equal:\n\nfalse !== true\n",
+  "cleanup": {
+    "hubsClosed": true,
+    "previewStopped": true,
+    "errors": []
+  },
+  "serverValues": {
+    "endpointA": 3,
+    "endpointB": 0
+  },
+  "serverReceipts": [
+    {
+      "endpoint": "endpointA",
+      "value": 1,
+      "credentialKind": "static"
+    },
+    {
+      "endpoint": "endpointA",
+      "value": 3,
+      "credentialKind": "static"
+    }
+  ],
+  "finishedAt": "2026-09-23T02:43:53.139Z"
+}
