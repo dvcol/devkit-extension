@@ -17,6 +17,8 @@ Admitted handles expose current snapshots, subscriptions, enable, disable, expli
 
 Replacements run one at a time per provider. A pending replacement reserves its old and successor identities, while unrelated installations and active calls can continue. Admission checks dependency cycles against both possible service graphs. A relaxed skipped service replacement leaves the current service active.
 
+The runnable [contribution example](../../examples/contribution/README.md) composes these APIs through built package exports and verifies real subscription cleanup.
+
 The lower-level exports remain available to adapters that need to compose their own boundary:
 
 - `createAdmissionRegistry` reserves a complete startup composition synchronously, in host-service then plugin order. Strict conflicts roll back the incoming batch. Relaxed service duplicates produce skipped results without an ownership handle. A plugin can retain independent contributions and its skip diagnostics. Existing and incoming service dependencies are checked together for cycles. Only the original reservation can release its slots.
