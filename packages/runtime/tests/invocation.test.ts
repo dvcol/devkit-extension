@@ -11,7 +11,11 @@ import type {
 } from '../src/invocation';
 
 const context: LocalInvocationContext = {
-  provider: { id: 'provider', realm: defineRealm({ id: 'custom' }) },
+  provider: {
+    id: 'provider',
+    incarnation: 'test.backend-lifetime',
+    realm: defineRealm({ id: 'custom' }),
+  },
   execution: defineExecution({ id: 'server' }),
   native: {
     get() {

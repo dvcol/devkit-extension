@@ -13,7 +13,7 @@ import { createProviderLifecycle } from '@devkit/runtime';
 
 const source = new MemoryCounter();
 const provider = createProviderLifecycle({
-  provider: exampleProvider,
+  provider: { ...exampleProvider, incarnation: crypto.randomUUID() },
   execution: exampleExecution,
   native: counterNativeAccess(source),
   report(diagnostic) {

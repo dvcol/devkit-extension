@@ -26,6 +26,7 @@ import type { Activation } from './activation.js';
 import type { Reservation, StartupComposition } from './admission.js';
 
 export interface ProviderLifecycleOptions {
+  /** The adapter issues an incarnation once per backend lifetime and reuses it across reconnects. */
   readonly provider: ProviderDescriptor;
   readonly execution: ExecutionDescriptor;
   readonly native: NativeContextAccess;

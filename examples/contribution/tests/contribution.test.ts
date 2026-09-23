@@ -25,7 +25,7 @@ function installationHandle(result: InstallationResult | undefined): Installatio
 function createLocalProvider(native: NativeContextAccess) {
   const diagnostics: RuntimeDiagnostic[] = [];
   const provider = createProviderLifecycle({
-    provider: exampleProvider,
+    provider: { ...exampleProvider, incarnation: crypto.randomUUID() },
     execution: exampleExecution,
     native,
     report(diagnostic) {

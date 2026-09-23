@@ -2,7 +2,7 @@
 
 This example executes one shared counter capability and one action through the real local provider lifecycle controller. It uses `@devkit/core` declarations, Standard Schema validation with Zod, and the private `@devkit/runtime` adapter internals. It has no renderer or frontend framework.
 
-`src/index.ts` exports only capability and action contracts. It imports neither provider handlers nor the runtime implementation. `src/provider.ts`, available through the separate `./provider` entry point, contains the service recipe and action plugin. The Node-only runner is `src/demo.ts`.
+`src/index.ts` exports only capability and action contracts. It imports neither provider handlers nor the runtime implementation. `src/provider.ts`, available through the separate `./provider` entry point, contains the service recipe and action plugin. The Node-only runner is `src/demo.ts`. `exampleProvider` contains stable host configuration. The runner adds a fresh `crypto.randomUUID()` incarnation when creating its backend lifecycle, then keeps that descriptor for the lifetime of the backend.
 
 The service obtains a `MemoryCounter` through a typed local native-context descriptor. Its activation owns a real subscription to that source. Reads observe source changes; disabling or disposing the service removes the subscription. The action calls the same capability through a declared service requirement. The in-memory resource demonstrates ownership; it is not a generic shared-state or persistence API.
 

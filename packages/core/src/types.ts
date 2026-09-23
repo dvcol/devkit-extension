@@ -28,7 +28,10 @@ export interface ExecutionDescriptor<Identifier extends string = string> {
 }
 
 export interface ProviderDescriptor {
+  /** Stable provider identity supplied by host configuration. */
   readonly id: string;
+  /** Opaque adapter-issued identity for one backend lifetime; stable across client HMR and reconnects. */
+  readonly incarnation: string;
   readonly realm: RealmDescriptor;
 }
 

@@ -59,7 +59,7 @@ export async function runConsumer(): Promise<string> {
   const disposed: string[] = [];
   activation.scope.onDispose(() => { disposed.push('disposed'); });
   const returned = await invokeLocalOperation(operation, input, {}, {
-    provider: { id: 'consumer', realm: defineRealm({ id: 'custom' }) },
+    provider: { id: 'consumer', incarnation: 'consumer.backend-lifetime', realm: defineRealm({ id: 'custom' }) },
     execution, contributionId: 'consumer.service', native: { get: () => undefined },
   }, activation.scope.signal, (value) => value);
   check(returned === 'artifact', 'Packed operation failed to return validated original input');

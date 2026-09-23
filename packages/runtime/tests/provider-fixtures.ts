@@ -30,7 +30,11 @@ export const action = defineAction({ id: 'example.action', version: 1, operation
 export function provider(options: Partial<ProviderLifecycleOptions> = {}) {
   const diagnostics: RuntimeDiagnostic[] = [];
   const runtime = createProviderLifecycle({
-    provider: { id: 'example.provider', realm: defineRealm({ id: 'example.custom-realm' }) },
+    provider: {
+      id: 'example.provider',
+      incarnation: 'example.backend-lifetime',
+      realm: defineRealm({ id: 'example.custom-realm' }),
+    },
     execution,
     native: { get: vi.fn<() => undefined>() },
     report: (diagnostic) => {

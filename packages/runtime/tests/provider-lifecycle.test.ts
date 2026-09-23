@@ -89,7 +89,11 @@ describe('provider lifecycle composition', () => {
     expect(resolution.status).toBe('available');
     expect(available(resolution).context).toMatchObject({
       access: 'local',
-      provider: { id: 'example.provider', realm: { id: 'example.custom-realm' } },
+      provider: {
+        id: 'example.provider',
+        incarnation: 'example.backend-lifetime',
+        realm: { id: 'example.custom-realm' },
+      },
       execution,
     });
     await runtime.dispose();

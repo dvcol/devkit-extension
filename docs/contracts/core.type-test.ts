@@ -14,7 +14,7 @@ import {
   defineService,
   isOperationError,
 } from './core';
-import type { ActionClient, BindingContext, CapabilityClient, NativeContextAccess, TargetReference } from './core';
+import type { ActionClient, BindingContext, CapabilityClient, ContextMetadata, NativeContextAccess, ProviderDescriptor, TargetReference } from './core';
 
 const serverRealm = defineRealm({ id: 'example.custom-server' });
 const serverExecution = defineExecution({ id: 'example.server' });
@@ -154,3 +154,24 @@ defineActionContribution(readAction, {
   // @ts-expect-error Action results must match the declared output schema.
   handler: () => 12,
 });
+
+export const providerIdentity: ProviderDescriptor = {
+  id: 'example.provider',
+  incarnation: 'opaque-backend-lifetime',
+  realm: serverRealm,
+};
+
+// @ts-expect-error Every provider descriptor identifies a concrete backend incarnation.
+export const missingIncarnation: ProviderDescriptor = { id: 'example.provider', realm: serverRealm };
+export const invalidIncarnation: ProviderDescriptor = {
+  id: 'example.provider',
+  // @ts-expect-error Incarnations are opaque strings rather than numeric generation counters.
+  incarnation: 1,
+  realm: serverRealm,
+};
+
+export function checkProviderIdentity(context: ContextMetadata): void {
+  context.provider.incarnation satisfies string;
+  // @ts-expect-error Consumers cannot change the backend lifetime of an existing context.
+  context.provider.incarnation = 'successor';
+}

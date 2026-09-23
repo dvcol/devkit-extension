@@ -17,6 +17,8 @@ Admitted handles expose current snapshots, subscriptions, enable, disable, expli
 
 Replacements run one at a time per provider. A pending replacement reserves its old and successor identities, while unrelated installations and active calls can continue. Admission checks dependency cycles against both possible service graphs. A relaxed skipped service replacement leaves the current service active.
 
+The provider descriptor is snapshotted and frozen, including its mandatory opaque `incarnation`. The adapter creates that value once per backend lifetime; this controller never generates or rotates it. Setup, binding and operation contexts retain that identity. A binding closes over its original controller and cannot acquire a successor merely because the successor uses the same configured provider ID. Disposing the old controller makes its bindings unavailable.
+
 The runnable [contribution example](../../examples/contribution/README.md) composes these APIs through built package exports and verifies real subscription cleanup.
 
 The lower-level exports remain available to adapters that need to compose their own boundary:

@@ -6,7 +6,7 @@ Host codes: **DF** standalone Devframe, **DT** Vite DevTools, **CH** Chromium ex
 
 | Public exports or hooks | Example/fixture | Required assertions |
 | --- | --- | --- |
-| `defineRealm`, `RealmDescriptor`; `defineExecution`, `ExecutionDescriptor`; `ProviderDescriptor`, `ContextMetadata` | `examples/custom-realm`; `contracts/context-types` | New realm/execution IDs preserve literal types; no core switch/renderer change; provider identity remains separate |
+| `defineRealm`, `RealmDescriptor`; `defineExecution`, `ExecutionDescriptor`; `ProviderDescriptor`, `ContextMetadata` | `examples/custom-realm`; `contracts/context-types` | New realm/execution IDs preserve literal types; no core switch/renderer change; provider identity remains separate; mandatory opaque incarnation identifies a backend lifetime and remains stable through client reconnect or ordinary HMR |
 | `defineNativeContext`, `NativeContextDescriptor`, `NativeContextAccess.get`, `BindingContext` | `examples/native-context`; `contracts/context-types` | Correct local type or absent; remote `native` access fails compile; native objects never cross messages; unavailable APIs return absent on unsupported hosts |
 | `defineOperation`, `OperationDefinition`, `OperationInput`, `OperationValue`, `TargetRequirement` | `examples/contribution`; `contracts/schema-inference` | Mandatory input/return validators and target mode; original-value inference including transforming schemas; reject invalid runtime input/return |
 | `defineCapability`, `CapabilityDescriptor`, `CapabilityImplementation` | `examples/multi-version-service`; `contracts/implementation-types` | Mandatory numeric version and schemas; missing/wrong method types fail compile; exact versions coexist; changed schema under same version is invalid |
@@ -28,7 +28,7 @@ Host codes: **DF** standalone Devframe, **DT** Vite DevTools, **CH** Chromium ex
 ## Cross-cutting gates
 
 - `contracts/client-imports`: emitted client graph contains no provider handler, Node-only dependency or mandatory UI framework.
-- `runtime/two-providers`: simultaneous providers/versions remain separately owned; state and native contexts never merge.
+- `runtime/two-providers`: simultaneous providers/versions remain separately owned; state and native contexts never merge; equal configured IDs with different backend incarnations never retarget an existing binding.
 - `hosts/lifecycle`: real worker restart, panel closure, navigation, reconnect and permission transitions exercise their supported operations and explicit unsupported states.
 - `hosts/modes`: development and built-asset live preview/release paths receive separate assertions; source HMR is not proof of preview behavior.
 - `examples/custom-renderer`: replace the renderer through public interfaces and repeat action/state/error behavior without modifying contributions.
@@ -38,11 +38,13 @@ View, script, transform, state, debugger and native adapter-specific helpers/hoo
 
 ## Local implementation evidence
 
-The maintained `packages/core` source implements the 61 reviewed exports. Its 12 runtime functions are tested in `packages/core/tests/definitions.test.ts`, `invalid-definitions.test.ts`, `snapshots.test.ts` and `errors.test.ts`; the 25 negative compile fixtures live in `packages/core/tests/core.type-test.ts`. Consult actual package files for the current test inventory. These are local contract checks, not four-host conformance.
+The maintained `packages/core` source implements the 61 reviewed exports. Its 12 runtime functions are tested in `packages/core/tests/definitions.test.ts`, `invalid-definitions.test.ts`, `snapshots.test.ts` and `errors.test.ts`; the 28 negative compile fixtures live in `packages/core/tests/core.type-test.ts`. Consult actual package files for the current test inventory. These are local contract checks, not four-host conformance.
 
 `packages/runtime/tests/admission.test.ts` exercises whole-batch rollback, service duplicate strictness, exact versions, waiting-service cycles, unknown kinds and mutable-alias isolation. `invocation.test.ts` exercises guard-only schema validation, targets, cancellation, errors and target capture across asynchronous validation. `scope.test.ts`, `activation.test.ts` and `activation-cancellation.test.ts` exercise reverse cleanup, in-progress setup/call settlement, blocked cleanup, late completion fencing and idempotent ownership termination.
 
 The local provider controller adds executable installation handles and dependency reconciliation. `provider-lifecycle.test.ts` covers dependency order and restoration, explicit disable/retry, snapshots and listener isolation. `provider-contracts.test.ts` covers strict/relaxed admission, version/execution availability, custom-kind validation and cleanup, registered schema authority and prototype-shaped names. `provider-cancellation.test.ts` covers cancellation during setup and calls, dependency teardown and reentrant abort listeners. `provider-replacement.test.ts` and `provider-admission-transactions.test.ts` cover successor preflight, retained ownership during cleanup, disjoint admission and dependency-cycle checks across replacement generations.
+
+`provider-identity.test.ts` verifies immutable provider identity in setup, bindings and operation contexts, distinct backend incarnations under the same configured ID, and stale bindings rejecting after their original controller is disposed. It also checks that asynchronous input validation cannot observe a later mutation of the supplied provider identity.
 
 The maintained `examples/contribution` executes a real local service and action without a renderer, using separate public contract and provider entry points. Its five integration tests exercise successful calls, later dependency installation, visible setup failure, disable/dispose cleanup and validation before mutation. The demo imports built package exports and observes its actual subscription count reaching zero on disposal. This is a custom local realm; it is not a substitute for any DF/DT/CH/FF cell above.
 

@@ -14,6 +14,7 @@ import type { MemoryCounter } from './counter-source.js';
 export { MemoryCounter } from './counter-source.js';
 
 export const exampleExecution = defineExecution({ id: 'example.local-provider' });
+/** Stable host configuration; each backend owner supplies its own incarnation at startup. */
 export const exampleProvider = {
   id: 'example.provider',
   realm: defineRealm({ id: 'example.local' }),

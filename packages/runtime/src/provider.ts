@@ -1,4 +1,4 @@
-import { defineExecution, defineRealm, isOperationError } from '@devkit/core';
+import { defineExecution, isOperationError } from '@devkit/core';
 import type {
   ActionDescriptor,
   CapabilityDescriptor,
@@ -13,6 +13,7 @@ import { createAdmissionRegistry } from './admission.js';
 import type { Admission, StartupComposition } from './admission.js';
 import { operationError } from './errors.js';
 import { invokeAction, resolveLocal } from './provider-bindings.js';
+import { snapshotProvider } from './provider-identity.js';
 import { createInstallation, createInstallationHandle } from './provider-installations.js';
 import { singleComposition, snapshotComposition, validatePayloads } from './provider-preflight.js';
 import { createReconciliation } from './provider-reconciliation.js';
@@ -61,7 +62,7 @@ class ProviderController implements ProviderLifecycle {
   constructor(input: ProviderLifecycleOptions) {
     this.options = {
       ...input,
-      provider: Object.freeze({ id: input.provider.id, realm: defineRealm(input.provider.realm) }),
+      provider: snapshotProvider(input.provider),
       execution: defineExecution(input.execution),
     };
     this.registry = createAdmissionRegistry({

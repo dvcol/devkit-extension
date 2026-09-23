@@ -25,6 +25,8 @@ Definition creation does not run setup, handlers or schema validators. The provi
 
 Views, transforms and scripts currently have only their agreed common declaration envelope. Their domain adapters own exact fields, validation and activation. `definePlugin` checks their common ID, kind and execution while preserving those domain fields. Duplicate admission, service lifecycle, routing and schema execution belong to runtime/adapters, not this package.
 
+Provider descriptors carry a stable configured `id` and a mandatory opaque `incarnation` issued once by the adapter for each backend lifetime. Client reconnects and updates within that lifetime keep the same incarnation. A newly created backend receives a fresh one.
+
 Run package checks from the workspace root:
 
 ```sh
@@ -35,4 +37,4 @@ pnpm --filter @devkit/core test
 pnpm --filter @devkit/core build
 ```
 
-`tests/core.type-test.ts` compiles against the implementation and preserves the 25 accepted negative declaration fixtures. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
+`tests/core.type-test.ts` compiles against the implementation and preserves the 28 negative declaration fixtures. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.

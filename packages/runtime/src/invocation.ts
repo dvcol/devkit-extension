@@ -9,6 +9,7 @@ import type {
 } from '@devkit/core';
 
 import { operationError } from './errors.js';
+import { snapshotProvider } from './provider-identity.js';
 import { validateOriginal } from './validation.js';
 
 export interface LocalInvocationContext extends ContextMetadata {
@@ -32,10 +33,11 @@ export async function invokeLocalOperation(
   operation: OperationDefinition,
   input: unknown,
   options: LocalInvocationOptions,
-  context: LocalInvocationContext,
+  sourceContext: LocalInvocationContext,
   activationSignal: AbortSignal,
   handler: (value: unknown, context: LocalOperationContext) => unknown,
 ): Promise<unknown> {
+  const context = { ...sourceContext, provider: snapshotProvider(sourceContext.provider) };
   const target = options.target ? Object.freeze({ ...options.target }) : undefined;
   const signal = options.signal
     ? AbortSignal.any([activationSignal, options.signal])
