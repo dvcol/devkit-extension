@@ -47,3 +47,13 @@ Generated `dist`, coverage and the pnpm lockfile are excluded from formatting. T
 The implementation replaces direct legacy source-linter/formatter dependencies, configuration, staged hooks and CI callers. Oxlint rule IDs containing `eslint/` are built into Oxlint and do not mean ESLint is installed or invoked. Conventional-commit linting remains separate. The template's publishing and deployment workflows were removed because they targeted the former application; release automation is still owned by issue 16.
 
 Sources: [Oxlint configuration](https://oxc.rs/docs/guide/usage/linter/config.html), [type-aware linting](https://oxc.rs/docs/guide/usage/linter/type-aware.html), [Oxfmt configuration](https://oxc.rs/docs/guide/usage/formatter/config.html), [pnpm configuration migration](https://github.com/pnpm/pnpm.io/blob/main/docs/migration.md).
+
+## Packed consumer proof
+
+After building `@devkit/core` and `@devkit/runtime`, run `pnpm artifacts:test`. This checks only those two affected packages. CI runs it immediately after the workspace build.
+
+The script creates real tarballs with `pnpm pack`, installs them into a temporary directory outside the workspace, and removes that directory afterward. The unpublished core version is resolved through an explicit tarball override. Standard Schema remains the exact public dependency declared by the packages. Installation prefers cached dependencies, can fetch a missing public tarball, and disables lifecycle scripts.
+
+The installed manifests must contain the expected package names, exact Standard Schema version and rewritten runtime-to-core version. Their contents must include `dist` and omit repository source and tests. Two isolated consumer projects compile with TypeScript 7, strict checks and `skipLibCheck: false`, using Bundler and NodeNext resolution. An expected type error verifies that the emitted operation input type retains schema inference. Both emitted consumers execute real package imports, admission and release, validated invocation, cancellation and cleanup.
+
+A Vite browser build of the same consumer rejects external imports and any resolved module outside the consumer and the two installed `dist` directories. The core source map must refer only to its own portable source files, detecting inlined third-party code. The bundled consumer is then executed. This proves artifact resolution, declarations and this runtime scenario; it does not establish unimplemented host adapters, browser extension behavior or renderer conformance.
