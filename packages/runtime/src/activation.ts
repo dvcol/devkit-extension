@@ -21,6 +21,7 @@ export interface ActivationSnapshot {
 export interface Activation<Value> {
   start(setup: (scope: ActivationScope) => Awaitable<Value>): Promise<Value>;
   run<Result>(work: (value: Value, signal: AbortSignal) => Awaitable<Result>): Promise<Result>;
+  cancel(): void;
   stop(): Promise<void>;
   snapshot(): ActivationSnapshot;
 }
@@ -40,6 +41,7 @@ class ActivationController<Value> implements Activation<Value> {
   private setupFailure: { readonly error: unknown } | undefined;
   private cleanupFailure: { readonly error: unknown } | undefined;
   private failedSetup = false;
+  private cancellationRequested = false;
 
   start(setup: (scope: ActivationScope) => Awaitable<Value>): Promise<Value> {
     if (this.status !== 'idle') {
@@ -68,13 +70,22 @@ class ActivationController<Value> implements Activation<Value> {
     return this.completeWork(workPromise);
   }
 
+  /** Fence and cancel first; dependency owners can then order resource teardown explicitly. */
+  cancel(): void {
+    this.cancellationRequested = true;
+    if (this.status === 'idle' || this.status === 'starting' || this.status === 'active') {
+      this.status = 'stopping';
+    }
+    this.activationScope.cancel();
+  }
+
   stop(): Promise<void> {
     if (this.stopPromise !== undefined) return this.stopPromise;
 
     this.status = 'stopping';
     /** Publish the attempt before synchronous abort listeners can reenter stop. */
     this.stopPromise = Promise.resolve().then(() => this.completeStop());
-    this.activationScope.cancel();
+    this.cancel();
     return this.stopPromise;
   }
 
@@ -91,7 +102,7 @@ class ActivationController<Value> implements Activation<Value> {
       value = await setupPromise;
     } catch (error) {
       this.setupFailure = { error };
-      this.failedSetup = this.stopPromise === undefined;
+      this.failedSetup = !this.cancellationRequested && this.stopPromise === undefined;
       try {
         await this.stop();
       } catch (cleanupError) {

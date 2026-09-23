@@ -6,3 +6,9 @@ export type { LocalInvocationContext, LocalInvocationOptions } from './invocatio
 export { createActivationScope } from './scope.js';
 export { createActivation } from './activation.js';
 export type { Activation, ActivationSnapshot, ActivationStatus } from './activation.js';
+export { createProviderLifecycle } from './provider.js';
+export type {
+  ProviderLifecycle,
+  ProviderLifecycleOptions,
+  StartupInstallationResult,
+} from './provider.js';
