@@ -48,4 +48,17 @@ The local provider controller adds executable installation handles and dependenc
 
 The maintained `examples/contribution` executes a real local service and action without a renderer, using separate public contract and provider entry points. Its five integration tests exercise successful calls, later dependency installation, visible setup failure, disable/dispose cleanup and validation before mutation. The demo imports built package exports and observes its actual subscription count reaching zero on disposal. This is a custom local realm; it is not a substitute for any DF/DT/CH/FF cell above.
 
+The maintained [`examples/server-contexts`](../../examples/server-contexts/README.md) reuses the same public descriptors with real Devframe hub and DevTools kit contexts. Its executable check consumes built exports. The 11 integration tests in [`packages/server/tests`](../../packages/server/tests) provide the additional adapter assertions below.
+
+| Implemented API | Example and automated evidence | Proven scope |
+| --- | --- | --- |
+| `installDevframeProvider`, `installDevToolsProvider`, `ServerComposition` | Both server demos; server integration and ownership tests | Genuine local contexts; strict/relaxed startup, ordered handles and one installation per context |
+| `serverRealm`, `serverExecution`, native context descriptors | Both server demos; server integration tests | Shared devserver realm; actual layered native objects; kit absent for hub installer; no fabricated Vite server |
+| `ServerProviderHandle.resolve` / `.invoke` | Both demos and executable check; server integration tests | Same portable action/capability descriptors; real native shared state; local validated calls |
+| `.services`, `.plugins`, `.startup` | Both demos; integration and ownership tests | Dynamic installation, waiting action, disable/enable, replacement, failed setup and observable cleanup failure |
+| Custom kinds and diagnostic sink | Server extension integration tests | Actual native command registration/disposal; local causes and default warning output |
+| `.dispose()` and incarnation | Both demos; ownership tests | Retained host state, removed owned commands, unrelated commands/HTTP survive, fresh incarnation after successful reinstall, failed cleanup blocks replacement |
+
+This table records headless local server integration only. It does not mark full DF/DT host cells complete: Vite lifecycle, remote transport, authentication, browser UI and reload evidence remain outstanding. No Chromium/Firefox extension cell is satisfied by these tests.
+
 Provider routing, state, transport, real-host lifecycle and the complete API-to-example catalogue remain required. View, script and transform entries still need domain-specific implementation. Do not infer supported host cells from these local controller tests.

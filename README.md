@@ -24,6 +24,17 @@ pnpm --filter @devkit/example-contribution run demo
 
 The [core proof matrix](./docs/contracts/CORE-API-MATRIX.md) records local evidence and the remaining host obligations. A passing local lifecycle example does not complete the Devframe, DevTools, Chromium or Firefox integrations.
 
+The [headless server examples](./examples/server-contexts/README.md) reuse those same contracts in genuine Devframe hub and DevTools kit contexts through [`@devkit/server`](./packages/server/README.md). Both execute actions against native shared state, disable and re-enable their service, and dispose owned commands while retaining host state. They use built public package exports and open no network listener.
+
+```sh
+pnpm --filter @devkit/example-server-contexts... run build
+pnpm --filter @devkit/example-server-contexts run demo:devframe
+pnpm --filter @devkit/example-server-contexts run demo:devtools
+pnpm --filter @devkit/example-server-contexts run test
+```
+
+These examples establish local native-context integration. Remote routing, Vite lifecycle integration, the DevTools shell, JSON rendering and WebExtension hosts remain outstanding.
+
 Oxlint checks correctness, suspicious and pedantic rules as errors, plus explicit TypeScript, imports, promises and test rules. Type-aware linting is enabled. Warnings fail checks. Oxfmt controls formatting, and `format:check` fails on drift. See [tooling conventions](./docs/TOOLING.md) for the enforced rules, documented exceptions and review obligations.
 
 ```sh
