@@ -35,3 +35,9 @@ Host codes: **DF** standalone Devframe, **DT** Vite DevTools, **CH** Chromium ex
 - `contracts/negative`: exact missing/wrong implementations, version-less definitions, missing targets, undeclared dependencies, incorrect custom-kind payloads, unknown plugin properties and remote-native access are compiler errors.
 
 View, script, transform, state, debugger and native adapter-specific helpers/hooks receive additional rows from their domain tickets before implementation admission. The matrix cannot count a declaration-only type check or browser mock as a successful real-host runtime cell.
+
+## Local implementation evidence
+
+The maintained `packages/core` source implements the 61 reviewed exports. Its 12 runtime functions are tested in `packages/core/tests/definitions.test.ts`, `invalid-definitions.test.ts`, `snapshots.test.ts` and `errors.test.ts`; the 25 negative compile fixtures live in `packages/core/tests/core.type-test.ts`. Consult actual package files for the current test inventory. These are local contract checks, not four-host conformance.
+
+`packages/runtime/tests/admission.test.ts` exercises whole-batch rollback, service duplicate strictness, exact versions, waiting-service cycles, unknown kinds and mutable-alias isolation. `invocation.test.ts` exercises guard-only schema validation, targets, cancellation, errors and target capture across asynchronous validation. `scope.test.ts` and `activation.test.ts` exercise reverse cleanup, in-progress setup/call settlement, blocked cleanup, late completion fencing and idempotent ownership termination. Provider installation handles, dependency reconciliation, routing, state, transport and real-host lifecycle proof remain required.

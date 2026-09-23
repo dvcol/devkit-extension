@@ -1,0 +1,29 @@
+{
+  "name": "@devkit/core",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
+    "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@standard-schema/spec": "1.1.0"
+  },
+  "devDependencies": {
+    "zod": "4.6.5"
+  }
+}

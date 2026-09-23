@@ -1,6 +1,6 @@
 # Core declaration specification
 
-`core.d.ts` specifies the accepted core API. It contains ambient declarations only. There is no runtime package to import or execute yet. The generic registration bases erase callback argument types only when collecting heterogeneous definitions; the factories retain exact capability, action and dependency types.
+`core.d.ts` specifies the accepted core API. It contains ambient declarations only. This archived fixture remains declaration-only; the maintained implementation and equivalent type fixtures now live in [packages/core](../../packages/core/README.md), with [adapter runtime internals](../../packages/runtime/README.md) progressing separately. Complete host adapters are still outstanding. The generic registration bases erase callback argument types only when collecting heterogeneous definitions; the factories retain exact capability, action and dependency types.
 
 `core.type-test.ts` checks positive factory inference and expected compiler errors. `tsconfig.json` enables strict checking with declaration checking retained. Zod appears only as a test validator; the declaration contract depends on Standard Schema types alone. View, script and transform entries retain common metadata here; their complete kind-specific contracts belong to their domain tickets.
 

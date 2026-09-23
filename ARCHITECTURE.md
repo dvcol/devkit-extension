@@ -1,6 +1,6 @@
 # Portable contribution architecture
 
-This is the canonical core architecture settled through the owner review of [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5). [GLOSSARY.md](./GLOSSARY.md) defines the vocabulary. [Core declarations](./docs/contracts/core.d.ts) express the declaration and lifecycle interfaces; they are a specification, not a shipped runtime package.
+This is the canonical core architecture settled through the owner review of [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5). [GLOSSARY.md](./GLOSSARY.md) defines the vocabulary. [Core declarations](./docs/contracts/core.d.ts) preserve the reviewed API specification. [The core package](./packages/core/README.md) implements its shared types and inert declaration factories. [Private adapter runtime internals](./packages/runtime/README.md) implement admission, guarded invocation and generation ownership. Complete provider adapters and host conformance remain in progress.
 
 The core decisions are settled. The linked domain tickets still own the exact server, routing, state, security, debugger, injection, renderer and reload integrations. Settling this document does not claim those implementations or their real-host tests exist.
 
@@ -10,7 +10,7 @@ Build a generic, modular client and contribution ecosystem shared by browser ext
 
 Executable contributions are assembled from packaged code at build time. Startup and later installation accept the same definitions; runtime installation does not mean downloading executable plugins. Public authoring is framework-neutral. Renderer implementations can use a framework and remain replaceable.
 
-The eventual monorepo uses pnpm/Turbo, Vite/Oxc, strict Oxlint rules and enforced Oxfmt formatting, with the audited TypeScript 7 pipeline subject to package/declaration compatibility checks. Migrating packages, configurations, scripts, staged-file hooks and CI away from ESLint, Stylelint and Prettier is a required foundation step before SDK implementation is admitted. [Tooling migration gates](./docs/planning/016-tooling-migration.md) define completion; default-rule feasibility probes do not satisfy this requirement. Chromium and Firefox are the initial browser hosts. Development HMR and watched production builds with live preview have separate, explicit update/restart/reload behavior. Existing scaffolding may be replaced as implementation proceeds.
+The monorepo uses pnpm/Turbo, Vite/Oxc, strict type-aware Oxlint and enforced Oxfmt formatting with TypeScript 7. The old frontend scaffold and active ESLint, Stylelint and Prettier integrations have been replaced. [Tooling conventions](./docs/TOOLING.md) record enforced checks and narrow exceptions; [migration gates](./docs/planning/016-tooling-migration.md) retain the required acceptance criteria. Default-rule feasibility probes do not satisfy these gates. Chromium and Firefox are the initial browser hosts. Development HMR and watched production builds with live preview have separate, explicit update/restart/reload behavior.
 
 ## Contracts, contributions and plugins
 
