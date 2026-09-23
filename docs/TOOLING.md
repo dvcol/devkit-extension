@@ -38,6 +38,8 @@ The old Vue UI, its CSS and its Stylelint rules were removed. Future renderer an
 
 `docs/probes/**` and `docs/contracts/**` are preserved research artifacts, not maintained workspace packages. Their exact executed files have their own recorded validation and are excluded from the new lint and formatting gates. `docs/planning/**` retains historical review formatting. Canonical architecture and glossary documents, new maintained documentation, packages and examples use Oxfmt.
 
+The consolidated initial audits also retain exact evidence under `docs/research/*-evidence/**`, plus `browser-capabilities-experiment.mjs` and `browser-capabilities-results.json` in that directory. These archived sources, dependency locks and execution receipts keep their recorded bytes and validation instead of passing through current source gates. The research reports alongside them remain formatted. All maintained packages and examples continue to use the strict checks.
+
 Generated `dist`, coverage and the pnpm lockfile are excluded from formatting. The lockfile is produced and checked by pnpm, not reformatted by a separate tool. Generated bundles and coverage are excluded from lint. No maintained package or example is excluded wholesale. Promoting a research probe to an example requires moving it into `examples/*`, applying the shared toolchain and rerunning its proof.
 
 ## Enforcement proof

@@ -13,6 +13,9 @@
     "pnpm-lock.yaml",
     "docs/probes/**",
     "docs/contracts/**",
-    "docs/planning/**"
+    "docs/planning/**",
+    "docs/research/*-evidence/**",
+    "docs/research/browser-capabilities-experiment.mjs",
+    "docs/research/browser-capabilities-results.json"
   ]
 }

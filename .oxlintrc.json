@@ -11,7 +11,14 @@
     "maxWarnings": 0,
     "reportUnusedDisableDirectives": "error"
   },
-  "ignorePatterns": ["**/dist/**", "**/coverage/**", "docs/probes/**", "docs/contracts/**"],
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/coverage/**",
+    "docs/probes/**",
+    "docs/contracts/**",
+    "docs/research/*-evidence/**",
+    "docs/research/browser-capabilities-experiment.mjs"
+  ],
   "rules": {
     "typescript/no-explicit-any": "error",
     "typescript/consistent-type-imports": "error",
