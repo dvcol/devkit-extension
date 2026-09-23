@@ -1,0 +1,53 @@
+{
+  "startedAt": "2026-09-22T23:52:49.858Z",
+  "passed": true,
+  "nodeVersion": "v26.9.0",
+  "packages": {
+    "devframe": "1.0.0",
+    "@devframes/hub": "1.0.0",
+    "vite": "8.3.0"
+  },
+  "observations": {
+    "hostMode": "dev",
+    "origin": "http://127.0.0.1:63577",
+    "metadata": {
+      "backend": "websocket",
+      "websocket": {
+        "path": "/__probe/__ws"
+      }
+    },
+    "upgradeListenersBefore": 0,
+    "upgradeListenersAttached": 1,
+    "handlerCalls": 1,
+    "browserStarted": {
+      "transport": "websocket",
+      "initialState": 0,
+      "actionReturn": 7,
+      "actionFailureRejected": true,
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+    },
+    "browserLive": {
+      "stateValues": [
+        7,
+        11
+      ]
+    },
+    "pendingCallAfterHubClose": {
+      "pendingStatus": "rejected",
+      "errorKind": "connection",
+      "errorMessage": "[devframe] Disconnected from the devframe server",
+      "stateValues": [
+        7,
+        11
+      ],
+      "connectionStatus": "disconnected"
+    },
+    "upgradeListenersAfterDetach": 0,
+    "previewSurvivedHubClose": true,
+    "metadataRouteDisabled": true,
+    "closedClientStatus": "disconnected",
+    "previewStopped": true
+  },
+  "errors": [],
+  "finishedAt": "2026-09-22T23:53:17.402Z"
+}
