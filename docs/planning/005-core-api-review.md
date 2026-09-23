@@ -1,5 +1,7 @@
 # Consolidated core API review
 
+Historical review packet. The owner accepted Q20–24 on 2026-09-23. The canonical [architecture](../../ARCHITECTURE.md), [glossary](../../GLOSSARY.md) and [declaration specification](../contracts/core.d.ts) supersede this proposal; the [decision ledger](./005-decisions.md#interview-round-5-owner-decisions) preserves the answers.
+
 Review packet for [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5), following interview rounds 1 through 4. The [decision ledger](./005-decisions.md) records accepted choices. This packet consolidates their consequences and labels the remaining choices; it is not an implemented SDK or the final architecture document.
 
 Earlier packets contain superseded alternatives, including mixed built-in contribution arrays, generic plugin-entry wrappers, portable raw-object `provide`, pointer-identity exceptions and shared installation leases. Those are absent from this proposal.

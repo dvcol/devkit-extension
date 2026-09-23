@@ -108,6 +108,18 @@ Q17 also fixes a typing constraint: public handler inputs and successful return 
 
 Capability restoration and setup retry remain separate triggers. Normal readiness loss can end an activation and later recreate it; a thrown setup error must not enter an automatic retry loop merely because its dependencies remain available. A permission or target error from one operation does not by itself remove a provider-wide service registration.
 
+## Interview round 5: owner decisions
+
+| Question | Owner answer | Accepted consequence |
+| --- | --- | --- |
+| Q20: Strict admission boundary | A | Reject the whole invalid incoming batch before setup; previously running installations remain intact. |
+| Q21: Multiple contract versions | Yes, with mandatory contracts | Service slots include provider, capability ID and exact numeric version. Every implementation must declare its contract; multiple explicit versions can coexist. |
+| Q22: Individual call result | Agreed | Ordinary operations return `Promise<Value>` and reject with runtime-classified portable errors. Broadcast retains per-provider outcomes in its routing contract. |
+| Q23: Target placement | Agreed | Validated target lives in common invocation options and handler context, separate from the business payload. Operations declare required or absent target. |
+| Q24: Cleanup failure | Agreed | Block replacement until cleanup completes or a verified adapter reset proves the old execution ended. A timeout does not authorize overlapping owners. |
+
+These answers complete the core interview. The owner has already authorized continuing implementation and the map once the architecture settles, until another material decision requires input. [GLOSSARY.md](../../GLOSSARY.md), [ARCHITECTURE.md](../../ARCHITECTURE.md), [declarations](../contracts/core.d.ts) and the [proof matrix](../contracts/CORE-API-MATRIX.md) now consolidate the accepted contract. The [compile-only fixtures](../contracts/core.type-test.ts) pass TypeScript 7 strict checking with declaration checking enabled and strict Oxlint categories.
+
 ## Correction to the earlier implementation-selection question
 
 The previous question conflated two decisions:
@@ -142,10 +154,10 @@ Adding a realm requires an exported descriptor and an adapter/integration that a
 
 [Provider discovery and routing](https://github.com/dvcol/devkit-extension/issues/7) already owns detailed selection, ambiguity, cancellation, broadcast and reconnect behavior. The current contribution contract must expose compatible definition/context integration points rather than settle that ticket implicitly.
 
-The [consolidated core API review](./005-core-api-review.md) carries the remaining declaration and lifecycle choices. It must settle startup admission failure, the scope of service conflict identity, caller error handling and replacement after cleanup failure. It also makes the proposed schema typing, local/remote context access, installation observation and dependency ownership concrete.
+The [consolidated core API review](./005-core-api-review.md) is a historical review packet. Q20–24 above resolve its remaining core choices. The canonical architecture fixes admission, exact-version service identity, caller errors, targets, binding affinity and replacement ownership.
 
-The routing ticket retains detailed policy resolution, dispatch races and outcomes. Domain-specific signatures remain owned by their named map tickets; they must be explicit dependencies before implementation admission. Accepted answers must be consolidated into the canonical architecture documents once the core review is complete.
+The routing ticket retains detailed selection policy, dispatch races, cancellation and outcomes. State, permissions, renderer, injection, debugger and reload signatures remain owned by their named map tickets. Those contracts are explicit dependencies before their implementation work begins.
 
 ## Status
 
-The contract remains open. No SDK runtime, canonical architecture declaration or routing implementation is delivered by this decision ledger. Simplified duplicate handling, shared strictness, guard-only Standard Schema validation, conditional JSON Schema export and automatic capability-restoration activation are accepted. The consolidated core API review precedes the canonical glossary and architecture documents.
+Core architecture and declaration decisions are settled. The canonical glossary, architecture, declaration specification and example/test obligations are available. No SDK runtime or real-host conformance is claimed by these artifacts.
