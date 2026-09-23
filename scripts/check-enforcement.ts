@@ -31,6 +31,7 @@ async function lintFixture(
     '.oxlintrc.json',
     '--deny-warnings',
     '--no-ignore',
+    '--format=json',
     ...additionalArguments,
     fixturePath,
   ]);
@@ -49,7 +50,8 @@ async function verifyLintGates() {
     'eqeqeq',
   ]);
   assert.notEqual(warning.status, 0, 'A warning unexpectedly passed the deny-warnings gate.');
-  assert.match(warning.output, /warning eslint\(eqeqeq\)/u);
+  assert.match(warning.output, /"severity":\s*"warning"/u);
+  assert.match(warning.output, /"code":\s*"eslint\(eqeqeq\)"/u);
 
   const floating = await lintFixture('floating', 'Promise.resolve(42);\nexport {};\n');
   assert.notEqual(floating.status, 0, 'The type-aware rule unexpectedly passed.');
