@@ -1,0 +1,27 @@
+
+ RUN  v5.0.1 <PROBE_ROOT>
+
+ ❯ probe.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  probe.test.ts [ probe.test.ts ]
+Error: Transform failed with 1 error:
+
+[TSCONFIG_ERROR] Failed to load tsconfig '@tsconfig/node24/tsconfig.json': Tsconfig not found
+
+  Plugin: vite:oxc
+  File: <PROBE_ROOT>/probe.test.ts
+ ❯ transformWithOxc node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:7208:19
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:7280:26
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:8172:51
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:19634:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  22:31:33
+   Duration  179ms (worker 96%, environment 4%)
+

@@ -1,0 +1,14 @@
+{
+  "name": "@probe/example",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@probe/sdk": "workspace:*"
+  },
+  "scripts": {
+    "test": "vitest run --config vitest.config.ts",
+    "build": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "lint": "oxlint --type-aware --type-check --deny-warnings --report-unused-disable-directives example.test.ts"
+  }
+}

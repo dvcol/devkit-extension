@@ -1,0 +1,62 @@
+
+   • Packages in scope: @probe/example
+   • Running test in 1 package
+   • Remote caching disabled, using shared worktree cache
+
+@probe/sdk:build: cache hit, replaying logs 23aa8c55b8c18f38
+@probe/sdk:build: $ tsc --build tsconfig.json && vite build
+@probe/sdk:build: vite v8.3.0 building client environment for production...
+@probe/sdk:build: transforming...
+@probe/sdk:build: ✓ 3 modules transformed.
+@probe/sdk:build: rendering chunks...
+@probe/sdk:build: computing gzip size...
+@probe/sdk:build: dist/index.js  0.10 kB │ gzip: 0.10 kB
+@probe/sdk:build: dist/node.js   0.13 kB │ gzip: 0.12 kB
+@probe/sdk:build:
+@probe/sdk:build: ✓ built in 8ms
+@probe/example:test: cache bypass, force executing 7c5de167b6f09652
+@probe/example:test: $ vitest run --config vitest.config.ts
+@probe/example:test:
+@probe/example:test:  RUN  v5.0.1 <PROBE_ROOT>/fixtures/example
+@probe/example:test:
+@probe/example:test:  ❯ example.test.ts (2 tests | 1 failed) 4ms
+@probe/example:test:    × keeps the contribution identity and value 3ms
+@probe/example:test:    ✓ covers each declared fixture feature 0ms
+@probe/example:test:
+@probe/example:test: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+@probe/example:test:
+@probe/example:test:  FAIL  example.test.ts > keeps the contribution identity and value
+@probe/example:test: AssertionError: expected 7 to be 8 // Object.is equality
+@probe/example:test:
+@probe/example:test: - Expected
+@probe/example:test: + Received
+@probe/example:test:
+@probe/example:test: - 8
+@probe/example:test: + 7
+@probe/example:test:
+@probe/example:test:  ❯ example.test.ts:7:30
+@probe/example:test:       5|   const contribution = defineContribution({ id: 'example:probe', value…
+@probe/example:test:       6|   expect(contribution.id).toBe('example:probe');
+@probe/example:test:       7|   expect(contribution.value).toBe(8);
+@probe/example:test:        |                              ^
+@probe/example:test:       8| });
+@probe/example:test:       9|
+@probe/example:test:
+@probe/example:test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+@probe/example:test:
+@probe/example:test:
+@probe/example:test:  Test Files  1 failed (1)
+@probe/example:test:       Tests  1 failed | 1 passed (2)
+@probe/example:test:    Start at  23:18:46
+@probe/example:test:    Duration  128ms (transform 50%, import 23%, tests 19%, worker 8%)
+@probe/example:test:
+@probe/example:test: [ELIFECYCLE] Test failed. See above for more details.
+
+ Tasks:    1 successful, 2 total
+Cached:    1 cached, 2 total
+  Time:    438ms
+Failed:    @probe/example#test
+
+• turbo 2.11.2
+@probe/example#test:  ERROR  command (<PROBE_ROOT>/fixtures/example) /opt/homebrew/bin/pnpm run test exited (1)
+ ERROR  run failed: command  exited (1)

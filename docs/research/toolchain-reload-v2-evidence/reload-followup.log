@@ -1,0 +1,129 @@
+✔ Started dev server @ http://localhost:39373
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+
+⠋ Preparing...
+⠋ [1/3] background, devtools, options, popup, sidepanel
+⠋ [2/3] main-world
+⠋ [3/3] probe
+
+✔ Built extension in 83 ms
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/manifest.json                       1.24 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/devtools.html                       480 B
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/options.html                        480 B
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/popup.html                          480 B
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/sidepanel.html                      480 B
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/background.js                       11.37 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/background.js.map                   11.44 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/chunks/reload-html-Cdi8sg27.js      3.16 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/chunks/reload-html-Cdi8sg27.js.map  3.82 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/content-scripts/probe.js            13.05 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/content-scripts/probe.js.map        18.96 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/main-world.js                       1.59 kB
+  └─ fixtures/wxt/.output/chrome-mv3-dev/main-world.js.map                   936 B
+Σ Total size: 67.48 kB
+ℹ Load "fixtures/wxt/.output/chrome-mv3-dev" as an unpacked extension manually
+ℹ Changed: ../../shared/content-version.ts
+
+⠋ Preparing...
+⠋ [1/1] probe
+
+✔ Reloaded: probe
+ℹ Changed: entrypoints/background.ts
+
+⠋ Preparing...
+⠋ [1/1] background, devtools, options, popup, sidepanel
+
+✔ Reloaded extension
+ℹ Config changed, restarting server...
+✔ Started dev server @ http://localhost:39373
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+
+⠋ Preparing...
+⠋ [1/3] background, devtools, options, popup, sidepanel
+⠋ [2/3] main-world
+⠋ [3/3] probe
+
+✔ Built extension in 36 ms
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/manifest.json                       1.24 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/devtools.html                       480 B
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/options.html                        480 B
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/popup.html                          480 B
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/sidepanel.html                      480 B
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/background.js                       11.37 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/background.js.map                   11.44 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/chunks/reload-html-Cdi8sg27.js      3.16 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/chunks/reload-html-Cdi8sg27.js.map  3.82 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/content-scripts/probe.js            13.05 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/content-scripts/probe.js.map        18.96 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/main-world.js                       1.59 kB
+  └─ fixtures/wxt/.output/chrome-mv3-dev/main-world.js.map                   936 B
+Σ Total size: 67.48 kB
+ℹ Load "fixtures/wxt/.output/chrome-mv3-dev" as an unpacked extension manually
+✔ Started dev server @ http://localhost:39373
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+
+⠋ Preparing...
+⠋ [1/3] background, devtools, options, popup, sidepanel
+⠋ [2/3] main-world
+⠋ [3/3] probe
+
+✔ Built extension in 43 ms
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/manifest.json                       1.24 kB
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/devtools.html                       480 B
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/options.html                        480 B
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/popup.html                          480 B
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/sidepanel.html                      480 B
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/background.js                       11.37 kB
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/background.js.map                   11.44 kB
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/chunks/reload-html-Cdi8sg27.js      3.16 kB
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/chunks/reload-html-Cdi8sg27.js.map  3.82 kB
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/content-scripts/probe.js            13.05 kB
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/content-scripts/probe.js.map        18.96 kB
+  ├─ fixtures/wxt/.output/firefox-mv3-dev/main-world.js                       1.59 kB
+  └─ fixtures/wxt/.output/firefox-mv3-dev/main-world.js.map                   936 B
+Σ Total size: 67.48 kB
+ℹ Load "fixtures/wxt/.output/firefox-mv3-dev" as an unpacked extension manually
+Running web extension from <PROBE_ROOT>/fixtures/wxt/.output/firefox-mv3-dev
+Use --verbose or --devtools to see logging
+Installed <PROBE_ROOT>/fixtures/wxt/.output/firefox-mv3-dev as a temporary add-on
+Automatic extension reloading has been disabled
+ℹ Changed: ../../shared/content-version.ts
+
+⠋ Preparing...
+⠋ [1/1] probe
+
+✔ Reloaded: probe
+ℹ Changed: entrypoints/background.ts
+
+⠋ Preparing...
+⠋ [1/1] background, devtools, options, popup, sidepanel
+
+✔ Reloaded extension
+🧪 [toolchain] observations [
+  {
+    candidate: 'wxt',
+    browserName: 'chrome',
+    mode: 'development',
+    steps: [
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object]
+    ]
+  },
+  {
+    candidate: 'wxt',
+    browserName: 'firefox',
+    mode: 'development',
+    steps: [
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object]
+    ]
+  }
+]

@@ -1,0 +1,47 @@
+• turbo 2.11.2
+
+   • Packages in scope: @probe/example, @probe/sdk
+   • Running build, check-types, lint, test in 2 packages
+   • Remote caching disabled, using shared worktree cache
+
+@probe/sdk:check-types: cache hit, replaying logs 5ad869ae6dbfe76c
+@probe/sdk:check-types: $ tsc --build tsconfig.json
+@probe/sdk:lint: cache hit, replaying logs 368ca902a0297a40
+@probe/sdk:lint: $ oxlint --type-aware --type-check --deny-warnings --report-unused-disable-directives src
+@probe/sdk:lint: Found 0 warnings and 0 errors.
+@probe/sdk:lint: Finished in 120ms on 2 files with 154 rules using 11 threads.
+@probe/sdk:build: cache hit, replaying logs 23aa8c55b8c18f38
+@probe/sdk:build: $ tsc --build tsconfig.json && vite build
+@probe/sdk:build: vite v8.3.0 building client environment for production...
+@probe/sdk:build: transforming...
+@probe/sdk:build: ✓ 3 modules transformed.
+@probe/sdk:build: rendering chunks...
+@probe/sdk:build: computing gzip size...
+@probe/sdk:build: dist/index.js  0.10 kB │ gzip: 0.10 kB
+@probe/sdk:build: dist/node.js   0.13 kB │ gzip: 0.12 kB
+@probe/sdk:build:
+@probe/sdk:build: ✓ built in 8ms
+@probe/example:lint: cache miss, executing 47e39f3c811e575c
+@probe/example:lint: $ oxlint --type-aware --type-check --deny-warnings --report-unused-disable-directives example.test.ts
+@probe/example:lint: Found 0 warnings and 0 errors.
+@probe/example:lint: Finished in 145ms on 1 file with 146 rules using 11 threads.
+@probe/example:test: cache bypass, force executing c42db3a8b8d3ade3
+@probe/example:test: $ vitest run --config vitest.config.ts
+@probe/example:test:
+@probe/example:test:  RUN  v5.0.1 <PROBE_ROOT>/fixtures/example
+@probe/example:test:
+@probe/example:test:  ✓ example.test.ts (2 tests) 2ms
+@probe/example:test:
+@probe/example:test:  Test Files  1 passed (1)
+@probe/example:test:       Tests  2 passed (2)
+@probe/example:test:    Start at  23:17:33
+@probe/example:test:    Duration  132ms (transform 54%, import 28%, worker 9%, tests 9%)
+@probe/example:test:
+@probe/example:build: cache miss, executing e40b960d072d450e
+@probe/example:build: $ tsc --noEmit
+@probe/example:check-types: cache miss, executing 1c0014a113a9b83b
+@probe/example:check-types: $ tsc --noEmit
+
+ Tasks:    7 successful, 7 total
+Cached:    3 cached, 7 total
+  Time:    1.396s

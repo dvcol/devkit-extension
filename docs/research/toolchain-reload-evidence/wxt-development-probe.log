@@ -1,0 +1,27 @@
+✔ Started dev server @ http://localhost:39271 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+
+⠋ Preparing...
+⠋ [1/2] background, devtools, options, popup, sidepanel
+⠙ [1/2] background, devtools, options, popup, sidepanel
+⠙ [2/2] probe
+
+✔ Built extension in 225 ms
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/manifest.json                   1.15 kB 
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/devtools.html                   412 B   
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/options.html                    411 B   
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/popup.html                      409 B   
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/sidepanel.html                  413 B   
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/background.js                   22.45 kB
+  ├─ fixtures/wxt/.output/chrome-mv3-dev/chunks/reload-html-EEOtgEWt.js  8.27 kB 
+  └─ fixtures/wxt/.output/chrome-mv3-dev/content-scripts/probe.js        31.75 kB
+Σ Total size: 65.25 kB                                                 
+ℹ Load "fixtures/wxt/.output/chrome-mv3-dev" as an unpacked extension manually
+{
+  "extensionPageHmr": {
+    "initialTimeOrigin": 1790084250483,
+    "updatedTimeOrigin": 1790084250483,
+    "currentUrl": "chrome-extension://hkmbfedimkliolfpnhbdpmmaompmcihp/popup.html",
+    "text": "background-ready:updated"
+  }
+}

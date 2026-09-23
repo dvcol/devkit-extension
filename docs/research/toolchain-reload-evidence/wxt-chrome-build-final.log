@@ -1,0 +1,20 @@
+
+WXT 0.21.4
+ℹ Building chrome-mv3 for production with Vite 8.3.0
+
+⠋ Preparing...
+⠋ [1/2] background, devtools, options, popup, sidepanel
+⠋ [2/2] probe
+
+✔ Built extension in 117 ms
+  ├─ fixtures/wxt/.output/chrome-mv3/manifest.json                            553 B  
+  ├─ fixtures/wxt/.output/chrome-mv3/devtools.html                            261 B  
+  ├─ fixtures/wxt/.output/chrome-mv3/options.html                             260 B  
+  ├─ fixtures/wxt/.output/chrome-mv3/popup.html                               258 B  
+  ├─ fixtures/wxt/.output/chrome-mv3/sidepanel.html                           262 B  
+  ├─ fixtures/wxt/.output/chrome-mv3/background.js                            602 B  
+  ├─ fixtures/wxt/.output/chrome-mv3/chunks/_virtual_wxt-plugins-DBMiDRPA.js  106 B  
+  ├─ fixtures/wxt/.output/chrome-mv3/chunks/page-BavTmPI_.js                  829 B  
+  └─ fixtures/wxt/.output/chrome-mv3/content-scripts/probe.js                 3.56 kB
+Σ Total size: 6.70 kB                                                       
+✔ Finished in 397 ms

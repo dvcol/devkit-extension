@@ -1,0 +1,77 @@
+[
+  {
+    "name": "turbo-negative-test",
+    "exit": 1,
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/turbo",
+      "run",
+      "test",
+      "--filter=@probe/example",
+      "--concurrency=1"
+    ]
+  },
+  {
+    "name": "turbo-negative-inventory",
+    "exit": 1,
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/turbo",
+      "run",
+      "test",
+      "--filter=@probe/example",
+      "--concurrency=1"
+    ]
+  },
+  {
+    "name": "turbo-restored",
+    "exit": 0,
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/turbo",
+      "run",
+      "test",
+      "--filter=@probe/example",
+      "--concurrency=1"
+    ]
+  },
+  {
+    "name": "packed-sdk",
+    "exit": 0,
+    "command": [
+      "/opt/homebrew/bin/pnpm",
+      "pack",
+      "--pack-destination",
+      "<RESEARCH_ROOT>/artifacts"
+    ]
+  },
+  {
+    "name": "standalone-install",
+    "exit": 0,
+    "command": [
+      "/opt/homebrew/bin/pnpm",
+      "--registry=https://registry.npmjs.org",
+      "--npmrc-auth-file=.npmrc",
+      "install",
+      "--ignore-scripts"
+    ]
+  },
+  {
+    "name": "standalone-types",
+    "exit": 0,
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/tsc",
+      "--project",
+      "tsconfig.json",
+      "--pretty",
+      "false"
+    ]
+  },
+  {
+    "name": "standalone-runtime",
+    "exit": 0,
+    "command": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import assert from 'node:assert/strict';import {defineContribution} from '@probe/sdk';assert.deepEqual(defineContribution({id:'standalone',value:7}),{id:'standalone',value:7});console.info('packed export runtime passed')"
+    ]
+  }
+]

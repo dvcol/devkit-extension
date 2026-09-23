@@ -1,0 +1,47 @@
+• turbo 2.11.2
+ WARNING  Unable to calculate transitive closures: Workspace 'fixtures/consumer' not found in lockfile.
+
+   • Packages in scope: //
+   • Running //#probe in 1 package
+   • Remote caching disabled, using shared worktree cache
+
+//:probe: cache bypass, force executing 4bf92501e248453b
+//:probe: Scope: all 5 workspace projects
+//:probe: ? Verifying lockfile against supply-chain policies (527 entries)...
+//:probe: [WARN] GET https://registry.npmjs.org/@types/node/-/node-26.6.2.tgz error (Failed to fetch https://registry.npmjs.org/@types/node/-/node-26.6.2.tgz: error sending request: client error (Connect): dns error: failed to lookup address information: nodename nor servname provided, or not known) — 1
+//:probe: Will retry in 10s. 1 retries left.
+//:probe: [WARN] GET https://registry.npmjs.org/wxt/-/wxt-0.21.4.tgz error (Failed to fetch https://registry.npmjs.org/wxt/-/wxt-0.21.4.tgz: error sending request: client error (Connect): dns error: failed to lookup address information: nodename nor servname provided, or not known) — 1
+//:probe: Will retry in 10s. 1 retries left.
+//:probe: [WARN] GET https://registry.npmjs.org/web-ext/-/web-ext-10.7.0.tgz error (Failed to fetch https://registry.npmjs.org/web-ext/-/web-ext-10.7.0.tgz: error sending request: client error (Connect): dns error: failed to lookup address information: nodename nor servname provided, or not known) — 1
+//:probe: Will retry in 10s. 1 retries left.
+//:probe: [WARN] GET https://registry.npmjs.org/undici-types/-/undici-types-8.9.0.tgz error (Failed to fetch https://registry.npmjs.org/undici-types/-/undici-types-8.9.0.tgz: error sending request: client error (Connect): dns error: failed to lookup address information: nodename nor servname provided, or not known) — 1
+//:probe: Will retry in 10s. 1 retries left.
+[Evidence excerpt: omitted 2635 repeated dependency-fetch failure lines.]
+//:probe: [WARN] GET https://registry.npmjs.org/rolldown/-/rolldown-1.2.9.tgz error (Failed to fetch https://registry.npmjs.org/rolldown/-/rolldown-1.2.9.tgz: error sending request: client error (Connect): dns error: failed to lookup address information: nodename nor servname provided, or not known) — 1
+//:probe: Will retry in 10s. 1 retries left.
+//:probe: [WARN] GET https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz error (Failed to fetch https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz: error sending request: client error (Connect): dns error: failed to lookup address information: nodename nor servname provided, or not known) — 1
+//:probe: Will retry in 10s. 1 retries left.
+//:probe: [WARN] GET https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz error (Failed to fetch https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz: error sending request: client error (Connect): dns error: failed to lookup address information: nodename nor servname provided, or not known) — 1
+//:probe: Will retry in 10s. 1 retries left.
+//:probe: ✗ Lockfile failed supply-chain policy check (527 entries in 1m 10.1s)
+//:probe: Error: ERR_PNPM_TARBALL_FETCH_TARBALL
+//:probe: 
+//:probe:   × installing dependencies
+//:probe:   ├─▶ Failed to fetch https://registry.npmjs.org/magic-string/-/magic-string-
+//:probe:   │   0.30.21.tgz: error sending request: client error (Connect): dns error:
+//:probe:   │   failed to lookup address information: nodename nor servname provided, or
+//:probe:   │   not known
+//:probe:   ├─▶ error sending request
+//:probe:   ├─▶ client error (Connect)
+//:probe:   ├─▶ dns error
+//:probe:   ╰─▶ failed to lookup address information: nodename nor servname provided, or
+//:probe:       not known
+//:probe: 
+//#probe:  ERROR  command (<PROBE_ROOT>/) /opt/homebrew/bin/pnpm run probe exited (1)
+
+ Tasks:    0 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    1m11.795s 
+Failed:    //#probe
+
+ ERROR  run failed: command  exited (1)

@@ -1,0 +1,499 @@
+{
+  "id": "3Jgeac0VccrCSxCP3OQqIDbRqGe",
+  "version": "1",
+  "turboVersion": "2.11.2",
+  "monorepo": true,
+  "globalCacheInputs": {
+    "rootKey": "I can’t see ya, but I know you’re here",
+    "files": {},
+    "hashOfExternalDependencies": "8a8d3ffb450d480b",
+    "hashOfInternalDependencies": "",
+    "environmentVariables": {
+      "specified": {
+        "env": [],
+        "passThroughEnv": null
+      },
+      "configured": [],
+      "inferred": [],
+      "passthrough": null
+    },
+    "engines": null
+  },
+  "packages": [
+    "@probe/example",
+    "@probe/sdk"
+  ],
+  "envMode": "strict",
+  "frameworkInference": true,
+  "tasks": [
+    {
+      "taskId": "@probe/example#build",
+      "task": "build",
+      "package": "@probe/example",
+      "hash": "ddd00558c3f3c08c",
+      "inputs": {
+        "example.test.ts": "690a2f10a02565bf533d2ef62946d91fc671672d",
+        "package.json": "e4daee38ea4d637df808f41c3e2486d5999a7641",
+        "tsconfig.json": "346a7db2519e8b6f8c33375720ec14feadef1566",
+        "turbo.json": "e8593784ef1a278418174763e0868983450e41e5",
+        "vitest.config.ts": "cf5219fd6649a5d19df184d8d338208ff3e43d78"
+      },
+      "hashOfExternalDependencies": "459c029558afe716",
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "command": "tsc --noEmit",
+      "cliArguments": [],
+      "outputs": null,
+      "excludedOutputs": null,
+      "logFile": "fixtures/example/.turbo/turbo-build.log",
+      "directory": "fixtures/example",
+      "dependencies": [
+        "@probe/sdk#build"
+      ],
+      "dependents": [],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [],
+        "cache": true,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [],
+          "passThroughEnv": null
+        },
+        "configured": [],
+        "inferred": [],
+        "passthrough": null
+      }
+    },
+    {
+      "taskId": "@probe/example#check-types",
+      "task": "check-types",
+      "package": "@probe/example",
+      "hash": "e5c78e9c56b1102d",
+      "inputs": {
+        "example.test.ts": "690a2f10a02565bf533d2ef62946d91fc671672d",
+        "package.json": "e4daee38ea4d637df808f41c3e2486d5999a7641",
+        "tsconfig.json": "346a7db2519e8b6f8c33375720ec14feadef1566",
+        "turbo.json": "e8593784ef1a278418174763e0868983450e41e5",
+        "vitest.config.ts": "cf5219fd6649a5d19df184d8d338208ff3e43d78"
+      },
+      "hashOfExternalDependencies": "459c029558afe716",
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "command": "tsc --noEmit",
+      "cliArguments": [],
+      "outputs": null,
+      "excludedOutputs": null,
+      "logFile": "fixtures/example/.turbo/turbo-check-types.log",
+      "directory": "fixtures/example",
+      "dependencies": [
+        "@probe/sdk#build"
+      ],
+      "dependents": [],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [],
+        "cache": true,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [],
+          "passThroughEnv": null
+        },
+        "configured": [],
+        "inferred": [],
+        "passthrough": null
+      }
+    },
+    {
+      "taskId": "@probe/example#lint",
+      "task": "lint",
+      "package": "@probe/example",
+      "hash": "e08b5d93458aae58",
+      "inputs": {
+        "example.test.ts": "690a2f10a02565bf533d2ef62946d91fc671672d",
+        "package.json": "e4daee38ea4d637df808f41c3e2486d5999a7641",
+        "tsconfig.json": "346a7db2519e8b6f8c33375720ec14feadef1566",
+        "turbo.json": "e8593784ef1a278418174763e0868983450e41e5",
+        "vitest.config.ts": "cf5219fd6649a5d19df184d8d338208ff3e43d78"
+      },
+      "hashOfExternalDependencies": "459c029558afe716",
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "command": "oxlint --type-aware --type-check --deny-warnings --report-unused-disable-directives example.test.ts",
+      "cliArguments": [],
+      "outputs": null,
+      "excludedOutputs": null,
+      "logFile": "fixtures/example/.turbo/turbo-lint.log",
+      "directory": "fixtures/example",
+      "dependencies": [
+        "@probe/sdk#build"
+      ],
+      "dependents": [],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [],
+        "cache": true,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [],
+          "passThroughEnv": null
+        },
+        "configured": [],
+        "inferred": [],
+        "passthrough": null
+      }
+    },
+    {
+      "taskId": "@probe/example#test",
+      "task": "test",
+      "package": "@probe/example",
+      "hash": "4bfa86bf2c649aff",
+      "inputs": {
+        "example.test.ts": "690a2f10a02565bf533d2ef62946d91fc671672d",
+        "package.json": "e4daee38ea4d637df808f41c3e2486d5999a7641",
+        "tsconfig.json": "346a7db2519e8b6f8c33375720ec14feadef1566",
+        "turbo.json": "e8593784ef1a278418174763e0868983450e41e5",
+        "vitest.config.ts": "cf5219fd6649a5d19df184d8d338208ff3e43d78"
+      },
+      "hashOfExternalDependencies": "459c029558afe716",
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "command": "vitest run --config vitest.config.ts",
+      "cliArguments": [],
+      "outputs": null,
+      "excludedOutputs": null,
+      "directory": "fixtures/example",
+      "dependencies": [
+        "@probe/sdk#build"
+      ],
+      "dependents": [],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [],
+        "cache": false,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [],
+          "passThroughEnv": null
+        },
+        "configured": [],
+        "inferred": [],
+        "passthrough": null
+      }
+    },
+    {
+      "taskId": "@probe/sdk#build",
+      "task": "build",
+      "package": "@probe/sdk",
+      "hash": "faa4211e0912ea1d",
+      "inputs": {
+        ".oxlintrc.json": "11a23259fd430ae24ffc7e384ed676e5b03d55b1",
+        "package.json": "bba258036c2045382e04e42c7f371ead31b26b96",
+        "src/index.ts": "7536d86d71760ebaed351486a7c9c0ba97239c65",
+        "src/node.ts": "9436ecd11cdd27bfdbc2b1e042b437b07ddbd38d",
+        "tsconfig.json": "859dc4f4d2f015ee5da04a8ab35f5d7d1b8084bd",
+        "tsconfig.portable.json": "5b7a94adb981e426fec3349a45065517c6ab0e55",
+        "vite.config.ts": "c03911dacfc841c63761fef423bf52c85595f8bd"
+      },
+      "hashOfExternalDependencies": "459c029558afe716",
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "command": "tsc --build tsconfig.json && vite build",
+      "cliArguments": [],
+      "outputs": [
+        "dist/**"
+      ],
+      "excludedOutputs": null,
+      "logFile": "fixtures/sdk/.turbo/turbo-build.log",
+      "directory": "fixtures/sdk",
+      "dependencies": [],
+      "dependents": [
+        "@probe/example#build",
+        "@probe/example#check-types",
+        "@probe/example#lint",
+        "@probe/example#test"
+      ],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [
+          "dist/**"
+        ],
+        "cache": true,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [],
+          "passThroughEnv": null
+        },
+        "configured": [],
+        "inferred": [],
+        "passthrough": null
+      }
+    },
+    {
+      "taskId": "@probe/sdk#check-types",
+      "task": "check-types",
+      "package": "@probe/sdk",
+      "hash": "769fe14e67f0129b",
+      "inputs": {
+        ".oxlintrc.json": "11a23259fd430ae24ffc7e384ed676e5b03d55b1",
+        "package.json": "bba258036c2045382e04e42c7f371ead31b26b96",
+        "src/index.ts": "7536d86d71760ebaed351486a7c9c0ba97239c65",
+        "src/node.ts": "9436ecd11cdd27bfdbc2b1e042b437b07ddbd38d",
+        "tsconfig.json": "859dc4f4d2f015ee5da04a8ab35f5d7d1b8084bd",
+        "tsconfig.portable.json": "5b7a94adb981e426fec3349a45065517c6ab0e55",
+        "vite.config.ts": "c03911dacfc841c63761fef423bf52c85595f8bd"
+      },
+      "hashOfExternalDependencies": "459c029558afe716",
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "command": "tsc --build tsconfig.json",
+      "cliArguments": [],
+      "outputs": null,
+      "excludedOutputs": null,
+      "logFile": "fixtures/sdk/.turbo/turbo-check-types.log",
+      "directory": "fixtures/sdk",
+      "dependencies": [],
+      "dependents": [],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [],
+        "cache": true,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [],
+          "passThroughEnv": null
+        },
+        "configured": [],
+        "inferred": [],
+        "passthrough": null
+      }
+    },
+    {
+      "taskId": "@probe/sdk#lint",
+      "task": "lint",
+      "package": "@probe/sdk",
+      "hash": "def3b7fa6fa03132",
+      "inputs": {
+        ".oxlintrc.json": "11a23259fd430ae24ffc7e384ed676e5b03d55b1",
+        "package.json": "bba258036c2045382e04e42c7f371ead31b26b96",
+        "src/index.ts": "7536d86d71760ebaed351486a7c9c0ba97239c65",
+        "src/node.ts": "9436ecd11cdd27bfdbc2b1e042b437b07ddbd38d",
+        "tsconfig.json": "859dc4f4d2f015ee5da04a8ab35f5d7d1b8084bd",
+        "tsconfig.portable.json": "5b7a94adb981e426fec3349a45065517c6ab0e55",
+        "vite.config.ts": "c03911dacfc841c63761fef423bf52c85595f8bd"
+      },
+      "hashOfExternalDependencies": "459c029558afe716",
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "command": "oxlint --type-aware --type-check --deny-warnings --report-unused-disable-directives src",
+      "cliArguments": [],
+      "outputs": null,
+      "excludedOutputs": null,
+      "logFile": "fixtures/sdk/.turbo/turbo-lint.log",
+      "directory": "fixtures/sdk",
+      "dependencies": [],
+      "dependents": [],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [],
+        "cache": true,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [],
+          "passThroughEnv": null
+        },
+        "configured": [],
+        "inferred": [],
+        "passthrough": null
+      }
+    },
+    {
+      "taskId": "@probe/sdk#test",
+      "task": "test",
+      "package": "@probe/sdk",
+      "hash": "72ee5f9b0392fc95",
+      "inputs": {
+        ".oxlintrc.json": "11a23259fd430ae24ffc7e384ed676e5b03d55b1",
+        "package.json": "bba258036c2045382e04e42c7f371ead31b26b96",
+        "src/index.ts": "7536d86d71760ebaed351486a7c9c0ba97239c65",
+        "src/node.ts": "9436ecd11cdd27bfdbc2b1e042b437b07ddbd38d",
+        "tsconfig.json": "859dc4f4d2f015ee5da04a8ab35f5d7d1b8084bd",
+        "tsconfig.portable.json": "5b7a94adb981e426fec3349a45065517c6ab0e55",
+        "vite.config.ts": "c03911dacfc841c63761fef423bf52c85595f8bd"
+      },
+      "hashOfExternalDependencies": "459c029558afe716",
+      "cache": {
+        "local": false,
+        "remote": false,
+        "status": "MISS",
+        "timeSaved": 0
+      },
+      "command": "<NONEXISTENT>",
+      "cliArguments": [],
+      "outputs": null,
+      "excludedOutputs": null,
+      "directory": "fixtures/sdk",
+      "dependencies": [],
+      "dependents": [],
+      "with": [],
+      "resolvedTaskDefinition": {
+        "outputs": [],
+        "cache": false,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [],
+        "outputLogs": "full",
+        "persistent": false,
+        "interruptible": false,
+        "env": [],
+        "passThroughEnv": null,
+        "interactive": false
+      },
+      "expandedOutputs": [],
+      "framework": "",
+      "envMode": "strict",
+      "environmentVariables": {
+        "specified": {
+          "env": [],
+          "passThroughEnv": null
+        },
+        "configured": [],
+        "inferred": [],
+        "passthrough": null
+      }
+    }
+  ],
+  "user": "",
+  "scm": {
+    "type": "git",
+    "sha": "dc909a4bd2a70b47199a3e1d27a834cf8af9cd04",
+    "branch": "dvcol/research/toolchain-reload"
+  }
+}

@@ -1,0 +1,11 @@
+✓ Lockfile passes supply-chain policies (verified 47s ago)
+[WARN] 2 deprecated subdependencies found: eslint@9.39.4, whatwg-encoding@3.1.1
+Packages: +7 -4
++++++++----
+Progress: resolved 7, reused 418, downloaded 2, added 7, done
+
+devDependencies:
++ @types/chrome 0.3.0
++ rollup 4.63.4
+
+Done in 1.9s using pnpm v12.5.1

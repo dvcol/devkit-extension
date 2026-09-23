@@ -1,0 +1,5 @@
+10:31:30 PM - Projects in this build: 
+    * fixtures/sdk/tsconfig.json
+
+10:31:30 PM - Project 'fixtures/sdk/tsconfig.json' is up to date because newest input 'fixtures/sdk/src/node.ts' is older than output 'fixtures/sdk/tsconfig.tsbuildinfo'
+

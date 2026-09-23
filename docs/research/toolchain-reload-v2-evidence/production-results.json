@@ -1,0 +1,258 @@
+[
+  {
+    "candidate": "wxt",
+    "browserName": "chrome",
+    "mode": "production",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086971874,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086971865,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086971850.1
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086971874,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086971865,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086971850.1
+        }
+      },
+      {
+        "name": "intentional-action-failure",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086971874,
+          "error": "intentional failure",
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086971865,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086971850.1
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086971874,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086972273.4
+        }
+      }
+    ]
+  },
+  {
+    "candidate": "wxt",
+    "browserName": "firefox",
+    "mode": "production",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086976102,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086976184,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086976040
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086976102,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086976184,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086976040
+        }
+      },
+      {
+        "name": "intentional-action-failure",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086976102,
+          "error": "intentional failure",
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086976184,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086976040
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086976102,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086976597
+        }
+      }
+    ]
+  },
+  {
+    "candidate": "custom",
+    "browserName": "chrome",
+    "mode": "production",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086977326,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086977430,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086977422.8
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 2,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086977326,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086977430,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086977422.8
+        }
+      },
+      {
+        "name": "intentional-action-failure",
+        "status": "observed",
+        "observation": {
+          "count": 2,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086977326,
+          "error": "intentional failure",
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086977430,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086977422.8
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 2,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086977326,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086977846.1
+        }
+      }
+    ]
+  },
+  {
+    "candidate": "custom",
+    "browserName": "firefox",
+    "mode": "production",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086978991,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086979077,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086978978
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086978991,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086979077,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086978978
+        }
+      },
+      {
+        "name": "intentional-action-failure",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086978991,
+          "error": "intentional failure",
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086979077,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086978978
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086978991,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086979494
+        }
+      }
+    ]
+  }
+]

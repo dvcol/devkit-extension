@@ -1,0 +1,24 @@
+{
+  "name": "@probe/sdk",
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "node": "./dist/node.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json && vite build",
+    "check-types": "tsc --build tsconfig.json",
+    "lint": "oxlint --type-aware --type-check --deny-warnings --report-unused-disable-directives src"
+  }
+}

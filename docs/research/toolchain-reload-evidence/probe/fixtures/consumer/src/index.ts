@@ -1,0 +1,2 @@
+import { defineContribution, type Contribution } from '@probe/sdk';
+export const contribution: Contribution = defineContribution({ id: 'example:probe', value: 7 });

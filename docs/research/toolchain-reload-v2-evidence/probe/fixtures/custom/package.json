@@ -1,0 +1,5 @@
+{
+  "name": "@probe/custom",
+  "private": true,
+  "type": "module"
+}

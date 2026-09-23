@@ -1,0 +1,252 @@
+[
+  {
+    "name": "typescript-declarations",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/tsc",
+      "--build",
+      "fixtures/sdk/tsconfig.json",
+      "--verbose"
+    ],
+    "cwd": ".",
+    "exit": 0
+  },
+  {
+    "name": "oxlint-strict",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/oxlint",
+      "--type-aware",
+      "--type-check",
+      "--deny-warnings",
+      "--report-unused-disable-directives",
+      "src"
+    ],
+    "cwd": "fixtures/sdk",
+    "exit": 0
+  },
+  {
+    "name": "sdk-build",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vite",
+      "build"
+    ],
+    "cwd": "fixtures/sdk",
+    "exit": 0
+  },
+  {
+    "name": "vitest",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vitest",
+      "run",
+      "--config",
+      "vitest.config.ts"
+    ],
+    "cwd": ".",
+    "exit": 1
+  },
+  {
+    "name": "wxt-chrome-build",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/wxt",
+      "build",
+      "fixtures/wxt",
+      "-b",
+      "chrome",
+      "--mv3"
+    ],
+    "cwd": ".",
+    "exit": 1
+  },
+  {
+    "name": "wxt-firefox-build",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/wxt",
+      "build",
+      "fixtures/wxt",
+      "-b",
+      "firefox",
+      "--mv3"
+    ],
+    "cwd": ".",
+    "exit": 1
+  },
+  {
+    "name": "crx-chrome-build",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vite",
+      "build"
+    ],
+    "cwd": "fixtures/crx",
+    "exit": 1
+  },
+  {
+    "name": "crx-firefox-build",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vite",
+      "build",
+      "--outDir",
+      "dist-firefox"
+    ],
+    "cwd": "fixtures/crx",
+    "exit": 1
+  },
+  {
+    "name": "vitest-isolated",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vitest",
+      "run",
+      "--config",
+      "vitest.config.ts"
+    ],
+    "cwd": ".",
+    "exit": 0
+  },
+  {
+    "name": "wxt-chrome-build-isolated",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/wxt",
+      "build",
+      "fixtures/wxt",
+      "-b",
+      "chrome",
+      "--mv3"
+    ],
+    "cwd": ".",
+    "exit": 1
+  },
+  {
+    "name": "wxt-firefox-build-isolated",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/wxt",
+      "build",
+      "fixtures/wxt",
+      "-b",
+      "firefox",
+      "--mv3"
+    ],
+    "cwd": ".",
+    "exit": 1
+  },
+  {
+    "name": "crx-chrome-build-isolated",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vite",
+      "build"
+    ],
+    "cwd": "fixtures/crx",
+    "exit": 1
+  },
+  {
+    "name": "crx-firefox-build-isolated",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vite",
+      "build",
+      "--outDir",
+      "dist-firefox"
+    ],
+    "cwd": "fixtures/crx",
+    "exit": 1
+  },
+  {
+    "name": "packed-project-reference",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/tsc",
+      "--build",
+      "fixtures/consumer/tsconfig.json",
+      "--verbose"
+    ],
+    "cwd": ".",
+    "exit": 0
+  },
+  {
+    "name": "wxt-chrome-build-final",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/wxt",
+      "build",
+      "fixtures/wxt",
+      "-b",
+      "chrome",
+      "--mv3"
+    ],
+    "cwd": ".",
+    "exit": 0
+  },
+  {
+    "name": "wxt-firefox-build-final",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/wxt",
+      "build",
+      "fixtures/wxt",
+      "-b",
+      "firefox",
+      "--mv3"
+    ],
+    "cwd": ".",
+    "exit": 0
+  },
+  {
+    "name": "crx-chrome-build-final",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vite",
+      "build"
+    ],
+    "cwd": "fixtures/crx",
+    "exit": 0
+  },
+  {
+    "name": "crx-firefox-build-final",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vite",
+      "build",
+      "--outDir",
+      "dist-firefox"
+    ],
+    "cwd": "fixtures/crx",
+    "exit": 0
+  },
+  {
+    "name": "oxlint-negative-control",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/oxlint",
+      "--type-aware",
+      "--type-check",
+      "--deny-warnings",
+      "src"
+    ],
+    "cwd": "fixtures/sdk",
+    "exit": 1
+  },
+  {
+    "name": "vitest-negative-control",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vitest",
+      "run",
+      "--config",
+      "vitest.config.ts"
+    ],
+    "cwd": ".",
+    "exit": 1
+  },
+  {
+    "name": "vitest-final",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/vitest",
+      "run",
+      "--config",
+      "vitest.config.ts"
+    ],
+    "cwd": ".",
+    "exit": 0
+  },
+  {
+    "name": "turbo-scoped",
+    "command": [
+      "<PROBE_ROOT>/node_modules/.bin/turbo",
+      "run",
+      "probe",
+      "--filter=toolchain-compatibility-probe",
+      "--concurrency=1"
+    ],
+    "cwd": ".",
+    "exit": 1
+  }
+]

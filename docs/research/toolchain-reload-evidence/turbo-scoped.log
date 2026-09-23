@@ -1,0 +1,4 @@
+• turbo 2.11.2
+ WARNING  Unable to calculate transitive closures: Workspace 'fixtures/consumer' not found in lockfile.
+  x No package found with name 'toolchain-compatibility-probe' in workspace
+

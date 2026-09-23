@@ -1,0 +1,12 @@
+[
+  {
+    "map": "package/dist/index.d.ts.map",
+    "source": "package/src/index.ts",
+    "sourceIncluded": true
+  },
+  {
+    "map": "package/dist/node.d.ts.map",
+    "source": "package/src/node.ts",
+    "sourceIncluded": true
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "chromiumVersion": "153.0.8010.12",
+  "viteDevelopmentHmr": {
+    "initialLoads": "1",
+    "updatedLoads": "1",
+    "text": "hmr-updated"
+  },
+  "viteWatchPreview": {
+    "beforeManualReload": "initial",
+    "afterManualReload": "watch-updated",
+    "invalidBuildEvent": "ERROR",
+    "retainedLastHtml": true,
+    "recoveredText": "recovered"
+  },
+  "wxtChromiumProduction": {
+    "contentScript": "background-ready",
+    "extensionPages": {
+      "popup": "background-ready",
+      "options": "background-ready",
+      "sidepanel": "background-ready",
+      "devtools": "background-ready"
+    },
+    "reports": [
+      {
+        "value": "background-ready",
+        "realm": "extension"
+      }
+    ]
+  }
+}

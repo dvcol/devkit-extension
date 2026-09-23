@@ -1,0 +1,15 @@
+
+WXT 0.21.4
+ℹ Building chrome-mv3 for production with Vite 8.3.0
+✖ Command failed after 145 ms
+
+ ERROR  Transform failed with 1 error:
+
+[TSCONFIG_ERROR] Failed to load tsconfig '@tsconfig/node24/tsconfig.json': Tsconfig not found
+
+
+    at transformWithOxc (node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:7208:19)
+    at TransformPluginContext.transform (node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:7280:26)
+    at EnvironmentPluginContainer.transform (node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:8172:51)
+    at async loadAndTransform (node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:19634:26)
+

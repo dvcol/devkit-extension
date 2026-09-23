@@ -1,0 +1,22 @@
+[
+  {
+    "name": "portable-core",
+    "expected": "accepted",
+    "observed": "accepted"
+  },
+  {
+    "name": "direct-node",
+    "expected": "rejected",
+    "observed": "Build failed with 1 error:\n\n[plugin probe-browser-boundary]\nError: Forbidden browser builtin: node:fs\n    at PluginContextImpl.resolveId (file://<PROBE_ROOT>/scripts/boundary-checks.ts:17:51)\n    at PluginContextImpl.handler (file://<PROBE_ROOT>/node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:34306:13)\n    at plugin (file://<PROBE_ROOT>/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:1460:30)\n    at file://<PROBE_ROOT>/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:1931:21\n    at plugin.<computed> (file://<PROBE_ROOT>/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:2128:18)"
+  },
+  {
+    "name": "transitive-node",
+    "expected": "rejected",
+    "observed": "Build failed with 1 error:\n\n[plugin probe-browser-boundary]\nError: Forbidden browser builtin: node:fs\n    at PluginContextImpl.resolveId (file://<PROBE_ROOT>/scripts/boundary-checks.ts:17:51)\n    at PluginContextImpl.handler (file://<PROBE_ROOT>/node_modules/.pnpm/vite@8.3.0_@types+node@26.6.2_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:34306:13)\n    at plugin (file://<PROBE_ROOT>/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:1460:30)\n    at file://<PROBE_ROOT>/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:1931:21\n    at plugin.<computed> (file://<PROBE_ROOT>/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:2128:18)"
+  },
+  {
+    "name": "background-renderer",
+    "expected": "rejected",
+    "observed": "Build failed with 1 error:\n\n[plugin probe-browser-boundary]\nError: Renderer entry forbidden in background\n    at PluginContextImpl.resolveId (file://<PROBE_ROOT>/scripts/boundary-checks.ts:19:49)\n    at async plugin (file://<PROBE_ROOT>/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:1460:16)\n    at async plugin.<computed> (file://<PROBE_ROOT>/node_modules/.pnpm/rolldown@1.2.9/node_modules/rolldown/dist/shared/bindingify-input-options-D4l624og.mjs:2128:12)"
+  }
+]

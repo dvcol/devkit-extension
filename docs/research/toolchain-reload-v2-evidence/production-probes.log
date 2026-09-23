@@ -1,0 +1,338 @@
+Running web extension from <PROBE_ROOT>/fixtures/wxt/.output/firefox-mv3
+Use --verbose or --devtools to see logging
+Installed <PROBE_ROOT>/fixtures/wxt/.output/firefox-mv3 as a temporary add-on
+Automatic extension reloading has been disabled
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 11 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/custom/dist-chrome/devtools.html            0.22 kB │ gzip: 0.16 kB
+fixtures/custom/dist-chrome/options.html             0.22 kB │ gzip: 0.16 kB
+fixtures/custom/dist-chrome/popup.html               0.22 kB │ gzip: 0.16 kB
+fixtures/custom/dist-chrome/sidepanel.html           0.22 kB │ gzip: 0.16 kB
+fixtures/custom/dist-chrome/assets/page-gxDkXOtz.js  2.13 kB │ gzip: 1.05 kB │ map: 4.50 kB
+
+✓ built in 27ms
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 5 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/custom/dist-chrome/background.js  1.19 kB │ gzip: 0.53 kB │ map: 2.93 kB
+
+✓ built in 5ms
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 5 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/custom/dist-chrome/content.js  2.27 kB │ gzip: 0.81 kB │ map: 3.96 kB
+
+✓ built in 5ms
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 2 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/custom/dist-chrome/main-world.js  0.16 kB │ gzip: 0.15 kB │ map: 0.22 kB
+
+✓ built in 3ms
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 11 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/custom/dist-firefox/devtools.html            0.22 kB │ gzip: 0.16 kB
+fixtures/custom/dist-firefox/options.html             0.22 kB │ gzip: 0.16 kB
+fixtures/custom/dist-firefox/popup.html               0.22 kB │ gzip: 0.16 kB
+fixtures/custom/dist-firefox/sidepanel.html           0.22 kB │ gzip: 0.16 kB
+fixtures/custom/dist-firefox/assets/page-gxDkXOtz.js  2.13 kB │ gzip: 1.05 kB │ map: 4.50 kB
+
+✓ built in 8ms
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 5 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/custom/dist-firefox/background.js  1.19 kB │ gzip: 0.53 kB │ map: 2.93 kB
+
+✓ built in 4ms
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 5 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/custom/dist-firefox/content.js  2.27 kB │ gzip: 0.81 kB │ map: 3.96 kB
+
+✓ built in 5ms
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 2 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/custom/dist-firefox/main-world.js  0.16 kB │ gzip: 0.15 kB │ map: 0.22 kB
+
+✓ built in 3ms
+Running web extension from <PROBE_ROOT>/fixtures/custom/dist-firefox
+Use --verbose or --devtools to see logging
+Installed <PROBE_ROOT>/fixtures/custom/dist-firefox as a temporary add-on
+Automatic extension reloading has been disabled
+[
+  {
+    "candidate": "wxt",
+    "browserName": "chrome",
+    "mode": "production",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086971874,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086971865,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086971850.1
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086971874,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086971865,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086971850.1
+        }
+      },
+      {
+        "name": "intentional-action-failure",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086971874,
+          "error": "intentional failure",
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086971865,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086971850.1
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086971874,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086972273.4
+        }
+      }
+    ]
+  },
+  {
+    "candidate": "wxt",
+    "browserName": "firefox",
+    "mode": "production",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086976102,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086976184,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086976040
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086976102,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086976184,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086976040
+        }
+      },
+      {
+        "name": "intentional-action-failure",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086976102,
+          "error": "intentional failure",
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086976184,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086976040
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086976102,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086976597
+        }
+      }
+    ]
+  },
+  {
+    "candidate": "custom",
+    "browserName": "chrome",
+    "mode": "production",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086977326,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086977430,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086977422.8
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 2,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086977326,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086977430,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086977422.8
+        }
+      },
+      {
+        "name": "intentional-action-failure",
+        "status": "observed",
+        "observation": {
+          "count": 2,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086977326,
+          "error": "intentional failure",
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086977430,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086977422.8
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 2,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086977326,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086977846.1
+        }
+      }
+    ]
+  },
+  {
+    "candidate": "custom",
+    "browserName": "firefox",
+    "mode": "production",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086978991,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086979077,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086978978
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086978991,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086979077,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086978978
+        }
+      },
+      {
+        "name": "intentional-action-failure",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086978991,
+          "error": "intentional failure",
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086979077,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086978978
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086978991,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086979494
+        }
+      }
+    ]
+  }
+]

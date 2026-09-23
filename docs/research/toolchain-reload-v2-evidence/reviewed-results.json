@@ -1,0 +1,79 @@
+{
+  "basis": "Raw results retained unchanged. This review overrides ambiguous raw observed statuses.",
+  "production": {
+    "wxtChrome": "observed",
+    "wxtFirefox": "observed",
+    "customChrome": "observed",
+    "customFirefox": "observed",
+    "scope": "Content/background RPC, increment/persisted count, intentional action error, extension page with typed Spec import. No native browser UI or reference-renderer integration."
+  },
+  "development": [
+    {
+      "case": "WXT Chromium page HMR",
+      "validity": "valid",
+      "finding": "timeOrigin unchanged"
+    },
+    {
+      "case": "WXT Firefox page HMR",
+      "validity": "valid",
+      "finding": "timeOrigin unchanged"
+    },
+    {
+      "case": "Custom Chromium page HMR",
+      "validity": "valid",
+      "finding": "timeOrigin unchanged"
+    },
+    {
+      "case": "Custom Firefox page update",
+      "validity": "valid",
+      "finding": "document timeOrigin changed; cannot claim HMR"
+    },
+    {
+      "case": "WXT Chromium content dependency change",
+      "validity": "valid",
+      "finding": "new document/content generation and a subsequent successful action observed; does not prove in-document disposal or absence of duplicate listeners"
+    },
+    {
+      "case": "WXT Firefox content dependency change",
+      "validity": "unverified",
+      "finding": "new content generation not observed before timeout"
+    },
+    {
+      "case": "WXT shared background dependency change, both browsers",
+      "validity": "unverified",
+      "finding": "new background version not observed before timeout"
+    },
+    {
+      "case": "WXT Chromium direct background entry change",
+      "validity": "unverified",
+      "finding": "reports stopped; recovery not observed"
+    },
+    {
+      "case": "WXT Firefox background fallback sequence",
+      "validity": "valid",
+      "finding": "new background version/boot, reset memoryCount and retained stored count observed during nested-edit/direct-edit fallback; trigger causality unresolved"
+    },
+    {
+      "case": "WXT Firefox explicit extension reload",
+      "validity": "INVALID",
+      "finding": "predicate reused the prior direct-entry observation; no independent reload proof"
+    },
+    {
+      "case": "WXT Firefox manifest update",
+      "validity": "INVALID",
+      "finding": "predicate could match older history and returned an older boot; manifest adoption not proven"
+    },
+    {
+      "case": "WXT Chromium manifest update",
+      "validity": "unverified",
+      "finding": "no post-change proof before timeout"
+    },
+    {
+      "case": "Custom content/background/manifest automatic reload",
+      "validity": "absent",
+      "finding": "minimal custom packager does not implement it"
+    }
+  ],
+  "nextReloadAcceptance": "Use a fresh unique marker and append-only cursor per mutation; attach run/candidate/browser identity and runtime manifest version. Settle restorations before continuing. Click after transitions and use atomic command IDs plus a bounded duplicate-response collection window. Observe backend and content reconnection separately; timeout is not proof that the backend never reloaded.",
+  "runnerExitMeaning": "Reload runner exit 0 means all observation cases completed, not that every step passed. The runner intentionally records failed observations instead of aborting."
+}

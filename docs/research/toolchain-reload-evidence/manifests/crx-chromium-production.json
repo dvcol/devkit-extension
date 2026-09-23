@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "CRX probe",
+  "version": "0.0.0",
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "assets/content.ts-tDCMfhj9.js"
+      ],
+      "matches": [
+        "http://127.0.0.1/*"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "http://127.0.0.1/*"
+      ],
+      "resources": [
+        "assets/content.ts-tDCMfhj9.js"
+      ],
+      "use_dynamic_url": false
+    }
+  ]
+}

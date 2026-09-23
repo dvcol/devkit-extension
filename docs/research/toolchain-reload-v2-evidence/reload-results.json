@@ -1,0 +1,331 @@
+[
+  {
+    "candidate": "wxt",
+    "browserName": "chrome",
+    "mode": "development",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086684619,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086684664,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086684650.9
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086684619,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086684664,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086684650.9
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086684619,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086685069.2
+        }
+      },
+      {
+        "name": "page-update",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086684619,
+          "viewVersion": "view-updated",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086685069.2
+        }
+      },
+      {
+        "name": "page-HMR-timeOrigin",
+        "status": "unchanged"
+      },
+      {
+        "name": "content-update",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086684619,
+          "contentVersion": "content-updated",
+          "contentBoot": 1790086686220,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086686215
+        }
+      },
+      {
+        "name": "single-listener-after-content-update",
+        "status": "observed",
+        "observation": {
+          "count": 2,
+          "memoryCount": 2,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086684619,
+          "contentVersion": "content-updated",
+          "contentBoot": 1790086686220,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086686215
+        }
+      },
+      {
+        "name": "background-update",
+        "status": "unverified",
+        "error": "Error: Observation timeout; content=44, page=2"
+      },
+      {
+        "name": "manifest-update",
+        "status": "unverified",
+        "error": "Error: Observation timeout; content=80, page=3"
+      }
+    ]
+  },
+  {
+    "candidate": "wxt",
+    "browserName": "firefox",
+    "mode": "development",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086723771,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086723896,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086723873
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086723771,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086723896,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086723873
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086723771,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086723910
+        }
+      },
+      {
+        "name": "page-update",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086723771,
+          "viewVersion": "view-updated",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086723910
+        }
+      },
+      {
+        "name": "page-HMR-timeOrigin",
+        "status": "unchanged"
+      },
+      {
+        "name": "content-update",
+        "status": "unverified",
+        "error": "Error: Observation timeout; content=22, page=3"
+      },
+      {
+        "name": "background-update",
+        "status": "unverified",
+        "error": "Error: Observation timeout; content=38, page=3"
+      },
+      {
+        "name": "manifest-update",
+        "status": "unverified",
+        "error": "Error: Observation timeout; content=56, page=3"
+      }
+    ]
+  },
+  {
+    "candidate": "custom",
+    "browserName": "chrome",
+    "mode": "development",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086779353,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086779300,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086779294.2
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086779353,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086779300,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086779294.2
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086779353,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086779717.5
+        }
+      },
+      {
+        "name": "page-update",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086779353,
+          "viewVersion": "view-updated",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086779717.5
+        }
+      },
+      {
+        "name": "page-HMR-timeOrigin",
+        "status": "unchanged"
+      },
+      {
+        "name": "content-background-manifest-auto-reload",
+        "status": "not-provided-by-minimal-packager"
+      }
+    ]
+  },
+  {
+    "candidate": "custom",
+    "browserName": "firefox",
+    "mode": "development",
+    "steps": [
+      {
+        "name": "initial-content-background",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086780893,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086780917,
+          "invocationCount": 0,
+          "pageTimeOrigin": 1790086780813
+        }
+      },
+      {
+        "name": "action-state",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086780893,
+          "contentVersion": "content-initial",
+          "contentBoot": 1790086780917,
+          "invocationCount": 1,
+          "pageTimeOrigin": 1790086780813
+        }
+      },
+      {
+        "name": "extension-page",
+        "status": "observed",
+        "observation": {
+          "count": 0,
+          "memoryCount": 0,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086780893,
+          "viewVersion": "view-initial",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086781039
+        }
+      },
+      {
+        "name": "page-update",
+        "status": "observed",
+        "observation": {
+          "count": 1,
+          "memoryCount": 1,
+          "backgroundVersion": "background-initial",
+          "boot": 1790086780893,
+          "viewVersion": "view-updated",
+          "pageInvocations": 0,
+          "specRoot": "root",
+          "pageTimeOrigin": 1790086781373
+        }
+      },
+      {
+        "name": "page-HMR-timeOrigin",
+        "status": "reloaded"
+      },
+      {
+        "name": "content-background-manifest-auto-reload",
+        "status": "not-provided-by-minimal-packager"
+      }
+    ]
+  }
+]

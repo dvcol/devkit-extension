@@ -1,0 +1,26 @@
+
+WXT 0.21.4
+ℹ Building firefox-mv3 for production with Vite 8.3.0
+
+⠋ Preparing...
+⠋ [1/2] background, devtools, options, popup, sidepanel
+⠋ [2/2] probe
+ WARN  Firefox requires data_collection_permissions for new extensions from November 3, 2025. Existing extensions are exempt for now.
+For more details, see: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/
+To suppress this warning, set suppressWarnings.firefoxDataCollection to true in your wxt config.
+
+
+
+
+✔ Built extension in 150 ms
+  ├─ fixtures/wxt/.output/firefox-mv3/manifest.json                            541 B  
+  ├─ fixtures/wxt/.output/firefox-mv3/devtools.html                            261 B  
+  ├─ fixtures/wxt/.output/firefox-mv3/options.html                             260 B  
+  ├─ fixtures/wxt/.output/firefox-mv3/popup.html                               258 B  
+  ├─ fixtures/wxt/.output/firefox-mv3/sidepanel.html                           262 B  
+  ├─ fixtures/wxt/.output/firefox-mv3/background.js                            602 B  
+  ├─ fixtures/wxt/.output/firefox-mv3/chunks/_virtual_wxt-plugins-DBMiDRPA.js  106 B  
+  ├─ fixtures/wxt/.output/firefox-mv3/chunks/page-BavTmPI_.js                  829 B  
+  └─ fixtures/wxt/.output/firefox-mv3/content-scripts/probe.js                 3.56 kB
+Σ Total size: 6.68 kB                                                        
+✔ Finished in 479 ms

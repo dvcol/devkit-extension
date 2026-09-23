@@ -1,0 +1,4 @@
+node_modules/.pnpm/@types+chrome@0.3.0/node_modules/@types/chrome/har-format/index.d.ts(4,10): error TS2300: Duplicate identifier 'HARFormatEntry'.
+node_modules/.pnpm/@types+chrome@0.3.0/node_modules/@types/chrome/har-format/index.d.ts(5,10): error TS2300: Duplicate identifier 'HARFormatLog'.
+node_modules/.pnpm/@wxt-dev+browser@0.3.0/node_modules/@wxt-dev/browser/src/gen/har-format/index.d.ts(6,10): error TS2300: Duplicate identifier 'HARFormatEntry'.
+node_modules/.pnpm/@wxt-dev+browser@0.3.0/node_modules/@wxt-dev/browser/src/gen/har-format/index.d.ts(7,10): error TS2300: Duplicate identifier 'HARFormatLog'.

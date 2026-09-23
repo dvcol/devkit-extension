@@ -1,0 +1,33 @@
+
+ RUN  v5.0.1 <PROBE_ROOT>
+
+ ❯ probe.test.ts (1 test | 1 failed) 5ms
+   × keeps the contribution identity and value 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  probe.test.ts > keeps the contribution identity and value
+AssertionError: expected 7 to be 8 // Object.is equality
+
+- Expected
++ Received
+
+- 8
++ 7
+
+ ❯ probe.test.ts:7:30
+      5|   const contribution = defineContribution({ id: 'example:probe', value…
+      6|   expect(contribution.id).toBe('example:probe');
+      7|   expect(contribution.value).toBe(8);
+       |                              ^
+      8| });
+      9|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  22:35:30
+   Duration  182ms (transform 50%, import 24%, tests 17%, worker 9%)
+

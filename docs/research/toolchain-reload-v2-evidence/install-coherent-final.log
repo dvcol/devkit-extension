@@ -1,0 +1,22 @@
+Scope: all 5 workspace projects
+? Verifying lockfile against supply-chain policies (524 entries)...
+✓ Lockfile passes supply-chain policies (524 entries in 3.6s)
+Lockfile is up to date, resolution step is skipped
+Packages: +453
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 453, reused 453, downloaded 0, added 453, done
+
+devDependencies:
++ @devframes/json-render 1.0.0
++ @playwright/test 1.63.0
++ @types/node 26.6.2
++ oxlint 1.85.0
++ oxlint-tsgolint 7.0.2002
++ turbo 2.11.2
++ typescript 7.0.2
++ vite 8.3.0
++ vitest 5.0.1
++ web-ext 10.7.0
++ wxt 0.21.4
+
+Done in 3.7s using pnpm v12.5.1

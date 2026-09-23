@@ -1,0 +1,9 @@
+
+ RUN  v5.0.1 <PROBE_ROOT>
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  22:35:31
+   Duration  181ms (transform 57%, import 26%, worker 12%, tests 5%)
+

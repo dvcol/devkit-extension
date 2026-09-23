@@ -1,0 +1,154 @@
+[
+  {
+    "candidate": "wxt",
+    "browser": "chrome",
+    "htmlScripts": [
+      {
+        "html": "devtools.html",
+        "script": "/chunks/_virtual_wxt-plugins-ZvdnR0U6.js",
+        "localFileExists": true
+      },
+      {
+        "html": "devtools.html",
+        "script": "/chunks/page-VW-1nLcb.js",
+        "localFileExists": true
+      },
+      {
+        "html": "popup.html",
+        "script": "/chunks/_virtual_wxt-plugins-ZvdnR0U6.js",
+        "localFileExists": true
+      },
+      {
+        "html": "popup.html",
+        "script": "/chunks/page-VW-1nLcb.js",
+        "localFileExists": true
+      },
+      {
+        "html": "options.html",
+        "script": "/chunks/_virtual_wxt-plugins-ZvdnR0U6.js",
+        "localFileExists": true
+      },
+      {
+        "html": "options.html",
+        "script": "/chunks/page-VW-1nLcb.js",
+        "localFileExists": true
+      },
+      {
+        "html": "sidepanel.html",
+        "script": "/chunks/_virtual_wxt-plugins-ZvdnR0U6.js",
+        "localFileExists": true
+      },
+      {
+        "html": "sidepanel.html",
+        "script": "/chunks/page-VW-1nLcb.js",
+        "localFileExists": true
+      }
+    ],
+    "sourceMapCount": 5,
+    "manifestSha256": "1f822feff44d2261aeb8518a39580c8f1ec32677ae7e92510a99e8b1ff0bc699"
+  },
+  {
+    "candidate": "wxt",
+    "browser": "firefox",
+    "htmlScripts": [
+      {
+        "html": "devtools.html",
+        "script": "/chunks/_virtual_wxt-plugins-ZvdnR0U6.js",
+        "localFileExists": true
+      },
+      {
+        "html": "devtools.html",
+        "script": "/chunks/page-VW-1nLcb.js",
+        "localFileExists": true
+      },
+      {
+        "html": "popup.html",
+        "script": "/chunks/_virtual_wxt-plugins-ZvdnR0U6.js",
+        "localFileExists": true
+      },
+      {
+        "html": "popup.html",
+        "script": "/chunks/page-VW-1nLcb.js",
+        "localFileExists": true
+      },
+      {
+        "html": "options.html",
+        "script": "/chunks/_virtual_wxt-plugins-ZvdnR0U6.js",
+        "localFileExists": true
+      },
+      {
+        "html": "options.html",
+        "script": "/chunks/page-VW-1nLcb.js",
+        "localFileExists": true
+      },
+      {
+        "html": "sidepanel.html",
+        "script": "/chunks/_virtual_wxt-plugins-ZvdnR0U6.js",
+        "localFileExists": true
+      },
+      {
+        "html": "sidepanel.html",
+        "script": "/chunks/page-VW-1nLcb.js",
+        "localFileExists": true
+      }
+    ],
+    "sourceMapCount": 5,
+    "manifestSha256": "a68fc9cdfa39e30824e8a9cc908ce048b7a11770b9c8a983468a102e766642e6"
+  },
+  {
+    "candidate": "custom",
+    "browser": "chrome",
+    "htmlScripts": [
+      {
+        "html": "devtools.html",
+        "script": "/assets/page-gxDkXOtz.js",
+        "localFileExists": true
+      },
+      {
+        "html": "popup.html",
+        "script": "/assets/page-gxDkXOtz.js",
+        "localFileExists": true
+      },
+      {
+        "html": "options.html",
+        "script": "/assets/page-gxDkXOtz.js",
+        "localFileExists": true
+      },
+      {
+        "html": "sidepanel.html",
+        "script": "/assets/page-gxDkXOtz.js",
+        "localFileExists": true
+      }
+    ],
+    "sourceMapCount": 4,
+    "manifestSha256": "38133fb13beb5ffd9e1097f8ed04d0931b19b66b882b261ae24a97e04a33ead9"
+  },
+  {
+    "candidate": "custom",
+    "browser": "firefox",
+    "htmlScripts": [
+      {
+        "html": "devtools.html",
+        "script": "/assets/page-gxDkXOtz.js",
+        "localFileExists": true
+      },
+      {
+        "html": "popup.html",
+        "script": "/assets/page-gxDkXOtz.js",
+        "localFileExists": true
+      },
+      {
+        "html": "options.html",
+        "script": "/assets/page-gxDkXOtz.js",
+        "localFileExists": true
+      },
+      {
+        "html": "sidepanel.html",
+        "script": "/assets/page-gxDkXOtz.js",
+        "localFileExists": true
+      }
+    ],
+    "sourceMapCount": 4,
+    "manifestSha256": "9d60929909c07422211805521203f595188b5a946c025ff7342b36575edfb7e4"
+  }
+]

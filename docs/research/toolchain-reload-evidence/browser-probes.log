@@ -1,0 +1,78 @@
+10:34:59 PM [vite] (client) hmr update /main.ts
+vite v8.3.0 building client environment for production...
+
+watching for file changes...
+
+build started...
+transforming...
+✓ 5 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/web/dist/index.html                0.14 kB │ gzip: 0.13 kB
+fixtures/web/dist/assets/index-BVg0GGHr.js  1.49 kB │ gzip: 0.65 kB
+
+built in 30ms.
+
+build started...
+transforming...
+✓ 5 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/web/dist/index.html                0.14 kB │ gzip: 0.13 kB
+fixtures/web/dist/assets/index-BD2FOKWs.js  1.50 kB │ gzip: 0.66 kB
+
+built in 17ms.
+
+build started...
+transforming...
+✓ 4 modules transformed.
+Build failed with 1 error:
+
+[builtin:vite-transform] Unexpected token
+   ╭─[ fixtures/web/value.ts:1:22 ]
+   │
+ 1 │ export const value = ;
+   │                      ┬  
+   │                      ╰── 
+───╯
+
+
+build started...
+transforming...
+✓ 5 modules transformed.
+rendering chunks...
+computing gzip size...
+fixtures/web/dist/index.html                0.14 kB │ gzip: 0.13 kB
+fixtures/web/dist/assets/index-BFqz1maR.js  1.49 kB │ gzip: 0.65 kB
+
+built in 10ms.
+{
+  "chromiumVersion": "153.0.8010.12",
+  "viteDevelopmentHmr": {
+    "initialLoads": "1",
+    "updatedLoads": "1",
+    "text": "hmr-updated"
+  },
+  "viteWatchPreview": {
+    "beforeManualReload": "initial",
+    "afterManualReload": "watch-updated",
+    "invalidBuildEvent": "ERROR",
+    "retainedLastHtml": true,
+    "recoveredText": "recovered"
+  },
+  "wxtChromiumProduction": {
+    "contentScript": "background-ready",
+    "extensionPages": {
+      "popup": "background-ready",
+      "options": "background-ready",
+      "sidepanel": "background-ready",
+      "devtools": "background-ready"
+    },
+    "reports": [
+      {
+        "value": "background-ready",
+        "realm": "extension"
+      }
+    ]
+  }
+}

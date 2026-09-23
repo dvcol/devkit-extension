@@ -1,0 +1,12 @@
+10:35:26 PM - Projects in this build: 
+    * fixtures/sdk/tsconfig.json
+    * fixtures/consumer/tsconfig.json
+
+10:35:26 PM - Project 'fixtures/sdk/tsconfig.json' is out of date because output 'fixtures/sdk/tsconfig.tsbuildinfo' is older than input 'node_modules/.pnpm/node_modules/punycode/package.json'
+
+10:35:26 PM - Building project 'fixtures/sdk/tsconfig.json'...
+
+10:35:26 PM - Project 'fixtures/consumer/tsconfig.json' is out of date because buildinfo file 'fixtures/consumer/tsconfig.tsbuildinfo' indicates that program needs to report errors.
+
+10:35:26 PM - Building project 'fixtures/consumer/tsconfig.json'...
+

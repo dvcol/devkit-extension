@@ -1,0 +1,23 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@probe/sdk':
+        specifier: file:../artifacts/probe-sdk-0.0.0.tgz
+        version: file:../artifacts/probe-sdk-0.0.0.tgz
+
+packages:
+
+  '@probe/sdk@file:../artifacts/probe-sdk-0.0.0.tgz':
+    resolution: {integrity: sha512-bDn9ukfSxjw7NvdGuQ74WQvNrJ+w+NWITE/4J369QnUgZDtZO+bIQa1DMB0ZJnfMyax/nlf2qzQ/79tRTWt8UQ==, tarball: file:../artifacts/probe-sdk-0.0.0.tgz}
+    version: 0.0.0
+
+snapshots:
+
+  '@probe/sdk@file:../artifacts/probe-sdk-0.0.0.tgz': {}

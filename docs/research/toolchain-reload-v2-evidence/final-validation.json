@@ -1,0 +1,71 @@
+[
+  {
+    "name": "fixture-lint-authored-final",
+    "command": [
+      "node_modules/.bin/oxlint",
+      "-c",
+      ".oxlintrc.json",
+      "--type-aware",
+      "--type-check",
+      "--tsconfig",
+      "tsconfig.check.json",
+      "--deny-warnings",
+      "--report-unused-disable-directives",
+      "shared/content-version.ts",
+      "shared/background-version.ts",
+      "shared/main-world.ts",
+      "shared/content.ts",
+      "shared/api.ts",
+      "shared/view-version.ts",
+      "shared/page.ts",
+      "shared/spec.ts",
+      "shared/background.ts",
+      "scripts/reload-probes.ts",
+      "scripts/custom-build.ts",
+      "scripts/boundary-checks.ts",
+      "scripts/web-ext.d.ts",
+      "fixtures/custom/content.ts",
+      "fixtures/custom/page.ts",
+      "fixtures/custom/background.ts",
+      "fixtures/wxt/wxt.config.ts",
+      "fixtures/wxt/page.ts",
+      "fixtures/wxt/entrypoints/main-world.ts",
+      "fixtures/wxt/entrypoints/probe.content.ts",
+      "fixtures/wxt/entrypoints/background.ts"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "fixture-types-final",
+    "command": [
+      "node_modules/.bin/tsc",
+      "--project",
+      "tsconfig.check.json",
+      "--pretty",
+      "false"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "custom-strict-types-final",
+    "command": [
+      "node_modules/.bin/tsc",
+      "--project",
+      "tsconfig.custom.json",
+      "--pretty",
+      "false"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "portable-types-final",
+    "command": [
+      "node_modules/.bin/tsc",
+      "--project",
+      "fixtures/sdk/tsconfig.portable.json",
+      "--pretty",
+      "false"
+    ],
+    "exit": 0
+  }
+]

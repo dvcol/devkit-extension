@@ -1,0 +1,13 @@
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 8 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/service-worker-loader.js          0.04 kB
+dist/popup.html                        0.14 kB │ gzip: 0.13 kB
+dist/manifest.json                     0.58 kB │ gzip: 0.29 kB
+dist/assets/background.ts-BCjmNK69.js  0.03 kB │ gzip: 0.05 kB
+dist/assets/content.ts-tDCMfhj9.js     0.07 kB │ gzip: 0.08 kB
+dist/assets/popup.html-DbLPjshE.js     0.72 kB │ gzip: 0.41 kB
+
+✓ built in 31ms

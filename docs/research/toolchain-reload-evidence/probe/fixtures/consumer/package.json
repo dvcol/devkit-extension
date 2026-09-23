@@ -1,0 +1,9 @@
+{
+  "name": "@probe/consumer",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@probe/sdk": "file:../artifacts/probe-sdk-0.0.0.tgz"
+  }
+}

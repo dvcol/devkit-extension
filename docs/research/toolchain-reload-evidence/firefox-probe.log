@@ -1,0 +1,11 @@
+Running web extension from <PROBE_ROOT>/fixtures/wxt/.output/firefox-mv3
+Use --verbose or --devtools to see logging
+Installed <PROBE_ROOT>/fixtures/wxt/.output/firefox-mv3 as a temporary add-on
+Automatic extension reloading has been disabled
+{
+  "firefoxVersion": "Mozilla Firefox 156.0",
+  "contentToBackground": {
+    "value": "background-ready",
+    "realm": "extension"
+  }
+}
