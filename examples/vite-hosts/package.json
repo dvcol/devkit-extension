@@ -1,0 +1,36 @@
+{
+  "name": "@devkit/example-vite-hosts",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "demo:devframe": "node src/demo.ts devframe",
+    "demo:devtools": "node src/demo.ts devtools",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts host.config.ts",
+    "format:check": "oxfmt --config ../../.oxfmtrc.json --check ."
+  },
+  "dependencies": {
+    "@devframes/hub": "1.0.0",
+    "@devframes/vite": "1.0.0",
+    "@devkit/core": "workspace:*",
+    "@devkit/example-contribution": "workspace:*",
+    "@devkit/example-server-contexts": "workspace:*",
+    "@devkit/server": "workspace:*",
+    "@vitejs/devtools": "0.7.5",
+    "@vitejs/devtools-kit": "0.7.5",
+    "devframe": "1.0.0",
+    "vite": "8.3.0"
+  }
+}

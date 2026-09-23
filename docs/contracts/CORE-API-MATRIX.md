@@ -59,6 +59,8 @@ The maintained [`examples/server-contexts`](../../examples/server-contexts/READM
 | Custom kinds and diagnostic sink | Server extension integration tests | Actual native command registration/disposal; local causes and default warning output |
 | `.dispose()` and incarnation | Both demos; ownership tests | Retained host state, removed owned commands, unrelated commands/HTTP survive, fresh incarnation after successful reinstall, failed cleanup blocks replacement |
 
-This table records headless local server integration only. It does not mark full DF/DT host cells complete: Vite lifecycle, remote transport, authentication, browser UI and reload evidence remain outstanding. No Chromium/Firefox extension cell is satisfied by these tests.
+This table records headless local server integration only. The maintained [`examples/vite-hosts`](../../examples/vite-hosts/README.md) adds twelve tests against the actual `@devframes/vite/hub` and `@vitejs/devtools` Vite plugins: native HTTP metadata and contexts, the shared counter action, awaited delayed cleanup, incarnation changes and stale bindings on restart, observable failed cleanup on close, close-before-listen, watched config replacement, and client-module invalidation that retains backend identity/state. Tests consume built public exports and use real filesystem changes and loopback listeners.
+
+These are partial DF/DT lifecycle cells, not complete host conformance. Failed-restart candidate cleanup, failed native setup, preview, bundled dev, browser-side HMR delivery, remote SDK transport, authentication and browser UI need separate evidence. No Chromium/Firefox extension cell is satisfied by these tests.
 
 Provider routing, state, transport, real-host lifecycle and the complete API-to-example catalogue remain required. View, script and transform entries still need domain-specific implementation. Do not infer supported host cells from these local controller tests.
