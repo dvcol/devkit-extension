@@ -90,6 +90,33 @@ Closing a UI document does not dispose independent provider work. A content/page
 
 Provider identity, realm, execution, UI surface and target are separate axes. Initial realm descriptors are `webext` and `devserver`. Adding a realm requires a descriptor and adapter, not a core union or renderer rewrite. Devframe, hub and Vite contexts may coexist within one server provider.
 
+### Stable identity and client-owned discovery
+
+The owner confirmed stable configured provider IDs and fresh backend incarnations on 2026-09-23. The provider descriptor carries `id`, `incarnation` and `realm`. An adapter creates the incarnation once for its backend lifetime. A recreated backend retains its configured ID and gets a fresh incarnation. Reconnecting to the same live backend or updating only a UI module does not create a new backend identity.
+
+| Identity                | Example                            | Changes when                                                                      |
+| ----------------------- | ---------------------------------- | --------------------------------------------------------------------------------- |
+| Provider ID             | `example:project-server`           | Host configuration selects a different logical provider                           |
+| Provider incarnation    | Opaque runtime token               | The provider backend is recreated, including complete disposal and reinstallation |
+| Contribution generation | Local activation counter           | A contribution's owned activation is replaced                                     |
+| Target generation       | Adapter-issued document generation | The inspected document or another target owner is replaced                        |
+
+These identities do not substitute for authentication, permissions or target validation. A binding remains attached to the provider incarnation that created it. A successor with the same logical ID cannot acquire the old binding or an already dispatched call. Durable state and resynchronization policy remain in the state contract.
+
+The client application's composition root owns discovery and supplies its registry to consumers. It composes explicit endpoint adapters, verified host-page handoffs and extension-local connections where supported. UI views consume provider metadata and route choices. They do not each invent discovery policy. This ownership creates no global daemon or singleton across unrelated applications and origins.
+
+```mermaid
+flowchart LR
+  Server["Devframe / DevTools backend"] --> ServerAdapter["Native server connection adapter"]
+  Extension["Extension backend"] --> ExtensionAdapter["Native extension connection adapter"]
+  ServerAdapter --> Registry["Client composition root: discovery registry"]
+  ExtensionAdapter --> Registry
+  Registry --> Client["Shared client routing and subscriptions"]
+  Client --> UI["JSON views and UI-free consumers"]
+```
+
+An extension background runtime can coordinate shared discovery for popup/panel consumers through native ports. Local DevTools-only hooks remain in the document that owns them. A web client can compose the registry in its own application runtime. Adapters retain native transports and provider state; registry snapshots contain only permitted portable metadata. Catalog readiness, routing directives/defaults, broadcast and trust filtering remain separate domain decisions. [Routing ownership record](./docs/planning/007-provider-routing.md).
+
 ## Identity, admission and strictness
 
 Every registration has an owner. Capability slots use `(provider ID, capability ID, exact contract version)`. A provider can offer multiple versions concurrently, each backed by an explicit contract and implementation. A definition's contribution ID identifies its lifecycle within the installation and must be unique there. Version equality is not proof that an author preserved a schema: publishing incompatible content under an unchanged contract version violates the contract.

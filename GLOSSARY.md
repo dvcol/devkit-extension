@@ -21,19 +21,22 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 
 ## Hosting and execution
 
-| Term                      | Definition                                                                                       | Distinction                                                                              |
-| ------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Host                      | The application composing providers, clients, adapters and policy                                | Can use several realms and providers concurrently                                        |
-| Provider                  | An identifiable owner offering contracts, operation execution and separate state                 | Multiple providers can offer the same capability                                         |
-| Realm                     | An extensible environment family, initially `webext` or `devserver`                              | Devframe and Vite are integrations within a realm, not mutually exclusive realm families |
-| Provider runtime          | The role responsible for admission, activation and authoritative operation execution             | May integrate into an existing native host rather than require a new runtime constructor |
-| Client runtime            | The role responsible for discovery, selection, subscriptions, calls and presentation bindings    | May run without owning the provider's native resources                                   |
-| Execution context         | The actual process, worker or document where code and native resources belong                    | Distinct from provider identity, realm and UI placement                                  |
-| Execution agent           | Target-scoped code performing delegated work for a provider in another execution                 | A content/page script does not automatically become an independently trusted provider    |
-| Adapter                   | Code integrating portable contracts with an environment's lifecycle, resources and communication | Broader than a transport; server adapters reuse existing Devframe/Vite machinery         |
-| Transport                 | The channel carrying protocol messages                                                           | Does not by itself implement capabilities or render UI                                   |
-| Native context            | The actual environment/library resources owned by a local execution                              | Remote metadata cannot contain native handles                                            |
-| Native context descriptor | An imported key associating a local context resource with its type                               | Presence is checked separately from a realm label                                        |
+| Term                      | Definition                                                                                           | Distinction                                                                                     |
+| ------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Host                      | The application composing providers, clients, adapters and policy                                    | Can use several realms and providers concurrently                                               |
+| Provider                  | An identifiable owner offering contracts, operation execution and separate state                     | Multiple providers can offer the same capability                                                |
+| Provider ID               | A stable logical identity configured by the embedding host for a provider                            | Preserves selection across backend recreation; does not authenticate an endpoint                |
+| Provider incarnation      | An opaque identity for one lifetime of that provider's backend runtime                               | Changes on backend recreation, not ordinary UI HMR or reconnect to the same running backend     |
+| Discovery registry        | The client composition root's owned collection of provider connections and their advertised metadata | Coordinates discovery for consumers; does not merge provider state or create another RPC engine |
+| Realm                     | An extensible environment family, initially `webext` or `devserver`                                  | Devframe and Vite are integrations within a realm, not mutually exclusive realm families        |
+| Provider runtime          | The role responsible for admission, activation and authoritative operation execution                 | May integrate into an existing native host rather than require a new runtime constructor        |
+| Client runtime            | The role responsible for discovery, selection, subscriptions, calls and presentation bindings        | May run without owning the provider's native resources                                          |
+| Execution context         | The actual process, worker or document where code and native resources belong                        | Distinct from provider identity, realm and UI placement                                         |
+| Execution agent           | Target-scoped code performing delegated work for a provider in another execution                     | A content/page script does not automatically become an independently trusted provider           |
+| Adapter                   | Code integrating portable contracts with an environment's lifecycle, resources and communication     | Broader than a transport; server adapters reuse existing Devframe/Vite machinery                |
+| Transport                 | The channel carrying protocol messages                                                               | Does not by itself implement capabilities or render UI                                          |
+| Native context            | The actual environment/library resources owned by a local execution                                  | Remote metadata cannot contain native handles                                                   |
+| Native context descriptor | An imported key associating a local context resource with its type                                   | Presence is checked separately from a realm label                                               |
 
 ## Ownership and lifecycle
 
