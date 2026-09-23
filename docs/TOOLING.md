@@ -2,6 +2,8 @@
 
 The workspace uses TypeScript 7, Vite, Oxlint with its TypeScript Go integration, and Oxfmt. Root tool versions are exact pins. The lockfile resolves every workspace dependency. The existing seven-day release-age and provenance downgrade policies remain enabled, so the selected Oxc and Turbo versions are the newest stable releases allowed by those policies on 2026-09-23. Package updates must pass the same checks before changing the pins.
 
+The pnpm 12 lockfile also contains a separate YAML document for the pinned package manager and its platform binaries. Keep that document committed and verify frozen installation with the repository's `pmOnFail: error` setting. Overriding it with `pmOnFail: ignore` skips this check and can hide missing package-manager metadata until CI.
+
 ## Commands and ownership
 
 | Scope              | Command                                       | Behavior                                                                                           |
