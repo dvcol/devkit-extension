@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-23",
+  "execution": {
+    "command": "node --input-type=module < docs/probes/vite-host-lifecycle/trace.mjs",
+    "workingDirectory": "repository root",
+    "exitCode": 0,
+    "approval": "Isolated ephemeral loopback listeners authorized through execution approval; no existing server/browser used.",
+    "dependenciesInstalled": false,
+    "repositorySourceChanges": false
+  },
+  "syntax": {
+    "command": "node --check docs/probes/vite-host-lifecycle/trace.mjs",
+    "exitCode": 0
+  },
+  "defaultLint": {
+    "command": "<repository>/node_modules/.bin/oxlint --deny-warnings trace.mjs",
+    "workingDirectory": "isolated scratch copy outside repository configuration discovery",
+    "exitCode": 0
+  },
+  "strictLint": {
+    "command": "PATH=<repository>/node_modules/.bin:$PATH oxlint --config <repository>/.oxlintrc.json --type-aware --deny-warnings <scratch>/trace.mjs",
+    "exitCode": 1,
+    "findings": [
+      "Trace restart function has62lines; policy limit50.",
+      "Promise.then callback omits return.",
+      "No configured TypeScript/JSDoc project for this exact stdin archive; copying without dependency graph produces unresolved import/global and unsafe-type findings."
+    ],
+    "claim": "Not a passing full repository strict profile. The archive preserves executed bytes; no later source refactor was executed."
+  },
+  "ignoredChecks": {
+    "repositoryLint": "docs/probes exclusion led to no files found, not a pass.",
+    "repositoryFormatting": "README excluded by docs/probes rules; no formatting pass claimed."
+  },
+  "cleanup": {
+    "ownedServers": 3,
+    "allNotListening": true,
+    "temporaryRootRemoved": true,
+    "executionExitCode": 0
+  },
+  "limits": [
+    "Public Vite lifecycle trace only. Native Devframe and DevTools lifecycle behavior inspected from release artifacts, not run here.",
+    "Explicit restart, not file watcher/config-loader or middleware-mode conformance.",
+    "No SDK integration wiring selected."
+  ],
+  "independentReplay": "Root reran the exact stdin program with Node/Vite. Exit0; parsed JSON matched result.json exactly, including all listeningAfterClose=false."
+}

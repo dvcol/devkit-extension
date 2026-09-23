@@ -1,0 +1,53 @@
+{
+  "date": "2026-09-23",
+  "publicArtifactsFetchedInMemory": [
+    {
+      "package": "@devframes/vite",
+      "version": "1.0.0",
+      "tarball": "https://registry.npmjs.org/@devframes/vite/-/vite-1.0.0.tgz",
+      "files": {
+        "dist/hub.mjs": "1744d5f72f5442a8ad7465dab1d8bcea618e09756af191efa55f8b21612c7aa3",
+        "dist/hub.d.mts": "8084826f1098dfcd9ff706421d47cd2a1bf7a11e45af73d627779fc5bae6dd72",
+        "dist/single.mjs": "66aee0cbe0a1499f3e9b29e65144eefef96055179dfa584dd6e4c431841a2c14",
+        "dist/single.d.mts": "074949d709973d457391001f274ca62618cee3edc28fc146b1e13bc672f048db"
+      }
+    },
+    {
+      "package": "@vitejs/devtools",
+      "version": "0.7.5",
+      "tarball": "https://registry.npmjs.org/@vitejs/devtools/-/devtools-0.7.5.tgz",
+      "files": {
+        "dist/index.d.ts": "3fede8beb600484471785a6ee51e577c2c0e44faf96bfa65d973c798684fcd5a",
+        "dist/plugins-C4WN3Ft6.js": "bf16300fa0b215698c82bf9a18624a39710515a18f7472a2d64704e3be58bfaa",
+        "dist/server-BIAKwFxh.js": "38113555c8c0b22a01db3729a3e28d32eaccbfce6ec6388cdbef15c51d0ba0f6"
+      }
+    }
+  ],
+  "installedArtifactsRead": [
+    {
+      "package": "vite",
+      "version": "8.3.0",
+      "file": "dist/node/chunks/node.js",
+      "sha256": "2d7a6a7a48f06baada8f6ceec415505c2426aa308fd23b8ace5da443bc7a9673"
+    },
+    {
+      "package": "@vitejs/devtools-kit",
+      "version": "0.7.5",
+      "file": "dist/node/index.js",
+      "sha256": "2b6d2cd1ef0b616630b6683d2a009262aca131dfff1015edf7049b6c8a46de35"
+    },
+    {
+      "package": "@devframes/hub",
+      "version": "1.0.0",
+      "file": "dist/node/initiate.mjs",
+      "sha256": "fa40fb13c6d592fe5d77cb48ec4b166dccdebbaeec258aa34560bd0cf140b846"
+    },
+    {
+      "package": "devframe",
+      "version": "1.0.0",
+      "file": "dist/instance-shell-wC2sfEU_.mjs",
+      "sha256": "3226793b13894f8996e7f0a03f1240061561c383d65855f5b240c70395b794f5"
+    }
+  ],
+  "note": "Only Vite was executed by this trace; native integrations were inspected. No package graph changes."
+}

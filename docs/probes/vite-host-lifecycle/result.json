@@ -1,0 +1,64 @@
+{
+  "vite": "8.3.0",
+  "node": "v26.9.0",
+  "cases": [
+    {
+      "name": "restart-order",
+      "beforeBundleRelease": [
+        "configure:1:start",
+        "configure:1:setup-complete",
+        "configure:1:post",
+        "initial:listening",
+        "configure:2:start",
+        "configure:2:setup-complete",
+        "configure:2:post",
+        "buildEnd:client",
+        "closeBundle:ssr:start",
+        "closeBundle:ssr:end",
+        "closeBundle:client:start"
+      ],
+      "events": [
+        "configure:1:start",
+        "configure:1:setup-complete",
+        "configure:1:post",
+        "initial:listening",
+        "configure:2:start",
+        "configure:2:setup-complete",
+        "configure:2:post",
+        "buildEnd:client",
+        "closeBundle:ssr:start",
+        "closeBundle:ssr:end",
+        "closeBundle:client:start",
+        "closeBundle:client:end",
+        "closeServer:restart:start",
+        "closeServer:restart:end",
+        "restart:resolved",
+        "buildEnd:client",
+        "closeBundle:ssr:start",
+        "closeBundle:ssr:end",
+        "closeBundle:client:start",
+        "closeBundle:client:end",
+        "closeServer:close:start",
+        "closeServer:close:end"
+      ],
+      "assertions": {
+        "newSetupBeforeOldCleanup": true,
+        "awaitedCloseBundle": true,
+        "awaitedCloseServer": true
+      },
+      "listeningAfterClose": false
+    },
+    {
+      "name": "closeBundle-failure",
+      "outcome": "resolved",
+      "events": ["closeBundle", "closeBundle", "closeServer"],
+      "listeningAfterClose": false
+    },
+    {
+      "name": "closeServer-failure",
+      "outcome": "rejected-with-original",
+      "events": ["closeBundle", "closeBundle", "closeServer"],
+      "listeningAfterClose": false
+    }
+  ]
+}
