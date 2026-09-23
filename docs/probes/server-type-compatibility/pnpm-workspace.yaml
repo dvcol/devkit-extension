@@ -1,0 +1,9 @@
+patchedDependencies:
+  devframe@1.0.0: patches/devframe.patch
+  crossws@0.4.12: patches/crossws.patch
+  h3@2.0.1-rc.32: patches/h3.patch
+packageExtensions:
+  devframe@1.0.0:
+    dependencies:
+      cac: 7.0.0
+      whenexpr: 0.1.2

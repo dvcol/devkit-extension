@@ -1,0 +1,27 @@
+[
+  {
+    "configuration": "tsconfig.baseline.json",
+    "exitCode": 0,
+    "output": ""
+  },
+  {
+    "configuration": "tsconfig.json",
+    "exitCode": 0,
+    "output": ""
+  },
+  {
+    "configuration": "tsconfig.kit.json",
+    "exitCode": 0,
+    "output": ""
+  },
+  {
+    "configuration": "tsconfig.strict.json",
+    "exitCode": 0,
+    "output": ""
+  },
+  {
+    "configuration": "tsconfig.strict-esnext-error.json",
+    "exitCode": 0,
+    "output": ""
+  }
+]

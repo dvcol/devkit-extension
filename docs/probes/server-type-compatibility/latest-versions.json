@@ -1,0 +1,13 @@
+{
+  "checkedOn": "2026-09-23",
+  "source": "https://registry.npmjs.org/<package>/latest",
+  "versions": {
+    "devframe": "1.0.0",
+    "@devframes/hub": "1.0.0",
+    "@vitejs/devtools-kit": "0.7.5",
+    "@vitejs/devtools": "0.7.5",
+    "crossws": "0.4.12",
+    "h3": "2.0.1-rc.32",
+    "cac": "7.0.0"
+  }
+}

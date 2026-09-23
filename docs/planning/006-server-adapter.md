@@ -187,6 +187,8 @@ This proves the public same-server attachment, not Vite DevTools preview, HMR, a
 
 Oxlint and the limited probe-source type check pass. Full declaration checking fails in upstream dependencies: six errors reproduce with imports only; four more scoped-state declaration errors appear with registry augmentation. [Validation output](../probes/server-preview/validation.json). These are explicit adoption blockers for a fully strict example. They do not justify a blanket `skipLibCheck` policy or a false passing conformance claim.
 
+A subsequent [strict declaration investigation](../research/server-type-compatibility.md) reproduces those errors and resolves the tested public hub/kit graph with exact-version declaration patches and dependency metadata corrections. A clean frozen-lock replay passes five TypeScript 7 configurations, including exact optional properties, checked indexed access and `skipLibCheck: false`. The patches leave runtime JavaScript byte-identical. This establishes a feasible strict dependency graph; it neither changes the original probe evidence nor implements the server adapter. External consumers still need a verified upstream release or an explicit distribution strategy for those fixes.
+
 The preserved source is the exact executed experiment. Its lint evidence uses the recorded default Oxlint command. An additional broad pedantic audit reports two function-length warnings and one top-level-await preference; it is not represented as passing the eventual monorepo's strict lint policy. The probe's native registry augmentation demonstrates the released upstream API, not a change to the SDK's explicit-descriptor authoring decision.
 
 ## Watched-output and launcher proof

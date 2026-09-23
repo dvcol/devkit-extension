@@ -1,0 +1,17 @@
+[
+  {
+    "package": "devframe",
+    "javascriptFiles": 86,
+    "identical": true
+  },
+  {
+    "package": "crossws",
+    "javascriptFiles": 28,
+    "identical": true
+  },
+  {
+    "package": "h3",
+    "javascriptFiles": 22,
+    "identical": true
+  }
+]

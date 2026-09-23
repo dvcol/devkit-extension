@@ -1,0 +1,25 @@
+{
+  "runtime": "v26.9.0",
+  "results": [
+    {
+      "property": "statusText",
+      "own": true,
+      "hasUndefinedValue": true
+    },
+    {
+      "property": "unhandled",
+      "own": true,
+      "hasUndefinedValue": true
+    },
+    {
+      "property": "data",
+      "own": true,
+      "hasUndefinedValue": true
+    },
+    {
+      "property": "body",
+      "own": true,
+      "hasUndefinedValue": true
+    }
+  ]
+}

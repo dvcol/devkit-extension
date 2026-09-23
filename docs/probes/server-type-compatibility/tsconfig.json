@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "ES2023",
+      "DOM"
+    ],
+    "skipLibCheck": false,
+    "noEmit": true
+  },
+  "include": [
+    "probe.ts", "browser-client.ts"
+  ]
+}

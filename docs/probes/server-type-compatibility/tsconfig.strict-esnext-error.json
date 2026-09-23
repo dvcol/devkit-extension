@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.strict.json",
+  "compilerOptions": {
+    "lib": [
+      "ES2023",
+      "DOM",
+      "ESNext.Error"
+    ]
+  }
+}

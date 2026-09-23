@@ -1,0 +1,51 @@
+diff --git a/dist/index.d.mts b/dist/index.d.mts
+--- a/dist/index.d.mts
++++ b/dist/index.d.mts
+@@ -1,6 +1,6 @@
+ import { CookieSerializeOptions, DynamicEventHandler, ErrorDetails, EventHandler, EventHandlerObject, EventHandlerRequest, EventHandlerResponse, EventHandlerWithFetch, FetchableObject, H3, H3$1, H3Config, H3Event, H3EventContext, H3Plugin, H3RouteMeta, HTTPError, HTTPEvent, HTTPHandler, HTTPMethod, HTTPResponse, InferEventInput, MaybePromise as MaybePromise$1, Middleware, ProxyOptions, ResolvedRequest } from "./h3.mjs";
+ import { NodeServerRequest, NodeServerResponse, ServerRequest, ServerRequestContext } from "srvx";
+-import { Hooks, Hooks as WebSocketHooks, Message as WebSocketMessage, Peer, Peer as WebSocketPeer } from "crossws";
++import { Hooks, Hooks as WebSocketHooks, Message as WebSocketMessage, Peer, Peer as WebSocketPeer } from "crossws/types";
+ 
+ export declare function isEvent(input: any): input is H3Event;
+ /**
+diff --git a/dist/h3.d.mts b/dist/h3.d.mts
+--- a/dist/h3.d.mts
++++ b/dist/h3.d.mts
+@@ -565,7 +565,7 @@
+    *
+    * **TIP:** Use `message` for longer error descriptions in JSON body.
+    */
+-  statusText?: string;
++  statusText?: string | undefined;
+   /**
+    * HTTP Error message.
+    *
+@@ -577,15 +577,15 @@
+    *
+    * Unhandled error stack trace, `data`, `body` and `message` are hidden for security reasons.
+    */
+-  unhandled?: boolean;
++  unhandled?: boolean | undefined;
+   /**
+    * Additional data to attach in the error JSON body under `data` key.
+    */
+-  data?: DataT;
++  data?: DataT | undefined;
+   /**
+    * Additional top level JSON body properties to attach in the error JSON body.
+    */
+-  body?: Record<string, unknown>;
++  body?: Record<string, unknown> | undefined;
+ }
+ /**
+  * HTTPError
+@@ -635,7 +635,7 @@
+    * Requiring a `status` rejects unrelated errors named `HTTPError` (e.g. from fetch clients like `ky` or `got`), while
+    * still accepting HTTPError-shaped errors from other packages (e.g. srvx `BodyTooLargeError`).
+    */
+-  static override isError(input: any): input is HTTPError;
++  static isError(input: any): input is HTTPError;
+   /**
+    * Create a new HTTPError with the given status code and optional status text and details.
+    *

@@ -1,0 +1,10 @@
+node_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/bun.d.mts(2,59): error TS2307: Cannot find module 'bun' or its corresponding type declarations.
+node_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(3,31): error TS2307: Cannot find module 'cloudflare:workers' or its corresponding type declarations.
+node_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(4,21): error TS2307: Cannot find module '@cloudflare/workers-types' or its corresponding type declarations.
+node_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(36,48): error TS2552: Cannot find name 'DurableObjectState'. Did you mean 'WSDurableObjectStub'?
+node_modules/.pnpm/devframe@1.0.0_srvx@1.0.5/node_modules/devframe/dist/client/index.d.mts(168,98): error TS2536: Type 'T' cannot be used to index type 'ScopedSharedStates<NS>'.
+node_modules/.pnpm/devframe@1.0.0_srvx@1.0.5/node_modules/devframe/dist/client/index.d.mts(168,147): error TS2536: Type 'T' cannot be used to index type 'ScopedSharedStates<NS>'.
+node_modules/.pnpm/devframe@1.0.0_srvx@1.0.5/node_modules/devframe/dist/context--tVkJw3W.d.mts(8,21): error TS2307: Cannot find module 'cac' or its corresponding type declarations.
+node_modules/.pnpm/devframe@1.0.0_srvx@1.0.5/node_modules/devframe/dist/context--tVkJw3W.d.mts(896,98): error TS2536: Type 'T' cannot be used to index type 'ScopedSharedStates<NS>'.
+node_modules/.pnpm/devframe@1.0.0_srvx@1.0.5/node_modules/devframe/dist/context--tVkJw3W.d.mts(896,147): error TS2536: Type 'T' cannot be used to index type 'ScopedSharedStates<NS>'.
+node_modules/.pnpm/h3@2.0.1-rc.32_crossws@0.4.12_srvx@1.0.5_/node_modules/h3/dist/h3.d.mts(638,19): error TS4113: This member cannot have an 'override' modifier because it is not declared in the base class 'Error'.

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "devframe-types",
+    "status": 0,
+    "output": ""
+  },
+  {
+    "name": "hub-node",
+    "status": 0,
+    "output": ""
+  },
+  {
+    "name": "hub-initiate",
+    "status": 1,
+    "output": "node_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/bun.d.mts(2,59): error TS2307: Cannot find module 'bun' or its corresponding type declarations.\nnode_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(3,31): error TS2307: Cannot find module 'cloudflare:workers' or its corresponding type declarations.\nnode_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(4,21): error TS2307: Cannot find module '@cloudflare/workers-types' or its corresponding type declarations.\nnode_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(36,48): error TS2552: Cannot find name 'DurableObjectState'. Did you mean 'WSDurableObjectStub'?\nnode_modules/.pnpm/h3@2.0.1-rc.32_crossws@0.4.12_srvx@1.0.5_/node_modules/h3/dist/h3.d.mts(638,19): error TS4113: This member cannot have an 'override' modifier because it is not declared in the base class 'Error'.\n"
+  },
+  {
+    "name": "kit-node",
+    "status": 1,
+    "output": "node_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/bun.d.mts(2,59): error TS2307: Cannot find module 'bun' or its corresponding type declarations.\nnode_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(3,31): error TS2307: Cannot find module 'cloudflare:workers' or its corresponding type declarations.\nnode_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(4,21): error TS2307: Cannot find module '@cloudflare/workers-types' or its corresponding type declarations.\nnode_modules/.pnpm/crossws@0.4.12_srvx@1.0.5/node_modules/crossws/dist/_chunks/cloudflare.d.mts(36,48): error TS2552: Cannot find name 'DurableObjectState'. Did you mean 'WSDurableObjectStub'?\nnode_modules/.pnpm/devframe@1.0.0_cac@7.0.0_srvx@1.0.5/node_modules/devframe/dist/utils/when.d.mts(1,52): error TS2307: Cannot find module 'whenexpr' or its corresponding type declarations.\nnode_modules/.pnpm/h3@2.0.1-rc.32_crossws@0.4.12_srvx@1.0.5_/node_modules/h3/dist/h3.d.mts(638,19): error TS4113: This member cannot have an 'override' modifier because it is not declared in the base class 'Error'.\n"
+  },
+  {
+    "name": "client",
+    "status": 0,
+    "output": ""
+  }
+]

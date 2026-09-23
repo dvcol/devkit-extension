@@ -1,0 +1,11 @@
+diff --git a/package.json b/package.json
+--- a/package.json
++++ b/package.json
+@@ -8,6 +8,7 @@
+   "sideEffects": false,
+   "type": "module",
+   "exports": {
++    "./types": { "types": "./dist/_chunks/adapter.d.mts" },
+     ".": "./dist/index.mjs",
+     "./sync": "./dist/sync.mjs",
+     "./adapters/bun": "./dist/adapters/bun.mjs",
