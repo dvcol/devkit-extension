@@ -251,3 +251,9 @@ The owner has settled independent scripts, their combined pnpm command, same-pro
 The watched-output and launcher findings are incorporated above. Release inspection has identified the supported kit/custom-host seam and the default host’s preview mismatch. Full DevTools shell behavior still needs a separately scoped real-host proof; its absence is explicit, not a question for the owner to answer from memory. The follow-on [Live preview and reload contract](https://github.com/dvcol/devkit-extension/issues/13) owns exact renderer/module/page update strategy and shutdown/reconnect sequencing; this ticket supplies lifecycle events and truthful native host bindings.
 
 The issue remains open until the adapter declaration inventory and Definition of Done are checked against the evidence. Routing/state/security/renderer contracts still own their respective behavior. Complete production implementation and real-host matrix execution remain tracked work.
+
+## 2026-09-24 preview attachment follow-up
+
+A [bounded native-host probe](../probes/vite-preview-hosts/README.md) attaches both actual backends to the HTTP server owned by `vite.preview()`, using public preview setup/shutdown hooks. Both return static HTML and native connection metadata over HTTP, execute the maintained typed counter action locally, remove their owned command and dispose their provider/backend before preview shutdown returns.
+
+This probe starts from a handwritten static fixture. It does not complete watched production output, remote authenticated calls, renderer mounting or browser HMR. DevTools preview resolves a serve/dev context without `viteServer`; its built-in branded asset hosting therefore needs explicit adapter wiring. These are implementation obligations within the accepted same-server preview model, not evidence requiring another backend process.
