@@ -28,10 +28,10 @@ index 8db367b73d7aabfa28a93cb8641ab3010f1b8650..989c8027a9fec572607c2ae6f6e65f0d
    };
    /** Streaming host scoped to this namespace. */
 diff --git a/dist/client/index.mjs b/dist/client/index.mjs
-index a26af04daee8a1d93897225fa8efa43b9b1efb32..1d7dd29bdd4b7cdefd27b961e774a817cc4801a6 100644
+index a26af04daee8a1d93897225fa8efa43b9b1efb32..28ef65345c8bd87fc30208d4912d07ff8aad7e5d 100644
 --- a/dist/client/index.mjs
 +++ b/dist/client/index.mjs
-@@ -481,31 +481,28 @@ function getDevframeConnection() {
+@@ -481,31 +481,27 @@ function getDevframeConnection() {
  * fetching `__connection.json` from the configured base URLs.
  */
  async function setupDevframeConnection(options = {}) {
@@ -40,7 +40,16 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..1d7dd29bdd4b7cdefd27b961e774a817
 -		storeConnection(connection);
 -		return connection;
 -	}
--	const bases = Array.isArray(options.baseURL) ? options.baseURL : [options.baseURL ?? "./"];
++	const connection = await resolveDevframeConnection(options);
++	const authToken = options.authToken ?? connection.authToken ?? connection.connectionMeta.authToken;
++	const resolvedConnection = withAuthToken(connection, options.isolateConnection ? authToken : readStoredAuthToken(authToken));
++	if (options.isolateConnection) return resolvedConnection;
++	storeConnection(resolvedConnection);
++	return resolvedConnection;
++}
++async function resolveDevframeConnection(options) {
++	if (options.connection) return options.connection;
+ 	const bases = Array.isArray(options.baseURL) ? options.baseURL : [options.baseURL ?? "./"];
 -	if (options.connectionMeta) {
 -		const connection = {
 -			connectionMeta: options.connectionMeta,
@@ -53,92 +62,105 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..1d7dd29bdd4b7cdefd27b961e774a817
 -		};
 -		storeConnection(connection);
 -		return connection;
-+	const isolateConnection = options.isolateConnection === true;
-+	function resolveAuthToken(authToken) {
-+		if (isolateConnection) return authToken;
-+		return readStoredAuthToken(authToken);
- 	}
+-	}
 -	const existing = getDevframeConnection();
 -	if (existing) {
 -		const connection = withAuthToken(existing, readStoredAuthToken(options.authToken ?? existing.authToken ?? existing.connectionMeta.authToken));
 -		storeConnection(connection);
-+	function finishConnectionSetup(connection) {
-+		if (!isolateConnection) storeConnection(connection);
- 		return connection;
- 	}
-+	if (options.connection) return finishConnectionSetup(withAuthToken(options.connection, resolveAuthToken(options.authToken ?? options.connection.authToken ?? options.connection.connectionMeta.authToken)));
-+	const bases = Array.isArray(options.baseURL) ? options.baseURL : [options.baseURL ?? "./"];
-+	if (options.connectionMeta) return finishConnectionSetup({
+-		return connection;
+-	}
++	if (options.connectionMeta) return {
 +		connectionMeta: options.connectionMeta,
 +		/**
 +		* Preserve the established connectionMeta behavior: an explicitly
 +		* supplied descriptor resolves from the caller's explicit base.
 +		*/
 +		metaBaseUrl: resolveMetaBaseUrl(bases[0] ?? "./"),
-+		authToken: resolveAuthToken(options.authToken ?? options.connectionMeta.authToken)
-+	});
-+	const existing = isolateConnection ? void 0 : getDevframeConnection();
-+	if (existing) return finishConnectionSetup(withAuthToken(existing, resolveAuthToken(options.authToken ?? existing.authToken ?? existing.connectionMeta.authToken)));
++		authToken: options.connectionMeta.authToken
++	};
++	const existing = options.isolateConnection ? void 0 : getDevframeConnection();
++	if (existing) return existing;
  	const errors = [];
  	for (const base of bases) {
  		const metaPath = withBase(DEVFRAME_CONNECTION_META_FILENAME, base);
-@@ -515,7 +512,7 @@ async function setupDevframeConnection(options = {}) {
+@@ -515,7 +511,7 @@ async function setupDevframeConnection(options = {}) {
  			if (!response.ok) throw new Error(`Failed to fetch connection meta from ${metaUrl}: ${response.status}`);
  			const connectionMeta = await response.json();
  			const loadedFrom = response.url || metaUrl;
 -			const connection = {
-+			return finishConnectionSetup({
++			return {
  				connectionMeta,
  				/**
  				* A served `baseUrl` re-points relative resolution (RPC dump shards,
-@@ -523,10 +520,8 @@ async function setupDevframeConnection(options = {}) {
+@@ -523,10 +519,8 @@ async function setupDevframeConnection(options = {}) {
  				* per-frame meta directs each frame SPA at the hub's own dump.
  				*/
  				metaBaseUrl: connectionMeta.baseUrl ? new URL(connectionMeta.baseUrl, loadedFrom).href : loadedFrom,
 -				authToken: readStoredAuthToken(options.authToken ?? connectionMeta.authToken)
--			};
++				authToken: connectionMeta.authToken
+ 			};
 -			storeConnection(connection);
 -			return connection;
-+				authToken: resolveAuthToken(options.authToken ?? connectionMeta.authToken)
-+			});
  		} catch (error) {
  			errors.push(error);
  		}
-@@ -1805,6 +1800,7 @@ function resolveClientTransport(requested, meta) {
+@@ -1804,6 +1798,13 @@ function resolveClientTransport(requested, meta) {
+ 	if (hasSse) return "sse";
  	throw new Error("[devframe] This server advertises no RPC transport (backend \"none\"), so there is nothing to connect to. Enable the WebSocket or SSE endpoint on the server, or use its static/MCP surfaces instead.");
  }
++function createAuthChannel(isolateConnection = false) {
++	if (isolateConnection) return void 0;
++	try {
++		/** Channel name kept for cross-tab interop with the Vite DevTools auth page. */
++		return new BroadcastChannel("devframe-auth");
++	} catch {}
++}
  async function getDevframeRpcClient(options = {}) {
-+	const isolateConnection = options.isolateConnection === true;
  	const { baseURL = "./", rpcOptions = {}, cacheOptions = false } = options;
  	const events = createEventEmitter();
- 	const bases = Array.isArray(baseURL) ? baseURL : [baseURL];
-@@ -1865,7 +1861,7 @@ async function getDevframeRpcClient(options = {}) {
+@@ -1863,10 +1864,14 @@ async function getDevframeRpcClient(options = {}) {
+ 		...liveModeOptions,
+ 		wsOptions: options.wsOptions
  	});
- 	let authChannel;
- 	try {
+-	let authChannel;
+-	try {
 -		authChannel = new BroadcastChannel("devframe-auth");
-+		if (!isolateConnection) authChannel = new BroadcastChannel("devframe-auth");
- 	} catch {}
+-	} catch {}
++	const authChannel = createAuthChannel(options.isolateConnection);
++	function updateAuthToken(token) {
++		connection = {
++			...connection,
++			authToken: token
++		};
++		if (!options.isolateConnection) storeAuthToken(token);
++	}
  	let bootstrapAuthPromise;
  	let bootstrapAuthSettled = false;
-@@ -1910,7 +1906,7 @@ async function getDevframeRpcClient(options = {}) {
+ 	function gateOnBootstrapAuth(fn) {
+@@ -1910,21 +1915,13 @@ async function getDevframeRpcClient(options = {}) {
  		ensureTrusted: mode.ensureTrusted,
  		requestTrust: mode.requestTrust,
  		requestTrustWithToken: async (token) => {
 -			storeAuthToken(token);
-+			if (!isolateConnection) storeAuthToken(token);
- 			connection = {
- 				...connection,
- 				authToken: token
-@@ -1920,7 +1916,7 @@ async function getDevframeRpcClient(options = {}) {
+-			connection = {
+-				...connection,
+-				authToken: token
+-			};
++			updateAuthToken(token);
+ 			return mode.requestTrustWithToken(token);
+ 		},
  		requestTrustWithCode: async (code) => {
  			const token = await mode.requestTrustWithCode(code);
  			if (!token) return false;
 -			storeAuthToken(token);
-+			if (!isolateConnection) storeAuthToken(token);
- 			connection = {
- 				...connection,
- 				authToken: token
+-			connection = {
+-				...connection,
+-				authToken: token
+-			};
++			updateAuthToken(token);
+ 			try {
+ 				authChannel?.postMessage({
+ 					type: "auth-update",
 diff --git a/dist/context--tVkJw3W.d.mts b/dist/context--tVkJw3W.d.mts
 index db223a17802de0b41ba214693546fa06aa4e0276..a5bd8bb625ab472fcfe74bc7f973043dbf83206c 100644
 --- a/dist/context--tVkJw3W.d.mts

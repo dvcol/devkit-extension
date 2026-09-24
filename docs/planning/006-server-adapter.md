@@ -263,3 +263,10 @@ This probe starts from a handwritten static fixture. It does not complete watche
 The owner authorized an upstream draft and an exact-version local backport. [Devframe PR 401](https://github.com/devframes/devframe/pull/401) adds `isolateConnection?: boolean` to the native setup/connect options. It preserves default sharing and scopes endpoint discovery, token persistence and authentication broadcasts to each opted-in RPC client. The workspace patch now includes this behavior alongside its earlier declaration repairs; earlier statements about byte-identical runtime JavaScript describe the declaration-only stage.
 
 The backport uses the upstream built setup function and public option contract. Maintained package tests exercise the installed dependency, including shared defaults and local credential updates. This unblocks owned connection integration, but does not itself implement the provider registry/router, propagate the patch to downstream installations, or rewrite prebundled hub UI assets.
+
+
+## Connection-isolation simplification, 2026-09-24
+
+The upstream draft now separates connection discovery from credential finalization. All discovery paths return a connection; one setup boundary selects the token and persists shared-mode state. RPC token and OTP updates use one helper, and isolated authentication-channel creation returns early. This removes repeated credential handling without adding a storage abstraction or public API.
+
+The workspace backport follows [upstream commit 9a4cacf4](https://github.com/devframes/devframe/commit/9a4cacf4). All 39 affected upstream tests, package build/typecheck/lint, and 19 installed-server tests pass. The isolated option and default shared behavior remain unchanged.
