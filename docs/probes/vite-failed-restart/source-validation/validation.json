@@ -1,0 +1,25 @@
+{
+  "base": "5f894339d27882fedc86bf6b1076fa6d92e404f3",
+  "proposal": "8da06debd747e039a37e1ada88ab142fc3189cf4",
+  "filesChanged": 2,
+  "runtimeChange": {
+    "netAdditionalLines": 13
+  },
+  "regressionBefore": {
+    "failed": 2,
+    "reason": "Replacement close hook is never called"
+  },
+  "hookSuiteAfter": {
+    "passed": 26
+  },
+  "checks": [
+    "Vite package build including declaration checks",
+    "Vite package typecheck",
+    "ESLint for both changed files",
+    "Oxfmt for both changed files",
+    "Built-source programmatic and real config-watch replay"
+  ],
+  "workspaceVitePatch": false,
+  "upstreamPrOpened": false,
+  "publication": "Requires submitter-written PR description under upstream AI policy"
+}

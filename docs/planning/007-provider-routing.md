@@ -123,7 +123,7 @@ This section supersedes the unresolved naming, identifier and patch-authorizatio
 - `defineActionContract` declares a public contract. `defineAction` defines its handler. `defineService`, `defineAction` and `defineExtension` now take one object containing their descriptor and implementation fields. Maintained examples, type fixtures, glossary and architecture use these names. Archived probes preserve their originally executed API.
 - Client composition owns the in-memory registry/router. Every backend connection retains its own authentication; no mandatory daemon is introduced.
 - The owner authorized a narrow Devframe draft upstream PR for opt-in connection isolation, followed by adoption of the matching exact-version workspace patch. Publication still requires an upstream release or an explicit downstream distribution policy.
-- No Vite patch or upstream PR is authorized or adopted. Evaluate SDK-independent reproduction, upstream lifecycle intent and supported alternatives before recommending one.
+- The owner accepts the failed-restart cleanup gap while Vite remains unpatched. A narrow upstream proposal may proceed through source validation and human review; it does not block SDK implementation.
 
 The declaration migration does not implement remote discovery, routing defaults or broadcast. Those remain explicit issue 7 obligations.
 

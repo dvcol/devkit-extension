@@ -18,6 +18,8 @@ The owner confirmed that normal server development follows Vite and the existing
 
 Adapters install and dispose their own contributions through the host's supported lifecycle. Core does not supervise processes or automatically restart an embedding host after failed cleanup. A host-specific restart mechanism requires an actual integration need and an explicit ownership policy. Vite's in-process server restart is not proof that arbitrary plugin timers, callbacks or in-flight work stopped.
 
+The owner accepts Vite's current failed-restart replacement-cleanup gap while the dependency remains unpatched. A [separate upstream proposal](./docs/probes/vite-failed-restart/source-validation/README.md) closes an abandoned replacement after old shutdown rejects. Normal SDK implementation does not depend on that proposal or add compensating restart machinery.
+
 | Workflow                                          | Host owns                                                | Adapter owns                                                    |
 | ------------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------- |
 | Vite development, including supported bundled dev | Module graph, HMR, HTTP server and normal server restart | Portable registrations, local native contexts and their cleanup |
