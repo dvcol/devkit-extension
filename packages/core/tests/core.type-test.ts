@@ -1,8 +1,8 @@
 /** Compile-only fixtures exercise the shipped declaration API. Never execute this module. */
 import { z } from 'zod';
 import {
+  defineActionContract,
   defineAction,
-  defineActionContribution,
   defineCapability,
   defineContributionKind,
   defineExecution,
@@ -48,7 +48,8 @@ const titleCapability = defineCapability({
   },
 });
 
-export const titleService = defineService(titleCapability, {
+export const titleService = defineService({
+  capability: titleCapability,
   id: 'example.title-service',
   execution: serverExecution,
   setup({ native, services, scope }) {
@@ -76,12 +77,13 @@ export const titleService = defineService(titleCapability, {
   },
 });
 
-const readAction = defineAction({
+const readAction = defineActionContract({
   id: 'example.read',
   version: 1,
   operation: titleCapability.operations.read,
 });
-export const readContribution = defineActionContribution(readAction, {
+export const readContribution = defineAction({
+  contract: readAction,
   id: 'example.read-handler',
   execution: serverExecution,
   requires: { titles: titleCapability },
@@ -98,7 +100,8 @@ const customKind = defineContributionKind({
   id: 'example.notification',
   schema: z.object({ message: z.string() }),
 });
-export const notification = defineExtension(customKind, {
+export const notification = defineExtension({
+  descriptor: customKind,
   id: 'example.ready',
   execution: serverExecution,
   payload: { message: 'Ready' },
@@ -181,22 +184,30 @@ definePlugin({
   // @ts-expect-error Action entries require their contract, requirements and handler.
   actions: [{ id: 'bad', kind: 'action', execution: serverExecution }],
 });
-// @ts-expect-error Custom-kind payloads match the declared schema.
-defineExtension(customKind, { id: 'bad', execution: serverExecution, payload: { message: 1 } });
+defineExtension({
+  descriptor: customKind,
+  id: 'bad',
+  execution: serverExecution,
+  // @ts-expect-error Custom-kind payloads match the declared schema.
+  payload: { message: 1 },
+});
 
-defineService(titleCapability, {
+defineService({
+  capability: titleCapability,
   id: 'example.missing-methods',
   execution: serverExecution,
   // @ts-expect-error Implementations must supply every method.
   setup: () => ({ status: () => true }),
 });
-defineService(titleCapability, {
+defineService({
+  capability: titleCapability,
   id: 'example.wrong-results',
   execution: serverExecution,
   // @ts-expect-error Return schema transformations do not permit a number implementation.
   setup: () => ({ read: () => '', status: () => true, normalize: () => 12 }),
 });
-defineActionContribution(readAction, {
+defineAction({
+  contract: readAction,
   id: 'example.wrong-action-result',
   execution: serverExecution,
   // @ts-expect-error Action results must match the declared output schema.

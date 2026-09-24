@@ -43,7 +43,8 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       const service = admitted(
         await previous.services.replace(
           admitted(previous.startup.services[0]),
-          defineService(counterCapability, {
+          defineService({
+            capability: counterCapability,
             id: 'example.delayed-counter',
             execution: serverExecution,
             setup(context) {
@@ -94,7 +95,8 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       const service = admitted(
         await provider.services.replace(
           admitted(provider.startup.services[0]),
-          defineService(counterCapability, {
+          defineService({
+            capability: counterCapability,
             id: 'example.failed-cleanup',
             execution: serverExecution,
             setup(context) {

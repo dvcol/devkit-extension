@@ -1,5 +1,5 @@
 import {
-  defineActionContribution,
+  defineAction,
   defineCapability,
   defineContributionKind,
   defineExecution,
@@ -28,7 +28,7 @@ describe('provider admission and invocation contracts', () => {
     const setup = vi.fn<() => { echo: (value: string) => string }>(() => ({
       echo: (value) => value,
     }));
-    const definition = defineService(capability, { id: 'service', execution, setup });
+    const definition = defineService({ capability: capability, id: 'service', execution, setup });
     const { runtime } = provider();
     await expect(runtime.startup({ services: [definition, definition] })).rejects.toMatchObject({
       code: 'duplicate-registration',
@@ -66,7 +66,8 @@ describe('provider admission and invocation contracts', () => {
         definePlugin({
           id: 'incompatible',
           actions: [
-            defineActionContribution(action, {
+            defineAction({
+              contract: action,
               id: 'action',
               execution,
               requires: { newer },
@@ -82,7 +83,8 @@ describe('provider admission and invocation contracts', () => {
     });
     const foreign = admitted(
       await runtime.services.install(
-        defineService(newer, {
+        defineService({
+          capability: newer,
           id: 'foreign',
           execution: defineExecution({ id: 'another.execution' }),
           setup: () => ({ echo: (value) => value }),
@@ -124,11 +126,11 @@ describe('provider admission and invocation contracts', () => {
     });
     const bad = definePlugin({
       id: 'bad',
-      extensions: [defineExtension(kind, { id: 'extension', execution, payload: 'x' })],
+      extensions: [defineExtension({ descriptor: kind, id: 'extension', execution, payload: 'x' })],
     });
     await expect(
       runtime.startup({
-        services: [defineService(capability, { id: 'service', execution, setup })],
+        services: [defineService({ capability: capability, id: 'service', execution, setup })],
         plugins: [bad],
       }),
     ).rejects.toMatchObject({ code: 'invalid-definition' });
@@ -137,7 +139,9 @@ describe('provider admission and invocation contracts', () => {
       await runtime.plugins.install(
         definePlugin({
           id: 'good',
-          extensions: [defineExtension(kind, { id: 'extension', execution, payload: 'okay' })],
+          extensions: [
+            defineExtension({ descriptor: kind, id: 'extension', execution, payload: 'okay' }),
+          ],
         }),
       ),
     );
@@ -153,7 +157,12 @@ describe('provider admission and invocation contracts', () => {
     const handler = vi.fn<(value: string) => string>((value) => value);
     const { runtime } = provider();
     await runtime.services.install(
-      defineService(capability, { id: 'service', execution, setup: () => ({ echo: handler }) }),
+      defineService({
+        capability: capability,
+        id: 'service',
+        execution,
+        setup: () => ({ echo: handler }),
+      }),
     );
     const counterfeit = defineCapability({
       id: capability.id,
@@ -189,7 +198,8 @@ describe('provider admission and invocation contracts', () => {
     });
     const { runtime } = provider();
     await runtime.services.install(
-      defineService(unusual, {
+      defineService({
+        capability: unusual,
         id: 'unusual',
         execution,
         setup: () => ({ ['__proto__']: (value) => value }),
@@ -199,7 +209,8 @@ describe('provider admission and invocation contracts', () => {
     expect(Object.hasOwn(available(resolution).api, '__proto__')).toBe(true);
     expect(Object.getPrototypeOf(available(resolution).api)).toBe(Object.prototype);
     await expect(available(resolution).api['__proto__']('own')).resolves.toBe('own');
-    const contribution = defineActionContribution(action, {
+    const contribution = defineAction({
+      contract: action,
       id: 'action',
       execution,
       requires: { ['__proto__']: unusual },

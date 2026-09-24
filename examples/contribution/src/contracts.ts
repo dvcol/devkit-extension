@@ -1,4 +1,4 @@
-import { defineAction, defineCapability, defineOperation } from '@devkit/core';
+import { defineActionContract, defineCapability, defineOperation } from '@devkit/core';
 import { z } from 'zod';
 
 export const counterCapability = defineCapability({
@@ -18,7 +18,7 @@ export const counterCapability = defineCapability({
   },
 });
 
-export const increaseCounterAction = defineAction({
+export const increaseCounterAction = defineActionContract({
   id: 'example.counter.increase',
   version: 1,
   operation: counterCapability.operations.increase,

@@ -1,6 +1,6 @@
 import {
+  defineActionContract,
   defineAction,
-  defineActionContribution,
   defineCapability,
   defineContributionKind,
   defineExecution,
@@ -24,14 +24,12 @@ const capability = defineCapability({
 });
 
 function service(id: string, version = 1) {
-  return defineService(
-    defineCapability({ id: capability.id, operations: capability.operations, version }),
-    {
-      id,
-      execution,
-      setup: () => ({ echo: (input) => input }),
-    },
-  );
+  return defineService({
+    capability: defineCapability({ id: capability.id, operations: capability.operations, version }),
+    id,
+    execution,
+    setup: () => ({ echo: (input) => input }),
+  });
 }
 
 function reservationOf(admission: Admission | undefined) {
@@ -48,10 +46,16 @@ describe('atomic admission', () => {
     const existing = service('existing');
     const registry = createAdmissionRegistry({ providerId: 'server' });
     registry.reserve({ services: [existing] });
-    const candidate = defineService(
-      defineCapability({ id: capability.id, operations: capability.operations, version: 2 }),
-      { id: 'candidate', execution, setup },
-    );
+    const candidate = defineService({
+      capability: defineCapability({
+        id: capability.id,
+        operations: capability.operations,
+        version: 2,
+      }),
+      id: 'candidate',
+      execution,
+      setup,
+    });
     expect(() => registry.reserve({ services: [candidate, existing] })).toThrow(
       'already registered',
     );
@@ -103,14 +107,12 @@ describe('atomic admission', () => {
   it('relaxed plugin keeps independent declarations and records skipped service', () => {
     expect.assertions(3);
     const registry = createAdmissionRegistry({ providerId: 'server', strict: false });
-    const action = defineActionContribution(
-      defineAction({ id: 'test.action', version: 1, operation }),
-      {
-        id: 'test.handler',
-        execution,
-        handler: ({ input }) => input,
-      },
-    );
+    const action = defineAction({
+      contract: defineActionContract({ id: 'test.action', version: 1, operation }),
+      id: 'test.handler',
+      execution,
+      handler: ({ input }) => input,
+    });
     const result = registry.reserve({
       services: [service('host')],
       plugins: [
@@ -147,13 +149,15 @@ describe('atomic admission', () => {
       version: 1,
       operations: capability.operations,
     });
-    const first = defineService(capability, {
+    const first = defineService({
+      capability: capability,
       id: 'first',
       execution,
       requires: { other },
       setup: () => ({ echo: (input) => input }),
     });
-    const second = defineService(other, {
+    const second = defineService({
+      capability: other,
       id: 'second',
       execution,
       requires: { first: capability },
@@ -162,7 +166,8 @@ describe('atomic admission', () => {
     const registry = createAdmissionRegistry({ providerId: 'server', strict: false });
     registry.reserve({ services: [first] });
     expect(() => registry.reserve({ services: [second] })).toThrow('cycle');
-    const independent = defineService(other, {
+    const independent = defineService({
+      capability: other,
       id: 'second',
       execution,
       setup: () => ({ echo: (input) => input }),
@@ -176,7 +181,9 @@ describe('atomic admission', () => {
     const kind = defineContributionKind({ id: 'test.custom', schema: z.string() });
     const plugin = definePlugin({
       id: 'custom',
-      extensions: [defineExtension(kind, { id: 'extension', execution, payload: 'value' })],
+      extensions: [
+        defineExtension({ descriptor: kind, id: 'extension', execution, payload: 'value' }),
+      ],
     });
     expect(() => registry.reserve({ services: [service('candidate')], plugins: [plugin] })).toThrow(
       'Unknown contribution kind',

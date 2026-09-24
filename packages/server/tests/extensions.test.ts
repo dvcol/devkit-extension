@@ -39,7 +39,8 @@ describe('server contribution kinds and diagnostics', () => {
         definePlugin({
           id: 'example.commands',
           extensions: [
-            defineExtension(commandKind, {
+            defineExtension({
+              descriptor: commandKind,
               id: 'example:command',
               execution: serverExecution,
               payload: { title: 'Custom command' },

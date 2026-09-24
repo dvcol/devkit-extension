@@ -39,7 +39,7 @@ const invalidInput: OperationInput<typeof operation> = 42;
 void invalidInput;
 const execution = defineExecution({ id: 'consumer.server' });
 const capability = defineCapability({ id: 'consumer.echo', version: 1, operations: { echo: operation } });
-const service = defineService(capability, {
+const service = defineService({ capability: capability,
   id: 'consumer.service', execution, setup: () => ({ echo: (value) => value }),
 });
 const plugin = definePlugin({ id: 'consumer.plugin', services: [service] });

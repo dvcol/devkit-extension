@@ -1,9 +1,4 @@
-import {
-  defineActionContribution,
-  defineCapability,
-  definePlugin,
-  defineService,
-} from '@devkit/core';
+import { defineAction, defineCapability, definePlugin, defineService } from '@devkit/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -25,7 +20,8 @@ describe('provider lifecycle composition', () => {
     const { runtime } = provider({ report });
     const handle = admitted(
       await runtime.services.install(
-        defineService(capability, {
+        defineService({
+          capability: capability,
           id: 'failed',
           execution,
           setup() {
@@ -53,7 +49,8 @@ describe('provider lifecycle composition', () => {
       version: 1,
       operations: { echo: operation },
     });
-    const dependent = defineService(other, {
+    const dependent = defineService({
+      capability: other,
       id: 'dependent',
       execution,
       requires: { source: capability },
@@ -62,7 +59,8 @@ describe('provider lifecycle composition', () => {
         return { echo: (value) => services.source.api.echo(value) };
       },
     });
-    const source = defineService(capability, {
+    const source = defineService({
+      capability: capability,
       id: 'source',
       execution,
       setup() {
@@ -70,7 +68,8 @@ describe('provider lifecycle composition', () => {
         return { echo: (value) => value };
       },
     });
-    const contribution = defineActionContribution(action, {
+    const contribution = defineAction({
+      contract: action,
       id: 'action',
       execution,
       requires: { other },
@@ -102,7 +101,8 @@ describe('provider lifecycle composition', () => {
   it('restores waiting dependents automatically but preserves explicit disable', async () => {
     expect.assertions(8);
     const { runtime } = provider();
-    const contribution = defineActionContribution(action, {
+    const contribution = defineAction({
+      contract: action,
       id: 'action',
       execution,
       requires: { source: capability },
@@ -143,8 +143,9 @@ describe('provider lifecycle composition', () => {
       .mockImplementationOnce(() => {
         throw new Error('temporary failure');
       });
-    const failing = defineService(capability, { id: 'failing', execution, setup });
-    const independent = defineActionContribution(action, {
+    const failing = defineService({ capability: capability, id: 'failing', execution, setup });
+    const independent = defineAction({
+      contract: action,
       id: 'independent',
       execution,
       handler: ({ input }) => input,

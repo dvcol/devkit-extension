@@ -19,6 +19,14 @@ export const title = defineCapability({
 });
 ```
 
+| Shared contract                                    | Implementation                                                   | Plugin property |
+| -------------------------------------------------- | ---------------------------------------------------------------- | --------------- |
+| `defineCapability({ id, version, operations })`    | `defineService({ capability, id, execution, requires?, setup })` | `services`      |
+| `defineActionContract({ id, version, operation })` | `defineAction({ contract, id, execution, requires?, handler })`  | `actions`       |
+| `defineContributionKind({ id, schema })`           | `defineExtension({ descriptor, id, execution, payload })`        | `extensions`    |
+
+Each helper takes one object. Contracts preserve inference for handler input, result, target and named dependencies. `defineAction` now defines the handler; the former contract helper is named `defineActionContract`.
+
 Factories reject invalid identifiers, non-positive or unsafe contract versions, unknown core declaration fields, wrong contribution kinds, malformed Standard Schema protocols and invalid execution/requirement descriptors. They snapshot and freeze declaration records, nested contract and operation envelopes, execution identities, requirements and plugin lists. Mutating a structural input afterward cannot change an admitted definition's identity or dependencies. Imported schemas, payload values and handlers keep their identity and ownership; factories never freeze caller-owned objects.
 
 Definition creation does not run setup, handlers or schema validators. The provider validates custom payloads during admission and operation values during invocation, including asynchronous schemas. Both input and result types use Standard Schema `InferInput`; validation must not substitute transformed schema output.

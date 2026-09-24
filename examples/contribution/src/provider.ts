@@ -1,5 +1,5 @@
 import {
-  defineActionContribution,
+  defineAction,
   defineExecution,
   defineNativeContext,
   definePlugin,
@@ -33,7 +33,8 @@ export function counterNativeAccess(source: MemoryCounter): NativeContextAccess 
   return { get };
 }
 
-export const counterService = defineService(counterCapability, {
+export const counterService = defineService({
+  capability: counterCapability,
   id: 'example.counter-service',
   execution: exampleExecution,
   setup({ native, scope }) {
@@ -55,7 +56,8 @@ export const counterService = defineService(counterCapability, {
 export const counterActionsPlugin = definePlugin({
   id: 'example.counter-actions',
   actions: [
-    defineActionContribution(increaseCounterAction, {
+    defineAction({
+      contract: increaseCounterAction,
       id: 'example.increase-counter',
       execution: exampleExecution,
       requires: { counter: counterCapability },

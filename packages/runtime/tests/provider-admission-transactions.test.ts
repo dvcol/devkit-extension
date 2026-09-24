@@ -26,13 +26,20 @@ describe('replacement reservation graph', () => {
   it('rejects an incoming batch that would break the retained graph if replacement aborts', () => {
     expect.assertions(3);
     const registry = createAdmissionRegistry({ providerId: 'example.provider' });
-    const old = defineService(capability, { id: 'old', execution, requires: { other }, setup });
+    const old = defineService({
+      capability: capability,
+      id: 'old',
+      execution,
+      requires: { other },
+      setup,
+    });
     const current = reserved(registry.reserve({ services: [old] })[0]);
     const transaction = registry.beginReplacement(
-      { services: [defineService(capability, { id: 'new', execution, setup })] },
+      { services: [defineService({ capability: capability, id: 'new', execution, setup })] },
       current,
     );
-    const cyclicOnRollback = defineService(other, {
+    const cyclicOnRollback = defineService({
+      capability: other,
       id: 'other',
       execution,
       requires: { source: capability },
@@ -42,8 +49,9 @@ describe('replacement reservation graph', () => {
     transaction.abort();
     expect(() => registry.reserve({ services: [old] })).toThrow('already registered');
     expect(
-      registry.reserve({ services: [defineService(other, { id: 'other', execution, setup })] })[0]
-        ?.status,
+      registry.reserve({
+        services: [defineService({ capability: other, id: 'other', execution, setup })],
+      })[0]?.status,
     ).toBe('reserved');
   });
 
@@ -52,17 +60,19 @@ describe('replacement reservation graph', () => {
     const registry = createAdmissionRegistry({ providerId: 'example.provider' });
     const current = reserved(
       registry.reserve({
-        services: [defineService(capability, { id: 'old', execution, setup })],
+        services: [defineService({ capability: capability, id: 'old', execution, setup })],
       })[0],
     );
-    const replacement = defineService(capability, {
+    const replacement = defineService({
+      capability: capability,
       id: 'new',
       execution,
       requires: { other },
       setup,
     });
     const transaction = registry.beginReplacement({ services: [replacement] }, current);
-    const cyclicAfterCommit = defineService(other, {
+    const cyclicAfterCommit = defineService({
+      capability: other,
       id: 'other',
       execution,
       requires: { source: capability },
@@ -71,7 +81,7 @@ describe('replacement reservation graph', () => {
     expect(() => registry.reserve({ services: [cyclicAfterCommit] })).toThrow('cycle');
     expect(
       registry.reserve({
-        services: [defineService(independent, { id: 'independent', execution, setup })],
+        services: [defineService({ capability: independent, id: 'independent', execution, setup })],
       })[0]?.status,
     ).toBe('reserved');
     registry.release(current);
@@ -85,22 +95,34 @@ describe('replacement reservation graph', () => {
     const first = definePlugin({
       id: 'plugin',
       services: [
-        defineService(capability, { id: 'first', execution, requires: { other }, setup }),
-        defineService(other, { id: 'other', execution, setup }),
+        defineService({
+          capability: capability,
+          id: 'first',
+          execution,
+          requires: { other },
+          setup,
+        }),
+        defineService({ capability: other, id: 'other', execution, setup }),
       ],
     });
     const current = reserved(registry.reserve({ plugins: [first] })[0]);
     const second = definePlugin({
       id: 'plugin',
       services: [
-        defineService(capability, { id: 'first', execution, setup }),
-        defineService(other, { id: 'other', execution, requires: { source: capability }, setup }),
+        defineService({ capability: capability, id: 'first', execution, setup }),
+        defineService({
+          capability: other,
+          id: 'other',
+          execution,
+          requires: { source: capability },
+          setup,
+        }),
       ],
     });
     const transaction = registry.beginReplacement({ plugins: [second] }, current);
     expect(
       registry.reserve({
-        services: [defineService(independent, { id: 'independent', execution, setup })],
+        services: [defineService({ capability: independent, id: 'independent', execution, setup })],
       })[0]?.status,
     ).toBe('reserved');
     expect(transaction.commit()[0]?.status).toBe('reserved');

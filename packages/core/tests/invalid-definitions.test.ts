@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import {
+  defineActionContract,
   defineAction,
-  defineActionContribution,
   defineCapability,
   defineContributionKind,
   defineExecution,
@@ -20,7 +20,7 @@ const capability = defineCapability({
   version: 1,
   operations: { echo: operation },
 });
-const action = defineAction({ id: 'example.echo', version: 1, operation });
+const action = defineActionContract({ id: 'example.echo', version: 1, operation });
 const setup = (): { echo: (value: string) => string } => ({ echo: (value) => value });
 
 /** Exercise JavaScript callers with malformed values without pretending they satisfy TypeScript contracts. */
@@ -52,7 +52,7 @@ describe('invalid declarations', () => {
       invokeFactory(defineCapability, { id: 'example.invalid', version, operations: {} }),
     ).toThrow(TypeError);
     expect(() =>
-      invokeFactory(defineAction, { id: 'example.invalid', version, operation }),
+      invokeFactory(defineActionContract, { id: 'example.invalid', version, operation }),
     ).toThrow(TypeError);
   });
 
@@ -126,7 +126,8 @@ describe('invalid declarations', () => {
     {
       name: 'invalid requirement contract',
       create: () =>
-        invokeFactory(defineService, capability, {
+        invokeFactory(defineService, {
+          capability: capability,
           id: 'example.invalid',
           execution,
           requires: { wrong: {} },
@@ -136,7 +137,8 @@ describe('invalid declarations', () => {
     {
       name: 'null requirements',
       create: () =>
-        invokeFactory(defineService, capability, {
+        invokeFactory(defineService, {
+          capability: capability,
           id: 'example.invalid',
           execution,
           requires: null,
@@ -145,16 +147,18 @@ describe('invalid declarations', () => {
     },
     {
       name: 'missing setup',
-      create: () => invokeFactory(defineService, capability, { id: 'example.invalid', execution }),
+      create: () =>
+        invokeFactory(defineService, { capability: capability, id: 'example.invalid', execution }),
     },
     {
       name: 'missing action handler',
       create: () =>
-        invokeFactory(defineActionContribution, action, { id: 'example.invalid', execution }),
+        invokeFactory(defineAction, { contract: action, id: 'example.invalid', execution }),
     },
     {
       name: 'missing execution',
-      create: () => invokeFactory(defineService, capability, { id: 'example.invalid', setup }),
+      create: () =>
+        invokeFactory(defineService, { capability: capability, id: 'example.invalid', setup }),
     },
     {
       name: 'wrong plugin list kind',
@@ -162,7 +166,12 @@ describe('invalid declarations', () => {
         invokeFactory(definePlugin, {
           id: 'example.invalid',
           actions: [
-            invokeFactory(defineService, capability, { id: 'example.service', execution, setup }),
+            invokeFactory(defineService, {
+              capability: capability,
+              id: 'example.service',
+              execution,
+              setup,
+            }),
           ],
         }),
     },
@@ -177,14 +186,14 @@ describe('invalid declarations', () => {
     {
       name: 'missing extension payload',
       create: () =>
-        invokeFactory(
-          defineExtension,
-          invokeFactory(defineContributionKind, { id: 'example.kind', schema: z.string() }),
-          {
-            id: 'example.invalid',
-            execution,
-          },
-        ),
+        invokeFactory(defineExtension, {
+          descriptor: invokeFactory(defineContributionKind, {
+            id: 'example.kind',
+            schema: z.string(),
+          }),
+          id: 'example.invalid',
+          execution,
+        }),
     },
     {
       name: 'forged nested contract kind',

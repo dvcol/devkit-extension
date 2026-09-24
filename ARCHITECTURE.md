@@ -44,6 +44,20 @@ A service always declares a capability contract and its version. There is no unv
 
 Definitions are inert. Helpers preserve schema/literal inference and validate declarative invariants; they do not execute setup or register resources. Use dedicated plugin properties. Unknown properties such as `actons`, wrong-kind list entries and missing contracts are errors.
 
+### Declaration helpers
+
+Every declaration helper takes one object. Contracts can be imported by a UI without importing backend handlers.
+
+| Helper                 | Input                                             | Result and placement                       |
+| ---------------------- | ------------------------------------------------- | ------------------------------------------ |
+| `defineCapability`     | `{ id, version, operations }`                     | Shared service contract                    |
+| `defineService`        | `{ capability, id, execution, requires?, setup }` | Implementation in `plugin.services`        |
+| `defineActionContract` | `{ id, version, operation }`                      | Shared action contract                     |
+| `defineAction`         | `{ contract, id, execution, requires?, handler }` | Implementation in `plugin.actions`         |
+| `defineExtension`      | `{ descriptor, id, execution, payload }`          | Custom contribution in `plugin.extensions` |
+
+An operation describes one callable input/result pair and its target requirement. A capability names several operations; an action contract describes one invocable use case. “Contribution” remains the shared terminology and typing for owned additions. It does not require a generic `defineContribution` factory. `defineActionContract` replaces the former contract helper named `defineAction`; `defineAction` replaces `defineActionContribution`.
+
 ## Dependency and execution diagrams
 
 ```mermaid
@@ -89,6 +103,20 @@ An adapter integrates environment lifecycle, communication and implementations. 
 Closing a UI document does not dispose independent provider work. A content/page script is not a trusted provider merely because it can send a message. A worker termination cannot be treated as proof that JavaScript cleanup callbacks ran; recovery must re-establish ownership and target generation.
 
 Provider identity, realm, execution, UI surface and target are separate axes. Initial realm descriptors are `webext` and `devserver`. Adding a realm requires a descriptor and adapter, not a core union or renderer rewrite. Devframe, hub and Vite contexts may coexist within one server provider.
+
+### Routing identity
+
+A route selector has a required `realm: string` and an optional `provider: string`. A provider selector constrains both fields. Provider-only selectors are unsupported. Identifiers are non-empty strings; callers choose stable unique names. Core performs no symbol or number coercion and maintains no alias registry. Registry collisions are checked within the `(realm, provider)` namespace; incarnation identifies a particular backend lifetime within that logical selection.
+
+```ts
+// Accepted routing shape; the multi-provider router is still being implemented.
+type RouteSelector = {
+  readonly realm: string;
+  readonly provider?: string;
+};
+```
+
+The router belongs to the client application's composition. It can run in a panel or the extension's existing background execution and does not require another server or daemon. Each connection retains its own native authentication. Registry metadata and routing selectors never carry credentials.
 
 ### Stable identity and client-owned discovery
 
@@ -175,13 +203,14 @@ const pageCapability = defineCapability({
   },
 });
 
-const readTitleAction = defineAction({
+const readTitleAction = defineActionContract({
   id: 'example.inspector.read-title',
   version: 1,
   operation: pageCapability.operations.readTitle,
 });
 
-const readTitleContribution = defineActionContribution(readTitleAction, {
+const readTitleContribution = defineAction({
+  contract: readTitleAction,
   id: 'example.inspector.read-title',
   execution: providerExecution,
   requires: { page: pageCapability },
@@ -200,7 +229,8 @@ const inspectorPlugin = definePlugin({
 The action handler is packaged for provider execution and does not run in the renderer. `inspectorView` is a JSON view declaration referencing the action's public descriptor; it does not import that handler. A UI-free plugin can omit `views`. Direct capability calls need no action wrapper.
 
 ```ts
-const browserPageService = defineService(pageCapability, {
+const browserPageService = defineService({
+  capability: pageCapability,
   id: 'example.browser-page-service',
   execution: extensionBackgroundExecution,
   setup(context) {
@@ -224,7 +254,7 @@ if (admission.status === 'admitted') {
 
 Transforms and scripts retain their own declaration kinds and execution hooks. A transform-only plugin owns its interception registration through its activation scope. A page-only plugin packages its script for MAIN-world execution and a document generation, without acquiring background native APIs. Their exact operation and packaging signatures belong to [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
 
-A custom kind uses `defineContributionKind({ id, schema })`, `defineExtension(kind, { id, execution, payload })` and `plugin.extensions`. The host explicitly supplies a `ContributionKindInstaller` for that descriptor. Its `activate` receives the validated definition and owned local setup scope. An unknown kind is an admission error; no arbitrary plugin key is treated as an extension. The renderer needs no change merely because another non-UI kind exists.
+A custom kind uses `defineContributionKind({ id, schema })`, `defineExtension({ descriptor: kind, id, execution, payload })` and `plugin.extensions`. The host explicitly supplies a `ContributionKindInstaller` for that descriptor. Its `activate` receives the validated definition and owned local setup scope. An unknown kind is an admission error; no arbitrary plugin key is treated as an extension. The renderer needs no change merely because another non-UI kind exists.
 
 ## Local native contexts
 

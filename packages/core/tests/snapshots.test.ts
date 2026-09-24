@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
 import {
+  defineActionContract,
   defineAction,
-  defineActionContribution,
   defineCapability,
   defineExtension,
   definePlugin,
@@ -38,7 +38,7 @@ describe('declaration ownership', () => {
       version: 1,
       operations: source.capability.operations,
     });
-    const action = defineAction({
+    const action = defineActionContract({
       id: source.contract.id,
       version: 1,
       operation: source.operation,
@@ -65,13 +65,15 @@ describe('declaration ownership', () => {
     expect.assertions(12);
     const source = mutableDeclarations();
     const requires = { text: source.capability };
-    const service = defineService(source.capability, {
+    const service = defineService({
+      capability: source.capability,
       id: 'example.service',
       execution: source.execution,
       requires,
       setup,
     });
-    const action = defineActionContribution(source.contract, {
+    const action = defineAction({
+      contract: source.contract,
       id: 'example.action',
       execution: source.execution,
       requires,
@@ -150,7 +152,12 @@ describe('declaration ownership', () => {
     const descriptor = { id: 'example.custom', schema };
     const execution = { id: 'example.server' };
     const payload = { message: 'original' };
-    const extension = defineExtension(descriptor, { id: 'example.extension', execution, payload });
+    const extension = defineExtension({
+      descriptor: descriptor,
+      id: 'example.extension',
+      execution,
+      payload,
+    });
     const structural = {
       kind: 'extension' as const,
       id: 'example.structural',

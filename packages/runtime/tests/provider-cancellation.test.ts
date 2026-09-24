@@ -1,9 +1,4 @@
-import {
-  defineActionContribution,
-  defineCapability,
-  definePlugin,
-  defineService,
-} from '@devkit/core';
+import { defineAction, defineCapability, definePlugin, defineService } from '@devkit/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -22,7 +17,8 @@ describe('provider cancellation and resource ownership', () => {
     expect.assertions(4);
     const { runtime } = provider();
     const started = deferred<void>();
-    const service = defineService(capability, {
+    const service = defineService({
+      capability: capability,
       id: 'service',
       execution,
       setup: () => ({
@@ -40,7 +36,8 @@ describe('provider cancellation and resource ownership', () => {
       }),
     });
     const source = admitted(await runtime.services.install(service));
-    const contribution = defineActionContribution(action, {
+    const contribution = defineAction({
+      contract: action,
       id: 'action',
       execution,
       requires: { source: capability },
@@ -67,7 +64,8 @@ describe('provider cancellation and resource ownership', () => {
     const finish = deferred<void>();
     const cleanup = vi.fn<() => void>();
     const installing = runtime.services.install(
-      defineService(capability, {
+      defineService({
+        capability: capability,
         id: 'service',
         execution,
         async setup({ scope }) {
@@ -101,7 +99,8 @@ describe('provider cancellation and resource ownership', () => {
     });
     const source = admitted(
       await runtime.services.install(
-        defineService(capability, {
+        defineService({
+          capability: capability,
           id: 'source',
           execution,
           setup({ scope }) {
@@ -114,7 +113,8 @@ describe('provider cancellation and resource ownership', () => {
       ),
     );
     await runtime.services.install(
-      defineService(other, {
+      defineService({
+        capability: other,
         id: 'dependent',
         execution,
         requires: { source: capability },
@@ -138,7 +138,8 @@ describe('provider cancellation and resource ownership', () => {
     const { runtime } = provider();
     const reentry = deferred<Promise<unknown>>();
     const cleanup = vi.fn<() => void>();
-    const service = defineService(capability, {
+    const service = defineService({
+      capability: capability,
       id: 'service',
       execution,
       setup({ scope }) {

@@ -1,6 +1,6 @@
 import {
+  defineActionContract,
   defineAction,
-  defineActionContribution,
   defineCapability,
   defineOperation,
   definePlugin,
@@ -23,12 +23,13 @@ export const counterCapability = defineCapability({
   version: 1,
   operations: { increment },
 });
-export const incrementAction = defineAction({
+export const incrementAction = defineActionContract({
   id: 'example.increment',
   version: 1,
   operation: increment,
 });
-export const counterService = defineService(counterCapability, {
+export const counterService = defineService({
+  capability: counterCapability,
   id: 'example.counter-service',
   execution: serverExecution,
   async setup({ native, scope }) {
@@ -58,7 +59,8 @@ export const counterService = defineService(counterCapability, {
 export const counterPlugin = definePlugin({
   id: 'example.counter-plugin',
   actions: [
-    defineActionContribution(incrementAction, {
+    defineAction({
+      contract: incrementAction,
       id: 'example.increment-contribution',
       execution: serverExecution,
       requires: { counter: counterCapability },

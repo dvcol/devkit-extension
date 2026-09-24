@@ -1,6 +1,6 @@
 # Provider identity, discovery and routing contract
 
-Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed identity and discovery ownership on 2026-09-23, then ambiguity, dispatch-time availability, separate broadcast methods and a compact invocation API on 2026-09-24. The owner accepted defaults on the public action declaration. Combined realm/provider selectors, symbol handling and helper ergonomics remain under review. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
+Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed identity and discovery ownership on 2026-09-23, then ambiguity, dispatch-time availability, separate broadcast methods and a compact invocation API on 2026-09-24. The owner accepted defaults on the public action declaration. Required realm/optional provider string selectors and single-object declaration helpers are now accepted. The remaining routing semantics are listed below. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
 
 ## Accepted ownership
 
@@ -51,7 +51,7 @@ The earlier Q6/Q8 core decisions already established that a per-call policy repl
 
 These are contract decisions, not claims that a multi-provider router has been implemented. The current core client interfaces still use their earlier positional signatures and expose no broadcast methods.
 
-## Current declaration review
+## Earlier declaration review, superseded by the accepted follow-up
 
 The owner proposed putting `routing` directly on contributions. Its value could select a realm, select a provider, supply an ordered list of alternatives, or run a context-aware selector callback. Separate `realm` and `provider` properties were also suggested. This is a counterproposal to the earlier recommendation for separate client policy declarations, not acceptance of that recommendation.
 
@@ -95,7 +95,7 @@ The owner accepted the public `defineAction` descriptor as the place for an opti
 
 Adopting the exact-version root patch for SDK-owned clients remains an owner decision. It would unblock private workspace transport work; publishing the SDK still needs an upstream release, maintained fork, or explicit consumer patch policy. A fresh browser replay could not start because the in-app browser was unavailable; its runner disposed both hubs and preview. Previous browser passes remain historical evidence, not a new pass.
 
-## Owner clarification after Q6–Q9
+## Earlier owner clarification after Q6–Q9
 
 The owner accepts public-action routing defaults and proposes a combined selector with required `realm` and optional `provider`. The requested ID types were `string | Symbol`; the exact portable representation remains unresolved. Provider-only selection is a question, not an approved feature. A realm constraint and provider constraint in the same selector must both hold; neither overrides the other.
 
@@ -105,7 +105,7 @@ The owner also asks why action implementation definitions have a specific helper
 
 The connection and lifecycle clarifications are explanatory, not patch authorization. Devframe isolation concerns client-side remembered connection/authentication state for multiple backend endpoints. The Vite proposal concerns cleanup of an abandoned replacement after a shutdown hook rejects; it is not a prerequisite for ordinary HMR or build watching. Both proposed runtime patches remain unapplied.
 
-## Follow-up on normalization, naming and client ownership
+## Earlier follow-up on normalization, naming and client ownership
 
 The owner confirmed required `realm` and optional `provider`. Symbol/number normalization is still under discussion. Normalizing a named symbol by description would work as an input convenience but discard its in-memory uniqueness: two distinct `Symbol('frontend')` values normalize to the same string. Numeric coercion likewise equates `1` and `'1'`. The current recommendation is string identifiers only, caller-owned naming, and SDK validation/conflict detection without another normalization registry.
 
@@ -114,3 +114,15 @@ The owner accepted the single-object, kind-specific authoring direction but flag
 The provider registry/router is an in-memory client SDK component owned by application composition, not a new dev server or daemon. A web panel may own it locally; extension composition may place connection ownership in its existing background runtime and expose metadata/calls to popup/panels. Discovery adapters can consume an existing external registry or broker without making that process a required SDK component.
 
 Many viewers connecting to one backend and one viewer connecting to many backends are distinct topologies. Native backend trust already belongs to each server/session. The isolated-client proposal addresses shared browser bookkeeping across independent backend connections, not the creation of a new server authentication system. No runtime isolation patch has been approved.
+
+## Accepted follow-up, 2026-09-24
+
+This section supersedes the unresolved naming, identifier and patch-authorization statements above.
+
+- Selectors require `realm: string` and may add `provider: string`. No provider-only selectors, symbol aliases or numeric coercion. Provider IDs are scoped to their realm.
+- `defineActionContract` declares a public contract. `defineAction` defines its handler. `defineService`, `defineAction` and `defineExtension` now take one object containing their descriptor and implementation fields. Maintained examples, type fixtures, glossary and architecture use these names. Archived probes preserve their originally executed API.
+- Client composition owns the in-memory registry/router. Every backend connection retains its own authentication; no mandatory daemon is introduced.
+- The owner authorized a narrow Devframe draft upstream PR for opt-in connection isolation, followed by adoption of the matching exact-version workspace patch. Publication still requires an upstream release or an explicit downstream distribution policy.
+- No Vite patch or upstream PR is authorized or adopted. Evaluate SDK-independent reproduction, upstream lifecycle intent and supported alternatives before recommending one.
+
+The declaration migration does not implement remote discovery, routing defaults or broadcast. Those remain explicit issue 7 obligations.

@@ -12,7 +12,8 @@ describe('native host ownership', () => {
     expect.assertions(7);
     const host = await createDevToolsHost();
     const setup = deferred();
-    const service = defineService(counterCapability, {
+    const service = defineService({
+      capability: counterCapability,
       id: 'example.delayed',
       execution: serverExecution,
       async setup() {
@@ -49,7 +50,8 @@ describe('native host ownership', () => {
     const setup = vi.fn<() => { increment(value: number): number }>(() => ({
       increment: (value: number) => value,
     }));
-    const service = defineService(counterCapability, {
+    const service = defineService({
+      capability: counterCapability,
       id: 'example.duplicate',
       execution: serverExecution,
       setup,
@@ -80,7 +82,8 @@ describe('native host ownership', () => {
       throw cleanupFailure;
     });
     const report = vi.fn<(diagnostic: RuntimeDiagnostic, cause?: unknown) => void>();
-    const service = defineService(counterCapability, {
+    const service = defineService({
+      capability: counterCapability,
       id: 'example.cleanup',
       execution: serverExecution,
       setup({ scope }) {

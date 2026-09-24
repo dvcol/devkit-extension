@@ -23,7 +23,8 @@ describe('provider replacement', () => {
       operations: { echo: operation },
     });
     await runtime.services.install(
-      defineService(other, {
+      defineService({
+        capability: other,
         id: 'occupied',
         execution,
         setup: () => ({ echo: (value) => value }),
@@ -31,7 +32,8 @@ describe('provider replacement', () => {
     );
     const result = await runtime.services.replace(
       old,
-      defineService(other, {
+      defineService({
+        capability: other,
         id: 'incoming',
         execution,
         setup: () => ({ echo: (value) => value }),
@@ -71,7 +73,8 @@ describe('provider replacement', () => {
     const releaseCleanup = deferred<void>();
     const old = admitted(
       await runtime.services.install(
-        defineService(capability, {
+        defineService({
+          capability: capability,
           id: 'old',
           execution,
           setup({ scope }) {
@@ -94,13 +97,15 @@ describe('provider replacement', () => {
     }));
     const replacement = runtime.services.replace(
       old,
-      defineService(next, { id: 'next', execution, setup }),
+      defineService({ capability: next, id: 'next', execution, setup }),
     );
     await cleaning.promise;
     expect(old.snapshot().status).toBe('disposing');
     expect(setup).not.toHaveBeenCalled();
     await expect(
-      runtime.services.install(defineService(next, { id: 'competitor', execution, setup })),
+      runtime.services.install(
+        defineService({ capability: next, id: 'competitor', execution, setup }),
+      ),
     ).rejects.toMatchObject({ code: 'duplicate-registration' });
     const independent = defineCapability({
       id: 'example.independent',
@@ -109,7 +114,8 @@ describe('provider replacement', () => {
     });
     const installed = admitted(
       await runtime.services.install(
-        defineService(independent, {
+        defineService({
+          capability: independent,
           id: 'independent',
           execution,
           setup: () => ({ echo: (value) => value }),
@@ -138,7 +144,8 @@ describe('provider replacement', () => {
     });
     const old = admitted(
       await runtime.services.install(
-        defineService(capability, {
+        defineService({
+          capability: capability,
           id: 'old',
           execution,
           setup({ scope }) {
@@ -169,7 +176,8 @@ describe('provider replacement', () => {
     const released = deferred<void>();
     const old = admitted(
       await runtime.services.install(
-        defineService(capability, {
+        defineService({
+          capability: capability,
           id: 'old',
           execution,
           setup({ scope }) {

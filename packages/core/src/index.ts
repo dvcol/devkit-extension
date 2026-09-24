@@ -1,6 +1,6 @@
 export {
+  defineActionContract,
   defineAction,
-  defineActionContribution,
   defineCapability,
   defineContributionKind,
   defineExecution,

@@ -1,4 +1,4 @@
-import { defineActionContribution, definePlugin, defineService } from '@devkit/core';
+import { defineAction, definePlugin, defineService } from '@devkit/core';
 import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
 import { devframeHubContext, serverExecution } from '@devkit/server';
 
@@ -6,7 +6,8 @@ export const counterStateKey = 'example:server-counter';
 export const readCounterCommandId = 'example:read-server-counter';
 
 /** Both server hosts expose the same native shared-state and command APIs through the hub. */
-export const counterService = defineService(counterCapability, {
+export const counterService = defineService({
+  capability: counterCapability,
   id: 'example.server-counter-service',
   execution: serverExecution,
   async setup({ native, scope }) {
@@ -38,7 +39,8 @@ export const counterService = defineService(counterCapability, {
 export const counterActionsPlugin = definePlugin({
   id: 'example.server-counter-actions',
   actions: [
-    defineActionContribution(increaseCounterAction, {
+    defineAction({
+      contract: increaseCounterAction,
       id: 'example.increase-server-counter',
       execution: serverExecution,
       requires: { counter: counterCapability },

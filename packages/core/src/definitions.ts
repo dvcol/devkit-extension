@@ -87,7 +87,7 @@ export function defineCapability<const Definition extends Omit<CapabilityDescrip
   return snapshotCapability(capability);
 }
 
-export function defineAction<const Definition extends Omit<ActionDescriptor, 'kind'>>(
+export function defineActionContract<const Definition extends Omit<ActionDescriptor, 'kind'>>(
   definition: Definition,
 ): Readonly<Definition> & { readonly kind: 'action-contract' } {
   assertRecord(definition, 'action contract');
@@ -100,61 +100,59 @@ export function defineAction<const Definition extends Omit<ActionDescriptor, 'ki
 export function defineService<
   Capability extends CapabilityDescriptor,
   const Requirements extends CapabilityRequirements = Record<never, never>,
->(
-  capability: Capability,
-  definition: {
-    readonly id: string;
-    readonly execution: ExecutionDescriptor;
-    readonly requires?: Requirements;
-    setup(context: SetupContext<Requirements>): Awaitable<CapabilityImplementation<Capability>>;
-  },
-): ServiceDefinition<Capability, Requirements>;
+>(definition: {
+  readonly capability: Capability;
+  readonly id: string;
+  readonly execution: ExecutionDescriptor;
+  readonly requires?: Requirements;
+  setup(
+    context: SetupContext<NoInfer<Requirements>>,
+  ): Awaitable<CapabilityImplementation<NoInfer<Capability>>>;
+}): ServiceDefinition<Capability, Requirements>;
 export function defineService(
-  capability: CapabilityDescriptor,
-  definition: Omit<ServiceDeclaration, 'kind' | 'capability' | 'requires'> & {
+  definition: Omit<ServiceDeclaration, 'kind' | 'requires'> & {
     readonly requires?: CapabilityRequirements;
   },
 ): ServiceDeclaration {
   assertRecord(definition, 'service');
-  assertKeys(definition, ['id', 'execution', 'requires', 'setup'], 'service');
+  assertKeys(definition, ['capability', 'id', 'execution', 'requires', 'setup'], 'service');
   if (Object.hasOwn(definition, 'requires'))
     assertRequirements(definition.requires, 'service.requires');
   const service = {
     ...definition,
     kind: 'service' as const,
-    capability,
     requires: definition.requires ?? {},
   };
   assertService(service, 'service');
   return snapshotService(service);
 }
 
-export function defineActionContribution<
+export function defineAction<
   Action extends ActionDescriptor,
   const Requirements extends CapabilityRequirements = Record<never, never>,
->(
-  contract: Action,
-  definition: {
-    readonly id: string;
-    readonly execution: ExecutionDescriptor;
-    readonly requires?: Requirements;
-    handler: ActionDefinition<Action, Requirements>['handler'];
-  },
-): ActionDefinition<Action, Requirements>;
-export function defineActionContribution(
-  contract: ActionDescriptor,
-  definition: Omit<ActionDeclaration, 'kind' | 'contract' | 'requires'> & {
+>(definition: {
+  readonly contract: Action;
+  readonly id: string;
+  readonly execution: ExecutionDescriptor;
+  readonly requires?: Requirements;
+  handler: ActionDefinition<NoInfer<Action>, NoInfer<Requirements>>['handler'];
+}): ActionDefinition<Action, Requirements>;
+export function defineAction(
+  definition: Omit<ActionDeclaration, 'kind' | 'requires'> & {
     readonly requires?: CapabilityRequirements;
   },
 ): ActionDeclaration {
   assertRecord(definition, 'action contribution');
-  assertKeys(definition, ['id', 'execution', 'requires', 'handler'], 'action contribution');
+  assertKeys(
+    definition,
+    ['contract', 'id', 'execution', 'requires', 'handler'],
+    'action contribution',
+  );
   if (Object.hasOwn(definition, 'requires'))
     assertRequirements(definition.requires, 'action contribution.requires');
   const contribution = {
     ...definition,
     kind: 'action' as const,
-    contract,
     requires: definition.requires ?? {},
   };
   assertActionContribution(contribution, 'action contribution');
@@ -168,17 +166,15 @@ export function defineContributionKind<const Kind extends ContributionKindDescri
   return snapshotKind(definition);
 }
 
-export function defineExtension<const Kind extends ContributionKindDescriptor>(
-  descriptor: Kind,
-  definition: {
-    readonly id: string;
-    readonly execution: ExecutionDescriptor;
-    readonly payload: StandardSchemaV1.InferInput<Kind['schema']>;
-  },
-): ExtensionDefinition<Kind> {
+export function defineExtension<const Kind extends ContributionKindDescriptor>(definition: {
+  readonly descriptor: Kind;
+  readonly id: string;
+  readonly execution: ExecutionDescriptor;
+  readonly payload: StandardSchemaV1.InferInput<NoInfer<Kind>['schema']>;
+}): ExtensionDefinition<Kind> {
   assertRecord(definition, 'extension');
-  assertKeys(definition, ['id', 'execution', 'payload'], 'extension');
-  const extension = { ...definition, kind: 'extension' as const, descriptor };
+  assertKeys(definition, ['descriptor', 'id', 'execution', 'payload'], 'extension');
+  const extension = { ...definition, kind: 'extension' as const };
   assertExtension(extension, 'extension');
   return snapshotExtension(extension);
 }

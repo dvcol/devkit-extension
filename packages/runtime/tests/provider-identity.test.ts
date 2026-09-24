@@ -1,4 +1,4 @@
-import { defineActionContribution, definePlugin, defineService } from '@devkit/core';
+import { defineAction, definePlugin, defineService } from '@devkit/core';
 import type { ProviderDescriptor } from '@devkit/core';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
@@ -42,7 +42,8 @@ describe('provider backend identity', () => {
     descriptor.id = 'mutated-provider';
     descriptor.incarnation = 'mutated-incarnation';
     descriptor.realm.id = 'mutated-realm';
-    const service = defineService(capability, {
+    const service = defineService({
+      capability: capability,
       id: 'echo',
       execution,
       setup(context) {
@@ -55,7 +56,8 @@ describe('provider backend identity', () => {
         };
       },
     });
-    const actionDefinition = defineActionContribution(action, {
+    const actionDefinition = defineAction({
+      contract: action,
       id: 'echo-action',
       execution,
       requires: { echo: capability },
@@ -96,7 +98,8 @@ describe('provider backend identity', () => {
     const successorHandler = vi.fn<(value: string) => string>((value) => `successor:${value}`);
     try {
       await previous.services.install(
-        defineService(capability, {
+        defineService({
+          capability: capability,
           id: 'echo',
           execution,
           setup: () => ({ echo: (value) => `previous:${value}` }),
@@ -104,7 +107,8 @@ describe('provider backend identity', () => {
       );
       const previousBinding = available(await previous.resolve(capability));
       await successor.services.install(
-        defineService(capability, {
+        defineService({
+          capability: capability,
           id: 'echo',
           execution,
           setup: () => ({ echo: successorHandler }),

@@ -1,5 +1,5 @@
 import {
-  defineAction,
+  defineActionContract,
   defineCapability,
   defineExecution,
   defineOperation,
@@ -25,7 +25,7 @@ export const capability = defineCapability({
   version: 1,
   operations: { echo: operation },
 });
-export const action = defineAction({ id: 'example.action', version: 1, operation });
+export const action = defineActionContract({ id: 'example.action', version: 1, operation });
 
 export function provider(options: Partial<ProviderLifecycleOptions> = {}) {
   const diagnostics: RuntimeDiagnostic[] = [];
@@ -46,7 +46,8 @@ export function provider(options: Partial<ProviderLifecycleOptions> = {}) {
 }
 
 export function echoService(id = 'example.service', valuePrefix = '') {
-  return defineService(capability, {
+  return defineService({
+    capability: capability,
     id,
     execution,
     setup: () => ({ echo: (value) => `${valuePrefix}${value}` }),

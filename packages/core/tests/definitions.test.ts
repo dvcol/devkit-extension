@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 import {
+  defineActionContract,
   defineAction,
-  defineActionContribution,
   defineCapability,
   defineContributionKind,
   defineExecution,
@@ -23,7 +23,7 @@ const capability = defineCapability({
   version: 1,
   operations: { echo: operation },
 });
-const action = defineAction({ id: 'example.echo', version: 1, operation });
+const action = defineActionContract({ id: 'example.echo', version: 1, operation });
 const setup = (): { echo: (value: string) => string } => ({ echo: (value) => value });
 
 describe('portable definitions', () => {
@@ -33,19 +33,26 @@ describe('portable definitions', () => {
     const schema: StandardSchemaV1 = { '~standard': { version: 1, vendor: 'example', validate } };
     const localSetup = vi.fn<typeof setup>(setup);
     const handler = vi.fn<() => string>(() => 'action');
-    const service = defineService(capability, {
+    const service = defineService({
+      capability: capability,
       id: 'example.service',
       execution,
       setup: localSetup,
     });
-    const contribution = defineActionContribution(action, {
+    const contribution = defineAction({
+      contract: action,
       id: 'example.handler',
       execution,
       handler,
     });
     const kind = defineContributionKind({ id: 'example.message', schema });
     const payload = { message: 'unchanged' };
-    const extension = defineExtension(kind, { id: 'example.extension', execution, payload });
+    const extension = defineExtension({
+      descriptor: kind,
+      id: 'example.extension',
+      execution,
+      payload,
+    });
     const plugin = definePlugin({
       id: 'example.plugin',
       services: [service],
@@ -71,7 +78,8 @@ describe('portable definitions', () => {
     const operations = { echo: operation };
     const mutableCapability = defineCapability({ id: 'example.mutable', version: 1, operations });
     const requires = { texts: capability };
-    const service = defineService(capability, {
+    const service = defineService({
+      capability: capability,
       id: 'example.service',
       execution,
       requires,
@@ -97,12 +105,17 @@ describe('portable definitions', () => {
     expect.assertions(8);
     const realm = defineRealm({ id: 'example.unlisted-realm' });
     const native = defineNativeContext<{ readonly name: string }>({ id: 'example.native' });
-    const service = defineService(capability, { id: 'example.service', execution, setup });
+    const service = defineService({
+      capability: capability,
+      id: 'example.service',
+      execution,
+      setup,
+    });
     const plugin = definePlugin({
       id: 'example.all-kinds',
       services: [service],
       actions: [
-        defineActionContribution(action, { id: 'example.handler', execution, handler: () => '' }),
+        defineAction({ contract: action, id: 'example.handler', execution, handler: () => '' }),
       ],
       views: [{ id: 'example.view', kind: 'view', execution }],
       transforms: [{ id: 'example.transform', kind: 'transform', execution }],
@@ -136,7 +149,12 @@ describe('portable definitions', () => {
 
   it('preserves duplicate declarations for the provider admission strictness policy', () => {
     expect.assertions(3);
-    const service = defineService(capability, { id: 'example.service', execution, setup });
+    const service = defineService({
+      capability: capability,
+      id: 'example.service',
+      execution,
+      setup,
+    });
     const plugin = definePlugin({ id: 'example.duplicate', services: [service, service] });
 
     expect(plugin.services).toHaveLength(2);

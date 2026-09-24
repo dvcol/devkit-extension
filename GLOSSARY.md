@@ -4,20 +4,20 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 
 ## Definitions and behavior
 
-| Term                   | Definition                                                                                                           | Distinction                                                                          |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Capability             | A declared backend service contract offered by a provider, consisting of named operations                            | A contract does not imply a currently available implementation                       |
-| Capability descriptor  | An imported definition containing the capability ID, mandatory numeric contract version and operation schemas        | Separate from a service definition or running service                                |
-| Contract version       | A numeric revision of a public contract, matched exactly                                                             | Separate from a package release version; no inferred semver compatibility            |
-| Operation              | A named method in a capability contract, with input and return schemas and an explicit target requirement            | It can be called directly without an action wrapper                                  |
-| Action descriptor      | The public, versioned contract for an invocable use case                                                             | Safe for clients to import without its handler                                       |
-| Action contribution    | A packaged handler implementing an action descriptor, with execution assignment and declared capability requirements | May compose several operations; does not replace capabilities                        |
-| Contribution           | An addition supplied by a plugin, such as a service, action, view, transform or script                               | Shared terminology and ownership rules, not a mandatory mixed array                  |
-| Contribution kind      | The category determining a contribution's declaration shape and activation behavior                                  | Built-in kinds have dedicated plugin properties                                      |
-| Extension contribution | A declaration carrying an imported custom-kind descriptor and a validated payload                                    | Extends the model without arbitrary plugin keys or a closed kind switch              |
-| Service definition     | An inert recipe constructing an implementation of a mandatory capability contract                                    | The same recipe type is used for startup and runtime installation                    |
-| Plugin                 | A named composition of contribution definitions installed and controlled together                                    | Neither a browser extension nor a provider; its contributions can fail independently |
-| Definition helper      | A function preserving declaration types and checking declarative invariants                                          | Does not install a service, register a listener or start a runtime                   |
+| Term                   | Definition                                                                                                                            | Distinction                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Capability             | A declared backend service contract offered by a provider, consisting of named operations                                             | A contract does not imply a currently available implementation                       |
+| Capability descriptor  | An imported definition containing the capability ID, mandatory numeric contract version and operation schemas                         | Separate from a service definition or running service                                |
+| Contract version       | A numeric revision of a public contract, matched exactly                                                                              | Separate from a package release version; no inferred semver compatibility            |
+| Operation              | A named method in a capability contract, with input and return schemas and an explicit target requirement                             | It can be called directly without an action wrapper                                  |
+| Action descriptor      | The public, versioned contract for an invocable use case, created by `defineActionContract`                                           | Safe for clients to import without its handler                                       |
+| Action contribution    | A packaged handler created by `defineAction`, implementing an action descriptor with execution assignment and capability requirements | May compose several operations; does not replace capabilities                        |
+| Contribution           | An addition supplied by a plugin, such as a service, action, view, transform or script                                                | Shared terminology and ownership rules, not a mandatory mixed array                  |
+| Contribution kind      | The category determining a contribution's declaration shape and activation behavior                                                   | Built-in kinds have dedicated plugin properties                                      |
+| Extension contribution | A declaration carrying an imported custom-kind descriptor and a validated payload                                                     | Extends the model without arbitrary plugin keys or a closed kind switch              |
+| Service definition     | An inert recipe created by `defineService`, implementing a mandatory capability contract                                              | The same recipe type is used for startup and runtime installation                    |
+| Plugin                 | A named composition of contribution definitions installed and controlled together                                                     | Neither a browser extension nor a provider; its contributions can fail independently |
+| Definition helper      | A function preserving declaration types and checking declarative invariants                                                           | Does not install a service, register a listener or start a runtime                   |
 
 ## Hosting and execution
 
@@ -82,3 +82,9 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 | A host composes providers and clients                           | One UI can use a development server or extension provider according to policy |
 | An adapter satisfies environment integration                    | Local native resources remain accessible without leaking across transport     |
 | A renderer mounts views on surfaces                             | Presentation lifetimes remain separate from provider work                     |
+
+## Authoring and routing identifiers
+
+`defineActionContract({ id, version, operation })` describes a callable action. `defineAction({ contract, id, execution, requires?, handler })` implements it. `defineService({ capability, id, execution, requires?, setup })` implements a capability. All definition helpers use one object; “contribution” describes their shared ownership model, not a second action API.
+
+A **route selector** constrains a required string `realm` and optional string `provider`. Its provider identity is scoped to that realm. Symbol descriptions and numbers are not normalized into identifiers. The caller owns stable naming; the runtime owns validation and collision detection. A selector identifies a logical provider, while a bound invocation retains one specific incarnation.

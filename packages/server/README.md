@@ -31,7 +31,8 @@ const counterCapability = defineCapability({
   },
 });
 
-const counterService = defineService(counterCapability, {
+const counterService = defineService({
+  capability: counterCapability,
   id: 'example.counter-service',
   execution: serverExecution,
   async setup({ native, scope }) {

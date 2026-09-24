@@ -13,6 +13,8 @@ pnpm --filter @devkit/core test
 pnpm --filter @devkit/core format:check
 ```
 
+Contracts use `defineCapability` and `defineActionContract`. Backend implementations use `defineService` and `defineAction`, each taking one declaration object. See the [helper table](./ARCHITECTURE.md#declaration-helpers) for their inputs and plugin placement.
+
 Packages live in `packages/*`, runnable host examples in `examples/*`. Vite builds JavaScript and TypeScript 7 emits declarations and checks source, tests and build configuration. Package builds must not import browser or server host dependencies into the portable core.
 
 The [UI-free contribution example](./examples/contribution/README.md) runs a shared capability and action through the local provider lifecycle. It demonstrates separate contract/provider entry points, typed native context, dependency activation, schema validation and owned cleanup. Run it through built package exports:

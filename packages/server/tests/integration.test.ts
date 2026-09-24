@@ -125,7 +125,8 @@ describe('local server provider integration', () => {
     const host = await createDevframeHost();
     const failure = new Error('native setup failure');
     const report = vi.fn<(diagnostic: RuntimeDiagnostic, cause?: unknown) => void>();
-    const service = defineService(counterCapability, {
+    const service = defineService({
+      capability: counterCapability,
       id: 'example.failure',
       execution: serverExecution,
       setup({ native, scope }) {

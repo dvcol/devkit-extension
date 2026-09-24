@@ -188,29 +188,28 @@ export declare function defineExecution<const Identifier extends string>(definit
 export declare function defineNativeContext<Value>(definition: { readonly id: string }): NativeContextDescriptor<Value>;
 export declare function defineOperation<const Definition extends OperationDefinition>(definition: Definition): Definition;
 export declare function defineCapability<const Definition extends Omit<CapabilityDescriptor, 'kind'>>(definition: Definition): Readonly<Definition> & { readonly kind: 'capability' };
-export declare function defineAction<const Definition extends Omit<ActionDescriptor, 'kind'>>(definition: Definition): Readonly<Definition> & { readonly kind: 'action-contract' };
+export declare function defineActionContract<const Definition extends Omit<ActionDescriptor, 'kind'>>(definition: Definition): Readonly<Definition> & { readonly kind: 'action-contract' };
 export declare function defineService<Capability extends CapabilityDescriptor, const Requirements extends CapabilityRequirements = Record<never, never>>(
-  capability: Capability,
   definition: {
+    readonly capability: Capability;
     readonly id: string;
     readonly execution: ExecutionDescriptor;
     readonly requires?: Requirements;
-    setup(context: SetupContext<Requirements>): Awaitable<CapabilityImplementation<Capability>>;
+    setup(context: SetupContext<NoInfer<Requirements>>): Awaitable<CapabilityImplementation<NoInfer<Capability>>>;
   },
 ): ServiceDefinition<Capability, Requirements>;
-export declare function defineActionContribution<Action extends ActionDescriptor, const Requirements extends CapabilityRequirements = Record<never, never>>(
-  contract: Action,
+export declare function defineAction<Action extends ActionDescriptor, const Requirements extends CapabilityRequirements = Record<never, never>>(
   definition: {
+    readonly contract: Action;
     readonly id: string;
     readonly execution: ExecutionDescriptor;
     readonly requires?: Requirements;
-    handler: ActionDefinition<Action, Requirements>['handler'];
+    handler: ActionDefinition<NoInfer<Action>, NoInfer<Requirements>>['handler'];
   },
 ): ActionDefinition<Action, Requirements>;
 export declare function defineContributionKind<const Kind extends ContributionKindDescriptor>(definition: Kind): Kind;
 export declare function defineExtension<const Kind extends ContributionKindDescriptor>(
-  descriptor: Kind,
-  definition: { readonly id: string; readonly execution: ExecutionDescriptor; readonly payload: StandardSchemaV1.InferInput<Kind['schema']> },
+  definition: { readonly descriptor: Kind; readonly id: string; readonly execution: ExecutionDescriptor; readonly payload: StandardSchemaV1.InferInput<NoInfer<Kind>['schema']> },
 ): ExtensionDefinition<Kind>;
 export declare function definePlugin<const Input extends PluginInput>(definition: Input & Record<Exclude<keyof Input, keyof PluginInput>, never>): PluginDefinition<Input>;
 
