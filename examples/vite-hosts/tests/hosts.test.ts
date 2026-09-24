@@ -18,7 +18,9 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       const hub = binding.native.get(devframeHubContext);
       expect(hub).toBeDefined();
       expect(binding.native.get(devToolsContext) === hub).toBe(host === 'devtools');
-      await expect(provider.invoke(increaseCounterAction, { amount: 3 })).resolves.toBe(3);
+      await expect(
+        provider.invoke({ action: increaseCounterAction, input: { amount: 3 } }),
+      ).resolves.toBe(3);
       await expect(binding.api.read({})).resolves.toBe(3);
       expect(hub?.commands.commands.has('example:read-server-counter')).toBe(true);
       const response = await connectionMetadata(current.server, host);
@@ -59,7 +61,9 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       );
       const oldBinding = await bindingFor(previous);
       const oldHub = oldBinding.native.get(devframeHubContext);
-      await expect(previous.invoke(increaseCounterAction, { amount: 7 })).resolves.toBe(7);
+      await expect(
+        previous.invoke({ action: increaseCounterAction, input: { amount: 7 } }),
+      ).resolves.toBe(7);
       let restartSettled = false;
       restarting = current.server.restart().then(() => {
         restartSettled = true;
@@ -77,7 +81,9 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       expect(service.snapshot().status).toBe('disposed');
       expect(oldHub?.commands.commands.has('example:read-server-counter')).toBe(false);
       await expect(oldBinding.api.read({})).rejects.toThrow('Contribution is unavailable');
-      await expect(replacement.invoke(increaseCounterAction, { amount: 2 })).resolves.toBe(2);
+      await expect(
+        replacement.invoke({ action: increaseCounterAction, input: { amount: 2 } }),
+      ).resolves.toBe(2);
     } finally {
       cleanupRelease.resolve();
       await restarting;
@@ -147,7 +153,9 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       expect(replacement.provider.id).toBe(previous.provider.id);
       expect(replacement.provider.incarnation).not.toBe(previous.provider.incarnation);
       expect(admitted(previous.startup.services[0]).snapshot().status).toBe('disposed');
-      await expect(replacement.invoke(increaseCounterAction, { amount: 5 })).resolves.toBe(5);
+      await expect(
+        replacement.invoke({ action: increaseCounterAction, input: { amount: 5 } }),
+      ).resolves.toBe(5);
     } finally {
       await current.close();
     }
@@ -159,7 +167,9 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
     try {
       await current.server.listen();
       const previous = await providerFromVite(current.server);
-      await expect(previous.invoke(increaseCounterAction, { amount: 6 })).resolves.toBe(6);
+      await expect(
+        previous.invoke({ action: increaseCounterAction, input: { amount: 6 } }),
+      ).resolves.toBe(6);
       expect((await current.server.transformRequest('/client.js'))?.code).toContain('value = 1');
       await current.changeClient();
       await vi.waitUntil(async () =>

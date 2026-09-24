@@ -80,19 +80,19 @@ Choose the installer matching the actual context and retain its returned handle.
 
 ## Handles and native resources
 
-| Export or handle member                | Behavior                                                                                                                                                    |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `serverRealm`                          | Shared realm descriptor with ID `devserver` for both installers.                                                                                            |
-| `serverExecution`                      | Shared execution descriptor with ID `devkit.server`; use it when declaring server contributions.                                                            |
-| `devframeContext`                      | `DevframeNodeContext` in both integrations.                                                                                                                 |
-| `devframeHubContext`                   | `DevframeHubContext` in both integrations.                                                                                                                  |
-| `devToolsContext`                      | Actual `KitNodeContext` for the kit installer; absent for the hub installer. Optional `viteServer` and `viteConfig` remain optional on that native context. |
-| `provider`                             | Frozen descriptor containing the configured stable ID, shared realm and a fresh UUID `incarnation` for this installation lifetime.                          |
-| `startup.services` / `startup.plugins` | Ordered admitted/skipped results for the original composition. Admitted handles expose current status, diagnostics and lifecycle controls.                  |
-| `services` / `plugins`                 | Runtime installation and replacement APIs for additional definitions.                                                                                       |
-| `resolve(capability)`                  | Local capability resolution. An available binding exposes its typed `api` and local context.                                                                |
-| `invoke(action, input, options?)`      | Local typed action invocation, including the core operation's target/signal requirements.                                                                   |
-| `dispose()`                            | One retained promise for cleanup of this adapter's owned contributions.                                                                                     |
+| Export or handle member                       | Behavior                                                                                                                                                    |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `serverRealm`                                 | Shared realm descriptor with ID `devserver` for both installers.                                                                                            |
+| `serverExecution`                             | Shared execution descriptor with ID `devkit.server`; use it when declaring server contributions.                                                            |
+| `devframeContext`                             | `DevframeNodeContext` in both integrations.                                                                                                                 |
+| `devframeHubContext`                          | `DevframeHubContext` in both integrations.                                                                                                                  |
+| `devToolsContext`                             | Actual `KitNodeContext` for the kit installer; absent for the hub installer. Optional `viteServer` and `viteConfig` remain optional on that native context. |
+| `provider`                                    | Frozen descriptor containing the configured stable ID, shared realm and a fresh UUID `incarnation` for this installation lifetime.                          |
+| `startup.services` / `startup.plugins`        | Ordered admitted/skipped results for the original composition. Admitted handles expose current status, diagnostics and lifecycle controls.                  |
+| `services` / `plugins`                        | Runtime installation and replacement APIs for additional definitions.                                                                                       |
+| `resolve({ capability })`                     | Local capability resolution. An available binding exposes its typed `api` and local context.                                                                |
+| `invoke({ action, input, target?, signal? })` | Local typed action invocation, including the core operation's target/signal requirements.                                                                   |
+| `dispose()`                                   | One retained promise for cleanup of this adapter's owned contributions.                                                                                     |
 
 Unknown native descriptors return `undefined`. Native values are local objects, not serialized metadata. Realm membership alone does not create an optional resource.
 

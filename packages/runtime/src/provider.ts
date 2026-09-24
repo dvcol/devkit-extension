@@ -1,10 +1,11 @@
 import { defineExecution, isOperationError } from '@devkit/core';
 import type {
   ActionDescriptor,
+  ActionInvocationRequest,
   CapabilityDescriptor,
+  CapabilityResolutionRequest,
   InstallationHandle,
   InstallationResult,
-  OperationArguments,
   PluginDefinition,
   ServiceDeclaration,
 } from '@devkit/core';
@@ -72,14 +73,13 @@ class ProviderController implements ProviderLifecycle {
     });
     this.environment = createReconciliation(this.options, this.installations);
   }
-  resolve<Capability extends CapabilityDescriptor>(capability: Capability) {
-    return Promise.resolve(resolveLocal(this.environment, capability));
-  }
-  invoke<Action extends ActionDescriptor>(
-    action: Action,
-    ...invocationArguments: OperationArguments<Action['operation']>
+  resolve<Capability extends CapabilityDescriptor>(
+    request: CapabilityResolutionRequest<Capability>,
   ) {
-    return invokeAction(this.environment, action, ...invocationArguments);
+    return Promise.resolve(resolveLocal(this.environment, request.capability));
+  }
+  invoke<Action extends ActionDescriptor>(request: ActionInvocationRequest<Action>) {
+    return invokeAction(this.environment, request);
   }
   private assertOpen(): void {
     if (this.disposed)

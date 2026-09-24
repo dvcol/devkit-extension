@@ -4,14 +4,14 @@ This private package implements admission, dependency reconciliation, operation 
 
 `createProviderLifecycle` composes these mechanisms for one provider and execution context. Its caller supplies the provider descriptor, execution descriptor, typed local native-context access, optional custom-kind installers, strictness and a diagnostic sink. The sink can receive a local cause separately; portable diagnostics and snapshots never include that native value.
 
-| Method                                | Behavior                                                                                                                                |
-| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `startup({ services, plugins })`      | Snapshot and preflight the whole composition before running setup. Return admitted handles or explicit relaxed skips in input order.    |
-| `services.install`, `plugins.install` | Use the same definition and admission rules after startup. Waiting dependencies activate when their matching service becomes available. |
-| `services.replace`, `plugins.replace` | Validate a successor before retiring the current owner. Successor setup requires completed cleanup.                                     |
-| `resolve(capability)`                 | Return an availability result or a local binding for the exact capability ID and version.                                               |
-| `invoke(action, input, options?)`     | Dispatch the registered action through its registered validators and local required services.                                           |
-| `dispose()`                           | Fence calls, cancel owned work, wait for actual settlement and dispose resources. Repeated calls retain the same terminal promise.      |
+| Method                                        | Behavior                                                                                                                                |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `startup({ services, plugins })`              | Snapshot and preflight the whole composition before running setup. Return admitted handles or explicit relaxed skips in input order.    |
+| `services.install`, `plugins.install`         | Use the same definition and admission rules after startup. Waiting dependencies activate when their matching service becomes available. |
+| `services.replace`, `plugins.replace`         | Validate a successor before retiring the current owner. Successor setup requires completed cleanup.                                     |
+| `resolve({ capability })`                     | Return an availability result or a local binding for the exact capability ID and version.                                               |
+| `invoke({ action, input, target?, signal? })` | Dispatch the registered action through its registered validators and local required services.                                           |
+| `dispose()`                                   | Fence calls, cancel owned work, wait for actual settlement and dispose resources. Repeated calls retain the same terminal promise.      |
 
 Admitted handles expose current snapshots, subscriptions, enable, disable, explicit setup retry and disposal. A disabled installation stays disabled when dependencies recover. Setup failures do not retry automatically or stop independent contributions. Failed cleanup blocks the affected ownership chain; neither a timer nor retry can declare it released. The host owns any verified process or browser-context reset.
 

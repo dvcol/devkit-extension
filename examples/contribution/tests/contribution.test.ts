@@ -50,8 +50,10 @@ describe('UI-free contribution example', () => {
       expect(service.snapshot().status).toBe('ready');
       expect(plugin.snapshot().status).toBe('ready');
       expect(source.subscriptionCount).toBe(1);
-      await expect(provider.invoke(increaseCounterAction, { amount: 3 })).resolves.toBe(3);
-      const resolution = await provider.resolve(counterCapability);
+      await expect(
+        provider.invoke({ action: increaseCounterAction, input: { amount: 3 } }),
+      ).resolves.toBe(3);
+      const resolution = await provider.resolve({ capability: counterCapability });
       expect(resolution.status).toBe('available');
       source.increase(2);
       const binding = await availableCounter(provider);
@@ -80,14 +82,18 @@ describe('UI-free contribution example', () => {
         }),
       ]);
       expect(source.subscriptionCount).toBe(0);
-      await expect(provider.invoke(increaseCounterAction, { amount: 1 })).rejects.toMatchObject({
+      await expect(
+        provider.invoke({ action: increaseCounterAction, input: { amount: 1 } }),
+      ).rejects.toMatchObject({
         code: 'unavailable-capability',
       });
 
       const service = installationHandle(await provider.services.install(counterService));
       expect(service.snapshot().status).toBe('ready');
       expect(plugin.snapshot().status).toBe('ready');
-      await expect(provider.invoke(increaseCounterAction, { amount: 2 })).resolves.toBe(2);
+      await expect(
+        provider.invoke({ action: increaseCounterAction, input: { amount: 2 } }),
+      ).resolves.toBe(2);
       expect(source.subscriptionCount).toBe(1);
     } finally {
       await provider.dispose();
@@ -117,7 +123,9 @@ describe('UI-free contribution example', () => {
           }),
         ]),
       );
-      expect((await provider.resolve(counterCapability)).status).toBe('unavailable');
+      expect((await provider.resolve({ capability: counterCapability })).status).toBe(
+        'unavailable',
+      );
       const disabled = await service.disable();
       expect(disabled.contributions).toEqual([
         expect.objectContaining({ id: 'example.counter-service', status: 'disabled' }),
@@ -149,7 +157,9 @@ describe('UI-free contribution example', () => {
       ]);
       await expect(binding.api.increase({ amount: 4 })).rejects.toBeInstanceOf(Error);
       expect(source.read()).toBe(0);
-      expect((await provider.resolve(counterCapability)).status).toBe('unavailable');
+      expect((await provider.resolve({ capability: counterCapability })).status).toBe(
+        'unavailable',
+      );
     } finally {
       await provider.dispose();
     }
@@ -161,7 +171,9 @@ describe('UI-free contribution example', () => {
     const { provider } = createLocalProvider(counterNativeAccess(source));
     try {
       await provider.startup({ services: [counterService], plugins: [counterActionsPlugin] });
-      await expect(provider.invoke(increaseCounterAction, { amount: -1 })).rejects.toMatchObject({
+      await expect(
+        provider.invoke({ action: increaseCounterAction, input: { amount: -1 } }),
+      ).rejects.toMatchObject({
         code: 'invalid-input',
       });
       expect(source.read()).toBe(0);
@@ -172,7 +184,7 @@ describe('UI-free contribution example', () => {
 });
 
 async function availableCounter(provider: ReturnType<typeof createProviderLifecycle>) {
-  const resolution = await provider.resolve(counterCapability);
+  const resolution = await provider.resolve({ capability: counterCapability });
   if (resolution.status !== 'available') throw new Error('Expected the example counter capability');
   return resolution.binding;
 }

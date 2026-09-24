@@ -47,9 +47,9 @@ The earlier Q6/Q8 core decisions already established that a per-call policy repl
 | Readiness | Ordinary invocations consider current readiness at dispatch; they do not queue while waiting for a connecting provider. Before dispatch, only the current policy's explicitly permitted alternatives may be considered. |
 | Execution failure | A provider dropping during execution is an error. The client may explicitly request a new invocation; the router never replays the failed call. A failed response is not proof that a mutation did not execute. |
 | Broadcast | Separate capability/action broadcast methods return per-provider outcomes. Ordinary invocation still returns `Promise<Value>`; an individual broadcast failure retains successful sibling results. |
-| Invocation arguments | Prefer a single request object, or at most two or three clear arguments separating business input from common options. Replace the positional contract/operation/input/options chain in the final routed API. Exact signatures remain to be reviewed. |
+| Invocation arguments | Prefer a single request object, or at most two or three clear arguments separating business input from common options. Replace the positional contract/operation/input/options chain in the final routed API. The implemented request signatures and their proof are recorded below. |
 
-These are contract decisions, not claims that a multi-provider router has been implemented. The current core client interfaces still use their earlier positional signatures and expose no broadcast methods.
+These are contract decisions, not claims that a multi-provider router has been implemented. Core client interfaces and local provider handles now use request objects. They still expose no implemented multi-provider routing or broadcast methods.
 
 ## Earlier declaration review, superseded by the accepted follow-up
 
@@ -131,3 +131,23 @@ The authorized upstream change is now [Devframe draft PR 401](https://github.com
 
 
 The owner's latest isolation shape is `connection.isolated`, carried by the prepared Devframe descriptor. URL discovery uses `connection: { isolated: true }`; reconnecting passes that completed descriptor without another toggle. The draft and exact-version backport both follow this shape. This change does not implement generic discovery or routing.
+
+## Implemented invocation requests, 2026-09-24
+
+The accepted compact invocation direction now has maintained core types and local runtime execution:
+
+```ts
+await capabilities.invoke({ capability, operation: 'read', input, target, signal });
+await capabilities.resolve({ capability, target });
+await actions.invoke({ action, input, target, signal });
+
+// Already bound to one local provider, with no routing override.
+await provider.invoke({ action, input, target, signal });
+await provider.resolve({ capability });
+```
+
+Core exports `CapabilityInvocationRequest`, `ActionInvocationRequest`, `OperationRequest` and `CapabilityResolutionRequest`. A capability request is a discriminated union by operation name, preserving each operation's own input and target requirement. The request's input cannot widen the imported descriptor. Already-bound methods keep the compact `input, options` signature. The adapter's lower-level `invokeLocalOperation` also takes one object containing operation, input, options, context, activationSignal and handler.
+
+The current generic runtime and server handles execute these requests locally. Core's routed client interfaces remain contracts, not a claim of implemented remote selection. New compile-only checks reject 12 invalid request shapes, including uncorrelated operation unions and removed positional calls. Three additional runtime tests cover payload/target separation and cancellation before and during dispatch. Existing lifecycle, real native-host and packaged-consumer checks use the new calls.
+
+The next owner review concerns callback results becoming stale while a provider picker waits, and the distinction between ordinary ordered fallback and explicit broadcast selection. Realm-scoped string IDs, dispatch-time readiness, ambiguity errors, no implicit waiting and no post-dispatch rerouting are already settled and are not reopened by those questions.

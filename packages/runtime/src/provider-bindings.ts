@@ -1,11 +1,11 @@
 import { isOperationError } from '@devkit/core';
 import type {
   ActionDescriptor,
+  ActionInvocationRequest,
   AvailabilityReason,
   CapabilityBinding,
   CapabilityDescriptor,
   CapabilityResolution,
-  OperationArguments,
   OperationValue,
   RequirementBindings,
   CapabilityRequirements,
@@ -173,14 +173,14 @@ function localBinding(
       if (operation === undefined)
         return rejectUnavailable(environment, `Operation ${name} is not registered`, contribution);
       return invokeOwned(environment, contribution, (implementation, signal) =>
-        invokeLocalOperation(
+        invokeLocalOperation({
           operation,
           input,
           options,
-          localContext(environment, contribution),
-          signal,
-          (value, context) => implementationMethod(implementation, name)(value, context),
-        ),
+          context: localContext(environment, contribution),
+          activationSignal: signal,
+          handler: (value, context) => implementationMethod(implementation, name)(value, context),
+        }),
       );
     };
     Object.defineProperty(api, name, { value: invoke, enumerable: true });
@@ -225,15 +225,13 @@ export function requirementBindings(
 
 export function invokeAction<Action extends ActionDescriptor>(
   environment: BindingEnvironment,
-  action: Action,
-  ...invocationArguments: OperationArguments<Action['operation']>
+  request: ActionInvocationRequest<Action>,
 ): Promise<OperationValue<Action['operation']>>;
 export function invokeAction(
   environment: BindingEnvironment,
-  action: ActionDescriptor,
-  input: unknown,
-  options: LocalInvocationOptions = {},
+  request: { readonly action: ActionDescriptor; readonly input: unknown } & LocalInvocationOptions,
 ): Promise<unknown> {
+  const { action, input } = request;
   const contribution = allContributions(environment).find((candidate) => {
     const definition = actionDeclaration(candidate.definition);
     return (
@@ -247,18 +245,18 @@ export function invokeAction(
   if (contribution === undefined || definition === undefined)
     return rejectUnavailable(environment, `Action ${action.id}@${action.version} is unavailable`);
   return invokeOwned(environment, contribution, (_value, signal) =>
-    invokeLocalOperation(
-      definition.contract.operation,
+    invokeLocalOperation({
+      operation: definition.contract.operation,
       input,
-      options,
-      localContext(environment, contribution),
-      signal,
-      (value, context) =>
+      options: request,
+      context: localContext(environment, contribution),
+      activationSignal: signal,
+      handler: (value, context) =>
         callRecipe(definition.handler, {
           ...context,
           input: value,
           services: requirementBindings(environment, definition.requires),
         }),
-    ),
+    }),
   );
 }

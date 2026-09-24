@@ -55,7 +55,7 @@ describe('provider admission and invocation contracts', () => {
       version: 2,
       operations: capability.operations,
     });
-    expect(await runtime.resolve(newer)).toMatchObject({
+    expect(await runtime.resolve({ capability: newer })).toMatchObject({
       status: 'unavailable',
       reason: 'incompatible-contract',
       diagnostic: { severity: 'warning' },
@@ -171,7 +171,7 @@ describe('provider admission and invocation contracts', () => {
         echo: defineOperation({ input: z.unknown(), output: z.unknown(), target: 'none' }),
       },
     });
-    const resolution = await runtime.resolve(counterfeit);
+    const resolution = await runtime.resolve({ capability: counterfeit });
     expect(resolution.status).toBe('available');
     await expect(available(resolution).api.echo(12)).rejects.toMatchObject({
       code: 'invalid-input',
@@ -182,7 +182,7 @@ describe('provider admission and invocation contracts', () => {
       version: capability.version,
       operations: { constructor: operation },
     });
-    const missing = available(await runtime.resolve(inheritedName));
+    const missing = available(await runtime.resolve({ capability: inheritedName }));
     await expect(missing.api.constructor('not declared')).rejects.toMatchObject({
       code: 'unavailable-capability',
     });
@@ -205,7 +205,7 @@ describe('provider admission and invocation contracts', () => {
         setup: () => ({ ['__proto__']: (value) => value }),
       }),
     );
-    const resolution = await runtime.resolve(unusual);
+    const resolution = await runtime.resolve({ capability: unusual });
     expect(Object.hasOwn(available(resolution).api, '__proto__')).toBe(true);
     expect(Object.getPrototypeOf(available(resolution).api)).toBe(Object.prototype);
     await expect(available(resolution).api['__proto__']('own')).resolves.toBe('own');
@@ -217,7 +217,9 @@ describe('provider admission and invocation contracts', () => {
       handler: ({ input, services }) => services['__proto__'].api['__proto__'](input),
     });
     await runtime.plugins.install(definePlugin({ id: 'plugin', actions: [contribution] }));
-    await expect(runtime.invoke(action, 'dependency')).resolves.toBe('dependency');
+    await expect(runtime.invoke({ action: action, input: 'dependency' })).resolves.toBe(
+      'dependency',
+    );
     await runtime.dispose();
   });
 });

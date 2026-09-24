@@ -27,7 +27,9 @@ describe.each(['devframe', 'devtools'] as const)('%s production preview', (host)
       expect(hub).toBeDefined();
       expect(native.get(devToolsContext) === hub).toBe(host === 'devtools');
       expect(native.get(devToolsContext)?.viteServer).toBeUndefined();
-      await expect(provider.invoke(increaseCounterAction, { amount: 4 })).resolves.toBe(4);
+      await expect(
+        provider.invoke({ action: increaseCounterAction, input: { amount: 4 } }),
+      ).resolves.toBe(4);
       await expect(api.read({})).resolves.toBe(4);
       await current.server.close();
       expect(hub?.commands.commands.has('example:read-server-counter')).toBe(false);

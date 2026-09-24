@@ -1,8 +1,10 @@
 import type {
   ActionDeclaration,
   ActionDescriptor,
+  ActionInvocationRequest,
   CapabilityDescriptor,
   CapabilityResolution,
+  CapabilityResolutionRequest,
   ContributionDeclaration,
   ContributionKindDescriptor,
   ContributionKindInstaller,
@@ -14,7 +16,6 @@ import type {
   InstallationResult,
   InstallationSnapshot,
   NativeContextAccess,
-  OperationArguments,
   OperationValue,
   PluginDefinition,
   ProviderDescriptor,
@@ -46,11 +47,10 @@ export interface ProviderLifecycle {
   readonly plugins: DefinitionInstallationApi<PluginDefinition>;
   startup(composition: StartupComposition): Promise<StartupInstallationResult>;
   resolve<Capability extends CapabilityDescriptor>(
-    capability: Capability,
+    request: CapabilityResolutionRequest<Capability>,
   ): Promise<CapabilityResolution<Capability>>;
   invoke<Action extends ActionDescriptor>(
-    action: Action,
-    ...invocationArguments: OperationArguments<Action['operation']>
+    request: ActionInvocationRequest<Action>,
   ): Promise<OperationValue<Action['operation']>>;
   dispose(): Promise<void>;
 }

@@ -30,14 +30,14 @@ function invoke(
   handler: (value: unknown, operationContext: LocalOperationContext) => unknown,
   options: LocalInvocationOptions = {},
 ) {
-  return invokeLocalOperation(
+  return invokeLocalOperation({
     operation,
-    'input',
+    input: 'input',
     options,
     context,
-    new AbortController().signal,
+    activationSignal: new AbortController().signal,
     handler,
-  );
+  });
 }
 
 function deferred<Value>() {
@@ -59,7 +59,14 @@ describe('guarded local invocation', () => {
     });
     const handler = vi.fn<(value: unknown) => unknown>((value) => value);
     await expect(
-      invokeLocalOperation(transforming, '12', {}, context, new AbortController().signal, handler),
+      invokeLocalOperation({
+        operation: transforming,
+        input: '12',
+        options: {},
+        context,
+        activationSignal: new AbortController().signal,
+        handler,
+      }),
     ).resolves.toBe('12');
     expect(handler).toHaveBeenCalledWith(
       '12',
@@ -71,7 +78,14 @@ describe('guarded local invocation', () => {
     expect.assertions(2);
     const handler = vi.fn<() => unknown>();
     await expect(
-      invokeLocalOperation(operation, 12, {}, context, new AbortController().signal, handler),
+      invokeLocalOperation({
+        operation,
+        input: 12,
+        options: {},
+        context,
+        activationSignal: new AbortController().signal,
+        handler,
+      }),
     ).rejects.toMatchObject({
       code: 'invalid-input',
       diagnostic: { phase: 'call', providerId: 'provider' },
@@ -90,14 +104,14 @@ describe('guarded local invocation', () => {
       }),
     });
     await expect(
-      invokeLocalOperation(
-        throwing,
-        'input',
-        {},
+      invokeLocalOperation({
+        operation: throwing,
+        input: 'input',
+        options: {},
         context,
-        new AbortController().signal,
-        () => 'output',
-      ),
+        activationSignal: new AbortController().signal,
+        handler: () => 'output',
+      }),
     ).rejects.toMatchObject({ code: 'invalid-input', cause: failure });
   });
 
@@ -109,24 +123,24 @@ describe('guarded local invocation', () => {
     });
     const targeted = defineOperation({ ...operation, target: 'required' });
     await expect(
-      invokeLocalOperation(
-        targeted,
-        'input',
-        {},
+      invokeLocalOperation({
+        operation: targeted,
+        input: 'input',
+        options: {},
         context,
-        new AbortController().signal,
-        () => 'output',
-      ),
+        activationSignal: new AbortController().signal,
+        handler: () => 'output',
+      }),
     ).rejects.toMatchObject({ code: 'target-unavailable' });
     await expect(
-      invokeLocalOperation(
-        targeted,
-        'input',
-        { target },
+      invokeLocalOperation({
+        operation: targeted,
+        input: 'input',
+        options: { target },
         context,
-        new AbortController().signal,
-        (_value, invocationContext) => invocationContext.target?.generation,
-      ),
+        activationSignal: new AbortController().signal,
+        handler: (_value, invocationContext) => invocationContext.target?.generation,
+      }),
     ).resolves.toBe('1');
   });
 
@@ -148,14 +162,14 @@ describe('guarded local invocation', () => {
     const handler = vi.fn<(input: unknown, invocationContext: LocalOperationContext) => unknown>(
       (_input, invocationContext) => invocationContext.target?.id,
     );
-    const invocation = invokeLocalOperation(
-      targeted,
-      'input',
+    const invocation = invokeLocalOperation({
+      operation: targeted,
+      input: 'input',
       options,
       context,
-      new AbortController().signal,
+      activationSignal: new AbortController().signal,
       handler,
-    );
+    });
     await validating.promise;
     originalTarget.id = 'mutated';
     options.target = { kind: 'document', id: 'replacement', generation: '2' };
@@ -191,14 +205,14 @@ describe('guarded local invocation', () => {
       }),
     });
     await expect(
-      invokeLocalOperation(
-        delayed,
-        'input',
-        { signal: controller.signal },
+      invokeLocalOperation({
+        operation: delayed,
+        input: 'input',
+        options: { signal: controller.signal },
         context,
-        new AbortController().signal,
+        activationSignal: new AbortController().signal,
         handler,
-      ),
+      }),
     ).rejects.toMatchObject({ code: 'cancelled' });
     expect(handler).not.toHaveBeenCalled();
   });

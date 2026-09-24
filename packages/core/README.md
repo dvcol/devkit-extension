@@ -45,4 +45,24 @@ pnpm --filter @devkit/core test
 pnpm --filter @devkit/core build
 ```
 
-`tests/core.type-test.ts` compiles against the implementation and preserves the 28 negative declaration fixtures. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
+`tests/core.type-test.ts` compiles against the implementation and preserves the 28 negative declaration fixtures. `tests/requests.type-test.ts` adds 12 negative request fixtures, including dynamic operation/input correlation and rejection of the removed positional calls. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
+
+## Invocation requests
+
+Core declares the client interfaces; provider adapters implement execution. Capability and action clients accept a single scoped request:
+
+```ts
+const value = await capabilities.invoke({
+  capability: title,
+  operation: 'read',
+  input: { prefix: 'Current: ' },
+  target,
+  signal,
+});
+const selected = await capabilities.resolve({ capability: title, target });
+const result = await actions.invoke({ action: readTitle, input: { prefix: '' }, target });
+```
+
+`CapabilityInvocationRequest`, `ActionInvocationRequest`, `OperationRequest` and `CapabilityResolutionRequest` expose these types to adapters and callers. Operation names and descriptors determine payload, result and required-target types; input cannot widen the imported contract. When an operation name is a union, callers must preserve its corresponding payload and target as a union of complete requests.
+
+Local provider handles accept `resolve({ capability })` and `invoke({ action, input, target?, signal? })`. They are already owned by one provider and accept no routing options. A resolved capability still uses `binding.api.read(input, { target, signal })`. Business input remains nested under `input`, so payload fields named `target` or `signal` cannot alter execution metadata.

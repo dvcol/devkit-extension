@@ -40,13 +40,13 @@ export async function runConsumer(): Promise<string> {
     check(service.handle.snapshot().status === 'ready', 'Packed service was not ready');
     check(plugin.handle.snapshot().status === 'ready', 'Packed plugin was not ready');
     checkSubscriptions(source, 1);
-    const result = await provider.invoke(increaseCounterAction, input);
+    const result = await provider.invoke({ action: increaseCounterAction, input });
     const typedResult: number = result;
     // @ts-expect-error The published action must infer a numeric result.
     const invalidResult: string = result;
     void invalidResult;
     check(typedResult === 3, 'Packed action did not update the counter');
-    const resolution = await provider.resolve(counterCapability);
+    const resolution = await provider.resolve({ capability: counterCapability });
     check(resolution.status === 'available', 'Packed capability was unavailable');
     source.increase(2);
     const current: number = await resolution.binding.api.read({});

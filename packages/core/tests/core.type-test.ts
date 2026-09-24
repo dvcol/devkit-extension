@@ -120,7 +120,7 @@ export async function checkClients(
 ): Promise<void> {
   serverRealm.id satisfies 'example.custom-server';
   serverExecution.id satisfies 'example.server';
-  const selected = await capabilities.resolve(titleCapability, { target });
+  const selected = await capabilities.resolve({ capability: titleCapability, target });
   if (selected.status === 'available') {
     const value = await selected.binding.api.read({ prefix: '' }, { target });
     value satisfies string;
@@ -137,14 +137,23 @@ export async function checkClients(
     // @ts-expect-error A pinned binding cannot silently reroute.
     await selected.binding.api.status({}, { routing: {} });
   }
-  (await capabilities.invoke(titleCapability, 'read', { prefix: '' }, { target })) satisfies string;
-  (await actions.invoke(readAction, { prefix: '' }, { target })) satisfies string;
+  (await capabilities.invoke({
+    capability: titleCapability,
+    operation: 'read',
+    input: { prefix: '' },
+    target,
+  })) satisfies string;
+  (await actions.invoke({ action: readAction, input: { prefix: '' }, target })) satisfies string;
   // @ts-expect-error Routed calls also require a target.
-  await capabilities.invoke(titleCapability, 'read', { prefix: '' });
+  await capabilities.invoke({
+    capability: titleCapability,
+    operation: 'read',
+    input: { prefix: '' },
+  });
   // @ts-expect-error Wrong operation is rejected instead of widening the descriptor.
-  await capabilities.invoke(titleCapability, 'missing', {});
+  await capabilities.invoke({ capability: titleCapability, operation: 'missing', input: {} });
   // @ts-expect-error Action inputs match their descriptor.
-  await actions.invoke(readAction, { prefix: 1 }, { target });
+  await actions.invoke({ action: readAction, input: { prefix: 1 }, target });
 }
 
 export function checkContexts(

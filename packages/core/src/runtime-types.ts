@@ -5,13 +5,17 @@ import type {
   ContributionKindDescriptor,
   ExtensionDefinition,
   ActionDescriptor,
-  OperationArguments,
   OperationValue,
   RoutedInvocationOptions,
   SetupContext,
   TargetReference,
   Unsubscribe,
 } from './types.js';
+import type {
+  ActionInvocationRequest,
+  CapabilityInvocationRequest,
+  CapabilityResolutionRequest,
+} from './requests.js';
 
 export type AvailabilityReason =
   | 'unsupported'
@@ -94,25 +98,19 @@ export interface ContributionKindInstaller<Kind extends ContributionKindDescript
 
 export interface CapabilityClient {
   resolve<Capability extends CapabilityDescriptor>(
-    capability: Capability,
-    options?: RoutedInvocationOptions & { readonly target?: TargetReference },
+    request: CapabilityResolutionRequest<Capability> &
+      RoutedInvocationOptions & { readonly target?: TargetReference },
   ): Promise<CapabilityResolution<Capability>>;
   invoke<
     Capability extends CapabilityDescriptor,
-    OperationName extends keyof Capability['operations'],
+    const OperationName extends keyof Capability['operations'],
   >(
-    capability: Capability,
-    operation: OperationName,
-    ...invocationArguments: OperationArguments<
-      Capability['operations'][OperationName],
-      RoutedInvocationOptions
-    >
+    request: CapabilityInvocationRequest<Capability, OperationName, RoutedInvocationOptions>,
   ): Promise<OperationValue<Capability['operations'][OperationName]>>;
 }
 
 export interface ActionClient {
   invoke<Action extends ActionDescriptor>(
-    action: Action,
-    ...invocationArguments: OperationArguments<Action['operation'], RoutedInvocationOptions>
+    request: ActionInvocationRequest<Action, RoutedInvocationOptions>,
   ): Promise<OperationValue<Action['operation']>>;
 }

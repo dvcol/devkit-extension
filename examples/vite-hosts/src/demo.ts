@@ -14,7 +14,7 @@ const server = await createServer({
 try {
   await server.listen();
   const provider = await providerFromVite(server);
-  const value = await provider.invoke(increaseCounterAction, { amount: 3 });
+  const value = await provider.invoke({ action: increaseCounterAction, input: { amount: 3 } });
   console.info(styleText('cyan', '🚀 [vite-hosts]'), 'Counter action:', {
     provider: provider.provider,
     value,

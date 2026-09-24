@@ -17,7 +17,7 @@ export function admitted(result: InstallationResult | undefined) {
 }
 
 export async function bindingFor(provider: ServerProviderHandle) {
-  const resolution = await provider.resolve(counterCapability);
+  const resolution = await provider.resolve({ capability: counterCapability });
   if (resolution.status !== 'available' || resolution.binding.context.access !== 'local')
     throw new Error('Expected an available local counter');
   return { api: resolution.binding.api, native: resolution.binding.context.native };

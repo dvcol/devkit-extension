@@ -28,15 +28,24 @@ export interface LocalInvocationOptions extends InvocationOptions {
   readonly target?: TargetReference;
 }
 
+export interface LocalInvocationRequest {
+  readonly operation: OperationDefinition;
+  readonly input: unknown;
+  readonly options: LocalInvocationOptions;
+  readonly context: LocalInvocationContext;
+  readonly activationSignal: AbortSignal;
+  readonly handler: (value: unknown, context: LocalOperationContext) => unknown;
+}
+
 /** Called only after the owning adapter authorizes and resolves the execution target. */
-export async function invokeLocalOperation(
-  operation: OperationDefinition,
-  input: unknown,
-  options: LocalInvocationOptions,
-  sourceContext: LocalInvocationContext,
-  activationSignal: AbortSignal,
-  handler: (value: unknown, context: LocalOperationContext) => unknown,
-): Promise<unknown> {
+export async function invokeLocalOperation({
+  operation,
+  input,
+  options,
+  context: sourceContext,
+  activationSignal,
+  handler,
+}: LocalInvocationRequest): Promise<unknown> {
   const context = { ...sourceContext, provider: snapshotProvider(sourceContext.provider) };
   const target = options.target ? Object.freeze({ ...options.target }) : undefined;
   const signal = options.signal

@@ -46,14 +46,16 @@ describe('provider cancellation and resource ownership', () => {
     const dependent = admitted(
       await runtime.plugins.install(definePlugin({ id: 'plugin', actions: [contribution] })),
     );
-    const invoked = runtime.invoke(action, 'wait');
+    const invoked = runtime.invoke({ action: action, input: 'wait' });
     const outcome = invoked.catch((error: unknown) => error);
     await started.promise;
     await source.disable();
     await expect(outcome).resolves.toMatchObject({ code: 'cancelled' });
     expect(source.snapshot().contributions[0]?.status).toBe('disabled');
     expect(dependent.snapshot().contributions[0]?.status).toBe('waiting');
-    expect(await runtime.resolve(capability)).toMatchObject({ status: 'unavailable' });
+    expect(await runtime.resolve({ capability: capability })).toMatchObject({
+      status: 'unavailable',
+    });
     await runtime.dispose();
   });
 
@@ -85,7 +87,9 @@ describe('provider cancellation and resource ownership', () => {
     const handle = admitted(await installing);
     expect(handle.snapshot().status).toBe('disposed');
     expect(cleanup).toHaveBeenCalledTimes(1);
-    expect(await runtime.resolve(capability)).toMatchObject({ status: 'unavailable' });
+    expect(await runtime.resolve({ capability: capability })).toMatchObject({
+      status: 'unavailable',
+    });
   });
 
   it('finishes dependent cleanup before disposing the service resource', async () => {
@@ -126,7 +130,7 @@ describe('provider cancellation and resource ownership', () => {
         },
       }),
     );
-    const pinned = available(await runtime.resolve(capability));
+    const pinned = available(await runtime.resolve({ capability: capability }));
     await source.disable();
     expect(order).toEqual(['dependent', 'source']);
     await expect(pinned.api.echo('late')).rejects.toMatchObject({ code: 'unavailable-capability' });

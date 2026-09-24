@@ -1,12 +1,13 @@
 import type {
   ActionDescriptor,
+  ActionInvocationRequest,
   CapabilityDescriptor,
   CapabilityResolution,
+  CapabilityResolutionRequest,
   ContributionKindDescriptor,
   ContributionKindInstaller,
   DefinitionInstallationApi,
   InstallationResult,
-  OperationArguments,
   OperationValue,
   PluginDefinition,
   ProviderDescriptor,
@@ -34,11 +35,10 @@ export interface ServerProviderHandle {
     readonly plugins: readonly InstallationResult[];
   };
   resolve<Capability extends CapabilityDescriptor>(
-    capability: Capability,
+    request: CapabilityResolutionRequest<Capability>,
   ): Promise<CapabilityResolution<Capability>>;
   invoke<Action extends ActionDescriptor>(
-    action: Action,
-    ...invocationArguments: OperationArguments<Action['operation']>
+    request: ActionInvocationRequest<Action>,
   ): Promise<OperationValue<Action['operation']>>;
   /** Dispose adapter-owned contributions. The caller retains ownership of its native host. */
   dispose(): Promise<void>;

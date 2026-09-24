@@ -23,8 +23,8 @@ const provider = createProviderLifecycle({
 
 try {
   await provider.startup({ services: [counterService], plugins: [counterActionsPlugin] });
-  const result = await provider.invoke(increaseCounterAction, { amount: 3 });
-  const resolution = await provider.resolve(counterCapability);
+  const result = await provider.invoke({ action: increaseCounterAction, input: { amount: 3 } });
+  const resolution = await provider.resolve({ capability: counterCapability });
   if (resolution.status !== 'available') throw new Error('Counter capability did not activate');
   console.info(styleText('cyan', '🚀 [contribution]'), 'Action returned:', result);
   console.info(

@@ -83,8 +83,8 @@ describe('provider lifecycle composition', () => {
     expect(result.services).toHaveLength(2);
     expect(admitted(result.services[0]).snapshot().status).toBe('ready');
     expect(admitted(result.plugins[0]).snapshot().status).toBe('ready');
-    await expect(runtime.invoke(action, 'hello')).resolves.toBe('hello');
-    const resolution = await runtime.resolve(capability);
+    await expect(runtime.invoke({ action: action, input: 'hello' })).resolves.toBe('hello');
+    const resolution = await runtime.resolve({ capability: capability });
     expect(resolution.status).toBe('available');
     expect(available(resolution).context).toMatchObject({
       access: 'local',
@@ -126,12 +126,12 @@ describe('provider lifecycle composition', () => {
     await source.disable();
     await source.enable();
     expect(plugin.snapshot().contributions[0]?.status).toBe('disabled');
-    await expect(runtime.invoke(action, 'hello')).rejects.toMatchObject({
+    await expect(runtime.invoke({ action: action, input: 'hello' })).rejects.toMatchObject({
       code: 'unavailable-capability',
     });
     await plugin.enable();
     expect(plugin.snapshot().contributions[0]).toMatchObject({ status: 'active', generation: 3 });
-    await expect(runtime.invoke(action, 'hello')).resolves.toBe('hello');
+    await expect(runtime.invoke({ action: action, input: 'hello' })).resolves.toBe('hello');
     await runtime.dispose();
   });
 
@@ -162,7 +162,7 @@ describe('provider lifecycle composition', () => {
         expect.objectContaining({ code: 'setup-failure', contributionId: 'failing' }),
       ]),
     );
-    await expect(runtime.invoke(action, 'working')).resolves.toBe('working');
+    await expect(runtime.invoke({ action: action, input: 'working' })).resolves.toBe('working');
     await handle.disable();
     await handle.enable();
     expect(setup).toHaveBeenCalledTimes(1);

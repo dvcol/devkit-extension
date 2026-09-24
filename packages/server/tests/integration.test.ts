@@ -45,8 +45,8 @@ describe('local server provider integration', () => {
     expect(provider.provider.incarnation).toMatch(/^[\da-f-]{36}$/u);
     expect(admitted(provider.startup.services[0]).snapshot().status).toBe('ready');
     expect(admitted(provider.startup.plugins[0]).snapshot().status).toBe('ready');
-    await expect(provider.invoke(incrementAction, 3)).resolves.toBe(3);
-    const binding = available(await provider.resolve(counterCapability));
+    await expect(provider.invoke({ action: incrementAction, input: 3 })).resolves.toBe(3);
+    const binding = available(await provider.resolve({ capability: counterCapability }));
     expect(binding.context.access).toBe('local');
     const context = localContext(binding.context);
     expect(context.native.get(devframeContext)).toBe(host.context);
@@ -78,7 +78,7 @@ describe('local server provider integration', () => {
       services: [counterService],
       plugins: [counterPlugin],
     });
-    const binding = available(await provider.resolve(counterCapability));
+    const binding = available(await provider.resolve({ capability: counterCapability }));
     const context = localContext(binding.context);
     expect(context.native.get(devToolsContext)).toBe(host.context);
     expect(context.native.get(devframeHubContext)).toBe(host.context);
@@ -87,7 +87,7 @@ describe('local server provider integration', () => {
     expect(typeof host.context.createJsonRenderer).toBe('function');
     expect(binding.context.execution).toEqual(serverExecution);
     expect(binding.context.provider).toEqual(provider.provider);
-    await expect(provider.invoke(incrementAction, 4)).resolves.toBe(4);
+    await expect(provider.invoke({ action: incrementAction, input: 4 })).resolves.toBe(4);
     await provider.dispose();
   });
 
@@ -100,12 +100,12 @@ describe('local server provider integration', () => {
     });
     const plugin = admitted(provider.startup.plugins[0]);
     expect(plugin.snapshot().contributions[0]?.status).toBe('waiting');
-    await expect(provider.invoke(incrementAction, 2)).rejects.toMatchObject({
+    await expect(provider.invoke({ action: incrementAction, input: 2 })).rejects.toMatchObject({
       code: 'unavailable-capability',
     });
     const service = admitted(await provider.services.install(counterService));
     expect(plugin.snapshot().status).toBe('ready');
-    await expect(provider.invoke(incrementAction, 2)).resolves.toBe(2);
+    await expect(provider.invoke({ action: incrementAction, input: 2 })).resolves.toBe(2);
     await service.disable();
     expect(host.context.commands.commands.has('example:counter')).toBe(false);
     expect(plugin.snapshot().contributions[0]?.status).toBe('waiting');
@@ -114,7 +114,7 @@ describe('local server provider integration', () => {
     expect(replacement.snapshot().status).toBe('ready');
     const newPlugin = admitted(await provider.plugins.replace(plugin, counterPlugin));
     expect(newPlugin.snapshot().status).toBe('ready');
-    await expect(provider.invoke(incrementAction, 3)).resolves.toBe(5);
+    await expect(provider.invoke({ action: incrementAction, input: 3 })).resolves.toBe(5);
     await newPlugin.dispose();
     expect(admitted(await provider.plugins.install(counterPlugin)).snapshot().status).toBe('ready');
     await provider.dispose();

@@ -41,9 +41,9 @@ describe('provider replacement', () => {
     );
     expect(result).toMatchObject({ status: 'skipped', diagnostic: { severity: 'warning' } });
     expect(old.snapshot().status).toBe('ready');
-    await expect(available(await runtime.resolve(capability)).api.echo('value')).resolves.toBe(
-      'old:value',
-    );
+    await expect(
+      available(await runtime.resolve({ capability: capability })).api.echo('value'),
+    ).resolves.toBe('old:value');
     expect(old.snapshot().contributions[0]?.generation).toBe(1);
     expect(diagnostics.at(-1)?.code).toBe('duplicate-registration');
     await runtime.dispose();
@@ -60,7 +60,7 @@ describe('provider replacement', () => {
       code: 'duplicate-registration',
     });
     expect(old.snapshot().status).toBe('ready');
-    const binding = available(await runtime.resolve(capability));
+    const binding = available(await runtime.resolve({ capability: capability }));
     await expect(binding.api.echo('still active')).resolves.toBe('still active');
     expect(old.snapshot().contributions[0]?.generation).toBe(1);
     await runtime.dispose();
@@ -123,16 +123,16 @@ describe('provider replacement', () => {
       ),
     );
     expect(installed.snapshot().status).toBe('ready');
-    await expect(available(await runtime.resolve(independent)).api.echo('available')).resolves.toBe(
-      'available',
-    );
+    await expect(
+      available(await runtime.resolve({ capability: independent })).api.echo('available'),
+    ).resolves.toBe('available');
     releaseCleanup.resolve();
     const successor = admitted(await replacement);
     expect(successor.snapshot().status).toBe('ready');
     expect(old.snapshot().status).toBe('disposed');
-    await expect(available(await runtime.resolve(next)).api.echo('value')).resolves.toBe(
-      'next:value',
-    );
+    await expect(
+      available(await runtime.resolve({ capability: next })).api.echo('value'),
+    ).resolves.toBe('next:value');
     await runtime.dispose();
   });
 
@@ -197,9 +197,9 @@ describe('provider replacement', () => {
     released.resolve();
     expect(admitted(await first).snapshot().status).toBe('ready');
     await expect(secondOutcome).resolves.toMatchObject({ code: 'invalid-definition' });
-    await expect(available(await runtime.resolve(capability)).api.echo('value')).resolves.toBe(
-      'first:value',
-    );
+    await expect(
+      available(await runtime.resolve({ capability: capability })).api.echo('value'),
+    ).resolves.toBe('first:value');
     await runtime.dispose();
   });
 });

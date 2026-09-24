@@ -33,13 +33,27 @@ function describeNativeContexts(native: NativeContextAccess, context: DevframeHu
   };
 }
 
+async function resolveCounter(provider: ServerProviderHandle) {
+  const resolution = await provider.resolve({ capability: counterCapability });
+  if (resolution.status !== 'available') throw new Error('Counter capability is unavailable');
+  return resolution.binding;
+}
+
+async function readRetainedCounter(context: DevframeHubContext) {
+  const state = await context.rpc.sharedState.get<{ value: number }>(counterStateKey, {
+    initialValue: { value: 0 },
+  });
+  return state.value().value;
+}
+
 async function exerciseProvider(provider: ServerProviderHandle, context: DevframeHubContext) {
   const service = admitted(provider.startup.services[0]);
   const plugin = admitted(provider.startup.plugins[0]);
-  const firstActionValue = await provider.invoke(increaseCounterAction, { amount: 3 });
-  const resolution = await provider.resolve(counterCapability);
-  if (resolution.status !== 'available') throw new Error('Counter capability is unavailable');
-  const binding = resolution.binding;
+  const firstActionValue = await provider.invoke({
+    action: increaseCounterAction,
+    input: { amount: 3 },
+  });
+  const binding = await resolveCounter(provider);
   if (binding.context.access !== 'local') throw new Error('Expected a local server binding');
   const native = describeNativeContexts(binding.context.native, context);
   const firstReadValue = await binding.api.read({});
@@ -50,20 +64,19 @@ async function exerciseProvider(provider: ServerProviderHandle, context: Devfram
     commandRegistered: context.commands.commands.has(readCounterCommandId),
   };
   await service.enable();
-  const secondActionValue = await provider.invoke(increaseCounterAction, { amount: 4 });
+  const secondActionValue = await provider.invoke({
+    action: increaseCounterAction,
+    input: { amount: 4 },
+  });
   const commandValue = await context.commands.execute(readCounterCommandId);
-  const reactivated = await provider.resolve(counterCapability);
-  if (reactivated.status !== 'available') throw new Error('Counter capability did not reactivate');
+  const reactivated = await resolveCounter(provider);
   const enabled = {
     service: service.snapshot().status,
     plugin: plugin.snapshot().status,
-    incarnation: reactivated.binding.context.provider.incarnation,
+    incarnation: reactivated.context.provider.incarnation,
     commandRegistered: context.commands.commands.has(readCounterCommandId),
   };
   await provider.dispose();
-  const state = await context.rpc.sharedState.get<{ value: number }>(counterStateKey, {
-    initialValue: { value: 0 },
-  });
   return {
     provider: provider.provider,
     execution: binding.context.execution,
@@ -78,7 +91,7 @@ async function exerciseProvider(provider: ServerProviderHandle, context: Devfram
       service: service.snapshot().status,
       plugin: plugin.snapshot().status,
       commandRegistered: context.commands.commands.has(readCounterCommandId),
-      retainedHostState: state.value().value,
+      retainedHostState: await readRetainedCounter(context),
     },
   };
 }

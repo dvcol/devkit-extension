@@ -72,14 +72,16 @@ describe('provider backend identity', () => {
         plugins: [definePlugin({ id: 'actions', actions: [actionDefinition] })],
       });
       const serviceHandle = admitted(installed.services[0]);
-      const binding = available(await runtime.resolve(capability));
+      const binding = available(await runtime.resolve({ capability: capability }));
       expect(binding.context.provider).toEqual(expected);
       expect(Object.isFrozen(binding.context.provider)).toBe(true);
       expect(Object.isFrozen(binding.context.provider.realm)).toBe(true);
       expect(Object.isFrozen(descriptor)).toBe(false);
       expect(Object.isFrozen(descriptor.realm)).toBe(false);
       await expect(binding.api.echo('')).resolves.toBe(expected.incarnation);
-      await expect(runtime.invoke(action, '')).resolves.toBe(expected.incarnation);
+      await expect(runtime.invoke({ action: action, input: '' })).resolves.toBe(
+        expected.incarnation,
+      );
       await serviceHandle.disable();
       await serviceHandle.enable();
       expect(serviceHandle.snapshot().contributions[0]?.generation).toBe(2);
@@ -105,7 +107,7 @@ describe('provider backend identity', () => {
           setup: () => ({ echo: (value) => `previous:${value}` }),
         }),
       );
-      const previousBinding = available(await previous.resolve(capability));
+      const previousBinding = available(await previous.resolve({ capability: capability }));
       await successor.services.install(
         defineService({
           capability: capability,
@@ -114,7 +116,7 @@ describe('provider backend identity', () => {
           setup: () => ({ echo: successorHandler }),
         }),
       );
-      const successorBinding = available(await successor.resolve(capability));
+      const successorBinding = available(await successor.resolve({ capability: capability }));
       expect(previousBinding.context.provider.id).toBe(successorBinding.context.provider.id);
       expect(previousBinding.context.provider.incarnation).not.toBe(
         successorBinding.context.provider.incarnation,
@@ -141,25 +143,25 @@ describe('provider backend identity', () => {
     const handler = vi.fn<(_value: unknown, context: LocalOperationContext) => string>(
       (_value, context) => context.provider.incarnation,
     );
-    const result = invokeLocalOperation(
-      {
+    const result = invokeLocalOperation({
+      operation: {
         ...operation,
         input: z.string().refine(async () => {
           await validation.promise;
           return true;
         }),
       },
-      'input',
-      {},
-      {
+      input: 'input',
+      options: {},
+      context: {
         provider: descriptor,
         execution,
         contributionId: 'echo',
         native: { get: vi.fn<() => undefined>() },
       },
-      new AbortController().signal,
+      activationSignal: new AbortController().signal,
       handler,
-    );
+    });
     descriptor.incarnation = 'successor-lifetime';
     descriptor.realm.id = 'mutated-realm';
     validation.resolve();

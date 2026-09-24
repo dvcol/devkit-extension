@@ -69,8 +69,8 @@ async function startProvider(
       startup,
       services: lifecycle.services,
       plugins: lifecycle.plugins,
-      resolve: (capability) => lifecycle.resolve(capability),
-      invoke: (action, ...invocationArguments) => lifecycle.invoke(action, ...invocationArguments),
+      resolve: (request) => lifecycle.resolve(request),
+      invoke: (request) => lifecycle.invoke(request),
       dispose,
     } satisfies ServerProviderHandle);
   } catch (startupFailure) {
