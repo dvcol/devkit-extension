@@ -85,12 +85,51 @@ Six additional integration tests cover both hosts against freshly built browser 
 | Delayed cleanup            | Preview close waits for contribution cleanup and removes upgrade listeners                           |
 | Failed cleanup             | Close rejects, the installation stays `cleanup-blocked`, and native transports still close           |
 
-The maintained suite now has 18 real-host tests. This establishes live backend attachment and built-file serving. It does not yet implement independent build-watch/publication status, retention of the last complete build, remote SDK dispatch, browser rendering or production asset reloads.
+The maintained suite now has 23 tests covering native development/preview hosts, watched production retention and process exit. The watched workflow is documented below. Remote SDK dispatch, browser rendering and automatic production asset reload remain open.
 
 ## Remaining host contract work
 
 - Failed native setup and changes during activation need further real-host evidence. Failed-restart replacement cleanup is a documented Vite gap accepted by the owner; the [upstream source proposal](../../docs/probes/vite-failed-restart/source-validation/README.md) is separate and no Vite dependency patch is installed.
-- Development middleware mode is explicitly rejected. Watched production publication, bundled development and browser-side HMR delivery are not established by these tests.
+- Development middleware mode is explicitly rejected. Bundled development and browser-side HMR delivery are not established by these tests.
 - Discovery, remote dispatch, authentication conformance, JSON rendering and extension hosts remain separate implementation work. The native connection-metadata request is not an SDK RPC transport test.
 
 These limits keep issues [6](https://github.com/dvcol/devkit-extension/issues/6), [13](https://github.com/dvcol/devkit-extension/issues/13) and [14](https://github.com/dvcol/devkit-extension/issues/14) open.
+
+## Watched production with a live backend
+
+Build the example's dependency graph once, then start the combined command:
+
+```sh
+pnpm --filter @devkit/example-vite-hosts... run build
+pnpm --filter @devkit/example-vite-hosts run dev:production
+```
+
+`dev:production` uses `pnpm --workspace-concurrency=2 run "/^(build:watch|preview)$/"`. The two underlying scripts remain independently runnable, including starting preview before the first build:
+
+```sh
+pnpm --filter @devkit/example-vite-hosts run build:watch
+pnpm --filter @devkit/example-vite-hosts run preview
+```
+
+The default preview backend is Devframe. Set `DEVKIT_HOST=devtools` on `preview` or the combined command to select the native DevTools backend. Both scripts use the example's `.devkit-production` directory. Preview reports HTTP 503 until a complete build exists. Its live backend can already accept authorized native connections during that interval.
+
+Vite owns compilation and source watching. On its real `BUNDLE_END` event, `watchProduction(config, directory)` copies the completed staging output into a new immutable directory and atomically publishes its status file. This happens after output-writing hooks complete. Failed builds publish `phase: 'failed'` with the error and retain the previous generation. The watcher logs failures; `/__build-status` returns the current status without caching.
+
+`productionPreviewPlugin(directory)` redirects the example entry page into that generation, and Vite serves its relative asset URLs. Older generation URLs remain valid after subsequent builds. Refreshing the entry page selects the latest complete build. Rebuilding assets does not recreate the backend or reset its counter. `readProductionStatus(directory)` exposes the same validated local status for orchestration.
+
+| Piece                                               | Maintained execution proof                                                                                      |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Preview starts before watcher                       | Real HTTP 503 and starting status, with a working native backend                                                |
+| `buildStart` and successful `BUNDLE_END`            | Real watched source edits publish distinct complete generations                                                 |
+| Syntax, `generateBundle` and `writeBundle` failures | Previous HTML and JavaScript remain byte-identical; HTTP status reports failure                                 |
+| Recovery and old URLs                               | New output becomes active while old asset URLs retain their original contents                                   |
+| Provider lifetime                                   | Native counter state and provider incarnation survive asset failures and rebuilds in both hosts                 |
+| Writer ownership                                    | A second simultaneous publisher is rejected; `close()` is idempotent and releases its lock and process listener |
+| Watcher restart                                     | A failed first build after restart retains the last complete published generation                               |
+| Process exit                                        | An actual child process publishes stopped status and releases its lock synchronously                            |
+
+The exact combined command was also run on macOS: watcher and preview started concurrently, HTTP returned the built page and native WebSocket metadata, and Ctrl+C stopped both children with `phase: 'stopped'` and no publisher lock. pnpm reports the interrupted preview task as a nonzero exit on Ctrl+C.
+
+This maintained example covers a single HTML application with relative asset URLs on local HTTP/1. It retains generated directories until they are removed after stopping both scripts. The exclusive publisher lock is intentionally not stolen from another process; after an uncatchable termination such as SIGKILL, stop any remaining publisher before deleting the stale lock. Crash consistency, Windows filesystem behavior, multiple output layouts and generation pruning are not established by this example.
+
+Automatic browser refresh/HMR, a renderer-mounted failure view, remote portable SDK calls and state restoration after backend replacement remain separate implementation work. The current browser document does not update itself merely because a new generation is available.

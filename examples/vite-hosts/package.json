@@ -15,6 +15,9 @@
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
     "build:site": "vite build --config host.config.ts --mode devframe",
+    "build:watch": "node src/build-watch.ts",
+    "preview": "node src/production-demo.ts",
+    "dev:production": "pnpm --workspace-concurrency=2 run \"/^(build:watch|preview)$/\"",
     "preview:devframe": "node src/preview-demo.ts devframe",
     "preview:devtools": "node src/preview-demo.ts devtools",
     "demo:devframe": "node src/demo.ts devframe",

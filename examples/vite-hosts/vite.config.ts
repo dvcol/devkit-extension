@@ -11,6 +11,7 @@ export default defineConfig({
         '@devkit/example-server-contexts',
         '@devkit/server',
         '@vitejs/devtools',
+        'vite',
       ],
     },
     sourcemap: true,

@@ -283,3 +283,9 @@ This is example-local lifecycle wiring with native authentication preserved. It 
 The owner replaced the draft-only standalone toggle with `connection.isolated`. Complete descriptors retain the property through token updates and recreation. For URL/metadata discovery, the same `connection` input accepts `{ isolated: true }` before the complete descriptor exists; partial metadata/URL descriptors remain type errors. RPC consumes the resolved connection property, so callers need no repeated flag. Authentication channel creation remains inline under the existing try/catch.
 
 The updated [upstream source at 22c32064](https://github.com/devframes/devframe/commit/22c32064) passes all 39 affected tests, 92 API snapshots, build, typecheck and lint. Installed-backport tests cover descriptor reuse and client recreation; four negative type fixtures reject invalid flags, the removed standalone toggle and incomplete prepared descriptors. The 19 server tests and 18 native-host tests pass. No Vite patch is adopted.
+
+## Maintained watched-production integration, 2026-09-24
+
+The [Vite-host example](../../examples/vite-hosts/README.md) now combines the accepted independent build watcher and preview processes with both real native backends. The pnpm regex command starts them concurrently. The publisher copies completed output after Vite's successful `BUNDLE_END`; syntax and late build-plugin failures retain the previous HTML/JavaScript and publish failed status. The same live provider and counter state survive those asset rebuilds.
+
+This closes the gap between the two earlier isolated probes for output retention and native preview attachment. It does not complete browser HMR, JSON diagnostics rendering, remote SDK routing or backend-state restoration. Its public example helpers, real-host assertions and filesystem/shutdown limits are documented in the example. Vite remains unpatched.
