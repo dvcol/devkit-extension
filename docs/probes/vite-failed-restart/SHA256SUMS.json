@@ -6,5 +6,7 @@
   "patched-restart.mjs": "9c5316a6456a85bf116a0c8eb796eb3339a109ff5aaecda758972ce69c18dd0b",
   "patched-restart-result.json": "2c0ad216781417d2edf833a980e6909cd95caedcd6d0a88007c49224c3f7dea0",
   "double-failure-restart.mjs": "f648e8748c6c7ca211b0c60bb728d5b0acd1476341f48bc61e19f480156454ac",
-  "double-failure-restart-result.json": "23c038427a117b143baa60d805f3e873ddfa4ea17b3ea2a305b0aed8aa8e4d38"
+  "double-failure-restart-result.json": "23c038427a117b143baa60d805f3e873ddfa4ea17b3ea2a305b0aed8aa8e4d38",
+  "auto-config-restart.mjs": "c4f5c717a00e1e2647d86de972ef229ff1b256c3654d6fe722b3c927634bcf1c",
+  "auto-config-restart-result.json": "44f1833afb797388e89c38bf2638f8735b6b70f6a71b2cb189b7c3d3489a6614"
 }

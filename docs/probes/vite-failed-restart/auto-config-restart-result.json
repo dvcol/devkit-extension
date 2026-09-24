@@ -1,0 +1,76 @@
+{
+  "vite": "8.3.0",
+  "node": "v26.9.0",
+  "cases": [
+    {
+      "host": "devframe",
+      "rejection": "caught and logged by native Vite config update path",
+      "loggedErrors": [
+        "OperationError: Provider cleanup is blocked"
+      ],
+      "watcherErrors": [],
+      "processContinuedAfterConfigFailure": true,
+      "beforeManualClose": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:restart"
+        ],
+        "candidateObservedChange": true,
+        "watchedDirectoryCount": 3,
+        "oldListening": false,
+        "candidateListening": false,
+        "candidateWatcherClosed": false,
+        "candidateReadiness": "pending",
+        "candidateListeningCallbacks": 4
+      },
+      "afterManualClose": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:restart",
+          "close:close"
+        ],
+        "watchedDirectoryCount": 0,
+        "candidateWatcherClosed": true,
+        "candidateReadiness": "rejected",
+        "candidateListeningCallbacks": 3
+      }
+    },
+    {
+      "host": "devtools",
+      "rejection": "caught and logged by native Vite config update path",
+      "loggedErrors": [
+        "OperationError: Provider cleanup is blocked"
+      ],
+      "watcherErrors": [],
+      "processContinuedAfterConfigFailure": true,
+      "beforeManualClose": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:restart"
+        ],
+        "candidateObservedChange": true,
+        "watchedDirectoryCount": 3,
+        "oldListening": false,
+        "candidateListening": false,
+        "candidateWatcherClosed": false,
+        "candidateReadiness": "pending",
+        "candidateListeningCallbacks": 4
+      },
+      "afterManualClose": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:restart",
+          "close:close"
+        ],
+        "watchedDirectoryCount": 0,
+        "candidateWatcherClosed": true,
+        "candidateReadiness": "rejected",
+        "candidateListeningCallbacks": 3
+      }
+    }
+  ]
+}
