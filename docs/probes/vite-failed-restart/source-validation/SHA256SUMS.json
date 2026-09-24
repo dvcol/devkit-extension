@@ -1,7 +1,7 @@
 {
   "regression-before.txt": "0a3b6e3ba5f3918f06ba3259de2aeef10a97948628f0fcb31ef06cf155448279",
   "proposal.patch": "c4626768bea89f00523306e5fb3a8cb8e27ad0131ee248742230f206fa6629b7",
-  "README.md": "73d7879a05eb2df3134bb767794b25435d960881e1a5ec5c216cf59385cd9126",
+  "README.md": "7dff9ebb572c5fbd104c59a679a9496c4b2164815f29e7c6eca51806beac21fa",
   "live-result.json": "e42caee643ef32a7497f8f67ac4e7c2af7e34680a5c1b3cf01a0b922f3e05b1f",
   "validation.json": "83f8fb80f02ccd9f490afb4a6f3effcc12176d8ee3d194127c3d12eab509128e"
 }

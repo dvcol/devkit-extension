@@ -14,6 +14,8 @@ The patch changes two files: 13 additional runtime lines in the existing restart
 
 `validation.json` records exact base/proposal commits; `proposal.patch` is the complete reviewable diff. The patch is not registered in pnpm and no Vite dependency bytes were changed in this monorepo. This evidence does not claim full Vite CI or recovery when candidate cleanup itself hangs or fails.
 
-## Publication boundary
+## Upstream draft
 
-Vite's [contribution policy](https://github.com/vitejs/vite/blob/5f894339d27882fedc86bf6b1076fa6d92e404f3/CONTRIBUTING.md#ai-policy) says all PR descriptions must be written in the submitter's own words. The source and tests are prepared on a local review branch; no upstream PR is open. Human review and the submitter's description remain before publication. Work on the SDK does not depend on this proposal.
+The owner explicitly authorized publication using the reviewed short description. [Vite draft PR 23574](https://github.com/vitejs/vite/pull/23574) is open at `301d422cd05e2f4ce4a29fc6d01de39936c282f2`, rebased onto upstream `39ddf7ccf7e7469ff6a3ba37bca38c32ea804d6e`. All 26 hook tests, the scoped package build/typecheck and changed-file lint pass again after rebasing. GitHub rejected self-assignment for this account; the draft itself was created successfully.
+
+The stored patch, red/green receipts and validation JSON preserve the original executed base/proposal pair. Their pre-publication status is historical. The workspace continues using unpatched Vite; SDK work does not depend on upstream acceptance.
