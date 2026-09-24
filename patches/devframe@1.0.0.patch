@@ -1,24 +1,28 @@
 diff --git a/dist/client/index.d.mts b/dist/client/index.d.mts
-index 8db367b73d7aabfa28a93cb8641ab3010f1b8650..989c8027a9fec572607c2ae6f6e65f0dbe87a6e6 100644
+index 8db367b73d7aabfa28a93cb8641ab3010f1b8650..9cd4c5a6eb974f2e5b047a56953ad7f8ee5a103f 100644
 --- a/dist/client/index.d.mts
 +++ b/dist/client/index.d.mts
-@@ -18,6 +18,15 @@ export interface DevframeConnection {
+@@ -16,10 +16,17 @@ export interface DevframeConnection {
+   metaBaseUrl: string;
+   /** Previously issued bearer token, when the connection is already trusted. */
    authToken?: string;
++  /** Skip shared browser caches and authentication broadcasts. Retained when reconnecting. */
++  isolated?: boolean;
  }
  export interface SetupDevframeConnectionOptions {
-+  /**
-+   * Keep connection discovery and credentials local to this RPC client.
-+   * Skips shared window/localStorage reads and writes, and authentication
-+   * broadcasts. Explicit connections, metadata and credentials still apply.
-+   * Pass this option again when reusing a prepared connection.
-+   *
-+   * @default false
-+   */
-+  isolateConnection?: boolean;
-   /** Reuse a complete connection prepared in another viewer or JavaScript realm. */
-   connection?: DevframeConnection;
+-  /** Reuse a complete connection prepared in another viewer or JavaScript realm. */
+-  connection?: DevframeConnection;
++  /** Reuse a prepared connection, or configure isolation before resolving its metadata. */
++  connection?: DevframeConnection | {
++    isolated: boolean;
++    connectionMeta?: never;
++    metaBaseUrl?: never;
++    authToken?: never;
++  };
    /** Use a pre-known descriptor while deriving its source URL from `baseURL`. */
-@@ -165,7 +174,7 @@ export interface DevframeScopedClientRpc<NS extends string = string> {
+   connectionMeta?: ConnectionMeta;
+   /** Base URL, or fallback list, used to locate `__connection.json`. */
+@@ -165,7 +172,7 @@ export interface DevframeScopedClientRpc<NS extends string = string> {
    };
    /** Resolve a namespaced shared state. Bare keys resolve within this namespace. */
    sharedState: {
@@ -28,10 +32,10 @@ index 8db367b73d7aabfa28a93cb8641ab3010f1b8650..989c8027a9fec572607c2ae6f6e65f0d
    };
    /** Streaming host scoped to this namespace. */
 diff --git a/dist/client/index.mjs b/dist/client/index.mjs
-index a26af04daee8a1d93897225fa8efa43b9b1efb32..28ef65345c8bd87fc30208d4912d07ff8aad7e5d 100644
+index a26af04daee8a1d93897225fa8efa43b9b1efb32..d31db9bd9f84726429b782627daa497c7890aa38 100644
 --- a/dist/client/index.mjs
 +++ b/dist/client/index.mjs
-@@ -481,31 +481,27 @@ function getDevframeConnection() {
+@@ -481,31 +481,28 @@ function getDevframeConnection() {
  * fetching `__connection.json` from the configured base URLs.
  */
  async function setupDevframeConnection(options = {}) {
@@ -42,13 +46,13 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..28ef65345c8bd87fc30208d4912d07ff
 -	}
 +	const connection = await resolveDevframeConnection(options);
 +	const authToken = options.authToken ?? connection.authToken ?? connection.connectionMeta.authToken;
-+	const resolvedConnection = withAuthToken(connection, options.isolateConnection ? authToken : readStoredAuthToken(authToken));
-+	if (options.isolateConnection) return resolvedConnection;
++	const resolvedConnection = withAuthToken(connection, connection.isolated ? authToken : readStoredAuthToken(authToken));
++	if (connection.isolated) return resolvedConnection;
 +	storeConnection(resolvedConnection);
 +	return resolvedConnection;
 +}
 +async function resolveDevframeConnection(options) {
-+	if (options.connection) return options.connection;
++	if (options.connection?.connectionMeta) return options.connection;
  	const bases = Array.isArray(options.baseURL) ? options.baseURL : [options.baseURL ?? "./"];
 -	if (options.connectionMeta) {
 -		const connection = {
@@ -76,14 +80,15 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..28ef65345c8bd87fc30208d4912d07ff
 +		* supplied descriptor resolves from the caller's explicit base.
 +		*/
 +		metaBaseUrl: resolveMetaBaseUrl(bases[0] ?? "./"),
-+		authToken: options.connectionMeta.authToken
++		authToken: options.connectionMeta.authToken,
++		isolated: options.connection?.isolated
 +	};
-+	const existing = options.isolateConnection ? void 0 : getDevframeConnection();
++	const existing = options.connection?.isolated ? void 0 : getDevframeConnection();
 +	if (existing) return existing;
  	const errors = [];
  	for (const base of bases) {
  		const metaPath = withBase(DEVFRAME_CONNECTION_META_FILENAME, base);
-@@ -515,7 +511,7 @@ async function setupDevframeConnection(options = {}) {
+@@ -515,7 +512,7 @@ async function setupDevframeConnection(options = {}) {
  			if (!response.ok) throw new Error(`Failed to fetch connection meta from ${metaUrl}: ${response.status}`);
  			const connectionMeta = await response.json();
  			const loadedFrom = response.url || metaUrl;
@@ -92,52 +97,37 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..28ef65345c8bd87fc30208d4912d07ff
  				connectionMeta,
  				/**
  				* A served `baseUrl` re-points relative resolution (RPC dump shards,
-@@ -523,10 +519,8 @@ async function setupDevframeConnection(options = {}) {
+@@ -523,10 +520,9 @@ async function setupDevframeConnection(options = {}) {
  				* per-frame meta directs each frame SPA at the hub's own dump.
  				*/
  				metaBaseUrl: connectionMeta.baseUrl ? new URL(connectionMeta.baseUrl, loadedFrom).href : loadedFrom,
 -				authToken: readStoredAuthToken(options.authToken ?? connectionMeta.authToken)
-+				authToken: connectionMeta.authToken
++				authToken: connectionMeta.authToken,
++				isolated: options.connection?.isolated
  			};
 -			storeConnection(connection);
 -			return connection;
  		} catch (error) {
  			errors.push(error);
  		}
-@@ -1804,6 +1798,13 @@ function resolveClientTransport(requested, meta) {
- 	if (hasSse) return "sse";
- 	throw new Error("[devframe] This server advertises no RPC transport (backend \"none\"), so there is nothing to connect to. Enable the WebSocket or SSE endpoint on the server, or use its static/MCP surfaces instead.");
- }
-+function createAuthChannel(isolateConnection = false) {
-+	if (isolateConnection) return void 0;
-+	try {
-+		/** Channel name kept for cross-tab interop with the Vite DevTools auth page. */
-+		return new BroadcastChannel("devframe-auth");
-+	} catch {}
-+}
- async function getDevframeRpcClient(options = {}) {
- 	const { baseURL = "./", rpcOptions = {}, cacheOptions = false } = options;
- 	const events = createEventEmitter();
-@@ -1863,10 +1864,14 @@ async function getDevframeRpcClient(options = {}) {
- 		...liveModeOptions,
- 		wsOptions: options.wsOptions
+@@ -1865,8 +1861,15 @@ async function getDevframeRpcClient(options = {}) {
  	});
--	let authChannel;
--	try {
+ 	let authChannel;
+ 	try {
 -		authChannel = new BroadcastChannel("devframe-auth");
--	} catch {}
-+	const authChannel = createAuthChannel(options.isolateConnection);
++		authChannel = connection.isolated ? void 0 : new BroadcastChannel("devframe-auth");
+ 	} catch {}
 +	function updateAuthToken(token) {
 +		connection = {
 +			...connection,
 +			authToken: token
 +		};
-+		if (!options.isolateConnection) storeAuthToken(token);
++		if (!connection.isolated) storeAuthToken(token);
 +	}
  	let bootstrapAuthPromise;
  	let bootstrapAuthSettled = false;
  	function gateOnBootstrapAuth(fn) {
-@@ -1910,21 +1915,13 @@ async function getDevframeRpcClient(options = {}) {
+@@ -1910,21 +1913,13 @@ async function getDevframeRpcClient(options = {}) {
  		ensureTrusted: mode.ensureTrusted,
  		requestTrust: mode.requestTrust,
  		requestTrustWithToken: async (token) => {

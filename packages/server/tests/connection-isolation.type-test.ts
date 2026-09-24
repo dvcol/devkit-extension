@@ -1,20 +1,34 @@
-import type { DevframeRpcClientOptions, SetupDevframeConnectionOptions } from 'devframe/client';
+import type {
+  DevframeConnection,
+  DevframeRpcClientOptions,
+  SetupDevframeConnectionOptions,
+} from 'devframe/client';
 
 export const setup: SetupDevframeConnectionOptions = {
-  isolateConnection: true,
+  baseURL: 'https://example.test/',
+  connection: { isolated: true },
 };
-export const connection: DevframeRpcClientOptions = {
-  isolateConnection: true,
+export const prepared: DevframeConnection = {
+  connectionMeta: { backend: 'static' },
+  metaBaseUrl: 'https://example.test/__connection.json',
+  isolated: true,
+};
+export const connection: DevframeRpcClientOptions = { connection: prepared };
+export const invalidFlag: SetupDevframeConnectionOptions = {
   connection: {
-    connectionMeta: { backend: 'static' },
-    metaBaseUrl: 'https://example.test/__connection.json',
+    // @ts-expect-error Isolation is boolean, not an identifier.
+    isolated: 'provider',
   },
 };
-export const invalidSetup: SetupDevframeConnectionOptions = {
-  // @ts-expect-error The isolation option is boolean, not an identifier.
-  isolateConnection: 'provider',
+export const invalidLegacyToggle: DevframeRpcClientOptions = {
+  // @ts-expect-error Isolation belongs to the connection.
+  isolateConnection: true,
 };
-export const invalidConnection: DevframeRpcClientOptions = {
-  // @ts-expect-error Complete RPC options inherit the boolean constraint.
-  isolateConnection: 1,
+export const invalidPartialMetadata: SetupDevframeConnectionOptions = {
+  // @ts-expect-error A prepared connection requires its metadata URL.
+  connection: { isolated: true, connectionMeta: { backend: 'static' } },
+};
+export const invalidPartialUrl: SetupDevframeConnectionOptions = {
+  // @ts-expect-error A prepared connection requires transport metadata.
+  connection: { isolated: true, metaBaseUrl: 'https://example.test/__connection.json' },
 };

@@ -10,6 +10,7 @@ const storedConnection: DevframeConnection = {
 const explicitConnection: DevframeConnection = {
   connectionMeta: { backend: 'static' },
   metaBaseUrl: 'http://explicit.example/__connection.json',
+  isolated: true,
 };
 const clientOptions = {
   connection: explicitConnection,
@@ -61,7 +62,6 @@ describe('packaged Devframe connection isolation', () => {
     expect.assertions(5);
     const connection = await setupDevframeConnection({
       connection: explicitConnection,
-      isolateConnection: true,
     });
     expect(connection).toBe(explicitConnection);
     expect(connection.authToken).toBeUndefined();
@@ -70,20 +70,22 @@ describe('packaged Devframe connection isolation', () => {
     expect(readGlobal('__DEVFRAME_CONNECTION__')).toBe(storedConnection);
   });
 
-  it('fetches the requested base despite a different cached connection', async () => {
-    expect.assertions(6);
+  it('fetches the requested base and retains isolation when reusing its descriptor', async () => {
+    expect.assertions(8);
     fetchMetadata.mockResolvedValue(
       Response.json({ backend: 'static', authToken: 'metadata-token' }),
     );
     const connection = await setupDevframeConnection({
       baseURL: 'http://requested.example/provider/',
-      isolateConnection: true,
+      connection: { isolated: true },
     });
     expect(fetchMetadata).toHaveBeenCalledExactlyOnceWith(
       'http://requested.example/provider/__connection.json',
     );
     expect(connection.metaBaseUrl).toBe('http://requested.example/provider/__connection.json');
     expect(connection.authToken).toBe('metadata-token');
+    expect(connection.isolated).toBe(true);
+    expect(await setupDevframeConnection({ connection })).toBe(connection);
     expect(getItem).not.toHaveBeenCalled();
     expect(setItem).not.toHaveBeenCalled();
     expect(readGlobal('__DEVFRAME_CONNECTION__')).toBe(storedConnection);
@@ -95,7 +97,7 @@ describe('packaged Devframe connection isolation', () => {
       connectionMeta: { backend: 'static', authToken: 'metadata-token' },
       baseURL: 'http://requested.example/',
       authToken: 'explicit-token',
-      isolateConnection: true,
+      connection: { isolated: true },
     });
     expect(connection.authToken).toBe('explicit-token');
     expect(connection.metaBaseUrl).toBe('http://requested.example/__connection.json');
@@ -105,7 +107,7 @@ describe('packaged Devframe connection isolation', () => {
     expect(readGlobal('__DEVFRAME_CONNECTION_META__')).toBe(storedConnection.connectionMeta);
   });
 
-  it.each([{}, { isolateConnection: false }])(
+  it.each([{}, { connection: { isolated: false } }])(
     'retains default cache discovery with %j',
     async (options) => {
       expect.assertions(5);
@@ -125,8 +127,8 @@ describe('packaged Devframe connection isolation', () => {
   );
 
   it('keeps explicit token updates local and creates no authentication broadcast channel', async () => {
-    expect.assertions(8);
-    const client = await connectDevframe({ ...clientOptions, isolateConnection: true });
+    expect.assertions(10);
+    const client = await connectDevframe(clientOptions);
     try {
       expect(await client.requestTrustWithToken('local-new-token')).toBe(true);
       expect(client.connection.authToken).toBe('local-new-token');
@@ -136,16 +138,26 @@ describe('packaged Devframe connection isolation', () => {
       expect(readGlobal('__DEVFRAME_CONNECTION_AUTH_TOKEN__')).toBe('stored-token');
       expect(client.sharedState).toBeDefined();
       expect(client.services).toBeDefined();
+      const recreated = await connectDevframe({ ...clientOptions, connection: client.connection });
+      try {
+        expect(recreated.connection.isolated).toBe(true);
+        expect(broadcastChannel).not.toHaveBeenCalled();
+      } finally {
+        recreated.close?.();
+      }
     } finally {
       client.close?.();
     }
   });
 
-  it.each([{}, { isolateConnection: false }])(
+  it.each([{}, { isolated: false }])(
     'retains default token persistence and authentication channel cleanup with %j',
     async (options) => {
       expect.assertions(5);
-      const client = await connectDevframe({ ...clientOptions, ...options });
+      const client = await connectDevframe({
+        ...clientOptions,
+        connection: { ...storedConnection, ...options },
+      });
       try {
         expect(await client.requestTrustWithToken('shared-new-token')).toBe(true);
         expect(client.connection.authToken).toBe('shared-new-token');

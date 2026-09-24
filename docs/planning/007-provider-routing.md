@@ -128,3 +128,6 @@ This section supersedes the unresolved naming, identifier and patch-authorizatio
 The declaration migration does not implement remote discovery, routing defaults or broadcast. Those remain explicit issue 7 obligations.
 
 The authorized upstream change is now [Devframe draft PR 401](https://github.com/devframes/devframe/pull/401). The workspace adopts its opt-in behavior through the exact-version Devframe patch, with maintained dependency regression tests. Upstream release adoption and downstream distribution remain separate gates.
+
+
+The owner's latest isolation shape is `connection.isolated`, carried by the prepared Devframe descriptor. URL discovery uses `connection: { isolated: true }`; reconnecting passes that completed descriptor without another toggle. The draft and exact-version backport both follow this shape. This change does not implement generic discovery or routing.

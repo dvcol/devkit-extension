@@ -260,19 +260,26 @@ This probe starts from a handwritten static fixture. It does not complete watche
 
 ## Adopted connection isolation, 2026-09-24
 
-The owner authorized an upstream draft and an exact-version local backport. [Devframe PR 401](https://github.com/devframes/devframe/pull/401) adds `isolateConnection?: boolean` to the native setup/connect options. It preserves default sharing and scopes endpoint discovery, token persistence and authentication broadcasts to each opted-in RPC client. The workspace patch now includes this behavior alongside its earlier declaration repairs; earlier statements about byte-identical runtime JavaScript describe the declaration-only stage.
+The owner authorized an upstream draft and an exact-version local backport. [Devframe PR 401](https://github.com/devframes/devframe/pull/401) adds `isolated?: boolean` to `DevframeConnection`. Setup accepts either a complete descriptor or `connection: { isolated: true }` while resolving metadata. It preserves default sharing and scopes endpoint discovery, token persistence and authentication broadcasts to each opted-in RPC client. The workspace patch now includes this behavior alongside its earlier declaration repairs; earlier statements about byte-identical runtime JavaScript describe the declaration-only stage.
 
 The backport uses the upstream built setup function and public option contract. Maintained package tests exercise the installed dependency, including shared defaults and local credential updates. This unblocks owned connection integration, but does not itself implement the provider registry/router, propagate the patch to downstream installations, or rewrite prebundled hub UI assets.
 
 
 ## Connection-isolation simplification, 2026-09-24
 
-The upstream draft now separates connection discovery from credential finalization. All discovery paths return a connection; one setup boundary selects the token and persists shared-mode state. RPC token and OTP updates use one helper, and isolated authentication-channel creation returns early. This removes repeated credential handling without adding a storage abstraction or public API.
+The upstream draft now separates connection discovery from credential finalization. All discovery paths return a connection; one setup boundary selects the token and persists shared-mode state. RPC token and OTP updates use one helper; authentication-channel creation uses a ternary inside the existing constructor guard. This removes repeated credential handling without adding a storage abstraction or public API.
 
-The workspace backport follows [upstream commit 9a4cacf4](https://github.com/devframes/devframe/commit/9a4cacf4). All 39 affected upstream tests, package build/typecheck/lint, and 19 installed-server tests pass. The isolated option and default shared behavior remain unchanged.
+The initial simplification is recorded in [upstream commit 9a4cacf4](https://github.com/devframes/devframe/commit/9a4cacf4). All 39 affected upstream tests, package build/typecheck/lint, and 19 installed-server tests pass. The isolated option and default shared behavior remain unchanged.
 
 ## Maintained production-preview example, 2026-09-24
 
 The [native Vite example](../../examples/vite-hosts/README.md#built-assets-with-a-live-preview-backend) now builds actual browser source and attaches either native backend to `vite.preview()`. Both runnable preview commands print the shared action result and provider identity. Six additional tests cover built HTML/JavaScript serving, live metadata winning over conflicting static metadata, native context truthfulness, action/state access, awaited disposal and native transport closure after contribution cleanup failure. The complete example suite has 18 passing tests.
 
 This is example-local lifecycle wiring with native authentication preserved. It does not add a portable remote RPC layer or claim native shell/JSON rendering. Preview is limited to loopback HTTP/1 without TLS. Watched output publication, build status and browser reload remain issue 13 work; remote routing and renderer integration remain separate gates. No Vite patch is adopted.
+
+
+## Connection-owned isolation, 2026-09-24
+
+The owner replaced the draft-only standalone toggle with `connection.isolated`. Complete descriptors retain the property through token updates and recreation. For URL/metadata discovery, the same `connection` input accepts `{ isolated: true }` before the complete descriptor exists; partial metadata/URL descriptors remain type errors. RPC consumes the resolved connection property, so callers need no repeated flag. Authentication channel creation remains inline under the existing try/catch.
+
+The updated [upstream source at 22c32064](https://github.com/devframes/devframe/commit/22c32064) passes all 39 affected tests, 92 API snapshots, build, typecheck and lint. Installed-backport tests cover descriptor reuse and client recreation; four negative type fixtures reject invalid flags, the removed standalone toggle and incomplete prepared descriptors. The 19 server tests and 18 native-host tests pass. No Vite patch is adopted.
