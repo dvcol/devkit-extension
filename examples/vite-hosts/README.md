@@ -58,10 +58,39 @@ pnpm --filter @devkit/example-vite-hosts test
 
 Tests require permission to bind ephemeral loopback ports. Watched cases enable Vite HMR because Vite's config-restart handling runs through that path. The fixture waits for the watcher’s public `ready` event and uses filesystem polling. macOS can deliver delayed creation events for an unchanged temporary config after `ready`, which otherwise causes unrelated restarts during client-edit tests. Polling still observes real file changes through Vite; tests do not simulate watcher events or replace native hosts with mocks. This setting is confined to temporary test fixtures.
 
+## Built assets with a live preview backend
+
+After building the example's dependency graph:
+
+```sh
+pnpm --filter @devkit/example-vite-hosts build:site
+pnpm --filter @devkit/example-vite-hosts preview:devframe
+# Or:
+pnpm --filter @devkit/example-vite-hosts preview:devtools
+```
+
+Both commands serve the same Vite-built site and invoke the live counter action, printing `3` and the provider identity. Press `q` then Enter to close. These examples use a loopback HTTP/1 server without TLS. They do not mount the native DevTools UI in preview or render a JSON counter view.
+
+`counterPreviewPlugin(host)` uses public `configurePreviewServer` and `closePreviewServer` hooks. It attaches the actual native backend to Vite's HTTP server and mounts live metadata before static assets. `providerFromVite(previewServer)` resolves its installed provider. The DevTools context has no `viteServer`, since preview does not have a development module graph. Native authentication remains enabled.
+
+The example disposes portable contributions before closing its native backend. A contribution cleanup failure remains visible while native transport cleanup still runs. Repeated disposal shares the original promise. Startup failure also attempts owned cleanup and retains both errors if cleanup fails.
+
+Six additional integration tests cover both hosts against freshly built browser source:
+
+| Case                       | Assertion                                                                                            |
+| -------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Production output          | HTTP serves the actual built HTML and emitted JavaScript                                             |
+| Live metadata              | Native WebSocket metadata takes precedence over a conflicting static metadata file                   |
+| Native context and actions | The same counter action and state work; genuine hub/kit context is available; `viteServer` is absent |
+| Delayed cleanup            | Preview close waits for contribution cleanup and removes upgrade listeners                           |
+| Failed cleanup             | Close rejects, the installation stays `cleanup-blocked`, and native transports still close           |
+
+The maintained suite now has 18 real-host tests. This establishes live backend attachment and built-file serving. It does not yet implement independent build-watch/publication status, retention of the last complete build, remote SDK dispatch, browser rendering or production asset reloads.
+
 ## Remaining host contract work
 
-- Failed cleanup during **restart**, failed native setup, replacement-server resource disposal after a failed restart, and changes during activation need separate real-host evidence. The failing-close test does not prove these paths. Vite creates the candidate native host before old cleanup, so stopping portable activation alone does not establish candidate resource cleanup.
-- Middleware mode is explicitly rejected. Preview, watched production builds, bundled development and browser-side HMR delivery are not established by these tests.
+- Failed native setup and changes during activation need further real-host evidence. Failed-restart replacement cleanup is a documented Vite gap accepted by the owner; the [upstream source proposal](../../docs/probes/vite-failed-restart/source-validation/README.md) is separate and no Vite dependency patch is installed.
+- Development middleware mode is explicitly rejected. Watched production publication, bundled development and browser-side HMR delivery are not established by these tests.
 - Discovery, remote dispatch, authentication conformance, JSON rendering and extension hosts remain separate implementation work. The native connection-metadata request is not an SDK RPC transport test.
 
 These limits keep issues [6](https://github.com/dvcol/devkit-extension/issues/6), [13](https://github.com/dvcol/devkit-extension/issues/13) and [14](https://github.com/dvcol/devkit-extension/issues/14) open.

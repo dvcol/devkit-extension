@@ -6,6 +6,7 @@ export default defineConfig({
     rolldownOptions: {
       external: [
         /^node:/u,
+        '@devframes/hub/initiate',
         '@devframes/vite/hub',
         '@devkit/example-server-contexts',
         '@devkit/server',

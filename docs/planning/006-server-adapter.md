@@ -270,3 +270,9 @@ The backport uses the upstream built setup function and public option contract. 
 The upstream draft now separates connection discovery from credential finalization. All discovery paths return a connection; one setup boundary selects the token and persists shared-mode state. RPC token and OTP updates use one helper, and isolated authentication-channel creation returns early. This removes repeated credential handling without adding a storage abstraction or public API.
 
 The workspace backport follows [upstream commit 9a4cacf4](https://github.com/devframes/devframe/commit/9a4cacf4). All 39 affected upstream tests, package build/typecheck/lint, and 19 installed-server tests pass. The isolated option and default shared behavior remain unchanged.
+
+## Maintained production-preview example, 2026-09-24
+
+The [native Vite example](../../examples/vite-hosts/README.md#built-assets-with-a-live-preview-backend) now builds actual browser source and attaches either native backend to `vite.preview()`. Both runnable preview commands print the shared action result and provider identity. Six additional tests cover built HTML/JavaScript serving, live metadata winning over conflicting static metadata, native context truthfulness, action/state access, awaited disposal and native transport closure after contribution cleanup failure. The complete example suite has 18 passing tests.
+
+This is example-local lifecycle wiring with native authentication preserved. It does not add a portable remote RPC layer or claim native shell/JSON rendering. Preview is limited to loopback HTTP/1 without TLS. Watched output publication, build status and browser reload remain issue 13 work; remote routing and renderer integration remain separate gates. No Vite patch is adopted.

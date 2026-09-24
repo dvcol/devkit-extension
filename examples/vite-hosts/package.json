@@ -14,6 +14,9 @@
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
+    "build:site": "vite build --config host.config.ts --mode devframe",
+    "preview:devframe": "node src/preview-demo.ts devframe",
+    "preview:devtools": "node src/preview-demo.ts devtools",
     "demo:devframe": "node src/demo.ts devframe",
     "demo:devtools": "node src/demo.ts devtools",
     "test": "vitest run",

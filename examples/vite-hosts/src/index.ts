@@ -3,9 +3,11 @@ import { counterActionsPlugin, counterService } from '@devkit/example-server-con
 import { installDevframeProvider, installDevToolsProvider } from '@devkit/server';
 import type { ServerComposition, ServerProviderHandle } from '@devkit/server';
 import { DevTools } from '@vitejs/devtools';
-import type { Plugin, ViteDevServer } from 'vite';
+import type { Plugin, PreviewServer, ViteDevServer } from 'vite';
 
 import { ProviderLifetime } from './lifetime.js';
+
+export { counterPreviewPlugin } from './preview.js';
 
 export type ExampleHost = 'devframe' | 'devtools';
 
@@ -50,7 +52,9 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
 }
 
 /** Resolve the current generation after listen/restart; a saved promise refers to the old one. */
-export function providerFromVite(server: ViteDevServer): Promise<ServerProviderHandle> {
+export function providerFromVite(
+  server: ViteDevServer | PreviewServer,
+): Promise<ServerProviderHandle> {
   const plugin = server.config.plugins.find(
     (candidate) => candidate.name === 'devkit:example-provider',
   );

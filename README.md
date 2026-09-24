@@ -37,7 +37,9 @@ pnpm --filter @devkit/example-server-contexts run test
 
 The [native Vite host examples](./examples/vite-hosts/README.md) mount the released Devframe hub and Vite DevTools plugins. Both run the shared counter and exercise HTTP startup, delayed cleanup, config-watcher restarts, fresh incarnations and client-module invalidation. Run `pnpm --filter @devkit/example-vite-hosts demo:devframe` or `demo:devtools` after building that example's dependency graph.
 
-Remote routing, JSON rendering, WebExtension hosts and the remaining restart-failure/preview/browser-HMR cases are still outstanding. The example README states the tested lifecycle boundaries.
+Both hosts also have maintained production-preview examples. Run `pnpm --filter @devkit/example-vite-hosts build:site`, then `preview:devframe` or `preview:devtools`. Each serves built assets with a live native backend and runs the same typed counter action.
+
+Remote routing, JSON rendering, WebExtension hosts, watched-production publication and browser HMR remain outstanding. The example README states the tested lifecycle boundaries and the accepted unpatched Vite cleanup gap.
 
 Oxlint checks correctness, suspicious and pedantic rules as errors, plus explicit TypeScript, imports, promises and test rules. Type-aware linting is enabled. Warnings fail checks. Oxfmt controls formatting, and `format:check` fails on drift. See [tooling conventions](./docs/TOOLING.md) for the enforced rules, documented exceptions and review obligations.
 
