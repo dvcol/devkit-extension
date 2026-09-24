@@ -1,3 +1,4 @@
+import { once } from 'node:events';
 import { mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -44,12 +45,22 @@ export async function fixture(host: ExampleHost, watch = false) {
     mode: host,
     logLevel: 'silent',
     publicDir: false,
-    server: { host: '127.0.0.1', port: 0, watch: watch ? {} : null, hmr: watch },
+    plugins: [
+      {
+        name: 'test:watcher-ready',
+        enforce: 'pre',
+        async configureServer({ watcher }) {
+          /** Watched paths appear before the initial scan can reliably report edits. */
+          if (watch) await once(watcher, 'ready');
+        },
+      },
+    ],
+    /** Poll temporary fixtures to avoid delayed macOS creation events reporting unchanged configs. */
+    server: { host: '127.0.0.1', port: 0, watch: watch ? { usePolling: true } : null, hmr: watch },
     optimizeDeps: { noDiscovery: true, include: [] },
   });
   return {
     server,
-    directory,
     changeConfig: () => writeFile(configFile, `${configSource}// Config reload receipt\n`),
     changeClient: () => writeFile(clientFile, 'export const value = 2;\n'),
     async close() {

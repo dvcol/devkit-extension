@@ -56,7 +56,7 @@ pnpm --filter @devkit/example-vite-hosts format:check
 pnpm --filter @devkit/example-vite-hosts test
 ```
 
-Tests require permission to bind ephemeral loopback ports. Watched cases enable Vite HMR because Vite's config-restart handling runs through that path. They do not simulate watcher events or replace native hosts with mocks.
+Tests require permission to bind ephemeral loopback ports. Watched cases enable Vite HMR because Vite's config-restart handling runs through that path. The fixture waits for the watcher’s public `ready` event and uses filesystem polling. macOS can deliver delayed creation events for an unchanged temporary config after `ready`, which otherwise causes unrelated restarts during client-edit tests. Polling still observes real file changes through Vite; tests do not simulate watcher events or replace native hosts with mocks. This setting is confined to temporary test fixtures.
 
 ## Remaining host contract work
 

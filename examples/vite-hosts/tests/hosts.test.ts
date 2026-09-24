@@ -141,9 +141,6 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       await current.server.listen();
       const previous = await providerFromVite(current.server);
       const previousConfig = current.server.config;
-      await vi.waitUntil(() =>
-        Object.hasOwn(current.server.watcher.getWatched(), current.directory),
-      );
       await current.changeConfig();
       await vi.waitUntil(() => current.server.config !== previousConfig);
       const replacement = await providerFromVite(current.server);
@@ -164,9 +161,6 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       const previous = await providerFromVite(current.server);
       await expect(previous.invoke(increaseCounterAction, { amount: 6 })).resolves.toBe(6);
       expect((await current.server.transformRequest('/client.js'))?.code).toContain('value = 1');
-      await vi.waitUntil(() =>
-        Object.hasOwn(current.server.watcher.getWatched(), current.directory),
-      );
       await current.changeClient();
       await vi.waitUntil(async () =>
         (await current.server.transformRequest('/client.js'))?.code.includes('value = 2'),
