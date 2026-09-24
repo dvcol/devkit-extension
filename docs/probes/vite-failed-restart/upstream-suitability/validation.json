@@ -1,0 +1,9 @@
+{
+  "syntax": "node --check passed",
+  "plainStockProbe": "passed; programmatic + real config file update",
+  "plainPatchedProbe": "passed; same two triggers",
+  "upstreamSourceBuiltOrTested": false,
+  "workspaceSourceOrDependenciesChanged": false,
+  "upstreamPRCreated": false,
+  "fixtureCorrection": "Initial plain fixture could write the config during watcher startup and time out without receiving a change. Awaited config registration plus 200ms stabilization before actual write, then stock and patched final source both passed. Resource cleanup assertions use watcher.closed/getWatched/plugin timer state, not elapsed time."
+}

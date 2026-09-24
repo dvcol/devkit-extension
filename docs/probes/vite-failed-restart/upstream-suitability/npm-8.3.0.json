@@ -1,0 +1,28 @@
+{
+  "name": "vite",
+  "version": "8.3.0",
+  "gitHead": null,
+  "dist": {
+    "shasum": "f9565cfd4879d58d28fa64d3c7aff3b372d2ccc8",
+    "tarball": "https://registry.npmjs.org/vite/-/vite-8.3.0.tgz",
+    "fileCount": 37,
+    "integrity": "sha512-lhZBVvEHefgE+HQZC9O7EBJgCU/nVzFNl7vkS4RE0APtWLP02/8QVIkQtzBxPquh7lq5/78NHipTj7ODQ6XuyQ==",
+    "signatures": [
+      {
+        "sig": "MEUCIQC6/kYWbrBTW51oUkyntHZ9LpjXCOrT7HIb213qT/q4LQIgDWIF97Fb1C8TvoJHIg37Vg1Bcsuh+EslNdR7W1VtvIE=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEQCIFwGbT0il/0wNZ1/QWe6KYtPmhluQiji573dYgLkAsLqAiAjDuWcZDmJha7pYgL2ajvnxfwthXUvMDvN+UD7Xev9Uw==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/vite@8.3.0",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 2361169
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "vite": "8.3.0",
+  "node": "v26.9.0",
+  "expectFixed": true,
+  "imports": [
+    "Node builtins",
+    "vite"
+  ],
+  "cases": [
+    {
+      "trigger": "programmatic",
+      "rejection": "Ordinary plugin cleanup failure",
+      "loggedErrors": [],
+      "watcherErrors": [],
+      "processContinuedAfterFailure": true,
+      "beforeManualCleanup": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:1:restart",
+          "close:2:close"
+        ],
+        "candidateWatcherClosed": true,
+        "watchedDirectories": 0,
+        "activePluginTimers": [],
+        "oldListening": false,
+        "candidateListening": false
+      }
+    },
+    {
+      "trigger": "watched-config",
+      "loggedErrors": [
+        "Error: Ordinary plugin cleanup failure"
+      ],
+      "watcherErrors": [],
+      "processContinuedAfterFailure": true,
+      "beforeManualCleanup": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:1:restart",
+          "close:2:close"
+        ],
+        "candidateWatcherClosed": true,
+        "watchedDirectories": 0,
+        "activePluginTimers": [],
+        "oldListening": false,
+        "candidateListening": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "plain-vite-restart.mjs": "ceac91648a8edc938f391a8cfa0d424554d934c1784b77623102b9b5116d64d6",
+  "plain-stock-result.json": "de00880c39857d5490f117fefc8dff5757b806e17def8061a389d7a39cc37a70",
+  "plain-patched-result.json": "e42caee643ef32a7497f8f67ac4e7c2af7e34680a5c1b3cf01a0b922f3e05b1f",
+  "installed-provenance.json": "f2639f4b0548098e8be8fa5e06cd26d7ab309cda94fe4ccd404af23033494d85",
+  "npm-8.3.0.json": "af909c9f634c7cfd02965b349758084d1a30cf9d036fdc8b727631590917af5c",
+  "main-ref.json": "4ac780c27568bdd23f8b8d82a4229940bb8ef680a275a7e20ccf128569326800",
+  "tag-ref.json": "37d31f3bdeafeab01f7316b33c8d2e4970da4b329b79fddf7666ef85b6cbf93e",
+  "source-receipts.json": "c182331f2cb046616f20ad7dd4f7fa80bdf3670ae3834a087df1fbb4d1eac0a7",
+  "validation.json": "6b930cf179ad0944c3a00873beee55e85d5aa6655a6480041ad87b06d038a284",
+  "upstream-source-proposal.patch": "2212901118b2302e775b66bf25b3505d1c5d5c31d1fbae4067c4c59c4eedadaf"
+}

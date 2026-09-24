@@ -1,0 +1,37 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/vitejs/vite/e8990c4d6101dfaca2654ed8ab4d0574ee920248/packages/vite/src/node/server/index.ts",
+    "path": "upstream-main/packages/vite/src/node/server/index.ts",
+    "sha256": "4269bda5b380df3fba22b7eb0e1023414524c30ca6ee3c25f217a27e4fb0faee"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/vitejs/vite/e8990c4d6101dfaca2654ed8ab4d0574ee920248/packages/vite/src/node/server/hmr.ts",
+    "path": "upstream-main/packages/vite/src/node/server/hmr.ts",
+    "sha256": "70382e5c26bb2369d7385a7a7155b88081551061906d167af4e67a57e4b1c1a2"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/vitejs/vite/e8990c4d6101dfaca2654ed8ab4d0574ee920248/packages/vite/src/node/__tests__/plugins/hooks.spec.ts",
+    "path": "upstream-main/packages/vite/src/node/__tests__/plugins/hooks.spec.ts",
+    "sha256": "682359cd003307c4d5670ac831e4e51eed87f11e104e980822e320e4fec8a626"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/vitejs/vite/e8990c4d6101dfaca2654ed8ab4d0574ee920248/package.json",
+    "path": "upstream-main/package.json",
+    "sha256": "44bb2ea60afb301ebe0dde31b97853c46d2e542962fb5f7dcb1adcdfd18de55f"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/vitejs/vite/e8990c4d6101dfaca2654ed8ab4d0574ee920248/packages/vite/package.json",
+    "path": "upstream-main/packages/vite/package.json",
+    "sha256": "f89cfa2c5f6c92d0426dfd4aadb0511bffa983164829482113d088dcc1d7a584"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/vitejs/vite/e8990c4d6101dfaca2654ed8ab4d0574ee920248/CONTRIBUTING.md",
+    "path": "upstream-main/CONTRIBUTING.md",
+    "sha256": "3d56eb2a4a34bfa5731e7388f46e2ed750969cc0a12ca3071a1c3b34ce1fe8a1"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/vitejs/vite/e8990c4d6101dfaca2654ed8ab4d0574ee920248/docs/guide/api-plugin.md",
+    "path": "upstream-main/docs/guide/api-plugin.md",
+    "sha256": "0dc57694477c03bd6db40dc091328121f3aeddf35ba59d0a1bce23526fd303eb"
+  }
+]

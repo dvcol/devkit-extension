@@ -1,0 +1,9 @@
+{
+  "tarball": "https://registry.npmjs.org/vite/-/vite-8.3.0.tgz",
+  "downloadedTarballSha512": "96164156f10779f804f874190bd3bb101260094fe757314d97bbe44b8444d003ed58b3f4dbff10548910b730713eaba1ee5ab9ffbf0d1e2a538fb38343a5eec9",
+  "installedChunkEqualsOfficialTarball": true,
+  "chunkSha256": "2d7a6a7a48f06baada8f6ceec415505c2426aa308fd23b8ace5da443bc7a9673",
+  "mainCommit": "e8990c4d6101dfaca2654ed8ab4d0574ee920248",
+  "downloadedTarballIntegrityMatchesRegistry": true,
+  "officialTagCommit": "434e8e9495436a60789f2b588a04a6a24a3d1661"
+}

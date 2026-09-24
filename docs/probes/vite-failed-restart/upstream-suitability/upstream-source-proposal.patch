@@ -1,0 +1,23 @@
+--- a/packages/vite/src/node/server/index.ts
++++ b/packages/vite/src/node/server/index.ts
+@@ -1422,7 +1422,19 @@
+ 
+     // Close with reason 'restart' so `closeServer` hooks can distinguish a
+     // restart from a real close.
+-    await server._closeServer('restart')
++    try {
++      await server._closeServer('restart')
++    } catch (error) {
++      try {
++        await newServer.close()
++      } catch (cleanupError) {
++        throw new AggregateError(
++          [error, cleanupError],
++          'Restart and candidate cleanup failed',
++        )
++      }
++      throw error
++    }
+ 
+     // Assign new server props to existing server instance
+     const middlewares = server.middlewares
