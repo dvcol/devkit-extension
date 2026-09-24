@@ -1,0 +1,10 @@
+{
+  "failed-restart.mjs": "5bace05080afb0c0fdacab55d3aec9e4f5ae8572085c2d2585f8a7f90e07c533",
+  "failed-restart-result.json": "b21535a378f42c980fc1b0cf44ceeff616dc4ee34c2105289cd567f883c52813",
+  "vite-8.3.0-restart-candidate-cleanup.patch": "4041936a27ef08d7c39816127ea2c4c0c323b85115c8d7bd28b0f2c1b2997653",
+  "source-hashes.json": "5959d67c3e79234af6f05bee5b3d99565d2e60a71f350363a0b98ca2fe4b516d",
+  "patched-restart.mjs": "9c5316a6456a85bf116a0c8eb796eb3339a109ff5aaecda758972ce69c18dd0b",
+  "patched-restart-result.json": "2c0ad216781417d2edf833a980e6909cd95caedcd6d0a88007c49224c3f7dea0",
+  "double-failure-restart.mjs": "f648e8748c6c7ca211b0c60bb728d5b0acd1476341f48bc61e19f480156454ac",
+  "double-failure-restart-result.json": "23c038427a117b143baa60d805f3e873ddfa4ea17b3ea2a305b0aed8aa8e4d38"
+}

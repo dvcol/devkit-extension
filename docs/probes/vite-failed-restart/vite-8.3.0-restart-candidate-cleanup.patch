@@ -1,0 +1,20 @@
+--- a/dist/node/chunks/node.js
++++ b/dist/node/chunks/node.js
+@@ -24717,7 +24717,16 @@
+ 			return;
+ 		}
+ 		server._shortcutsState = void 0;
+-		await server._closeServer("restart");
++		try {
++			await server._closeServer("restart");
++		} catch (error) {
++			try {
++				await newServer.close();
++			} catch (cleanupError) {
++				throw new AggregateError([error, cleanupError], "Restart and candidate cleanup failed");
++			}
++			throw error;
++		}
+ 		const middlewares = server.middlewares;
+ 		newServer._configServerPort = server._configServerPort;
+ 		newServer._currentServerPort = server._currentServerPort;

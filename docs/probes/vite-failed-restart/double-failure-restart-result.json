@@ -1,0 +1,74 @@
+{
+  "vite": "8.3.0",
+  "node": "v26.9.0",
+  "cases": [
+    {
+      "host": "devframe",
+      "rejection": "Restart and candidate cleanup failed",
+      "rejectionDetails": [
+        "Provider cleanup is blocked",
+        "Candidate close sentinel"
+      ],
+      "beforeManualClose": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:restart",
+          "close:close"
+        ],
+        "watchedDirectoryCount": 0,
+        "oldListening": false,
+        "candidateListening": false,
+        "candidateWatcherClosed": true,
+        "candidateReadiness": "rejected",
+        "candidateListeningCallbacks": 3
+      },
+      "afterManualClose": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:restart",
+          "close:close"
+        ],
+        "watchedDirectoryCount": 0,
+        "candidateWatcherClosed": true,
+        "candidateReadiness": "rejected",
+        "candidateListeningCallbacks": 3
+      }
+    },
+    {
+      "host": "devtools",
+      "rejection": "Restart and candidate cleanup failed",
+      "rejectionDetails": [
+        "Provider cleanup is blocked",
+        "Candidate close sentinel"
+      ],
+      "beforeManualClose": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:restart",
+          "close:close"
+        ],
+        "watchedDirectoryCount": 0,
+        "oldListening": false,
+        "candidateListening": false,
+        "candidateWatcherClosed": true,
+        "candidateReadiness": "rejected",
+        "candidateListeningCallbacks": 3
+      },
+      "afterManualClose": {
+        "events": [
+          "configure:1",
+          "configure:2",
+          "close:restart",
+          "close:close"
+        ],
+        "watchedDirectoryCount": 0,
+        "candidateWatcherClosed": true,
+        "candidateReadiness": "rejected",
+        "candidateListeningCallbacks": 3
+      }
+    }
+  ]
+}
