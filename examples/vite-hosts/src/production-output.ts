@@ -70,9 +70,14 @@ export class ProductionPublication {
   constructor(directory: string) {
     this.paths = productionPaths(directory);
     mkdirSync(this.paths.published, { recursive: true });
-    this.status = readProductionStatus(directory);
     const lock = openSync(this.paths.lock, 'wx');
     closeSync(lock);
+    try {
+      this.status = readProductionStatus(directory);
+    } catch (error) {
+      rmSync(this.paths.lock, { force: true });
+      throw error;
+    }
     /** Process exit cannot await the watcher, but must release this process's publication lock. */
     process.once('exit', this.onExit);
   }

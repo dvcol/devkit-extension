@@ -85,7 +85,7 @@ Six additional integration tests cover both hosts against freshly built browser 
 | Delayed cleanup            | Preview close waits for contribution cleanup and removes upgrade listeners                           |
 | Failed cleanup             | Close rejects, the installation stays `cleanup-blocked`, and native transports still close           |
 
-The maintained suite now has 23 tests covering native development/preview hosts, watched production retention and process exit. The watched workflow is documented below. Remote SDK dispatch, browser rendering and automatic production asset reload remain open.
+The maintained suite now has 24 tests covering native development/preview hosts, watched production retention and process exit. The watched workflow is documented below. Remote SDK dispatch, browser rendering and automatic production asset reload remain open.
 
 ## Remaining host contract work
 
@@ -117,16 +117,16 @@ Vite owns compilation and source watching. On its real `BUNDLE_END` event, `watc
 
 `productionPreviewPlugin(directory)` redirects the example entry page into that generation, and Vite serves its relative asset URLs. Older generation URLs remain valid after subsequent builds. Refreshing the entry page selects the latest complete build. Rebuilding assets does not recreate the backend or reset its counter. `readProductionStatus(directory)` exposes the same validated local status for orchestration.
 
-| Piece                                               | Maintained execution proof                                                                                      |
-| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Preview starts before watcher                       | Real HTTP 503 and starting status, with a working native backend                                                |
-| `buildStart` and successful `BUNDLE_END`            | Real watched source edits publish distinct complete generations                                                 |
-| Syntax, `generateBundle` and `writeBundle` failures | Previous HTML and JavaScript remain byte-identical; HTTP status reports failure                                 |
-| Recovery and old URLs                               | New output becomes active while old asset URLs retain their original contents                                   |
-| Provider lifetime                                   | Native counter state and provider incarnation survive asset failures and rebuilds in both hosts                 |
-| Writer ownership                                    | A second simultaneous publisher is rejected; `close()` is idempotent and releases its lock and process listener |
-| Watcher restart                                     | A failed first build after restart retains the last complete published generation                               |
-| Process exit                                        | An actual child process publishes stopped status and releases its lock synchronously                            |
+| Piece                                               | Maintained execution proof                                                                                                                                                  |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Preview starts before watcher                       | Real HTTP 503 and starting status, with a working native backend                                                                                                            |
+| `buildStart` and successful `BUNDLE_END`            | Real watched source edits publish distinct complete generations                                                                                                             |
+| Syntax, `generateBundle` and `writeBundle` failures | Previous HTML and JavaScript remain byte-identical; HTTP status reports failure                                                                                             |
+| Recovery and old URLs                               | New output becomes active while old asset URLs retain their original contents                                                                                               |
+| Provider lifetime                                   | Native counter state and provider incarnation survive asset failures and rebuilds in both hosts                                                                             |
+| Writer ownership                                    | A second simultaneous publisher is rejected before reading status; invalid status releases the acquired lock; `close()` releases its lock and process listener idempotently |
+| Watcher restart                                     | A failed first build after restart retains the last complete published generation                                                                                           |
+| Process exit                                        | An actual child process publishes stopped status and releases its lock synchronously                                                                                        |
 
 The exact combined command was also run on macOS: watcher and preview started concurrently, HTTP returned the built page and native WebSocket metadata, and Ctrl+C stopped both children with `phase: 'stopped'` and no publisher lock. pnpm reports the interrupted preview task as a nonzero exit on Ctrl+C.
 
