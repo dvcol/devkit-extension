@@ -1,0 +1,27 @@
+{
+  "startedAt": "2026-09-24T07:03:18.542Z",
+  "passed": false,
+  "nodeVersion": "v26.9.0",
+  "packages": {
+    "devframe": "1.0.0",
+    "hub": "1.0.0",
+    "kit": "0.7.5",
+    "vite": "8.3.0"
+  },
+  "browser": {
+    "passed": false,
+    "reason": "in-app browser unavailable before execution"
+  },
+  "error": "Expected values to be strictly equal:\n\nfalse !== true\n",
+  "cleanup": {
+    "hubsClosed": true,
+    "previewStopped": true,
+    "errors": []
+  },
+  "serverValues": {
+    "endpointA": 0,
+    "endpointB": 0
+  },
+  "serverReceipts": [],
+  "finishedAt": "2026-09-24T07:04:01.330Z"
+}

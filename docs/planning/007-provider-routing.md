@@ -1,6 +1,6 @@
 # Provider identity, discovery and routing contract
 
-Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed the identity and discovery ownership below on 2026-09-23. The remaining routing choices are under review. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
+Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed identity and discovery ownership on 2026-09-23, then ambiguity, dispatch-time availability, separate broadcast methods and a compact invocation API on 2026-09-24. Declaration placement and selector syntax remain under review. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
 
 ## Accepted ownership
 
@@ -37,15 +37,27 @@ const afterRestart = {
 | Backend disposal and recreation | Retained | Fresh | Remains stale; a new resolution is required |
 | Target navigation | Retained if provider survives | Retained if backend survives | Target generation is validated separately |
 
-## Current routing review
+## Accepted routing behavior
 
-The following recommendations are questions, not adopted implementation behavior:
+The earlier Q6/Q8 core decisions already established that a per-call policy replaces lower-priority defaults, an exact provider pin inherits no fallback, and a dispatched call never reroutes or automatically replays. The previous version of this note incorrectly listed parts of those decisions as unresolved. The 2026-09-24 review adds:
 
-1. **Selection composition.** A per-call route replaces the contribution default. An exact provider ID takes priority over an ordered realm preference. Two equally eligible providers are ambiguous until the caller selects one. For example, a `devserver` then `webext` preference can choose the extension when no eligible server exists; it must not choose arbitrarily between two eligible servers.
-2. **Pre-dispatch availability.** If a selection disappears before dispatch, consider another candidate only when the route explicitly allows fallback; otherwise fail unavailable. Ordinary calls do not wait indefinitely for a connecting provider. The accepted post-dispatch rule remains no rerouting or automatic replay for any operation.
-3. **Broadcast typing.** Separate capability/action broadcast methods return provider-specific settled outcomes. Ordinary invocation remains `Promise<Value>`. One rejected broadcast target does not discard successful siblings.
+| Decision | Accepted behavior |
+| --- | --- |
+| Equal candidates | Return an ambiguity error with enough permitted candidate information to request a discriminant. The UI, agent or caller must explicitly choose before making a new invocation. Do not choose by discovery order or silently skip an ambiguous preferred group. |
+| Readiness | Ordinary invocations consider current readiness at dispatch; they do not queue while waiting for a connecting provider. Before dispatch, only the current policy's explicitly permitted alternatives may be considered. |
+| Execution failure | A provider dropping during execution is an error. The client may explicitly request a new invocation; the router never replays the failed call. A failed response is not proof that a mutation did not execute. |
+| Broadcast | Separate capability/action broadcast methods return per-provider outcomes. Ordinary invocation still returns `Promise<Value>`; an individual broadcast failure retains successful sibling results. |
+| Invocation arguments | Prefer a single request object, or at most two or three clear arguments separating business input from common options. Replace the positional contract/operation/input/options chain in the final routed API. Exact signatures remain to be reviewed. |
 
-The owner can answer these independently while local identity and host adapters are implemented. Their answers determine the declaration sketch for routing defaults, callback inputs/results and candidate readiness. Trust filtering, target mapping and state restoration remain owned by their respective linked issues, not implicit additions to this registry.
+These are contract decisions, not claims that a multi-provider router has been implemented. The current core client interfaces still use their earlier positional signatures and expose no broadcast methods.
+
+## Current declaration review
+
+The owner proposed putting `routing` directly on contributions. Its value could select a realm, select a provider, supply an ordered list of alternatives, or run a context-aware selector callback. Separate `realm` and `provider` properties were also suggested. This is a counterproposal to the earlier recommendation for separate client policy declarations, not acceptance of that recommendation.
+
+The next sketch must establish how realm and provider identities are distinguished, how defaults are available to the client before backend selection, and how callback inputs and results preserve target/provider generations. Bare strings cannot be interpreted by guessing which registry namespace currently matches. Current strict service/action/plugin declarations reject an added `routing` property; a settled API requires an explicit declaration and validation change.
+
+Trust filtering, target mapping and state restoration remain owned by their linked issues. Request-object signatures, callback cancellation, registry collisions and broadcast ordering/empty-selection behavior need concrete examples before completing this contract.
 
 ## Implementation and verification obligations
 
@@ -59,3 +71,26 @@ The owner can answer these independently while local identity and host adapters 
 | UI reuse | The same selector receives ordinary input from JSON UI and a non-UI consumer |
 
 The bounded released-client experiment found shared endpoint/authentication interference. The separate opt-in upstream patch is still a proposal. SDK integration must resolve that public API/distribution boundary before claiming isolated simultaneous server connections. No mock registry or compile-only adapter counts as the real-host routing proof.
+
+## Compact declaration proposal, awaiting review
+
+A single `routing` property can distinguish realm constraints from provider pins without a separate policy factory. Tagged object values avoid interpreting an untagged string through whichever registry happens to contain it. An array represents ordered pre-dispatch fallback, not broadcast:
+
+```ts
+routing: { realm: 'devserver' }
+routing: { provider: 'project:frontend' }
+routing: [{ realm: 'devserver' }, { provider: 'browser:local' }]
+routing: (context) => selectRoute(context)
+```
+
+These are alternative property values, not implemented exports or an accepted selector type. A namespaced-string alternative would require explicit prefixes such as `realm:devserver` and `provider:project:frontend`. Separate top-level realm/provider fields would need additional rules for their intersection and ordering; one property keeps the fallback sequence in one place. A callback's candidate snapshot, target metadata, cancellation and stale-selection behavior still require review.
+
+The authoring boundary also needs an owner choice. The public `defineAction` descriptor can carry the client-visible default, while `defineActionContribution` retains the backend handler and execution constraints. A view's action binding or a call can supply a narrower client policy. A callback can run only where its code is installed; it cannot be serialized from a backend-only contribution to a previously unknown client. Remote advertisements can carry validated declarative metadata but not executable JavaScript. Alternatively, deployments can keep every default in client composition, at the cost of separate routing configuration. Neither placement is adopted by this sketch.
+
+[The request-object type probe](../probes/routing-request-shape/README.md) passes strict TypeScript 7 checking for operation/input/output inference and required-target constraints. It establishes that compact calls are feasible; it does not establish the final routing union or dynamic operation-union inference.
+
+## Connection-isolation follow-up
+
+[Fresh verification](../probes/provider-connection-isolation/proposal/follow-up-20260924/README.md) confirms that the opt-in patch composes with the currently locked declaration repair and passes eight tests, strict TS7 and type-aware Oxlint. Released Devframe 1.0.0 still lacks equivalent public isolation. Kit/hub wrappers can forward the option or accept an owned RPC client. Prebuilt native UI assets contain their own inlined client and are not rewritten by patching the installed Devframe package.
+
+Adopting the exact-version root patch for SDK-owned clients remains an owner decision. It would unblock private workspace transport work; publishing the SDK still needs an upstream release, maintained fork, or explicit consumer patch policy. A fresh browser replay could not start because the in-app browser was unavailable; its runner disposed both hubs and preview. Previous browser passes remain historical evidence, not a new pass.

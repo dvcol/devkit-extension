@@ -1,0 +1,5 @@
+{
+  "extends": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "types": [], "lib": ["ES2023", "DOM"] },
+  "files": ["requests.type-test.ts"]
+}

@@ -1,0 +1,9 @@
+{
+  "date": "2026-09-24",
+  "typescript": "7.0.2",
+  "command": "pnpm exec tsc --noEmit -p /private/tmp/devkit-routing-shape-20260924/tsconfig.json",
+  "exitCode": 0,
+  "positiveAssignments": 4,
+  "negativeTypeAssertions": 8,
+  "scope": "Compile-only request-object sketch against built public core/contribution entry files; not routing implementation or export-map/packed-consumer proof."
+}

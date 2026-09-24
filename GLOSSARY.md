@@ -58,18 +58,19 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 
 ## Calls and presentation
 
-| Term           | Definition                                                                        | Distinction                                                                        |
-| -------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Target         | The subject of an operation, with identity and generation                         | A replaced document is a new generation even when its tab is unchanged             |
-| Invocation     | One requested operation call with common target, cancellation and routing context | Contains business input separately from its execution target                       |
-| Routing policy | Rules selecting eligible providers before dispatch                                | Distinct from service construction and provider-state synchronization              |
-| Dispatch       | The routing boundary after which an invocation's selected route cannot change     | A timeout or reported failure does not authorize fallback or replay                |
-| Broadcast      | Explicit execution across several selected providers with individual outcomes     | Does not merge provider state or replace ordinary value-returning methods          |
-| Diagnostic     | A serializable report identifying a failure's code, owner and phase               | Native exceptions remain local; diagnostics support logs and current/later UI      |
-| View           | A declared JSON presentation and its bindings                                     | Its availability need not depend on every action it references                     |
-| Renderer       | An implementation turning the JSON view contract into UI                          | Replaceable; its own framework does not become a dependency of authoring contracts |
-| UI surface     | Where a view is mounted, such as popup, options, panel or sidebar                 | Separate from realm, provider and execution ownership                              |
-| Live preview   | Built assets served with a live provider for actions and state                    | Separate from a static snapshot and from a source development server               |
+| Term                | Definition                                                                        | Distinction                                                                             |
+| ------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Target              | The subject of an operation, with identity and generation                         | A replaced document is a new generation even when its tab is unchanged                  |
+| Invocation          | One requested operation call with common target, cancellation and routing context | Contains business input separately from its execution target                            |
+| Routing policy      | Rules selecting eligible providers before dispatch                                | Distinct from service construction and provider-state synchronization                   |
+| Ambiguous selection | More than one equally eligible provider satisfies the current selector            | Requires an explicit caller/UI/agent discriminant; discovery order cannot pick a winner |
+| Dispatch            | The routing boundary after which an invocation's selected route cannot change     | A timeout or reported failure does not authorize fallback or replay                     |
+| Broadcast           | Explicit execution across several selected providers with individual outcomes     | Does not merge provider state or replace ordinary value-returning methods               |
+| Diagnostic          | A serializable report identifying a failure's code, owner and phase               | Native exceptions remain local; diagnostics support logs and current/later UI           |
+| View                | A declared JSON presentation and its bindings                                     | Its availability need not depend on every action it references                          |
+| Renderer            | An implementation turning the JSON view contract into UI                          | Replaceable; its own framework does not become a dependency of authoring contracts      |
+| UI surface          | Where a view is mounted, such as popup, options, panel or sidebar                 | Separate from realm, provider and execution ownership                                   |
+| Live preview        | Built assets served with a live provider for actions and state                    | Separate from a static snapshot and from a source development server                    |
 
 ## Relationship summary
 

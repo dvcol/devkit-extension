@@ -152,6 +152,10 @@ Ordinary operation/action calls return `Promise<Value>` and reject on failure. S
 
 A bound API stays pinned to its provider. A fresh routed invocation can select another provider before dispatch. Cross-provider orchestration is explicit. After dispatch, no timeout, disconnect or report that execution did not begin permits rerouting or automatic replay. A separately requested invocation starts a new decision.
 
+The 2026-09-24 routing review confirms that equally eligible providers produce an ambiguity error requiring an explicit caller/UI/agent discriminant. Ordinary invocations use current availability at dispatch and do not implicitly wait for a connecting provider. A drop during execution is an error; a caller may explicitly request a new invocation, but the router cannot infer that the previous mutation did not run.
+
+Broadcast will have separate capability/action methods with per-provider outcomes. The routed invocation API will use a single request object or at most two or three clear arguments; the positional signatures in the table above describe the current implementation boundary, not the final reviewed routing syntax. Contribution-local defaults and the exact compact declaration/request shapes remain under review in [issue 7](./docs/planning/007-provider-routing.md).
+
 Operation declarations specify `target: 'required'` or `target: 'none'`. Required-target calls must provide a validated target reference in invocation options; targetless calls reject an execution target. Business payloads can refer to other subjects without changing this execution target. A target reference contains a kind, opaque identity and generation; the routing/trust adapters define resolution and validate freshness. Abort signals remain local, with transport cancellation represented by protocol messages.
 
 ## Representative shared and native declarations

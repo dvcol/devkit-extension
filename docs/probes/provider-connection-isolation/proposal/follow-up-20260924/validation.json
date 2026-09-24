@@ -1,0 +1,48 @@
+{
+  "verificationDirectory": "/private/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/devframe-isolation-verification-81DjG3",
+  "currentLockedPackages": {
+    "devframe": "1.0.0",
+    "hub": "1.0.0",
+    "kit": "0.7.5"
+  },
+  "preparation": {
+    "patchOutput": "patching file 'dist/client/index.mjs'\npatching file 'dist/client/index.d.mts'\n",
+    "hashes": {
+      "dist/client/index.mjs": {
+        "baseline": "0e835386c35519d788ebcd6a7c091307d58fe9271cfca76320762b5cc53dc96e",
+        "patched": "c35899907efc22345e3c981815b05c602a1003af28ad4beb2a34a6b4abdc28a9"
+      },
+      "dist/client/index.d.mts": {
+        "baseline": "ee65069553be253575e08149250debf035623b611d2e368f957aa6cc37af08ca",
+        "patched": "557f6963ade4adc1840c1094eb6cb5c8a03a46f9bdaee8ef6bcfdff8a0e7f157"
+      }
+    }
+  },
+  "checks": [
+    {
+      "command": "vitest run --config vitest.config.ts",
+      "exitCode": 0,
+      "testFilesPassed": 1,
+      "testsPassed": 8
+    },
+    {
+      "command": "tsc --noEmit -p tsconfig.json",
+      "exitCode": 0
+    },
+    {
+      "command": "oxlint --config <repo>/.oxlintrc.json --type-aware --deny-warnings isolation.test.ts isolation.type-test.ts vitest.config.ts prepare.mjs",
+      "exitCode": 0
+    }
+  ],
+  "freshBrowserReplay": {
+    "status": "not-executed",
+    "reason": "Browser is not available: iab",
+    "tabsCreated": 0,
+    "runnerExitCode": 1,
+    "hubsClosed": true,
+    "previewStopped": true,
+    "subsequentHttpConnectionRefused": true,
+    "result": "baseline/result.json"
+  },
+  "historicalBrowserEvidence": "docs/probes/provider-connection-isolation/proposal/replay/results/"
+}

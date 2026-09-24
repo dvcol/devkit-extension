@@ -1,0 +1,92 @@
+[
+  {
+    "path": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@vitejs+devtools-kit@0.7.5_@devframes+agentic@1.0.0_cac@7.0.0_crossws@0.4.12_patch_hash_953e967682dfd64e6d5bfe625f6608f6/node_modules/@vitejs/devtools-kit/dist/client.js",
+    "sha256": "d5a994c13274721d57b142514a771aedc7de6b8d06fe1700e5ab07d43083c53d",
+    "matches": [
+      {
+        "needle": "function getDevToolsRpcClient",
+        "line": 18,
+        "excerpt": "rowser-prompt fallback for every kit-managed connection.\n*/\nfunction getDevToolsRpcClient(options = {}) {\n\treturn getDevframeRpcClient({\n\t\t...options,\n\t\tsimpleAuth: false\n\t});\n}\n//#endregion\n//#region src/client/context.ts\nconst CLIENT_CONTEXT_KEY ="
+      },
+      {
+        "needle": "...options",
+        "line": 20,
+        "excerpt": "sRpcClient(options = {}) {\n\treturn getDevframeRpcClient({\n\t\t...options,\n\t\tsimpleAuth: false\n\t});\n}\n//#endregion\n//#region src/client/context.ts\nconst CLIENT_CONTEXT_KEY = \"__VITE_DEVTOOLS_CLIENT_CONTEXT__\";\n/**\n* Get the global De"
+      }
+    ]
+  },
+  {
+    "path": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@devframes+hub@1.0.0_@devframes+agentic@1.0.0_crossws@0.4.12_patch_hash=7da56550dc94db3_d8ae70ab12c65eb9972fa7e682cedccb/node_modules/@devframes/hub/dist/client/index.mjs",
+    "sha256": "630ffa98ca31ae194a700df122bb0f6ce0985ab6ae52a6a20c0b1bea357f5f75",
+    "matches": [
+      {
+        "needle": "async function createDevframeClientRuntime",
+        "line": 578,
+        "excerpt": "ves plugin client scripts a live host context to run in.\n*/\nasync function createDevframeClientRuntime(options = {}) {\n\tconst clientType = options.clientType ?? \"standalone\";\n\tconst rpc = options.rpc ?? await connectDevframe(options.connect);\n\tlet mountedRendere"
+      },
+      {
+        "needle": "options.rpc ?? await connectDevframe",
+        "line": 580,
+        "excerpt": "ientType = options.clientType ?? \"standalone\";\n\tconst rpc = options.rpc ?? await connectDevframe(options.connect);\n\tlet mountedRenderers;\n\tconst [docksState, commandsState, settings, renderersManifestState] = await Promise.all([\n\t\trpc.sharedState.get(DOCKS"
+      },
+      {
+        "needle": "async function connectRemoteDevframe",
+        "line": 1140,
+        "excerpt": "URL.\n*\n* @throws if no descriptor is present in the URL.\n*/\nasync function connectRemoteDevframe(options = {}) {\n\tconst info = parseRemoteConnection();\n\tif (!info) throw new Error(\"[@devframes/hub] No remote connection descriptor found in the URL. Open thi"
+      },
+      {
+        "needle": "...options",
+        "line": 397,
+        "excerpt": ") {\n\t\treturn makeHandle(await call(\"hub:messages:add\", {\n\t\t\t...options.defaults,\n\t\t\t...input\n\t\t}));\n\t}\n\tfunction levelShortcut(level) {\n\t\treturn (message, extra) => add({\n\t\t\t...extra,\n\t\t\tmessage,\n\t\t\tlevel\n\t\t});\n\t}\n\treturn {\n\t\tadd,"
+      }
+    ]
+  },
+  {
+    "path": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/devframe@1.0.0_patch_hash=ffa0d25bd3f149d2a621176c73eb6297d351eaf49ef73b54a984d609b4449_ddf0c845756c069983162da0dc9c053a/node_modules/devframe/dist/client/index.mjs",
+    "sha256": "0e835386c35519d788ebcd6a7c091307d58fe9271cfca76320762b5cc53dc96e",
+    "matches": [
+      {
+        "needle": "async function setupDevframeConnection",
+        "line": 483,
+        "excerpt": "ching `__connection.json` from the configured base URLs.\n*/\nasync function setupDevframeConnection(options = {}) {\n\tif (options.connection) {\n\t\tconst connection = withAuthToken(options.connection, readStoredAuthToken(options.authToken ?? options.connection.a"
+      },
+      {
+        "needle": "new BroadcastChannel(\"devframe-auth\")",
+        "line": 1868,
+        "excerpt": "ons.wsOptions\n\t});\n\tlet authChannel;\n\ttry {\n\t\tauthChannel = new BroadcastChannel(\"devframe-auth\");\n\t} catch {}\n\tlet bootstrapAuthPromise;\n\tlet bootstrapAuthSettled = false;\n\tfunction gateOnBootstrapAuth(fn) {\n\t\treturn ((...args) => {\n\t\t\tif (bootstrapAuthSet"
+      },
+      {
+        "needle": "storeAuthToken(token)",
+        "line": 421,
+        "excerpt": "authToken) storeAuthToken(connection.authToken);\n}\nfunction storeAuthToken(token) {\n\ttry {\n\t\tlocalStorage.setItem(CONNECTION_AUTH_TOKEN_KEY, token);\n\t} catch {}\n\tglobalThis[CONNECTION_AUTH_TOKEN_KEY] = token;\n\tconst connection = readStoredCo"
+      },
+      {
+        "needle": "authChannel.onmessage",
+        "line": 1996,
+        "excerpt": "AgentRpcBridge(rpc);\n\t}).catch(() => {});\n\tif (authChannel) authChannel.onmessage = (event) => {\n\t\tif (event.data?.type === \"auth-update\" && event.data.authToken) rpc.requestTrustWithToken(event.data.authToken);\n\t};\n\treturn rpc;\n}\n//#endregi"
+      }
+    ]
+  },
+  {
+    "path": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@devframes+hub-ui@1.0.0_@devframes+hub@1.0.0_@devframes+agentic@1.0.0_crossws@0.4.12_pa_20b460e7621f241682c754d72578bfed/node_modules/@devframes/hub-ui/dist/client/embedded.js",
+    "sha256": "30f7153f747d6f1d314b42c68fa018fab7495f1a7512c81fb4cd1d4d1239957d",
+    "matches": [
+      {
+        "needle": "new BroadcastChannel(\"devframe-auth\")",
+        "line": 3050,
+        "excerpt": " gi({\n\t\t...y,\n\t\twsOptions: e.wsOptions\n\t}), S;\n\ttry {\n\t\tS = new BroadcastChannel(\"devframe-auth\");\n\t} catch {}\n\tlet C, w = !1;\n\tfunction T(e) {\n\t\treturn ((...t) => w || !C ? e(...t) : C.then(() => e(...t)));\n\t}\n\tfunction E() {\n\t\t_ = !0;\n\t\ttry {\n\t\t\tg?.(), h?"
+      }
+    ]
+  },
+  {
+    "path": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@devframes+hub-ui@1.0.0_@devframes+hub@1.0.0_@devframes+agentic@1.0.0_crossws@0.4.12_pa_20b460e7621f241682c754d72578bfed/node_modules/@devframes/hub-ui/dist/client/standalone/assets/index-Co92Bzrl.js",
+    "sha256": "577af294b0094ce9f879bf35e8971aa73ef0bd6ad492de5788266eb6e6f148d5",
+    "matches": [
+      {
+        "needle": "new BroadcastChannel(`devframe-auth`)",
+        "line": 4,
+        "excerpt": "ons:e.sseOptions}):qr({...y,wsOptions:e.wsOptions}),S;try{S=new BroadcastChannel(`devframe-auth`)}catch{}let C,w=!1;function T(e){return((...t)=>w||!C?e(...t):C.then(()=>e(...t)))}function E(){_=!0;try{g?.(),h?.()}finally{try{S?.close()}finally{x.close?.()}"
+      }
+    ]
+  }
+]

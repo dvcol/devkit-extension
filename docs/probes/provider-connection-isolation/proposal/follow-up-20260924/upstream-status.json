@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-09-24T07:07:43.911606+00:00",
+  "npm": {
+    "package": "devframe",
+    "latest": "1.0.0"
+  },
+  "github": {
+    "repository": "devframes/devframe",
+    "ref": "main",
+    "sha": "18fa60effeb928eb445add2a536cd44906a59981",
+    "committerDate": "2026-09-17T02:42:20Z",
+    "noIsolateConnectionSearchResults": true,
+    "relatedCleanupPullRequest": "https://github.com/devframes/devframe/pull/386"
+  },
+  "sourceCopies": [
+    "upstream-connection.ts",
+    "upstream-rpc.ts"
+  ]
+}
