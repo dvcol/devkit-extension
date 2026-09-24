@@ -257,3 +257,9 @@ The issue remains open until the adapter declaration inventory and Definition of
 A [bounded native-host probe](../probes/vite-preview-hosts/README.md) attaches both actual backends to the HTTP server owned by `vite.preview()`, using public preview setup/shutdown hooks. Both return static HTML and native connection metadata over HTTP, execute the maintained typed counter action locally, remove their owned command and dispose their provider/backend before preview shutdown returns.
 
 This probe starts from a handwritten static fixture. It does not complete watched production output, remote authenticated calls, renderer mounting or browser HMR. DevTools preview resolves a serve/dev context without `viteServer`; its built-in branded asset hosting therefore needs explicit adapter wiring. These are implementation obligations within the accepted same-server preview model, not evidence requiring another backend process.
+
+## Adopted connection isolation, 2026-09-24
+
+The owner authorized an upstream draft and an exact-version local backport. [Devframe PR 401](https://github.com/devframes/devframe/pull/401) adds `isolateConnection?: boolean` to the native setup/connect options. It preserves default sharing and scopes endpoint discovery, token persistence and authentication broadcasts to each opted-in RPC client. The workspace patch now includes this behavior alongside its earlier declaration repairs; earlier statements about byte-identical runtime JavaScript describe the declaration-only stage.
+
+The backport uses the upstream built setup function and public option contract. Maintained package tests exercise the installed dependency, including shared defaults and local credential updates. This unblocks owned connection integration, but does not itself implement the provider registry/router, propagate the patch to downstream installations, or rewrite prebundled hub UI assets.

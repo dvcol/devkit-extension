@@ -1,4 +1,159 @@
+diff --git a/dist/client/index.d.mts b/dist/client/index.d.mts
+index 8db367b73d7aabfa28a93cb8641ab3010f1b8650..989c8027a9fec572607c2ae6f6e65f0dbe87a6e6 100644
+--- a/dist/client/index.d.mts
++++ b/dist/client/index.d.mts
+@@ -18,6 +18,15 @@ export interface DevframeConnection {
+   authToken?: string;
+ }
+ export interface SetupDevframeConnectionOptions {
++  /**
++   * Keep connection discovery and credentials local to this RPC client.
++   * Skips shared window/localStorage reads and writes, and authentication
++   * broadcasts. Explicit connections, metadata and credentials still apply.
++   * Pass this option again when reusing a prepared connection.
++   *
++   * @default false
++   */
++  isolateConnection?: boolean;
+   /** Reuse a complete connection prepared in another viewer or JavaScript realm. */
+   connection?: DevframeConnection;
+   /** Use a pre-known descriptor while deriving its source URL from `baseURL`. */
+@@ -165,7 +174,7 @@ export interface DevframeScopedClientRpc<NS extends string = string> {
+   };
+   /** Resolve a namespaced shared state. Bare keys resolve within this namespace. */
+   sharedState: {
+-    <T extends keyof ScopedSharedStates<NS> & string>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
++    <T extends Extract<keyof ScopedSharedStates<NS>, string>>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
+     <T extends Record<string, any> = Record<string, any>>(key: string, options?: RpcSharedStateGetOptions<T>): Promise<SharedState<T>>;
+   };
+   /** Streaming host scoped to this namespace. */
+diff --git a/dist/client/index.mjs b/dist/client/index.mjs
+index a26af04daee8a1d93897225fa8efa43b9b1efb32..1d7dd29bdd4b7cdefd27b961e774a817cc4801a6 100644
+--- a/dist/client/index.mjs
++++ b/dist/client/index.mjs
+@@ -481,31 +481,28 @@ function getDevframeConnection() {
+ * fetching `__connection.json` from the configured base URLs.
+ */
+ async function setupDevframeConnection(options = {}) {
+-	if (options.connection) {
+-		const connection = withAuthToken(options.connection, readStoredAuthToken(options.authToken ?? options.connection.authToken ?? options.connection.connectionMeta.authToken));
+-		storeConnection(connection);
+-		return connection;
+-	}
+-	const bases = Array.isArray(options.baseURL) ? options.baseURL : [options.baseURL ?? "./"];
+-	if (options.connectionMeta) {
+-		const connection = {
+-			connectionMeta: options.connectionMeta,
+-			/**
+-			* Preserve the established connectionMeta behavior: an explicitly
+-			* supplied descriptor resolves from the caller's explicit base.
+-			*/
+-			metaBaseUrl: resolveMetaBaseUrl(bases[0] ?? "./"),
+-			authToken: readStoredAuthToken(options.authToken ?? options.connectionMeta.authToken)
+-		};
+-		storeConnection(connection);
+-		return connection;
++	const isolateConnection = options.isolateConnection === true;
++	function resolveAuthToken(authToken) {
++		if (isolateConnection) return authToken;
++		return readStoredAuthToken(authToken);
+ 	}
+-	const existing = getDevframeConnection();
+-	if (existing) {
+-		const connection = withAuthToken(existing, readStoredAuthToken(options.authToken ?? existing.authToken ?? existing.connectionMeta.authToken));
+-		storeConnection(connection);
++	function finishConnectionSetup(connection) {
++		if (!isolateConnection) storeConnection(connection);
+ 		return connection;
+ 	}
++	if (options.connection) return finishConnectionSetup(withAuthToken(options.connection, resolveAuthToken(options.authToken ?? options.connection.authToken ?? options.connection.connectionMeta.authToken)));
++	const bases = Array.isArray(options.baseURL) ? options.baseURL : [options.baseURL ?? "./"];
++	if (options.connectionMeta) return finishConnectionSetup({
++		connectionMeta: options.connectionMeta,
++		/**
++		* Preserve the established connectionMeta behavior: an explicitly
++		* supplied descriptor resolves from the caller's explicit base.
++		*/
++		metaBaseUrl: resolveMetaBaseUrl(bases[0] ?? "./"),
++		authToken: resolveAuthToken(options.authToken ?? options.connectionMeta.authToken)
++	});
++	const existing = isolateConnection ? void 0 : getDevframeConnection();
++	if (existing) return finishConnectionSetup(withAuthToken(existing, resolveAuthToken(options.authToken ?? existing.authToken ?? existing.connectionMeta.authToken)));
+ 	const errors = [];
+ 	for (const base of bases) {
+ 		const metaPath = withBase(DEVFRAME_CONNECTION_META_FILENAME, base);
+@@ -515,7 +512,7 @@ async function setupDevframeConnection(options = {}) {
+ 			if (!response.ok) throw new Error(`Failed to fetch connection meta from ${metaUrl}: ${response.status}`);
+ 			const connectionMeta = await response.json();
+ 			const loadedFrom = response.url || metaUrl;
+-			const connection = {
++			return finishConnectionSetup({
+ 				connectionMeta,
+ 				/**
+ 				* A served `baseUrl` re-points relative resolution (RPC dump shards,
+@@ -523,10 +520,8 @@ async function setupDevframeConnection(options = {}) {
+ 				* per-frame meta directs each frame SPA at the hub's own dump.
+ 				*/
+ 				metaBaseUrl: connectionMeta.baseUrl ? new URL(connectionMeta.baseUrl, loadedFrom).href : loadedFrom,
+-				authToken: readStoredAuthToken(options.authToken ?? connectionMeta.authToken)
+-			};
+-			storeConnection(connection);
+-			return connection;
++				authToken: resolveAuthToken(options.authToken ?? connectionMeta.authToken)
++			});
+ 		} catch (error) {
+ 			errors.push(error);
+ 		}
+@@ -1805,6 +1800,7 @@ function resolveClientTransport(requested, meta) {
+ 	throw new Error("[devframe] This server advertises no RPC transport (backend \"none\"), so there is nothing to connect to. Enable the WebSocket or SSE endpoint on the server, or use its static/MCP surfaces instead.");
+ }
+ async function getDevframeRpcClient(options = {}) {
++	const isolateConnection = options.isolateConnection === true;
+ 	const { baseURL = "./", rpcOptions = {}, cacheOptions = false } = options;
+ 	const events = createEventEmitter();
+ 	const bases = Array.isArray(baseURL) ? baseURL : [baseURL];
+@@ -1865,7 +1861,7 @@ async function getDevframeRpcClient(options = {}) {
+ 	});
+ 	let authChannel;
+ 	try {
+-		authChannel = new BroadcastChannel("devframe-auth");
++		if (!isolateConnection) authChannel = new BroadcastChannel("devframe-auth");
+ 	} catch {}
+ 	let bootstrapAuthPromise;
+ 	let bootstrapAuthSettled = false;
+@@ -1910,7 +1906,7 @@ async function getDevframeRpcClient(options = {}) {
+ 		ensureTrusted: mode.ensureTrusted,
+ 		requestTrust: mode.requestTrust,
+ 		requestTrustWithToken: async (token) => {
+-			storeAuthToken(token);
++			if (!isolateConnection) storeAuthToken(token);
+ 			connection = {
+ 				...connection,
+ 				authToken: token
+@@ -1920,7 +1916,7 @@ async function getDevframeRpcClient(options = {}) {
+ 		requestTrustWithCode: async (code) => {
+ 			const token = await mode.requestTrustWithCode(code);
+ 			if (!token) return false;
+-			storeAuthToken(token);
++			if (!isolateConnection) storeAuthToken(token);
+ 			connection = {
+ 				...connection,
+ 				authToken: token
+diff --git a/dist/context--tVkJw3W.d.mts b/dist/context--tVkJw3W.d.mts
+index db223a17802de0b41ba214693546fa06aa4e0276..a5bd8bb625ab472fcfe74bc7f973043dbf83206c 100644
+--- a/dist/context--tVkJw3W.d.mts
++++ b/dist/context--tVkJw3W.d.mts
+@@ -893,7 +893,7 @@ interface DevframeScopedNodeRpc<NS extends string = string> {
+    * namespace; pass a fully-qualified key (containing `:`) to opt out.
+    */
+   sharedState: {
+-    <T extends keyof ScopedSharedStates<NS> & string>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
++    <T extends Extract<keyof ScopedSharedStates<NS>, string>>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
+     <T extends Record<string, any> = Record<string, any>>(key: string, options?: RpcSharedStateGetOptions<T>): Promise<SharedState<T>>;
+   };
+   /** Streaming host scoped to this namespace. */
 diff --git a/dist/ws-server-y2R76aSW.d.mts b/dist/ws-server-y2R76aSW.d.mts
+index fdf74c88dedd9524ed5018350530193644f89717..81053a5ca782be1810cf43d8196412c4c2573dbc 100644
 --- a/dist/ws-server-y2R76aSW.d.mts
 +++ b/dist/ws-server-y2R76aSW.d.mts
 @@ -1,7 +1,7 @@
@@ -10,27 +165,3 @@ diff --git a/dist/ws-server-y2R76aSW.d.mts b/dist/ws-server-y2R76aSW.d.mts
  import { NodeAdapter } from "crossws/adapters/node";
  import { Buffer } from "node:buffer";
  import { IncomingMessage, Server } from "node:http";
-diff --git a/dist/client/index.d.mts b/dist/client/index.d.mts
---- a/dist/client/index.d.mts
-+++ b/dist/client/index.d.mts
-@@ -165,7 +165,7 @@
-   };
-   /** Resolve a namespaced shared state. Bare keys resolve within this namespace. */
-   sharedState: {
--    <T extends keyof ScopedSharedStates<NS> & string>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
-+    <T extends Extract<keyof ScopedSharedStates<NS>, string>>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
-     <T extends Record<string, any> = Record<string, any>>(key: string, options?: RpcSharedStateGetOptions<T>): Promise<SharedState<T>>;
-   };
-   /** Streaming host scoped to this namespace. */
-diff --git a/dist/context--tVkJw3W.d.mts b/dist/context--tVkJw3W.d.mts
---- a/dist/context--tVkJw3W.d.mts
-+++ b/dist/context--tVkJw3W.d.mts
-@@ -893,7 +893,7 @@
-    * namespace; pass a fully-qualified key (containing `:`) to opt out.
-    */
-   sharedState: {
--    <T extends keyof ScopedSharedStates<NS> & string>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
-+    <T extends Extract<keyof ScopedSharedStates<NS>, string>>(key: T, options?: RpcSharedStateGetOptions<ScopedSharedStates<NS>[T]>): Promise<SharedState<ScopedSharedStates<NS>[T]>>;
-     <T extends Record<string, any> = Record<string, any>>(key: string, options?: RpcSharedStateGetOptions<T>): Promise<SharedState<T>>;
-   };
-   /** Streaming host scoped to this namespace. */

@@ -126,3 +126,5 @@ This section supersedes the unresolved naming, identifier and patch-authorizatio
 - No Vite patch or upstream PR is authorized or adopted. Evaluate SDK-independent reproduction, upstream lifecycle intent and supported alternatives before recommending one.
 
 The declaration migration does not implement remote discovery, routing defaults or broadcast. Those remain explicit issue 7 obligations.
+
+The authorized upstream change is now [Devframe draft PR 401](https://github.com/devframes/devframe/pull/401). The workspace adopts its opt-in behavior through the exact-version Devframe patch, with maintained dependency regression tests. Upstream release adoption and downstream distribution remain separate gates.
