@@ -1,6 +1,6 @@
 # Provider identity, discovery and routing contract
 
-Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed identity and discovery ownership on 2026-09-23, then ambiguity, dispatch-time availability, separate broadcast methods and a compact invocation API on 2026-09-24. Declaration placement and selector syntax remain under review. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
+Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed identity and discovery ownership on 2026-09-23, then ambiguity, dispatch-time availability, separate broadcast methods and a compact invocation API on 2026-09-24. The owner accepted defaults on the public action declaration. Combined realm/provider selectors, symbol handling and helper ergonomics remain under review. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
 
 ## Accepted ownership
 
@@ -72,7 +72,7 @@ Trust filtering, target mapping and state restoration remain owned by their link
 
 The bounded released-client experiment found shared endpoint/authentication interference. The separate opt-in upstream patch is still a proposal. SDK integration must resolve that public API/distribution boundary before claiming isolated simultaneous server connections. No mock registry or compile-only adapter counts as the real-host routing proof.
 
-## Compact declaration proposal, awaiting review
+## Initial compact declaration proposal, superseded in part by the clarification below
 
 A single `routing` property can distinguish realm constraints from provider pins without a separate policy factory. Tagged object values avoid interpreting an untagged string through whichever registry happens to contain it. An array represents ordered pre-dispatch fallback, not broadcast:
 
@@ -85,7 +85,7 @@ routing: (context) => selectRoute(context)
 
 These are alternative property values, not implemented exports or an accepted selector type. A namespaced-string alternative would require explicit prefixes such as `realm:devserver` and `provider:project:frontend`. Separate top-level realm/provider fields would need additional rules for their intersection and ordering; one property keeps the fallback sequence in one place. A callback's candidate snapshot, target metadata, cancellation and stale-selection behavior still require review.
 
-The authoring boundary also needs an owner choice. The public `defineAction` descriptor can carry the client-visible default, while `defineActionContribution` retains the backend handler and execution constraints. A view's action binding or a call can supply a narrower client policy. A callback can run only where its code is installed; it cannot be serialized from a backend-only contribution to a previously unknown client. Remote advertisements can carry validated declarative metadata but not executable JavaScript. Alternatively, deployments can keep every default in client composition, at the cost of separate routing configuration. Neither placement is adopted by this sketch.
+The owner accepted the public `defineAction` descriptor as the place for an optional client-visible default, while the action implementation retains its backend handler and execution constraints. A view's action binding or a call can supply a narrower client policy. A callback can run only where its code is installed; it cannot be serialized from a backend-only contribution to a previously unknown client. Remote advertisements can carry validated declarative metadata but not executable JavaScript. Client composition can supply deployment-specific policy without being the only place defaults are declared. Production definitions have not yet gained the accepted default property.
 
 [The request-object type probe](../probes/routing-request-shape/README.md) passes strict TypeScript 7 checking for operation/input/output inference and required-target constraints. It establishes that compact calls are feasible; it does not establish the final routing union or dynamic operation-union inference.
 
@@ -94,3 +94,13 @@ The authoring boundary also needs an owner choice. The public `defineAction` des
 [Fresh verification](../probes/provider-connection-isolation/proposal/follow-up-20260924/README.md) confirms that the opt-in patch composes with the currently locked declaration repair and passes eight tests, strict TS7 and type-aware Oxlint. Released Devframe 1.0.0 still lacks equivalent public isolation. Kit/hub wrappers can forward the option or accept an owned RPC client. Prebuilt native UI assets contain their own inlined client and are not rewritten by patching the installed Devframe package.
 
 Adopting the exact-version root patch for SDK-owned clients remains an owner decision. It would unblock private workspace transport work; publishing the SDK still needs an upstream release, maintained fork, or explicit consumer patch policy. A fresh browser replay could not start because the in-app browser was unavailable; its runner disposed both hubs and preview. Previous browser passes remain historical evidence, not a new pass.
+
+## Owner clarification after Q6–Q9
+
+The owner accepts public-action routing defaults and proposes a combined selector with required `realm` and optional `provider`. The requested ID types were `string | Symbol`; the exact portable representation remains unresolved. Provider-only selection is a question, not an approved feature. A realm constraint and provider constraint in the same selector must both hold; neither overrides the other.
+
+The current provider descriptor already contains a realm, string ID and incarnation. The generic multi-provider registry is not implemented. Its conflict namespace still needs a decision: provider-only lookup would require registry-wide unique IDs, while a `(realm, provider)` key permits reuse across realms but still requires detecting collisions within a realm. A symbol alone cannot supply cross-runtime identity through JSON or structured-clone transports. Local symbol aliases would need explicit stable-ID mapping; descriptor-backed IDs are the simpler proposal.
+
+The owner also asks why action implementation definitions have a specific helper and two arguments. Dedicated plugin properties do not mandate either factory naming choice. A kind-specific helper supplies the contribution kind; a generic helper would need an explicit kind/descriptor. A fresh single-object declaration probe retains action input/dependency inference and service operation input inference under strict TS7. This removes an inference objection to flattening `contract` or `capability` into the same object as the implementation. Production helpers remain unchanged pending the naming/shape review.
+
+The connection and lifecycle clarifications are explanatory, not patch authorization. Devframe isolation concerns client-side remembered connection/authentication state for multiple backend endpoints. The Vite proposal concerns cleanup of an abandoned replacement after a shutdown hook rejects; it is not a prerequisite for ordinary HMR or build watching. Both proposed runtime patches remain unapplied.
