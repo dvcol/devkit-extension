@@ -289,3 +289,10 @@ The updated [upstream source at 22c32064](https://github.com/devframes/devframe/
 The [Vite-host example](../../examples/vite-hosts/README.md) now combines the accepted independent build watcher and preview processes with both real native backends. The pnpm regex command starts them concurrently. The publisher copies completed output after Vite's successful `BUNDLE_END`; syntax and late build-plugin failures retain the previous HTML/JavaScript and publish failed status. The same live provider and counter state survive those asset rebuilds.
 
 This closes the gap between the two earlier isolated probes for output retention and native preview attachment. It does not complete browser HMR, JSON diagnostics rendering, remote SDK routing or backend-state restoration. Its public example helpers, real-host assertions and filesystem/shutdown limits are documented in the example. Vite remains unpatched.
+
+
+### Review corrections, September 25
+
+[Upstream commit 6d66d7e9](https://github.com/devframes/devframe/commit/6d66d7e9abea9a1f5fa23abb9567671f36437db9) makes the discovery input flag optional: `connection: {}` uses shared behavior, just like an omitted flag. The input union still rejects incomplete prepared descriptors. Channel creation now guards the entire try/catch, and token updates return before shared persistence for isolated connections.
+
+Token precedence remains centralized after metadata resolution. Eight new upstream cases cover explicit-token precedence, metadata-token precedence, local-storage fallback and window-token fallback for provided and fetched metadata. All 48 affected upstream tests, 92 API snapshots, package build, typecheck and lint pass. The synchronized installed backport passes 20 server tests, strict TypeScript 7, type-aware Oxlint and formatting checks. Vite remains unpatched.

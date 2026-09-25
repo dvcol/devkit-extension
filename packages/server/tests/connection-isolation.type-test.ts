@@ -8,6 +8,7 @@ export const setup: SetupDevframeConnectionOptions = {
   baseURL: 'https://example.test/',
   connection: { isolated: true },
 };
+export const sharedDiscovery: SetupDevframeConnectionOptions = { connection: {} };
 export const prepared: DevframeConnection = {
   connectionMeta: { backend: 'static' },
   metaBaseUrl: 'https://example.test/__connection.json',

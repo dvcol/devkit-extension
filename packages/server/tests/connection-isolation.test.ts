@@ -107,7 +107,7 @@ describe('packaged Devframe connection isolation', () => {
     expect(readGlobal('__DEVFRAME_CONNECTION_META__')).toBe(storedConnection.connectionMeta);
   });
 
-  it.each([{}, { connection: { isolated: false } }])(
+  it.each([{}, { connection: {} }, { connection: { isolated: false } }])(
     'retains default cache discovery with %j',
     async (options) => {
       expect.assertions(5);
