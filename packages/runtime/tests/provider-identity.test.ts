@@ -22,6 +22,35 @@ function identity(incarnation: string) {
 
 describe('provider backend identity', () => {
   it.each([undefined, null, 1, '', '  '])(
+    'rejects invalid provider ID %j before setup or dispatch',
+    async (identifier) => {
+      expect.assertions(3);
+      const descriptor = identity('original');
+      Reflect.set(descriptor, 'id', identifier);
+      const handler = vi.fn<() => string>(() => 'unexpected dispatch');
+      expect(() => provider({ provider: descriptor })).toThrow(
+        'Provider ID must be a non-empty string',
+      );
+      await expect(
+        invokeLocalOperation({
+          operation,
+          input: 'input',
+          options: {},
+          context: {
+            provider: descriptor,
+            execution,
+            contributionId: 'echo',
+            native: { get: vi.fn<() => undefined>() },
+          },
+          activationSignal: new AbortController().signal,
+          handler,
+        }),
+      ).rejects.toThrow('Provider ID must be a non-empty string');
+      expect(handler).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([undefined, null, 1, '', '  '])(
     'rejects a missing or invalid incarnation %j',
     (incarnation) => {
       expect.assertions(1);
