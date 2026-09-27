@@ -19,11 +19,11 @@ export const title = defineCapability({
 });
 ```
 
-| Shared contract                                    | Implementation                                                   | Plugin property |
-| -------------------------------------------------- | ---------------------------------------------------------------- | --------------- |
-| `defineCapability({ id, version, operations })`    | `defineService({ capability, id, execution, requires?, setup })` | `services`      |
-| `defineActionContract({ id, version, operation })` | `defineAction({ contract, id, execution, requires?, handler })`  | `actions`       |
-| `defineContributionKind({ id, schema })`           | `defineExtension({ descriptor, id, execution, payload })`        | `extensions`    |
+| Shared contract                                              | Implementation                                                   | Plugin property |
+| ------------------------------------------------------------ | ---------------------------------------------------------------- | --------------- |
+| `defineCapability({ id, version, operations })`              | `defineService({ capability, id, execution, requires?, setup })` | `services`      |
+| `defineActionContract({ id, version, operation, routing? })` | `defineAction({ contract, id, execution, requires?, handler })`  | `actions`       |
+| `defineContributionKind({ id, schema })`                     | `defineExtension({ descriptor, id, execution, payload })`        | `extensions`    |
 
 Each helper takes one object. Contracts preserve inference for handler input, result, target and named dependencies. `defineAction` now defines the handler; the former contract helper is named `defineActionContract`.
 
@@ -45,7 +45,7 @@ pnpm --filter @devkit/core test
 pnpm --filter @devkit/core build
 ```
 
-`tests/core.type-test.ts` compiles against the implementation and preserves the 28 negative declaration fixtures. `tests/requests.type-test.ts` adds 12 negative request fixtures, including dynamic operation/input correlation and rejection of the removed positional calls. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
+`tests/core.type-test.ts` compiles against the implementation and preserves the 28 negative declaration fixtures. `tests/requests.type-test.ts` adds 12 negative request fixtures, including dynamic operation/input correlation and rejection of the removed positional calls. `tests/routing.type-test.ts` adds seven negative selector/default fixtures. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
 
 ## Invocation requests
 
@@ -66,3 +66,20 @@ const result = await actions.invoke({ action: readTitle, input: { prefix: '' }, 
 `CapabilityInvocationRequest`, `ActionInvocationRequest`, `OperationRequest` and `CapabilityResolutionRequest` expose these types to adapters and callers. Operation names and descriptors determine payload, result and required-target types; input cannot widen the imported contract. When an operation name is a union, callers must preserve its corresponding payload and target as a union of complete requests.
 
 Local provider handles accept `resolve({ capability })` and `invoke({ action, input, target?, signal? })`. They are already owned by one provider and accept no routing options. A resolved capability still uses `binding.api.read(input, { target, signal })`. Business input remains nested under `input`, so payload fields named `target` or `signal` cannot alter execution metadata.
+
+## Declarative routing
+
+`RouteSelector` requires a string `realm` and accepts an optional string `provider` scoped to that realm. `RoutingDirective` is one selector or a non-empty, ordered fallback list. Identifiers must contain a non-whitespace character; their spelling is preserved without normalization. Provider-only selectors, empty lists, unknown fields and non-string identifiers are rejected during action declaration validation.
+
+```ts
+const readTitle = defineActionContract({
+  id: 'example.read-title',
+  version: 1,
+  operation,
+  routing: [{ realm: 'devserver', provider: 'frontend' }, { realm: 'webext' }],
+});
+```
+
+The factory snapshots and freezes the selectors and list. The default belongs to the public action contract so clients can inspect it before choosing a backend. A routed request's explicit `routing` replaces the whole default. An ordered list describes fallback before dispatch to one provider; it never requests broadcast or permits replay after dispatch.
+
+This package implements declaration validation, immutable metadata and request types. It does not execute selection. Local provider handles continue to use their fixed provider. Remote discovery, a multi-provider client, callback selection and broadcast remain issue 7 work.

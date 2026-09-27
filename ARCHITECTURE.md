@@ -111,7 +111,7 @@ Provider identity, realm, execution, UI surface and target are separate axes. In
 A route selector has a required `realm: string` and an optional `provider: string`. A provider selector constrains both fields. Provider-only selectors are unsupported. Identifiers are non-empty strings; callers choose stable unique names. Core performs no symbol or number coercion and maintains no alias registry. Registry collisions are checked within the `(realm, provider)` namespace; incarnation identifies a particular backend lifetime within that logical selection.
 
 ```ts
-// Accepted routing shape; the multi-provider router is still being implemented.
+// Exported by @devkit/core; the multi-provider router remains outstanding.
 type RouteSelector = {
   readonly realm: string;
   readonly provider?: string;
@@ -186,7 +186,9 @@ The 2026-09-24 routing review confirms that equally eligible providers produce a
 
 Core client interfaces and local provider handles now use request objects. Local handles accept `resolve({ capability })` and `invoke({ action, input, target?, signal? })`; their provider is already fixed, so they expose no routing override. Bound capability methods retain the two arguments `input, options`. Request types preserve operation/input/target correlation, including unions of operation requests. Client interfaces describe the routing boundary; a multi-provider client implementation remains outstanding.
 
-Broadcast will have separate capability/action methods with per-provider outcomes. The owner accepted optional routing defaults on the public action contract, visible to clients before backend selection. Backend implementation handlers remain separate. Selectors require a string realm and optional string provider scoped to that realm. Callback selection during registry changes and broadcast selection syntax remain under review in [Provider discovery and routing](./docs/planning/007-provider-routing.md).
+Core exports `RouteSelector` and `RoutingDirective` and validates optional `routing` defaults on public action contracts. The directive contains one selector or a non-empty ordered fallback list. Factories copy and freeze this metadata, including selectors inside structural plugin declarations. An explicit invocation directive replaces the entire default. Backend implementation handlers remain separate. Selectors require a string realm and optional string provider scoped to that realm. This declaration support does not implement remote discovery or selection.
+
+Broadcast will have separate capability/action methods with per-provider outcomes. Callback selection during registry changes and broadcast selection syntax remain under review in [Provider discovery and routing](./docs/planning/007-provider-routing.md).
 
 Operation declarations specify `target: 'required'` or `target: 'none'`. Required-target calls must provide a validated target reference in request metadata or bound-method options; targetless calls reject an execution target. Business payloads can refer to other subjects without changing this execution target. A target reference contains a kind, opaque identity and generation; the routing/trust adapters define resolution and validate freshness. Abort signals remain local, with transport cancellation represented by protocol messages.
 

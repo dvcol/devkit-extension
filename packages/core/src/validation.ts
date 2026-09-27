@@ -7,6 +7,8 @@ import type {
   ContributionDeclaration,
   ContributionKindDescriptor,
   OperationDefinition,
+  RouteSelector,
+  RoutingDirective,
   ExtensionDefinition,
   ServiceDeclaration,
 } from './types.js';
@@ -98,12 +100,30 @@ export function assertCapability(
 
 export function assertAction(value: unknown, label: string): asserts value is ActionDescriptor {
   assertRecord(value, label);
-  assertKeys(value, ['kind', 'id', 'version', 'operation'], label);
+  assertKeys(value, ['kind', 'id', 'version', 'operation', 'routing'], label);
   if (value.kind !== 'action-contract')
     throw new TypeError(`${label}.kind must be action-contract`);
   assertIdentifier(value.id, `${label}.id`);
   assertVersion(value.version, `${label}.version`);
   assertOperation(value.operation, `${label}.operation`);
+  if (Object.hasOwn(value, 'routing')) assertRouting(value.routing, `${label}.routing`);
+}
+
+function assertRouteSelector(value: unknown, label: string): asserts value is RouteSelector {
+  assertRecord(value, label);
+  assertKeys(value, ['realm', 'provider'], label);
+  assertIdentifier(value.realm, `${label}.realm`);
+  if (Object.hasOwn(value, 'provider')) assertIdentifier(value.provider, `${label}.provider`);
+}
+
+function assertRouting(value: unknown, label: string): asserts value is RoutingDirective {
+  if (!Array.isArray(value)) {
+    assertRouteSelector(value, label);
+    return;
+  }
+  if (value.length === 0) throw new TypeError(`${label} must contain at least one selector`);
+  for (const [index, selector] of value.entries())
+    assertRouteSelector(selector, `${label}[${index}]`);
 }
 
 export function assertContribution(

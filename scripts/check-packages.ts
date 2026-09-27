@@ -13,10 +13,10 @@ const packageNames = ['core', 'runtime'] as const;
 
 const consumerSource = `
 import {
-  defineCapability, defineExecution, defineOperation, definePlugin,
+  defineActionContract, defineCapability, defineExecution, defineOperation, definePlugin,
   defineRealm, defineService,
 } from '@devkit/core';
-import type { OperationInput } from '@devkit/core';
+import type { OperationInput, RoutingDirective } from '@devkit/core';
 import {
   createActivationScope, createAdmissionRegistry, invokeLocalOperation,
 } from '@devkit/runtime';
@@ -33,6 +33,15 @@ const stringSchema: StandardSchemaV1<string> = {
   },
 };
 const operation = defineOperation({ input: stringSchema, output: stringSchema, target: 'none' });
+const action = defineActionContract({
+  id: 'consumer.action', version: 1, operation,
+  routing: [{ realm: 'devserver', provider: 'frontend' }, { realm: 'webext' }],
+});
+action.routing[0].provider satisfies 'frontend';
+action.routing satisfies RoutingDirective;
+// @ts-expect-error Packed routing declarations must require a realm.
+const invalidRouting: RoutingDirective = { provider: 'frontend' };
+void invalidRouting;
 const input: OperationInput<typeof operation> = 'artifact';
 // @ts-expect-error A packed declaration must preserve the operation input type.
 const invalidInput: OperationInput<typeof operation> = 42;

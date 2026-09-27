@@ -86,6 +86,8 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 
 ## Authoring and routing identifiers
 
-`defineActionContract({ id, version, operation })` describes a callable action. `defineAction({ contract, id, execution, requires?, handler })` implements it. `defineService({ capability, id, execution, requires?, setup })` implements a capability. All definition helpers use one object; “contribution” describes their shared ownership model, not a second action API.
+`defineActionContract({ id, version, operation, routing? })` describes a callable action and an optional client-visible route default. `defineAction({ contract, id, execution, requires?, handler })` implements it. `defineService({ capability, id, execution, requires?, setup })` implements a capability. All definition helpers use one object; “contribution” describes their shared ownership model, not a second action API.
 
 A **route selector** constrains a required string `realm` and optional string `provider`. Its provider identity is scoped to that realm. Symbol descriptions and numbers are not normalized into identifiers. The caller owns stable naming; the runtime owns validation and collision detection. A selector identifies a logical provider, while a bound invocation retains one specific incarnation.
+
+A **routing directive** is a selector or a non-empty ordered list of selectors for one invocation. The list describes fallback before dispatch, not broadcast. An explicit per-call directive replaces the action contract's default. Core exports these as `RouteSelector` and `RoutingDirective`; callback selection remains under review.

@@ -14,7 +14,7 @@ Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issu
 
 The provider descriptor extends the already reviewed core with a mandatory `incarnation: string`. Adapters mint it; declarations do not. A stable provider ID must be configured for the intended logical owner, rather than regenerated on every client connection.
 
-This metadata is implemented in core and the local runtime. Runtime admission rejects missing, empty and whitespace-only incarnations and freezes an identity snapshot before setup or asynchronous call validation. Eight focused ownership tests include two live providers sharing a logical ID: an old binding retains its original backend and rejects after disposal instead of switching to its successor. Contribution reactivation retains the incarnation. The complete affected core/runtime suites and packed-consumer gates also pass. This establishes local ownership behavior; remote discovery and selection remain unimplemented.
+This metadata is implemented in core and the local runtime. Runtime admission rejects non-string, empty and whitespace-only provider IDs and incarnations and freezes an identity snapshot before setup or asynchronous call validation. Focused ownership tests include two live providers sharing a logical ID: an old binding retains its original backend and rejects after disposal instead of switching to its successor. Contribution reactivation retains the incarnation. The complete affected core/runtime suites and packed-consumer gates also pass. This establishes local ownership behavior; remote discovery and selection remain unimplemented.
 
 ```ts
 // Illustrative metadata; these are not credentials or native transport handles.
@@ -125,7 +125,7 @@ This section supersedes the unresolved naming, identifier and patch-authorizatio
 - The owner authorized a narrow Devframe draft upstream PR for opt-in connection isolation, followed by adoption of the matching exact-version workspace patch. Publication still requires an upstream release or an explicit downstream distribution policy.
 - The owner accepts the failed-restart cleanup gap while Vite remains unpatched. A narrow upstream proposal may proceed through source validation and human review; it does not block SDK implementation.
 
-The declaration migration does not implement remote discovery, routing defaults or broadcast. Those remain explicit issue 7 obligations.
+The declaration migration did not implement remote discovery, routing defaults or broadcast. The 2026-09-27 slice below adds validated routing defaults; executing selection remains an issue 7 obligation.
 
 The authorized upstream change is now [Devframe draft PR 401](https://github.com/devframes/devframe/pull/401). The workspace adopts its opt-in behavior through the exact-version Devframe patch, with maintained dependency regression tests. Upstream release adoption and downstream distribution remain separate gates.
 
@@ -151,3 +151,35 @@ Core exports `CapabilityInvocationRequest`, `ActionInvocationRequest`, `Operatio
 The current generic runtime and server handles execute these requests locally. Core's routed client interfaces remain contracts, not a claim of implemented remote selection. New compile-only checks reject 12 invalid request shapes, including uncorrelated operation unions and removed positional calls. Three additional runtime tests cover payload/target separation and cancellation before and during dispatch. Existing lifecycle, real native-host and packaged-consumer checks use the new calls.
 
 The next owner review concerns callback results becoming stale while a provider picker waits, and the distinction between ordinary ordered fallback and explicit broadcast selection. Realm-scoped string IDs, dispatch-time readiness, ambiguity errors, no implicit waiting and no post-dispatch rerouting are already settled and are not reopened by those questions.
+
+## Implemented declarative routing, 2026-09-27
+
+Core now exports the accepted declarative shapes:
+
+```ts
+interface RouteSelector {
+  readonly realm: string;
+  readonly provider?: string;
+}
+type RoutingDirective = RouteSelector | readonly [RouteSelector, ...RouteSelector[]];
+
+const readTitle = defineActionContract({
+  id: 'example.read-title',
+  version: 1,
+  operation,
+  routing: [{ realm: 'devserver', provider: 'frontend' }, { realm: 'webext' }],
+});
+```
+
+The public action descriptor owns the optional default. Request types accept the same selector/list shape; an explicit request replaces the complete default. Declaration factories validate and freeze their own copy, including when callers provide structural action definitions directly to a plugin. Caller objects remain unfrozen. An empty list, provider-only selector, non-string identifier or unknown selector field fails declaration admission. No identifier normalization is performed.
+
+This slice adds 21 declaration tests and seven negative TypeScript fixtures. It also fixes local provider identity validation: both lifecycle creation and direct local invocation reject malformed provider IDs before handler dispatch, covered by five regression cases. Tests first reproduced the missing check.
+
+The declarations do not execute routing. Local handles remain bound to their provider, and no callback or broadcast behavior is implied by the new types. Registry composition, authenticated remote catalogs, selection/dispatch, cancellation and real multi-host examples remain outstanding.
+
+### Pending owner decisions
+
+1. An asynchronous selection callback observes incarnation A and returns after the same logical provider restarts as B. Should that invocation reject the stale selection, or re-resolve the selector against B? Recommended: reject, with a new explicit invocation allowed to select B. Direct declarative selectors still use current availability at dispatch.
+2. Should broadcast require its own `selection` list meaning a union of recipients, or reuse `routing` with semantics different from ordinary fallback? Recommended: a required `selection` field with no inherited ordinary-invocation defaults.
+
+These questions block their dependent API and runtime behavior, not the accepted declaration metadata above.

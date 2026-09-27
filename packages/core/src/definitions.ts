@@ -91,7 +91,7 @@ export function defineActionContract<const Definition extends Omit<ActionDescrip
   definition: Definition,
 ): Readonly<Definition> & { readonly kind: 'action-contract' } {
   assertRecord(definition, 'action contract');
-  assertKeys(definition, ['id', 'version', 'operation'], 'action contract');
+  assertKeys(definition, ['id', 'version', 'operation', 'routing'], 'action contract');
   const action = { ...definition, kind: 'action-contract' as const };
   assertAction(action, 'action contract');
   return snapshotAction(action);

@@ -5,12 +5,15 @@ export type Unsubscribe = () => void;
 export type TargetRequirement = 'required' | 'none';
 
 declare const nativeContextValue: unique symbol;
-declare const routingDirectiveType: unique symbol;
 
-/** Constructed by the routing package; selection semantics belong to its contract. */
-export interface RoutingDirective {
-  readonly [routingDirectiveType]: true;
+/** Constrain a realm, optionally pinning a provider within that realm. Identifiers are not coerced. */
+export interface RouteSelector {
+  readonly realm: string;
+  readonly provider?: string;
 }
+
+/** One selector, or an ordered non-empty fallback list for a single invocation. */
+export type RoutingDirective = RouteSelector | readonly [RouteSelector, ...RouteSelector[]];
 
 /** Validated adapter-issued identity; native tab/document handles are not transported. */
 export interface TargetReference {
@@ -161,6 +164,8 @@ export interface ActionDescriptor<Operation extends OperationDefinition = Operat
   readonly id: string;
   readonly version: number;
   readonly operation: Operation;
+  /** Client-visible default; an invocation's explicit routing replaces this entire directive. */
+  readonly routing?: RoutingDirective;
 }
 
 export interface ActionDeclaration extends ContributionDeclaration<'action'> {

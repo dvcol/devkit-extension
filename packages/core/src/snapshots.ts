@@ -8,6 +8,8 @@ import type {
   ExecutionDescriptor,
   ExtensionDefinition,
   OperationDefinition,
+  RouteSelector,
+  RoutingDirective,
   ServiceDeclaration,
 } from './types.js';
 
@@ -54,12 +56,38 @@ export function snapshotCapability<Capability extends CapabilityDescriptor>(
 }
 
 export function snapshotAction<Action extends ActionDescriptor>(action: Action): Action {
-  return Object.freeze({
+  const snapshot = {
     ...action,
     id: action.id,
     version: action.version,
     operation: snapshotOperation(action.operation),
-  });
+  };
+  if (action.routing !== undefined) {
+    Object.defineProperty(snapshot, 'routing', {
+      value: snapshotRouting(action.routing),
+      enumerable: true,
+    });
+  }
+  return Object.freeze(snapshot);
+}
+
+function isRoutingFallback(
+  routing: RoutingDirective,
+): routing is readonly [RouteSelector, ...RouteSelector[]] {
+  return Array.isArray(routing);
+}
+
+function snapshotRouteSelector(selector: RouteSelector): RouteSelector {
+  return Object.freeze({ ...selector, realm: selector.realm });
+}
+
+function snapshotRouting(routing: RoutingDirective): RoutingDirective {
+  if (!isRoutingFallback(routing)) return snapshotRouteSelector(routing);
+  const [first, ...remaining] = routing;
+  return Object.freeze([
+    snapshotRouteSelector(first),
+    ...remaining.map((selector) => snapshotRouteSelector(selector)),
+  ] as const);
 }
 
 function snapshotRequirements<Requirements extends CapabilityRequirements>(
