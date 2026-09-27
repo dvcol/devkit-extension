@@ -114,6 +114,6 @@ A **provider catalog** describes the action and capability contracts registered 
 
 An asynchronous routing callback selects from its original candidate owners and rechecks their current readiness. If the selected provider's incarnation changes before dispatch, the invocation fails as stale; a fresh invocation may select the successor. Broadcast requires a separate `selection` field whose selectors form a union of recipients. It does not inherit ordinary routing defaults.
 
-A **provider connection** is an adapter-owned authenticated connection with fixed provider identity, observable catalog and invocation methods. A **provider attachment** is the client's ownership of that connection in its registry; detaching it cancels client work without disposing the backend.
+A **provider connection** is an adapter-owned authenticated connection with fixed provider identity, observable catalog and invocation methods. A **provider attachment** is the client's ownership of that connection in its registry; detaching it cancels client work without disposing the backend. For native remote unary RPC, cancellation stops the caller waiting; already-dispatched backend work may finish. No automatic retry or replay follows.
 
 An **unmatched broadcast selector** names no known provider. The entire broadcast rejects before dispatch and lists these selectors. A known provider that is currently unavailable remains a recipient and receives its own rejected outcome.

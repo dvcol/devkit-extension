@@ -2,16 +2,31 @@ import { defineActionContract, defineCapability } from '@devkit/core';
 import type { OperationDefinition } from '@devkit/core';
 
 import type { ServerComposition, ServerProviderHandle } from './types.js';
+import { actionMethod, capabilityMethod } from './rpc-contract.js';
 
 export type ExposedProvider = Pick<
   ServerProviderHandle<boolean>,
-  'provider' | 'invoke' | 'resolve'
+  'provider' | 'catalog' | 'invoke' | 'resolve'
 >;
 
 export interface ExposedMethod {
   readonly name: string;
   readonly operation: OperationDefinition;
   invoke(provider: ExposedProvider, input: unknown): Promise<unknown>;
+}
+
+/** Includes empty capabilities, which advertise a contract without creating operation methods. */
+export function exposureIdentity(
+  composition: ServerComposition<boolean>,
+  methods: readonly ExposedMethod[],
+): string {
+  return JSON.stringify([
+    composition.providerId,
+    methods.map(({ name }) => name).toSorted(),
+    (composition.expose?.capabilities ?? [])
+      .map(({ id, version }) => JSON.stringify([id, version]))
+      .toSorted(),
+  ]);
 }
 
 /** A native method name encodes a tuple so arbitrary contract identifiers cannot collide. */
@@ -25,7 +40,7 @@ export function exposureMethods(composition: ServerComposition<boolean>): readon
       operation: descriptor.operation,
     });
     methods.push({
-      name: `devkit:${JSON.stringify([composition.providerId, 'action', action.id, action.version])}`,
+      name: actionMethod(composition.providerId, action.id, action.version),
       operation: action.operation,
       invoke: (provider, input) => provider.invoke({ action, input }),
     });
@@ -42,7 +57,7 @@ export function exposureMethods(composition: ServerComposition<boolean>): readon
     capabilities.add(identity);
     for (const [operationName, operation] of Object.entries(capability.operations)) {
       methods.push({
-        name: `devkit:${JSON.stringify([composition.providerId, 'capability', capability.id, capability.version, operationName])}`,
+        name: capabilityMethod(composition.providerId, capability, operationName),
         operation,
         async invoke(provider, input) {
           const resolution = await provider.resolve({ capability });

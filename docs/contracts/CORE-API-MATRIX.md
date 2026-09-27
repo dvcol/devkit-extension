@@ -77,10 +77,21 @@ Provider routing, state, transport, real-host lifecycle and the complete API-to-
 | `RoutingError`, `RoutingErrorCode` | Client tests and packed consumer | Local codes and actionable unmatched-selector diagnostics; no network serialization claim. |
 | Portable package exports | `scripts/check-packages.ts` | Core/runtime/client tarballs installed without workspace sources; strict Bundler and NodeNext compilation, execution and host-free browser bundling. |
 
-These checks add local DF/DT composition evidence. Authenticated remote catalog synchronization, discovery, target authority and all WebExtension cells still require their domain implementations and real-host checks.
+These checks add local DF/DT composition evidence. Native remote synchronization evidence is recorded below. Automatic endpoint discovery, target authority and all WebExtension cells still require their domain implementations and real-host checks.
 
 ## Authenticated native server example evidence
 
 `examples/server-contexts` exports `runRemoteDemo`; `demo:remote` and `checks/remote.ts` exercise it through built public exports on genuine Devframe hub and DevTools kit hosts. Native token authorization gates explicitly named RPC definitions that delegate to the same portable action. Assertions cover denied credentials, valid native session ownership, invalid input, action rejection after provider disposal, retained unrelated HTTP, stale-incarnation rejection, same-ID replacement with native state retention, and actual host shutdown rejecting a pending client call.
 
-The server handler deliberately finishes after the socket closes, proving that client rejection is not backend cancellation. Three adapter-owned method names remain across replacement, alongside two example-only probes. Startup exposure and direct strict installation handles are implemented and type-checked. Native schema reuse, registration conflicts, unsupported target authority, inactive implementations and failed native observers have dedicated server checks. This adds real native authentication/transport evidence; it does not implement automatic remote contribution publication, catalog synchronization, per-call cancellation, or any WebExtension cell. The [lifecycle investigation](../research/native-rpc-lifecycle.md) identifies the remaining public API gaps.
+The server handler deliberately finishes after the socket closes, proving that client rejection is not backend cancellation. Four adapter-owned method names remain across replacement, alongside two example-only probes. Startup exposure and direct strict installation handles are implemented and type-checked. Native schema reuse, registration conflicts, unsupported target authority, inactive implementations and failed native observers have dedicated server checks. This adds real native authentication/transport evidence; it does not implement automatic remote contribution publication, automatic endpoint discovery, backend unary cancellation, or any WebExtension cell. The [lifecycle investigation](../research/native-rpc-lifecycle.md) identifies the remaining public API gaps.
+
+## Native remote client evidence
+
+| API or behavior | Maintained evidence | Scope |
+| --- | --- | --- |
+| `createDevframeProviderConnection`, `DevframeProviderConnection`, options | Server socket tests and compile probes; browser example on both native hosts | Existing native client; fixed identity; typed actions/capabilities; remote context has no raw backend handles; static/cached endpoints reject. |
+| Authorized catalog synchronization | `remote-catalog.test.ts`, `remote-client.test.ts` | Exposed contracts only; no writable catalog state; immutable validated metadata; payload-free invalidation; stale-query fencing; disable/enable; replacement requires new attachment. |
+| Cancellation and disposal | `remote-cancellation.test.ts` | Caller abort, client disposal, adapter disposal and native disconnect stop waiting. Backend completes once; no replay or backend-cancellation claim. |
+| Browser entry and real hosts | `checks/browser-build.ts`; `demo:browser devframe` / `devtools` | Built exports, no Node/runtime modules; actual browser action and retained-state reload on both hosts. Manual smoke is distinct from automatic socket/build checks. |
+
+Target authority, automatic endpoint discovery, renderer/extension integration and full host conformance remain open. No Chromium/Firefox extension cell is satisfied by the native browser example.

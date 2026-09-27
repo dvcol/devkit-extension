@@ -111,6 +111,46 @@ All names and target requirements are checked before native registration. Foreig
 
 Default strict startup arrays and later `install` / `replace` calls contain direct handles. Relaxed mode retains `{ status: 'admitted', handle }` or `{ status: 'skipped', diagnostic }`; a dynamic boolean strictness returns the union. Handles expose `snapshot`, `subscribe`, `enable`, `disable`, `retry` and `dispose`. A successfully admitted handle can still report waiting or failed contributions.
 
+## Connect the shared client to an existing native browser client
+
+The separate `@devkit/server/client` entry is browser-safe. It accepts the native `DevframeRpcClient`, including the compatible client returned by Vite DevTools. It opens no transport and owns no credentials.
+
+```ts
+import { createClient } from '@devkit/client';
+import { createDevframeProviderConnection } from '@devkit/server/client';
+
+const connection = await createDevframeProviderConnection({
+  rpc, // Existing authenticated native client.
+  providerId: 'example.remote',
+});
+const client = createClient({ connections: [connection] });
+const value = await client.actions.invoke({
+  action: increaseCounterAction,
+  input: { amount: 1 },
+});
+
+client.dispose();
+connection.dispose();
+// The application still owns rpc.close() and backend lifetime.
+```
+
+`signal?` cancels connection startup locally. `report?(error)` receives background catalog/observer failures; the default reports through the browser console. Initial synchronization failures reject the factory. Capability bindings expose `context.access: 'remote'`, provider identity and execution metadata, with no raw backend handles. The shared client keeps existing routing, binding and broadcast behavior.
+
+| Event                                   | Adapter behavior                                                                                                                                              |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Initial connection                      | Register a native notification listener, read the authorized catalog, validate metadata, pin the provider incarnation. Reject unavailable or static backends. |
+| Contribution change                     | Clear the cached snapshot immediately, then reread through native authorization. An invalidation during a query forces another read before publication.       |
+| Provider replacement                    | Invalidate the old connection. The application creates and attaches a fresh connection; old bindings never select the successor.                              |
+| Caller abort or client/adapter disposal | Stop local waiting. An already-dispatched backend operation may finish; no cancellation message, retry or replay is fabricated.                               |
+| Native disconnect or lost trust         | Clear availability, cancel local waits and unsubscribe. The application owns native reconnection/authentication.                                              |
+| Adapter disposal                        | Remove its listeners without closing native RPC, shared state or provider contributions.                                                                      |
+
+The server adds one native query named `devkit:[providerId,"catalog"]`. It projects only explicitly exposed action/capability contracts. Native authorization of this query grants access to that metadata; each operation still passes its own native method authorization. The catalog is not a shared-state key and clients cannot write it. A payload-free `devkit:catalog:changed` notification carries no catalog or provider data. Its definition lives with the native client; disposed adapters leave no listener behind. No polling, custom RPC framing, schema downloads or state replication is added.
+
+Metadata is validated and frozen on receipt. Imported descriptors remain the source of typed business calls. Native schemas validate the server call as before. Client-side native caching of catalog or effect methods is rejected, because it could retain stale availability or suppress an operation; the adapter does not clear application-owned caches. `expose: {}` still publishes an empty catalog, whereas omitted `expose` publishes nothing.
+
+The [browser example](../../examples/server-contexts/README.md#browser-client) exercises the built package entry against both native hosts. Socket tests cover malformed metadata, denied credentials, stale refreshes, disable/enable, replacement, listener reuse, ownership and cancellation. Those Node tests supply `location` because the upstream browser client reads it; the interactive browser check uses the actual browser environment.
+
 ## Handles and native resources
 
 | Export or handle member                              | Behavior                                                                                                                                                                                                                   |
@@ -154,8 +194,8 @@ pnpm --filter @devkit/server test
 
 The build filter includes this package's workspace dependencies. The tests create genuine headless hub and kit contexts. They exercise native shared state, services/actions, waiting activation, replacement, custom kinds, setup/cleanup failure and ownership. One test opens an ephemeral loopback HTTP server and verifies it still responds after adapter disposal; restricted sandboxes may require permission for that listener. Tests close their own native hosts afterward.
 
-This package supports local integration and explicit target-free native RPC exposure. It does not yet publish a remote provider catalog/discovery or provide a remote `ProviderConnection` for the shared client. Server-side unary cancellation on client disconnect remains unsupported. It does not render a UI or install Vite reload/close hooks. The [native Vite examples](../../examples/vite-hosts/README.md) provide example-local lifecycle wiring and real server/config-watcher tests for both released hosts. Their failure, preview and browser-HMR limitations remain explicit; this package does not yet expose a general Vite integration API.
+This package supports local integration, explicit target-free native RPC exposure, authenticated remote catalog synchronization and a remote `ProviderConnection`. Endpoint discovery and authoritative remote targets remain unfinished. The owner accepts native unary cancellation behavior: local cancellation does not stop dispatched backend work. It does not render a UI or install Vite reload/close hooks. The [native Vite examples](../../examples/vite-hosts/README.md) provide example-local lifecycle wiring and real server/config-watcher tests for both released hosts. Their failure, preview and browser-HMR limitations remain explicit; this package does not yet expose a general Vite integration API.
 
 The package is private and relies on the repository's exact-version declaration patches and dependency metadata for the released Devframe/hub/kit graph. The `devframe@1.0.0` patch also backports opt-in RPC connection isolation from [Devframe draft PR 401](https://github.com/devframes/devframe/pull/401). SDK-owned browser connections use `connection: { isolated: true }` when discovering an endpoint, or set `isolated: true` on a complete `DevframeConnection`. The returned descriptor retains the setting, so reconnecting with `{ connection }` keeps credentials local without another flag. Omitting `isolated` or setting it to `false` preserves shared behavior.
 
-The patch changes the installed `devframe/client` artifacts. Prebuilt hub UI bundles contain their own RPC code and are unaffected. Root pnpm patches do not propagate to a published SDK's consumers; distribution still requires an upstream release or an explicit consumer patch policy. The local multi-provider router is implemented in `@devkit/client`; authenticated remote connection adapters remain outstanding.
+The patch changes the installed `devframe/client` artifacts. Prebuilt hub UI bundles contain their own RPC code and are unaffected. Root pnpm patches do not propagate to a published SDK's consumers; distribution still requires an upstream release or an explicit consumer patch policy. The local multi-provider router is implemented in `@devkit/client`; the native remote connection adapter is available through this package’s browser entry. Extension connections and target authority remain outstanding.

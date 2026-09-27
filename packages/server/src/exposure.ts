@@ -1,11 +1,15 @@
 import type { DevframeHubContext } from '@devframes/hub/node';
+import { styleText } from 'node:util';
 
-import { exposureMethods, incarnationSchema } from './exposure-methods.js';
+import { exposureIdentity, exposureMethods, incarnationSchema } from './exposure-methods.js';
 import type { ExposedMethod, ExposedProvider } from './exposure-methods.js';
 import type { ServerComposition } from './types.js';
+import { catalogSchema } from './catalog-schema.js';
+import { projectCatalog } from './catalog-exposure.js';
+import { catalogChanged, catalogMethod } from './rpc-contract.js';
 
 interface HostExposure {
-  readonly names: ReadonlySet<string>;
+  readonly identity: string;
   current: ExposedProvider | undefined;
   failed: boolean;
 }
@@ -24,24 +28,32 @@ export function prepareExposure(
 ): PreparedExposure | undefined {
   if (composition.expose === undefined) return undefined;
   const methods = exposureMethods(composition);
-  const exposure = exposures.get(context) ?? registerExposure(context, methods);
+  const exposure = exposures.get(context) ?? registerExposure(context, methods, composition);
   if (exposure.failed)
     throw new Error(
       'Native RPC exposure is blocked after registration failure; recreate the native host',
     );
-  if (
-    exposure.names.size !== methods.length ||
-    methods.some(({ name }) => !exposure.names.has(name))
-  )
+  if (exposure.identity !== exposureIdentity(composition, methods))
     throw new Error(
       'Exposed contracts are fixed for this native host; recreate the host to change them',
     );
+  let unsubscribe: (() => void) | undefined;
+  const notify = () => {
+    void context.rpc
+      .broadcast({ method: catalogChanged, args: [], event: true, optional: true })
+      .catch((cause: unknown) => {
+        console.error(styleText('red', '⚠️ [devkit/server]'), 'Catalog invalidation failed', cause);
+      });
+  };
   return {
     publish(provider) {
       exposure.current = provider;
+      unsubscribe = provider.catalog.subscribe(notify);
     },
     clear() {
+      unsubscribe?.();
       exposure.current = undefined;
+      notify();
     },
   };
 }
@@ -49,17 +61,27 @@ export function prepareExposure(
 function registerExposure(
   context: DevframeHubContext,
   methods: readonly ExposedMethod[],
+  composition: ServerComposition<boolean>,
 ): HostExposure {
-  for (const { name } of methods) {
+  const catalogName = catalogMethod(composition.providerId);
+  for (const name of [catalogName, ...methods.map((method) => method.name)]) {
     if (context.rpc.has(name)) throw new Error(`Native RPC method is already registered: ${name}`);
   }
   const exposure: HostExposure = {
-    names: new Set(methods.map(({ name }) => name)),
+    identity: exposureIdentity(composition, methods),
     current: undefined,
     failed: false,
   };
   exposures.set(context, exposure);
   try {
+    const snapshot = projectCatalog(composition, methods);
+    context.rpc.register({
+      name: catalogName,
+      type: 'query',
+      args: [] as const,
+      returns: catalogSchema,
+      handler: () => snapshot(exposure.current),
+    });
     for (const method of methods) {
       context.rpc.register({
         name: method.name,

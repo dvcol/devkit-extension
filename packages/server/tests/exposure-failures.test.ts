@@ -1,4 +1,4 @@
-import { defineActionContract, defineOperation } from '@devkit/core';
+import { defineActionContract, defineCapability, defineOperation } from '@devkit/core';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
@@ -8,6 +8,7 @@ import { createDevframeProvider } from '../src/index.js';
 import { counterCapability, counterService, incrementAction } from './fixtures.js';
 import { createDevframeHost } from './host-fixtures.js';
 
+const catalogName = 'devkit:["example.remote","catalog"]';
 const actionMethod = 'devkit:["example.remote","action","example.increment",1]';
 const composition = {
   providerId: 'example.remote',
@@ -70,6 +71,7 @@ describe('native exposure startup boundaries', () => {
       }),
     ).rejects.toThrow(/fixed for this native host/u);
     expect(host.context.rpc.list().filter((name) => name.startsWith('devkit:'))).toEqual([
+      catalogName,
       actionMethod,
     ]);
     await expect(
@@ -87,11 +89,9 @@ describe('native exposure startup boundaries', () => {
       /retained methods are unavailable/u,
     );
     unsubscribe();
-    expect(host.context.rpc.has(actionMethod)).toBe(true);
+    expect(host.context.rpc.has(catalogName)).toBe(true);
     expect(host.context.commands.commands.has('example:counter')).toBe(false);
-    await expect(invokeExposed(host.context, actionMethod, 'unknown', 1)).rejects.toThrow(
-      /unavailable/u,
-    );
+    await expect(invokeExposed(host.context, catalogName)).resolves.toBeUndefined();
     await expect(createDevframeProvider({ context: host.context, ...composition })).rejects.toThrow(
       /blocked after registration failure/u,
     );
@@ -116,11 +116,34 @@ describe('native exposure startup boundaries', () => {
       expose: { actions: [first, second] },
     });
     const names = host.context.rpc.list().filter((name) => name.startsWith('devkit:'));
-    expect(new Set(names).size).toBe(2);
+    expect(new Set(names).size).toBe(3);
     expect(names.map((name) => JSON.parse(name.slice('devkit:'.length)) as unknown)).toEqual([
+      ['provider:"/😀', 'catalog'],
       ['provider:"/😀', 'action', 'counter:1', 2],
       ['provider:"/😀', 'action', 'counter', 12],
     ]);
     await provider.dispose();
+  });
+
+  it('keeps catalog ownership fixed even when exposed capabilities have no methods', async () => {
+    expect.assertions(2);
+    const host = await createDevframeHost();
+    const capability = defineCapability({ id: 'empty', version: 1, operations: {} });
+    const provider = await createDevframeProvider({
+      context: host.context,
+      providerId: 'first',
+      expose: { capabilities: [capability] },
+    });
+    await provider.dispose();
+    await expect(
+      createDevframeProvider({
+        context: host.context,
+        providerId: 'second',
+        expose: { capabilities: [capability] },
+      }),
+    ).rejects.toThrow(/fixed for this native host/u);
+    await expect(
+      createDevframeProvider({ context: host.context, providerId: 'first', expose: {} }),
+    ).rejects.toThrow(/fixed for this native host/u);
   });
 });

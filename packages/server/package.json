@@ -10,6 +10,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client.js"
     }
   },
   "scripts": {
@@ -21,13 +25,12 @@
   },
   "dependencies": {
     "@devframes/hub": "1.0.0",
+    "@devkit/client": "workspace:*",
     "@devkit/core": "workspace:*",
     "@devkit/runtime": "workspace:*",
     "@vitejs/devtools-kit": "0.7.5",
     "cac": "7.0.0",
-    "devframe": "1.0.0"
-  },
-  "devDependencies": {
+    "devframe": "1.0.0",
     "zod": "4.6.5"
   }
 }

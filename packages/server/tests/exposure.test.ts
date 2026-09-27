@@ -71,7 +71,7 @@ describe('host-owned native exposure', () => {
     );
     const successor = await createDevToolsProvider({ context: host.context, ...composition });
     expect(host.context.rpc.get(actionMethod)).toBe(definition);
-    expect(host.context.rpc.list().filter((name) => name.startsWith('devkit:'))).toHaveLength(2);
+    expect(host.context.rpc.list().filter((name) => name.startsWith('devkit:'))).toHaveLength(3);
     await expect(invokeExposed(host.context, actionMethod, incarnation, 100)).rejects.toThrow(
       /incarnation changed/u,
     );
@@ -131,7 +131,7 @@ describe('host-owned native exposure', () => {
     await expect(
       invokeExposed(host.context, actionMethod, provider.provider.incarnation, 1),
     ).resolves.toBe(1);
-    expect(host.context.rpc.list().filter((name) => name.startsWith('devkit:'))).toHaveLength(2);
+    expect(host.context.rpc.list().filter((name) => name.startsWith('devkit:'))).toHaveLength(3);
     await provider.dispose();
   });
 });

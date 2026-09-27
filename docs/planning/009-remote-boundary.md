@@ -4,7 +4,7 @@ Working deliverable for [Permissions and trust](https://github.com/dvcol/devkit-
 
 ## Reuse boundary
 
-`@devkit/client` composes `ProviderConnection`s. The maintained two-host example uses local server handles; it does not yet expose contributions remotely. Remote adapters should use existing Devframe RPC and connection APIs, mapping only the portable contribution metadata and ownership they lack.
+`@devkit/client` composes `ProviderConnection`s. The maintained examples include local two-host routing and a native remote browser connection on both hosts. Remote adapters should use existing Devframe RPC and connection APIs, mapping only the portable contribution metadata and ownership they lack.
 
 ```mermaid
 flowchart LR
@@ -47,24 +47,25 @@ Inspection used the installed patched `devframe@1.0.0` declarations and the sour
 | Native RPC has JSON and structured-clone modes | `rpc/wire-codec.ts` and public `utils/structured-clone.ts`. Reuse public exports; do not copy the internal wire codec. |
 | Native low-level RPC accepts channel callbacks | Public `devframe/rpc/client`. Adapt extension Port events/close to that channel before considering any new transport mechanism. |
 | Ordinary shared state has client-accessible set/patch endpoints | `node/rpc-shared-state.ts`. A normal writable state key is not authoritative catalog or permission storage. |
-| Collector registration has no public unregister method | Public collector API and `rpc/collector.ts`. Direct Map deletion does not emit the collector change event. Investigate supported registration ownership before promising dynamic remote disposal. |
-| The public session API has no disconnect signal/subscription | `RpcFunctionsHost` type; native disconnect internals are not a supported extension API. Prove what native close handles, then identify any remaining server cancellation gap. A timeout is not cancellation proof. |
+| Collector registration has no public unregister method | Public collector API and `rpc/collector.ts`. Definitions now have the accepted finite native host/client lifetime. Adapter disposal removes subscriptions and availability, without private Map mutation. |
+| The public session API has no disconnect signal/subscription | `RpcFunctionsHost` type; native disconnect internals are not a supported extension API. Real-socket tests prove local waiting stops while dispatched backend work can finish, as accepted below. |
 | Local definitions own schema/handler execution | `packages/runtime/src/provider-bindings.ts`. Remote metadata cannot install executable schemas or handlers. |
 
 The [upstream alignment review](../research/upstream-alignment-review.md) maps these limits to the other tickets. Native auth/codec reuse removes the earlier broad choice of competing systems; it does not settle extension actor permissions, state privacy or debugger authority.
 
 ## Native socket evidence, September 27
 
-The maintained [remote counter example](../../examples/server-contexts/README.md#authenticated-native-rpc) now proves native allow/deny behavior, actual session trust, invalid-input rejection, provider disposal and stale incarnations over real WebSockets on both native hosts. Host shutdown rejects the pending client call, while an already-started server handler still finishes when released. These are explicit host-owned native definitions, not automatic remote provider publication. Remote catalogs, bridge authority, per-call cancellation and browser execution remain unimplemented.
+The maintained [remote counter example](../../examples/server-contexts/README.md#authenticated-native-rpc) now proves native allow/deny behavior, actual session trust, invalid-input rejection, provider disposal and stale incarnations over real WebSockets on both native hosts. Host shutdown rejects the pending client call, while an already-started server handler still finishes when released. These are explicit host-owned native definitions, not automatic remote provider publication. Authenticated native catalogs and a browser client are now implemented. Extension bridge/target authority and backend unary cancellation are not supplied by this evidence.
 
 The [lifecycle investigation](../research/native-rpc-lifecycle.md) also distinguishes standalone disconnect hooks from the installed hub, which does not expose them. Native validation helpers are exported but marked `@internal`; ordinary native declaration schemas remain the supported integration.
 
-## Next implementation slice
+## Remaining implementation
 
-1. The fixed-counter native fixture is implemented, and the owner selected explicit host-owned remote methods. The combined startup authoring API and explicit target-free native method mapping are implemented. Extend this evidence to SDK catalog synchronization and a general remote client connection.
-2. Establish registration lifetime and disconnect cleanup through public APIs. If a required operation is absent, record the exact limitation and smallest possible extension; do not reach into private collections or add a replacement RPC host.
-3. Map server-owned contract/version/incarnation metadata and target references into that native call. Keep native correlation IDs and native wire encoding. Publish an authoritative, appropriately visible catalog without trusting client-writable state.
-4. Adapt a real extension Port to the existing RPC channel and codec. Verify rich values, malformed/unsupported data, disconnection and listener cleanup on Chromium and Firefox. Bridge sender/target checks must precede privileged dispatch.
+The combined startup API, finite native method lifetime, target-free method mapping, authorized catalog synchronization and shared-client connection are implemented. Remaining work includes:
+
+1. Resolve authoritative target references through a concrete target-owning host. The [native target investigation](../research/native-target-authority.md) distinguishes native caller authentication from browser document identity and navigation safety. Required-target exposure remains rejected until that integration exists.
+2. Adapt a real extension Port to the existing RPC channel and codec. Verify rich values, malformed/unsupported data, disconnection and listener cleanup on Chromium and Firefox. Bridge sender/target checks must precede privileged dispatch.
+3. Complete actor permissions, state privacy, error disclosure and real-host conformance. The current native transport tests do not establish those broader guarantees.
 
 Existing upstream PRs remain drafts. This review opens no new upstream PR.
 
@@ -73,14 +74,22 @@ Existing upstream PRs remain drafts. This review opens no new upstream PR.
 - [x] Local routing ownership and broadcast semantics are implemented and tested.
 - [x] Native auth/serialization reuse is the implementation direction; Q4/Q5 are no longer pending choices between duplicate systems.
 - [x] Public serializer compatibility and unsupported-function rejection have maintained installed-package tests.
-- [ ] Public registration/disconnect integration is proven or its exact limitation is resolved.
-- [ ] Real authenticated hosts prove synchronization, native allow/deny behavior, spoofed metadata rejection and disposal.
+- [x] Finite native registration and local disconnect cleanup are proven for the target-free adapter, with the accepted backend-cancellation limitation.
+- [x] Real authenticated hosts prove native allow/deny behavior and disposal; socket tests cover catalog synchronization and malformed/mismatched metadata at the native call boundary. Browser smoke checks cover both hosts.
 - [ ] Real extension hosts prove wire compatibility, page/extension authority and target freshness.
 - [ ] Cancellation, permission revocation and error-detail disclosure meet the complete issue-9 contract.
 
 
-## Next owner decision: remote caller cancellation
+## Accepted remote caller cancellation
 
 The generic remote client connection must define what caller abort and connection loss mean. Actual native WebSocket checks prove that the pending client rejects while an already-started backend handler can finish. Local provider cancellation can signal owned work and wait for settlement, but installed native unary RPC has no equivalent per-call backend cancellation hook.
 
-The owner is reviewing whether to preserve native remote behavior with an explicit realm limitation (stop the client waiting, permit backend completion, never retry/replay automatically), or require native backend cancellation support before offering the generic remote connection. No choice is assumed. The implemented server exposure itself accepts only an expected incarnation and business input; it does not advertise transported AbortSignals or backend cancellation.
+The owner selected native behavior. Caller abort, attachment disposal or connection loss stops the caller waiting; already-dispatched backend work may finish. The adapter never retries or replays the operation automatically. A fresh call makes a new routing decision, and must not assume the earlier mutation was undone. The implemented server exposure itself accepts only an expected incarnation and business input; it does not advertise transported AbortSignals or backend cancellation.
+
+## Native catalog and client implementation
+
+The native adapter borrows a `DevframeRpcClient`; it neither creates nor owns its transport/authentication. The server registers one authorized catalog query and projects exposed descriptors only. Client-writable shared state is not used. A retained native client method receives payload-free invalidations and triggers another authorized query. Response fencing prevents a query begun before invalidation from republishing stale availability. The client validates metadata, pins one provider incarnation and rejects configured native caching for catalog/effect methods.
+
+Caller abort, client disposal, connection disposal and native disconnect all stop local waiting. Real-socket tests confirm an already-dispatched backend handler still finishes exactly once. This is the accepted native behavior, not a claim of backend cancellation. Browser smoke checks on both native hosts invoke the shared action and retain counter value/provider incarnation across reload. Endpoint discovery, target authority, extension actors and complete security conformance remain open.
+
+[Source investigation](../research/native-catalog-sync.md), [adapter API](../../packages/server/README.md), [browser example](../../examples/server-contexts/README.md#browser-client).

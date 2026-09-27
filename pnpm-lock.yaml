@@ -323,6 +323,9 @@ importers:
       '@devframes/hub':
         specifier: 1.0.0
         version: 1.0.0(@devframes/agentic@1.0.0)(crossws@0.4.12(patch_hash=7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605)(srvx@1.0.5))(devframe@1.0.0)
+      '@devkit/client':
+        specifier: workspace:*
+        version: link:../client
       '@devkit/core':
         specifier: workspace:*
         version: link:../core
@@ -338,7 +341,6 @@ importers:
       devframe:
         specifier: 1.0.0
         version: 1.0.0(patch_hash=274ba03845a64012ab160e92fcedcac375b800b9474bb152f604d08bb172ee5a)(@devframes/agentic@1.0.0)(cac@7.0.0)(srvx@1.0.5)
-    devDependencies:
       zod:
         specifier: 4.6.5
         version: 4.6.5

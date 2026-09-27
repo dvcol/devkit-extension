@@ -12,6 +12,11 @@ import { afterEach } from 'vitest';
 
 const cleanup: (() => Promise<void>)[] = [];
 
+export async function temporaryDirectory() {
+  const directory = await mkdtemp(join(tmpdir(), 'devkit-server-test-'));
+  return { directory, dispose: () => rm(directory, { recursive: true, force: true }) };
+}
+
 afterEach(async () => {
   for (const dispose of cleanup.splice(0).toReversed()) await dispose();
 });
