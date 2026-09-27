@@ -30,3 +30,9 @@ Real-host tests perform actual source edits and inject real syntax, `generateBun
 Automatic browser reload, JSON renderer replacement/failure display, portable remote invocation, background/content-script reload, navigation invalidation and declared retained-state recovery remain open. Unsupported or untested host/mode cells must remain explicit. The example does not settle callback selection or broadcast semantics in the separate routing contract.
 
 The upstream cleanup proposal remains [Vite draft 23574](https://github.com/vitejs/vite/pull/23574). No Vite workspace patch is adopted; the owner will take over the draft.
+
+### Restart cleanup refactor, September 27
+
+[Vite draft commit 60b99b3](https://github.com/vitejs/vite/commit/60b99b30b4a3488c2da360ee1b05b2e517e9b848) extracts `closeUnusedReplacementServer()` beside `restartServer()` so its failure path has no nested try/catch. The helper closes the abandoned candidate and retains both errors if cleanup also rejects; the caller rethrows the original restart error after successful cleanup. This corrects a native Vite resource leak and introduces no SDK-specific behavior or API.
+
+All 26 lifecycle-hook tests, affected-package build/type checks, changed-file lint and formatting pass. The PR remains a draft. Vite stays unpatched in this workspace.
