@@ -57,21 +57,21 @@ export async function requests(
   });
   // @ts-expect-error Broadcast action inputs preserve their contract.
   await actions.broadcast({ action, input: 2, selection });
-  // @ts-expect-error Broadcast selection cannot contain a provider without its realm.
   await capabilities.broadcast({
     capability,
     operation: 'read',
     input: 'value',
+    // @ts-expect-error Broadcast selection cannot contain a provider without its realm.
     selection: [{ provider: 'A' }],
   });
   // @ts-expect-error The operation name preserves payload correlation.
   await capabilities.broadcast({ capability, operation: 'count', input: 'value', selection });
-  // @ts-expect-error Broadcast has no universal target option.
   await capabilities.broadcast({
     capability,
     operation: 'count',
     input: 2,
     selection,
+    // @ts-expect-error Broadcast has no universal target option.
     target: { id: 'example' },
   });
 }
