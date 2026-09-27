@@ -40,7 +40,7 @@ A broadcast with overlapping realm/provider selectors then increments each count
 
 `demo:remote` opens a temporary loopback HTTP/WebSocket host for each native context. It reuses the same counter contracts and implementations, Devframe's `createInteractiveAuth`, named native RPC definitions, and the public `createRpcClient` / `createWsRpcChannel` exports. Node's actual WebSocket implements the client channel; no browser globals or transport mocks are installed. Every run creates a fresh in-memory credential and temporary storage directory. It prints no credentials, removes its storage, and closes both sockets and hosts before returning. Expected auth, validation and disposed-provider failures produce native diagnostics during the check.
 
-The example supplies services, plugins and `expose` in one provider startup call. The adapter registers three **host-owned methods**: the action and the capability’s `read` and `increase` operations. Each captures its provider, checks the expected incarnation and delegates through the existing lifecycle. Two example-only native probes inspect session trust and handler behavior across disconnect. None is advertised as an agent tool.
+The example supplies services, plugins and `expose` in one provider startup call. The adapter registers four host-owned methods: the action, the capability’s `read` and `increase` operations, and its catalog query. Each captures its provider, checks the expected incarnation and delegates through the existing lifecycle. Two example-only native probes inspect session trust and handler behavior across disconnect. None is advertised as an agent tool.
 
 ```mermaid
 flowchart LR
@@ -62,12 +62,27 @@ flowchart LR
 | Same-ID provider replacement                      | The old incarnation rejects; a fresh call returns `9`, using retained native state.           |
 | Actual native host shutdown during a pending call | The channel closes the native RPC client and the pending client call rejects.                 |
 | Already-started server handler after disconnect   | Releasing its gate still lets it finish. Client rejection does not prove server cancellation. |
-| Host-owned declaration count                      | The three adapter methods remain registered across provider replacement; no names accumulate. |
+| Host-owned declaration count                      | The four adapter methods remain registered across provider replacement; no names accumulate.  |
 
 The low-level native client needs its `$close()` connected to the channel's disconnect/error callbacks. The example does that directly, with no additional request-ID registry or RPC codec. The native high-level browser client already owns its own connection guards. A five-second native RPC timeout bounds failed calls in this executable example; it is not a server-side cancellation mechanism.
 
-The [native lifecycle investigation](../../docs/research/native-rpc-lifecycle.md) records missing coherent dynamic RPC removal and server-side ordinary-call cancellation through an existing hub. The owner has since selected host-owned remote methods, which avoids requiring dynamic removal. The combined startup API is implemented. Remote catalog synchronization, the general remote client connection and backend cancellation remain absent.
+The [native lifecycle investigation](../../docs/research/native-rpc-lifecycle.md) records missing coherent dynamic RPC removal and server-side ordinary-call cancellation through an existing hub. The owner has since selected host-owned remote methods, which avoids requiring dynamic removal. The combined startup API is implemented. The native remote client and catalog synchronization are now implemented. Native backend unary cancellation remains absent, as accepted by the owner.
+
+## Browser client
+
+```sh
+pnpm exec turbo run build --filter=@devkit/example-server-contexts...
+pnpm --filter @devkit/example-server-contexts demo:browser devframe
+# Or run against the native DevTools backend:
+pnpm --filter @devkit/example-server-contexts demo:browser devtools
+```
+
+Open the printed loopback URL. The page creates an isolated native `connectDevframe` client and passes it to `createDevframeProviderConnection` from `@devkit/server/client`. The shared router resolves the counter capability, then invokes the shared action when the button is pressed. No credentials are printed or stored in browser caches. The launcher injects its temporary demo credential into its loopback-only Vite page and proxies the native endpoint; use application-owned authentication in a real host.
+
+Both hosts were checked in the in-app browser: initial value `0`, action result `1`, then reload reads `1` with the same provider incarnation. The page owns its native client; page/HMR disposal releases the shared client, adapter subscriptions and native socket. The launcher owns the backend and Vite server; press Enter to close both and remove temporary storage. This is a diagnostic page for transport verification, not the JSON renderer example.
+
+`checks/browser-build.ts` builds the browser entry using public package exports and rejects Node shims or backend runtime modules. Server-package socket tests additionally exercise authenticated catalog reads, invalid metadata, disable/enable, replacement, stale-query fencing, startup cancellation and caller/client/adapter/disconnect cancellation. Each cancellation path stops waiting while the backend finishes once. Test-only `location` supplies the environment required by the native browser client; transport, auth and handlers are real.
 
 ## Scope
 
-The local demos are headless in-process integrations; `demo:remote` adds real authenticated WebSocket calls. Neither implements remote SDK catalog synchronization/discovery, a DevTools UI, Vite HMR, a JSON renderer, or browser extension execution. The kit context has no Vite server in this example. Browser-hosted examples and reload behavior remain separate work.
+The local demos exercise in-process routing; `demo:remote` checks low-level native RPC on both hosts; `demo:browser` uses the shared routed client over an actual native browser connection. Catalog synchronization is implemented for explicit target-free exposure. Automatic endpoint discovery, target authority, the JSON renderer, extension execution and complete browser HMR/conformance remain separate work. The DevTools example uses a real kit backend without presenting the DevTools UI.
