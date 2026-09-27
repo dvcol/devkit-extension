@@ -1,5 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "noEmit": true, "types": ["node"], "lib": ["ES2023", "DOM"] },
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"],
+    "lib": ["ES2024", "DOM", "ESNext.Disposable"]
+  },
   "include": ["src", "checks", "vite.config.ts"]
 }

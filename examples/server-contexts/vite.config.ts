@@ -6,6 +6,7 @@ export default defineConfig({
     rolldownOptions: {
       external: [
         /^node:/u,
+        /^devframe\//u,
         '@devframes/hub/initiate',
         '@devframes/hub/node',
         '@devkit/client',

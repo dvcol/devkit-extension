@@ -53,9 +53,15 @@ Inspection used the installed patched `devframe@1.0.0` declarations and the sour
 
 The [upstream alignment review](../research/upstream-alignment-review.md) maps these limits to the other tickets. Native auth/codec reuse removes the earlier broad choice of competing systems; it does not settle extension actor permissions, state privacy or debugger authority.
 
+## Native socket evidence, September 27
+
+The maintained [remote counter example](../../examples/server-contexts/README.md#authenticated-native-rpc) now proves native allow/deny behavior, actual session trust, invalid-input rejection, provider disposal and stale incarnations over real WebSockets on both native hosts. Host shutdown rejects the pending client call, while an already-started server handler still finishes when released. These are explicit host-owned native definitions, not automatic remote provider publication. Remote catalogs, bridge authority, per-call cancellation and browser execution remain unimplemented.
+
+The [lifecycle investigation](../research/native-rpc-lifecycle.md) also distinguishes standalone disconnect hooks from the installed hub, which does not expose them. Native validation helpers are exported but marked `@internal`; ordinary native declaration schemas remain the supported integration.
+
 ## Next implementation slice
 
-1. Register the existing counter through supported native RPC APIs in a real authenticated server fixture. Demonstrate native allow/deny behavior and inspect actual session ownership.
+1. The fixed-counter native fixture is implemented. Settle reusable remote exposure lifetime, then extend this evidence to SDK catalog synchronization and general contract mapping.
 2. Establish registration lifetime and disconnect cleanup through public APIs. If a required operation is absent, record the exact limitation and smallest possible extension; do not reach into private collections or add a replacement RPC host.
 3. Map server-owned contract/version/incarnation metadata and target references into that native call. Keep native correlation IDs and native wire encoding. Publish an authoritative, appropriately visible catalog without trusting client-writable state.
 4. Adapt a real extension Port to the existing RPC channel and codec. Verify rich values, malformed/unsupported data, disconnection and listener cleanup on Chromium and Firefox. Bridge sender/target checks must precede privileged dispatch.

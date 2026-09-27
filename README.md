@@ -40,6 +40,8 @@ pnpm --filter @devkit/example-server-contexts run test
 
 The [routing client](./packages/client/README.md) composes those local providers. `demo:routing` runs both hosts simultaneously, exercises fallback and callbacks, rejects an incomplete broadcast before either counter changes, and dispatches overlapping selectors once per provider. Client disposal retains native state and host ownership.
 
+The same package's `demo:remote` runs the counter through real authenticated native WebSocket RPC on both hosts. It proves authorization and input rejection, contribution disposal, incarnation checks, retained state and client rejection on host shutdown. Native server handlers can still finish after disconnect; the example does not claim a complete remote SDK adapter or backend cancellation.
+
 The [native Vite host examples](./examples/vite-hosts/README.md) mount the released Devframe hub and Vite DevTools plugins. Both run the shared counter and exercise HTTP startup, delayed cleanup, config-watcher restarts, fresh incarnations and client-module invalidation. Run `pnpm --filter @devkit/example-vite-hosts demo:devframe` or `demo:devtools` after building that example's dependency graph.
 
 Both hosts also have maintained production-preview examples. Run `pnpm --filter @devkit/example-vite-hosts build:site`, then `preview:devframe` or `preview:devtools`. Each serves built assets with a live native backend and runs the same typed counter action.

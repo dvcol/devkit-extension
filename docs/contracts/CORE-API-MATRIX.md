@@ -66,7 +66,6 @@ These are partial DF/DT lifecycle cells, not complete host conformance. Failed-r
 
 Provider routing, state, transport, real-host lifecycle and the complete API-to-example catalogue remain required. View, script and transform entries still need domain-specific implementation. Do not infer supported host cells from these local controller tests.
 
-
 ## Local routing implementation evidence
 
 | Implemented API | Example and automated evidence | Proven scope |
@@ -79,3 +78,9 @@ Provider routing, state, transport, real-host lifecycle and the complete API-to-
 | Portable package exports | `scripts/check-packages.ts` | Core/runtime/client tarballs installed without workspace sources; strict Bundler and NodeNext compilation, execution and host-free browser bundling. |
 
 These checks add local DF/DT composition evidence. Authenticated remote catalog synchronization, discovery, target authority and all WebExtension cells still require their domain implementations and real-host checks.
+
+## Authenticated native server example evidence
+
+`examples/server-contexts` exports `runRemoteDemo`; `demo:remote` and `checks/remote.ts` exercise it through built public exports on genuine Devframe hub and DevTools kit hosts. Native token authorization gates explicitly named RPC definitions that delegate to the same portable action. Assertions cover denied credentials, valid native session ownership, invalid input, action rejection after provider disposal, retained unrelated HTTP, stale-incarnation rejection, same-ID replacement with native state retention, and actual host shutdown rejecting a pending client call.
+
+The server handler deliberately finishes after the socket closes, proving that client rejection is not backend cancellation. Two host-owned method names remain across replacement. This adds real native authentication/transport evidence; it does not implement automatic remote contribution publication, catalog synchronization, per-call cancellation, or any WebExtension cell. The [lifecycle investigation](../research/native-rpc-lifecycle.md) identifies the remaining public API gaps.

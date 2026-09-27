@@ -266,7 +266,6 @@ The owner authorized an upstream draft and an exact-version local backport. [Dev
 
 The backport uses the upstream built setup function and public option contract. Maintained package tests exercise the installed dependency, including shared defaults and local credential updates. This unblocks owned connection integration, but does not itself implement the provider registry/router, propagate the patch to downstream installations, or rewrite prebundled hub UI assets.
 
-
 ## Connection-isolation simplification, 2026-09-24
 
 The upstream draft now separates connection discovery from credential finalization. All discovery paths return a connection; one setup boundary selects the token and persists shared-mode state. RPC token and OTP updates use one helper; authentication-channel creation uses a ternary inside the existing constructor guard. This removes repeated credential handling without adding a storage abstraction or public API.
@@ -278,7 +277,6 @@ The initial simplification is recorded in [upstream commit 9a4cacf4](https://git
 The [native Vite example](../../examples/vite-hosts/README.md#built-assets-with-a-live-preview-backend) now builds actual browser source and attaches either native backend to `vite.preview()`. Both runnable preview commands print the shared action result and provider identity. Six additional tests cover built HTML/JavaScript serving, live metadata winning over conflicting static metadata, native context truthfulness, action/state access, awaited disposal and native transport closure after contribution cleanup failure. The complete example suite has 18 passing tests.
 
 This is example-local lifecycle wiring with native authentication preserved. It does not add a portable remote RPC layer or claim native shell/JSON rendering. Preview is limited to loopback HTTP/1 without TLS. Watched output publication, build status and browser reload remain issue 13 work; remote routing and renderer integration remain separate gates. No Vite patch is adopted.
-
 
 ## Connection-owned isolation, 2026-09-24
 
@@ -292,13 +290,11 @@ The [Vite-host example](../../examples/vite-hosts/README.md) now combines the ac
 
 This closes the gap between the two earlier isolated probes for output retention and native preview attachment. It does not complete browser HMR, JSON diagnostics rendering, remote SDK routing or backend-state restoration. Its public example helpers, real-host assertions and filesystem/shutdown limits are documented in the example. Vite remains unpatched.
 
-
 ### Review corrections, September 25
 
 [Upstream commit 6d66d7e9](https://github.com/devframes/devframe/commit/6d66d7e9abea9a1f5fa23abb9567671f36437db9) makes the discovery input flag optional: `connection: {}` uses shared behavior, just like an omitted flag. The input union still rejects incomplete prepared descriptors. Channel creation now guards the entire try/catch, and token updates return before shared persistence for isolated connections.
 
 Token precedence remains centralized after metadata resolution. Eight new upstream cases cover explicit-token precedence, metadata-token precedence, local-storage fallback and window-token fallback for provided and fetched metadata. All 48 affected upstream tests, 92 API snapshots, package build, typecheck and lint pass. The synchronized installed backport passes 20 server tests, strict TypeScript 7, type-aware Oxlint and formatting checks. Vite remains unpatched.
-
 
 ### Named discovery options and authentication scope, September 27
 
@@ -307,3 +303,11 @@ Token precedence remains centralized after metadata resolution. Eight new upstre
 JSDoc on the discovery type, `isolated` flag and channel guard explains the existing authentication protocol: `devframe-auth` carries a token without a backend identifier, and credential caches are not scoped per backend. Isolated connections skip those shared mechanisms while continuing to authenticate through their own RPC transport. The 48 affected upstream tests, 92 API snapshots, package build/typecheck/lint, and 20 installed server tests plus strict TypeScript 7/Oxlint/format checks pass.
 
 The owner raised server-scoped broadcasts as an alternative. That remains a proposal, not an implemented or accepted contract. Adding a message identifier alone does not scope the existing token cache or make legacy listeners filter messages. Any broader protocol change needs an upstream authentication identity and compatibility design, independent of this SDK's provider and realm identifiers. The current draft keeps the explicit shared-state opt-out. Its description and implementation are expressed entirely through native Devframe connections and authentication behavior.
+
+### Authenticated native RPC implementation, September 27
+
+The maintained [server-context example](../../examples/server-contexts/README.md#authenticated-native-rpc) now runs the existing shared counter through real authenticated WebSocket RPC on both native hosts. Its native method names preserve per-method authorization. Credentials are generated per run and remain local. Native request correlation, serialization and close behavior are reused; no SDK transport engine is added.
+
+The built-export checks prove rejected credentials and invalid input, current native session trust, disposed-provider rejection with HTTP survival, old-incarnation rejection after replacement, retained native state, and pending-client rejection on actual host shutdown. They also prove that the already-started native server handler can finish after disconnect. The finite RPC declarations belong to the example host; provider disposal does not claim to unregister them.
+
+The [public lifecycle investigation](../research/native-rpc-lifecycle.md) identifies absent coherent RPC unregister and absent hub disconnect forwarding. The next owner question is the reusable adapter's remote exposure lifetime: explicit host-declared contracts with host-lived native methods, or contribution-lived methods that require dynamic removal support. The example demonstrates the former without silently selecting it as the general contract. Complete remote discovery, cancellation, renderer/browser behavior and this ticket's wider conformance remain open.

@@ -17,10 +17,11 @@
     "demo:devframe": "node src/demo.ts devframe",
     "demo:devtools": "node src/demo.ts devtools",
     "demo:routing": "node src/routing-demo.ts",
-    "test": "node checks/integration.ts && node checks/routing.ts",
+    "test": "node checks/integration.ts && node checks/routing.ts && node checks/remote.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src checks vite.config.ts",
-    "format:check": "oxfmt --config ../../.oxfmtrc.json --check ."
+    "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
+    "demo:remote": "node src/remote-demo.ts"
   },
   "dependencies": {
     "@devframes/hub": "1.0.0",
@@ -29,6 +30,7 @@
     "@devkit/example-contribution": "workspace:*",
     "@devkit/server": "workspace:*",
     "@vitejs/devtools-kit": "0.7.5",
+    "devframe": "1.0.0",
     "zod": "4.6.5"
   }
 }
