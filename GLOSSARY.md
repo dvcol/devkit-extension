@@ -90,4 +90,8 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 
 A **route selector** constrains a required string `realm` and optional string `provider`. Its provider identity is scoped to that realm. Symbol descriptions and numbers are not normalized into identifiers. The caller owns stable naming; the runtime owns validation and collision detection. A selector identifies a logical provider, while a bound invocation retains one specific incarnation.
 
-A **routing directive** is a selector or a non-empty ordered list of selectors for one invocation. The list describes fallback before dispatch, not broadcast. An explicit per-call directive replaces the action contract's default. Core exports these as `RouteSelector` and `RoutingDirective`; callback selection remains under review.
+A **routing directive** is a selector or a non-empty ordered list of selectors for one invocation. The list describes fallback before dispatch, not broadcast. An explicit per-call directive replaces the action contract's default. Core exports this declarative portion as `RouteSelector` and `RoutingDirective`; the callback runtime remains to be implemented.
+
+A **provider catalog** describes the action and capability contracts registered in one provider, including exact contract versions, execution and lifecycle status. The local catalog is authoritative immediately. A connection adapter must distinguish an unsynchronized remote catalog from a confirmed empty one. Catalog membership or active status does not grant permission or authorize a target.
+
+An asynchronous routing callback selects from its original candidate snapshot. If the selected provider's incarnation changes before dispatch, the invocation fails as stale; a fresh invocation may select the successor. Broadcast requires a separate `selection` field whose selectors form a union of recipients. It does not inherit ordinary routing defaults.

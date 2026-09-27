@@ -50,6 +50,7 @@ class ProviderController implements ProviderLifecycle {
   private replacements: Promise<unknown> = Promise.resolve();
   private disposed = false;
   private disposal: Promise<void> | undefined;
+  readonly catalog;
   readonly services = {
     install: (definition: ServiceDeclaration) => this.install('service', definition),
     replace: (handle: InstallationHandle, definition: ServiceDeclaration) =>
@@ -72,6 +73,7 @@ class ProviderController implements ProviderLifecycle {
       ...(this.options.kinds === undefined ? {} : { kinds: this.options.kinds }),
     });
     this.environment = createReconciliation(this.options, this.installations);
+    this.catalog = this.environment.catalog.api;
   }
   resolve<Capability extends CapabilityDescriptor>(
     request: CapabilityResolutionRequest<Capability>,
@@ -104,6 +106,7 @@ class ProviderController implements ProviderLifecycle {
     this.registry.release(installation.reservation);
     this.installations.delete(installation);
     if (installation.handle !== undefined) this.handles.delete(installation.handle);
+    this.environment.catalog.notify();
   }
 
   private publish(admissions: readonly Admission[]): {
@@ -128,12 +131,14 @@ class ProviderController implements ProviderLifecycle {
       );
       installation.handle = handle;
       this.installations.add(installation);
+      installation.listeners.add(this.environment.catalog.notify);
       this.handles.set(handle, installation);
       owned.push(installation);
       results.push({ status: 'admitted', handle });
       for (const diagnostic of installation.diagnostics)
         reportDiagnostic(this.options, diagnostic, installation);
     }
+    if (owned.length > 0) this.environment.catalog.notify();
     return { results, owned };
   }
 
@@ -263,11 +268,13 @@ class ProviderController implements ProviderLifecycle {
   dispose(): Promise<void> {
     if (this.disposal !== undefined) return this.disposal;
     this.disposed = true;
+    this.environment.catalog.status = 'disposing';
     const pending: Promise<void>[] = [];
     this.disposal = Promise.resolve().then(() => this.completeDisposal(pending));
     for (const installation of this.installations) {
       if (installation.handle !== undefined) pending.push(installation.handle.dispose());
     }
+    this.environment.catalog.notify();
     return this.disposal;
   }
 
@@ -276,7 +283,8 @@ class ProviderController implements ProviderLifecycle {
     const failures = results.flatMap((result) =>
       result.status === 'rejected' ? [result.reason as unknown] : [],
     );
-    if (failures.length > 0)
+    if (failures.length > 0) {
+      this.environment.catalog.setStatus('cleanup-blocked');
       throw operationError(
         providerDiagnostic(
           this.options,
@@ -286,5 +294,7 @@ class ProviderController implements ProviderLifecycle {
         ),
         new AggregateError(failures),
       );
+    }
+    this.environment.catalog.setStatus('disposed');
   }
 }

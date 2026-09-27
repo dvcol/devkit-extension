@@ -7,82 +7,11 @@ import { pathToFileURL } from 'node:url';
 import { styleText } from 'node:util';
 import { build } from 'vite';
 
+import { consumerSource } from './fixtures/core-runtime-package-source.ts';
+
 const repositoryDirectory = resolvePath(import.meta.dirname, '..');
 const consumerDirectory = await realpath(await mkdtemp(join(tmpdir(), 'devkit-package-consumer-')));
 const packageNames = ['core', 'runtime'] as const;
-
-const consumerSource = `
-import {
-  defineActionContract, defineCapability, defineExecution, defineOperation, definePlugin,
-  defineRealm, defineService,
-} from '@devkit/core';
-import type { OperationInput, RoutingDirective } from '@devkit/core';
-import {
-  createActivationScope, createAdmissionRegistry, invokeLocalOperation,
-} from '@devkit/runtime';
-import type { StandardSchemaV1 } from '@standard-schema/spec';
-
-const stringSchema: StandardSchemaV1<string> = {
-  '~standard': {
-    version: 1,
-    vendor: 'artifact-consumer',
-    validate(value) {
-      if (typeof value === 'string') return { value };
-      return { issues: [{ message: 'Expected string' }] };
-    },
-  },
-};
-const operation = defineOperation({ input: stringSchema, output: stringSchema, target: 'none' });
-const action = defineActionContract({
-  id: 'consumer.action', version: 1, operation,
-  routing: [{ realm: 'devserver', provider: 'frontend' }, { realm: 'webext' }],
-});
-action.routing[0].provider satisfies 'frontend';
-action.routing satisfies RoutingDirective;
-// @ts-expect-error Packed routing declarations must require a realm.
-const invalidRouting: RoutingDirective = { provider: 'frontend' };
-void invalidRouting;
-const input: OperationInput<typeof operation> = 'artifact';
-// @ts-expect-error A packed declaration must preserve the operation input type.
-const invalidInput: OperationInput<typeof operation> = 42;
-void invalidInput;
-const execution = defineExecution({ id: 'consumer.server' });
-const capability = defineCapability({ id: 'consumer.echo', version: 1, operations: { echo: operation } });
-const service = defineService({ capability: capability,
-  id: 'consumer.service', execution, setup: () => ({ echo: (value) => value }),
-});
-const plugin = definePlugin({ id: 'consumer.plugin', services: [service] });
-
-function check(condition: boolean, message: string): asserts condition {
-  if (!condition) throw new Error(message);
-}
-
-export async function runConsumer(): Promise<string> {
-  const registry = createAdmissionRegistry({ providerId: 'consumer' });
-  const admission = registry.reserve({ plugins: [plugin] })[0];
-  check(admission?.status === 'reserved', 'Packed plugin was not admitted');
-  check(admission.reservation.services.length === 1, 'Service was lost from packed plugin');
-  registry.release(admission.reservation);
-  check(registry.reserve({ plugins: [plugin] })[0]?.status === 'reserved', 'Ownership was not released');
-  const activation = createActivationScope();
-  const disposed: string[] = [];
-  activation.scope.onDispose(() => { disposed.push('disposed'); });
-  const returned = await invokeLocalOperation({
-    operation, input, options: {},
-    context: {
-      provider: { id: 'consumer', incarnation: 'consumer.backend-lifetime', realm: defineRealm({ id: 'custom' }) },
-      execution, contributionId: 'consumer.service', native: { get: () => undefined },
-    },
-    activationSignal: activation.scope.signal,
-    handler: (value) => value,
-  });
-  check(returned === 'artifact', 'Packed operation failed to return validated original input');
-  await activation.dispose();
-  check(activation.scope.signal.aborted, 'Packed activation was not cancelled');
-  check(disposed.join(',') === 'disposed', 'Packed activation did not clean up');
-  return 'artifact-consumer-passed';
-}
-`;
 
 function run(command: string, arguments_: readonly string[], directory: string): Promise<string> {
   return new Promise((resolve, reject) => {

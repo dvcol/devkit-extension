@@ -18,6 +18,8 @@ pnpm --filter @devkit/example-contribution run demo
 
 The demo uses Node's TypeScript execution and built workspace-package exports. It prints an action result of `3`, a capability read of `3`, one active subscription, and zero subscriptions after disposal. Use the Node version required by the repository.
 
+It also subscribes to the provider catalog before startup, prints contract activation transitions, and reads the current provider identity through `catalog.snapshot()`. The subscription stops independently before provider disposal. This catalog is authoritative local metadata; it does not advertise a network endpoint or establish permission for a target.
+
 ```sh
 pnpm --filter @devkit/example-contribution run test
 pnpm --filter @devkit/example-contribution run typecheck

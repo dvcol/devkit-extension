@@ -12,12 +12,18 @@ This private package implements admission, dependency reconciliation, operation 
 | `resolve({ capability })`                     | Return an availability result or a local binding for the exact capability ID and version.                                               |
 | `invoke({ action, input, target?, signal? })` | Dispatch the registered action through its registered validators and local required services.                                           |
 | `dispose()`                                   | Fence calls, cancel owned work, wait for actual settlement and dispose resources. Repeated calls retain the same terminal promise.      |
+| `catalog.snapshot()`                          | Immutable local provider identity, lifecycle status and admitted capability/action contracts, derived from existing registrations.      |
+| `catalog.subscribe(listener)`                 | Immediately publish a snapshot and then lifecycle changes. Return an independent unsubscribe function.                                  |
 
 Admitted handles expose current snapshots, subscriptions, enable, disable, explicit setup retry and disposal. A disabled installation stays disabled when dependencies recover. Setup failures do not retry automatically or stop independent contributions. Failed cleanup blocks the affected ownership chain; neither a timer nor retry can declare it released. The host owns any verified process or browser-context reset.
 
 Replacements run one at a time per provider. A pending replacement reserves its old and successor identities, while unrelated installations and active calls can continue. Admission checks dependency cycles against both possible service graphs. A relaxed skipped service replacement leaves the current service active.
 
 The provider descriptor is snapshotted and frozen, including its mandatory opaque `incarnation`. The adapter creates that value once per backend lifetime; this controller never generates or rotates it. Setup, binding and operation contexts retain that identity. A binding closes over its original controller and cannot acquire a successor merely because the successor uses the same configured provider ID. Disposing the old controller makes its bindings unavailable.
+
+The catalog retains inactive and failed contracts with their contribution status and reason. A capability entry identifies its exact ID/version, contribution, execution and operation names/target requirements. An action entry identifies its contract and target requirement. Schemas, handlers, native contexts and diagnostic causes are excluded. `active` describes contribution activation, not target authorization or permission. Consumers must also check that the provider is `open`; disposal changes its status to `disposing`, then `disposed` or `cleanup-blocked`.
+
+Catalog subscribers observe late installation, dependency loss, replacement and disposal. Rejected admission publishes no catalog change. Listener exceptions go to the existing local diagnostic sink without interrupting provider work or other subscribers. Successful disposal publishes the terminal empty snapshot and releases subscribers. Remote connection readiness, authentication and initial catalog synchronization belong to adapters; an empty local catalog is immediately authoritative.
 
 The runnable [contribution example](../../examples/contribution/README.md) composes these APIs through built package exports and verifies real subscription cleanup.
 

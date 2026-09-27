@@ -66,6 +66,7 @@ async function startProvider(
     const startup = await lifecycle.startup(composition);
     return Object.freeze({
       provider,
+      catalog: lifecycle.catalog,
       startup,
       services: lifecycle.services,
       plugins: lifecycle.plugins,

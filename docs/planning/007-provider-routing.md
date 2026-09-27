@@ -177,9 +177,21 @@ This slice adds 21 declaration tests and seven negative TypeScript fixtures. It 
 
 The declarations do not execute routing. Local handles remain bound to their provider, and no callback or broadcast behavior is implied by the new types. Registry composition, authenticated remote catalogs, selection/dispatch, cancellation and real multi-host examples remain outstanding.
 
-### Pending owner decisions
+### Owner decisions accepted on 2026-09-27
 
-1. An asynchronous selection callback observes incarnation A and returns after the same logical provider restarts as B. Should that invocation reject the stale selection, or re-resolve the selector against B? Recommended: reject, with a new explicit invocation allowed to select B. Direct declarative selectors still use current availability at dispatch.
-2. Should broadcast require its own `selection` list meaning a union of recipients, or reuse `routing` with semantics different from ordinary fallback? Recommended: a required `selection` field with no inherited ordinary-invocation defaults.
+1. An asynchronous selection callback observes incarnation A and returns after the same logical provider restarts as B. Reject the stale selection, with a new explicit invocation allowed to select B. Direct declarative selectors still use current availability at dispatch.
+2. Broadcast requires its own `selection` list meaning a union of recipients. It inherits no ordinary-invocation defaults. Overlapping selectors identify each provider incarnation only once.
 
-These questions block their dependent API and runtime behavior, not the accepted declaration metadata above.
+The owner agreed to both recommendations. They are accepted behavior, not a claim that the routing client already executes them.
+
+## Local provider catalogs
+
+The lifecycle now exposes `catalog.snapshot()` and `catalog.subscribe(listener)`, also forwarded by both server installers. Snapshots derive from admitted definitions and their existing activation state. They carry provider identity/lifecycle, exact capability/action IDs and versions, contribution ID, execution, operation names and target requirements. They include registered but inactive contracts with their current status/reason. Unknown remote synchronization is a future connection-adapter state, never inferred from a local empty list.
+
+Catalog entries contain no schemas, handlers, native contexts or diagnostic causes. An active contribution and an open provider are necessary selection conditions, not proof of authorization, target freshness or permission. Subscribers receive an initial snapshot and updates for admission, dependency changes, replacement and disposal. Listener failures use the existing diagnostic sink and do not stop other listeners. Successful disposal releases listeners; blocked cleanup remains visible.
+
+The contribution demo exercises snapshot/subscription against actual lifecycle work. Runtime tests cover versions, immutable snapshots, late admission, rejected duplicates, dependency restoration, replacement and cleanup failure. Native hub/kit tests verify the same catalog on real local server handles. Remote catalog publication and the multi-provider client remain outstanding.
+
+### Next owner decision
+
+Q3: Broadcast names A and B, but B matches no known provider. Reject before any dispatch, or execute A and retain an explicit missing-recipient outcome? Recommended: reject before dispatch if any selector matches no known provider, including a completely empty match. Known disconnected or permission-blocked providers can still produce their own failed outcomes. This choice determines whether A's side effect occurs and remains pending.

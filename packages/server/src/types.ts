@@ -11,6 +11,7 @@ import type {
   OperationValue,
   PluginDefinition,
   ProviderDescriptor,
+  ProviderCatalog,
   RuntimeDiagnostic,
   ServiceDeclaration,
 } from '@devkit/core';
@@ -28,6 +29,7 @@ export interface ServerComposition {
 /** Local integration only. This handle does not publish discovery or create a transport. */
 export interface ServerProviderHandle {
   readonly provider: ProviderDescriptor;
+  readonly catalog: ProviderCatalog;
   readonly services: DefinitionInstallationApi<ServiceDeclaration>;
   readonly plugins: DefinitionInstallationApi<PluginDefinition>;
   readonly startup: {

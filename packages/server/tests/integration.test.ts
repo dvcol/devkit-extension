@@ -71,7 +71,7 @@ describe('local server provider integration', () => {
   });
 
   it('exposes the actual layered kit context without inventing a Vite server', async () => {
-    expect.assertions(8);
+    expect.assertions(10);
     const host = await createDevToolsHost();
     const provider = await installDevToolsProvider(host.context, {
       providerId: 'example.kit',
@@ -87,12 +87,17 @@ describe('local server provider integration', () => {
     expect(typeof host.context.createJsonRenderer).toBe('function');
     expect(binding.context.execution).toEqual(serverExecution);
     expect(binding.context.provider).toEqual(provider.provider);
+    expect(provider.catalog.snapshot().provider).toEqual(provider.provider);
+    expect(provider.catalog.snapshot().capabilities[0]).toMatchObject({
+      id: counterCapability.id,
+      status: 'active',
+    });
     await expect(provider.invoke({ action: incrementAction, input: 4 })).resolves.toBe(4);
     await provider.dispose();
   });
 
   it('activates waiting actions after dynamic service admission and delegates replacement', async () => {
-    expect.assertions(10);
+    expect.assertions(15);
     const host = await createDevframeHost();
     const provider = await installDevframeProvider(host.context, {
       providerId: 'example.dynamic',
@@ -100,24 +105,36 @@ describe('local server provider integration', () => {
     });
     const plugin = admitted(provider.startup.plugins[0]);
     expect(plugin.snapshot().contributions[0]?.status).toBe('waiting');
+    expect(provider.catalog.snapshot().actions[0]).toMatchObject({
+      id: incrementAction.id,
+      status: 'waiting',
+    });
     await expect(provider.invoke({ action: incrementAction, input: 2 })).rejects.toMatchObject({
       code: 'unavailable-capability',
     });
     const service = admitted(await provider.services.install(counterService));
     expect(plugin.snapshot().status).toBe('ready');
+    expect(provider.catalog.snapshot().actions[0]?.status).toBe('active');
     await expect(provider.invoke({ action: incrementAction, input: 2 })).resolves.toBe(2);
     await service.disable();
     expect(host.context.commands.commands.has('example:counter')).toBe(false);
     expect(plugin.snapshot().contributions[0]?.status).toBe('waiting');
+    expect(provider.catalog.snapshot().capabilities[0]?.status).toBe('disabled');
     await service.enable();
     const replacement = admitted(await provider.services.replace(service, counterService));
     expect(replacement.snapshot().status).toBe('ready');
+    expect(provider.catalog.snapshot().capabilities).toHaveLength(1);
     const newPlugin = admitted(await provider.plugins.replace(plugin, counterPlugin));
     expect(newPlugin.snapshot().status).toBe('ready');
     await expect(provider.invoke({ action: incrementAction, input: 3 })).resolves.toBe(5);
     await newPlugin.dispose();
     expect(admitted(await provider.plugins.install(counterPlugin)).snapshot().status).toBe('ready');
     await provider.dispose();
+    expect(provider.catalog.snapshot()).toMatchObject({
+      status: 'disposed',
+      capabilities: [],
+      actions: [],
+    });
   });
 
   it('retains a failed setup handle and its cleanup ownership with local diagnostic causes', async () => {

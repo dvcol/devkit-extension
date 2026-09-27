@@ -8,6 +8,7 @@ import { operationError } from './errors.js';
 import { requirementsOf, startContribution } from './provider-activation.js';
 import type { ActivationEnvironment } from './provider-activation.js';
 import { allContributions, findService, unavailableReason } from './provider-bindings.js';
+import { ProviderCatalogController } from './provider-catalog.js';
 import {
   contributionDiagnostic,
   notifyInstallation,
@@ -21,6 +22,7 @@ import type {
 } from './provider-types.js';
 
 export interface ProviderReconciliation extends ActivationEnvironment {
+  readonly catalog: ProviderCatalogController;
   stop(contribution: OwnedContribution): Promise<void>;
   settle(installations: readonly OwnedInstallation[]): Promise<void>;
 }
@@ -33,6 +35,7 @@ export function createReconciliation(
 }
 
 class ReconciliationController implements ProviderReconciliation {
+  readonly catalog = new ProviderCatalogController(this);
   readonly kinds: ReadonlyMap<string, ContributionKindInstaller<ContributionKindDescriptor>>;
   private refreshing = false;
   private refreshAgain = false;

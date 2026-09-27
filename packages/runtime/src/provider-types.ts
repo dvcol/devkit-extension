@@ -19,6 +19,7 @@ import type {
   OperationValue,
   PluginDefinition,
   ProviderDescriptor,
+  ProviderCatalog,
   RuntimeDiagnostic,
   ServiceDeclaration,
 } from '@devkit/core';
@@ -43,6 +44,7 @@ export interface StartupInstallationResult {
 }
 
 export interface ProviderLifecycle {
+  readonly catalog: ProviderCatalog;
   readonly services: DefinitionInstallationApi<ServiceDeclaration>;
   readonly plugins: DefinitionInstallationApi<PluginDefinition>;
   startup(composition: StartupComposition): Promise<StartupInstallationResult>;

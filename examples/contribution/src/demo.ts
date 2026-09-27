@@ -21,8 +21,23 @@ const provider = createProviderLifecycle({
   },
 });
 
+const stopCatalog = provider.catalog.subscribe((snapshot) => {
+  console.info(
+    styleText('cyan', '🚀 [contribution]'),
+    'Catalog:',
+    snapshot.status,
+    snapshot.capabilities.map(({ id, version, status }) => ({ id, version, status })),
+    snapshot.actions.map(({ id, version, status }) => ({ id, version, status })),
+  );
+});
+
 try {
   await provider.startup({ services: [counterService], plugins: [counterActionsPlugin] });
+  console.info(
+    styleText('cyan', '🚀 [contribution]'),
+    'Provider identity:',
+    provider.catalog.snapshot().provider,
+  );
   const result = await provider.invoke({ action: increaseCounterAction, input: { amount: 3 } });
   const resolution = await provider.resolve({ capability: counterCapability });
   if (resolution.status !== 'available') throw new Error('Counter capability did not activate');
@@ -38,6 +53,7 @@ try {
     source.subscriptionCount,
   );
 } finally {
+  stopCatalog();
   await provider.dispose();
 }
 
