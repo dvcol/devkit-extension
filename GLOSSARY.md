@@ -100,6 +100,8 @@ See the [upstream alignment review](./docs/research/upstream-alignment-review.md
 
 ## Authoring and routing identifiers
 
+A **host-owned remote method** is a named native RPC entry point for an explicitly exposed contract. Its registration lasts for the host lifetime, independently of contribution implementation availability. Disabling or disposing an implementation makes calls unavailable; the method's presence alone does not establish readiness or authorization.
+
 `defineActionContract({ id, version, operation, routing? })` describes a callable action and an optional client-visible route default. `defineAction({ contract, id, execution, requires?, handler })` implements it. `defineService({ capability, id, execution, requires?, setup })` implements a capability. All definition helpers use one object; “contribution” describes their shared ownership model, not a second action API.
 
 A **route selector** constrains a required string `realm` and optional string `provider`. Its provider identity is scoped to that realm. Symbol descriptions and numbers are not normalized into identifiers. The caller owns stable naming; the runtime owns validation and collision detection. A selector identifies a logical provider, while a bound invocation retains one specific incarnation.

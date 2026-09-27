@@ -157,6 +157,14 @@ flowchart LR
 
 An extension background runtime can coordinate shared discovery for popup/panel consumers through native ports. Local DevTools-only hooks remain in the document that owns them. A web client can compose the registry in its own application runtime. Adapters retain native transports and provider state; registry snapshots contain only permitted portable metadata. The client implements local catalog readiness, routing defaults and broadcast. Authenticated remote discovery and trust filtering remain adapter work. [Routing ownership record](./docs/planning/007-provider-routing.md).
 
+### Host-owned native RPC methods
+
+The owner selected explicit host-owned remote method lifetime in [Server adapter contract](https://github.com/dvcol/devkit-extension/issues/6). The host declares the exposed action and capability contracts. Their named native RPC definitions remain registered for the host lifetime; contribution installation, disabling and disposal change implementation availability. An unavailable or disposed implementation rejects invocation. Native method registration alone does not advertise an available capability or grant authorization.
+
+Remote exposure and local implementation ownership remain distinct, but this does not require separate startup calls. Startup composition already accepts both services and plugins. The exact combined authoring API, factory naming and strict-mode installation return type are still under review; no proposed helper name is part of the accepted contract yet.
+
+This choice reuses native registration without requiring an upstream unregister API. It preserves native authentication, schemas and serialization, expected-incarnation checks, and no rerouting after dispatch. It does not establish server-side cancellation on client disconnect or complete the remote catalog adapter.
+
 ## Identity, admission and strictness
 
 Every registration has an owner. Capability slots use `(provider ID, capability ID, exact contract version)`. A provider can offer multiple versions concurrently, each backed by an explicit contract and implementation. A definition's contribution ID identifies its lifecycle within the installation and must be unique there. Version equality is not proof that an author preserved a schema: publishing incompatible content under an unchanged contract version violates the contract.

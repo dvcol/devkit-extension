@@ -65,7 +65,7 @@ flowchart LR
 
 The low-level native client needs its `$close()` connected to the channel's disconnect/error callbacks. The example does that directly, with no additional request-ID registry or RPC codec. The native high-level browser client already owns its own connection guards. A five-second native RPC timeout bounds failed calls in this executable example; it is not a server-side cancellation mechanism.
 
-The [native lifecycle investigation](../../docs/research/native-rpc-lifecycle.md) records two remaining gaps: coherent dynamic RPC removal, and server-side ordinary-call cancellation through an existing hub. The reusable remote adapter's exposure lifetime is still under review. A fixed host-owned example does not decide that contract.
+The [native lifecycle investigation](../../docs/research/native-rpc-lifecycle.md) records missing coherent dynamic RPC removal and server-side ordinary-call cancellation through an existing hub. The owner has since selected host-owned remote methods, which avoids requiring dynamic removal. The combined startup API remains under review, and this example does not implement the general remote adapter or backend cancellation.
 
 ## Scope
 

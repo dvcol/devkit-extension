@@ -61,7 +61,7 @@ The [lifecycle investigation](../research/native-rpc-lifecycle.md) also distingu
 
 ## Next implementation slice
 
-1. The fixed-counter native fixture is implemented. Settle reusable remote exposure lifetime, then extend this evidence to SDK catalog synchronization and general contract mapping.
+1. The fixed-counter native fixture is implemented, and the owner selected explicit host-owned remote methods. Settle the combined startup authoring API, then extend this evidence to SDK catalog synchronization and general contract mapping.
 2. Establish registration lifetime and disconnect cleanup through public APIs. If a required operation is absent, record the exact limitation and smallest possible extension; do not reach into private collections or add a replacement RPC host.
 3. Map server-owned contract/version/incarnation metadata and target references into that native call. Keep native correlation IDs and native wire encoding. Publish an authoritative, appropriately visible catalog without trusting client-writable state.
 4. Adapt a real extension Port to the existing RPC channel and codec. Verify rich values, malformed/unsupported data, disconnection and listener cleanup on Chromium and Firefox. Bridge sender/target checks must precede privileged dispatch.
