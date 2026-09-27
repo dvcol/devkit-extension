@@ -1,12 +1,14 @@
 import type {
   DevframeConnection,
+  DevframeConnectionDiscoveryOptions,
   DevframeRpcClientOptions,
   SetupDevframeConnectionOptions,
 } from 'devframe/client';
 
+export const discovery: DevframeConnectionDiscoveryOptions = { isolated: true };
 export const setup: SetupDevframeConnectionOptions = {
   baseURL: 'https://example.test/',
-  connection: { isolated: true },
+  connection: discovery,
 };
 export const sharedDiscovery: SetupDevframeConnectionOptions = { connection: {} };
 export const prepared: DevframeConnection = {

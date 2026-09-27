@@ -14,7 +14,7 @@ Keep these fixes tied to their reviewed versions and remove them when compatible
 
 ## Devframe connection isolation
 
-The exact-version `devframe@1.0.0` patch includes the runtime change from [Devframe draft 401](https://github.com/devframes/devframe/pull/401), currently reviewed at [6d66d7e9](https://github.com/devframes/devframe/commit/6d66d7e9abea9a1f5fa23abb9567671f36437db9). `connection.isolated` bypasses shared connection discovery, stored browser credentials and authentication broadcasts. The prepared descriptor retains that setting across token updates and reuse. Shared behavior remains the default.
+The exact-version `devframe@1.0.0` patch includes the runtime change from [Devframe draft 401](https://github.com/devframes/devframe/pull/401), currently reviewed at [b0856763](https://github.com/devframes/devframe/commit/b0856763d0eb227687fe186f60028f12c37c947e). `connection.isolated` bypasses shared connection discovery, stored browser credentials and authentication broadcasts. The prepared descriptor retains that setting across token updates and reuse. Shared behavior remains the default. `DevframeConnectionDiscoveryOptions` names the unresolved setup input and accepts either shared or isolated mode. Its JSDoc explains that the shared authentication channel carries no backend identity, so it can mix credentials between independent connections; isolated clients still authenticate through their own RPC transport.
 
 ```ts
 const connection = await setupDevframeConnection({
