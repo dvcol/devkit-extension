@@ -35,10 +35,10 @@ export async function runConsumer(): Promise<string> {
     });
     const service = installed.services[0];
     const plugin = installed.plugins[0];
-    check(service?.status === 'admitted', 'Packed service was not admitted');
-    check(plugin?.status === 'admitted', 'Packed action plugin was not admitted');
-    check(service.handle.snapshot().status === 'ready', 'Packed service was not ready');
-    check(plugin.handle.snapshot().status === 'ready', 'Packed plugin was not ready');
+    check(service !== undefined, 'Packed service was not installed');
+    check(plugin !== undefined, 'Packed action plugin was not installed');
+    check(service.snapshot().status === 'ready', 'Packed service was not ready');
+    check(plugin.snapshot().status === 'ready', 'Packed plugin was not ready');
     checkSubscriptions(source, 1);
     const result = await provider.invoke({ action: increaseCounterAction, input });
     const typedResult: number = result;
