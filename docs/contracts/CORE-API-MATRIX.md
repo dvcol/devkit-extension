@@ -95,3 +95,11 @@ The server handler deliberately finishes after the socket closes, proving that c
 | Browser entry and real hosts | `checks/browser-build.ts`; `demo:browser devframe` / `devtools` | Built exports, no Node/runtime modules; actual browser action and retained-state reload on both hosts. Manual smoke is distinct from automatic socket/build checks. |
 
 Browser capability authority, automatic endpoint discovery, renderer/extension integration and full host conformance remain open. No Chromium/Firefox extension cell is satisfied by the native browser example.
+
+## Two-layer applicability evidence, 2026-09-27
+
+`packages/server/tests/applicability.test.ts` opens four authenticated native connections between two clients and two backends. It proves realm-selected broadcast, schema-defined resource input, per-provider `applied`/`not-applicable` results, independent state reads, the same guard on direct capability invocation, continued provider availability and one client's continued operation after the other closes. Catalogs expose no generic target metadata.
+
+`packages/core/tests/requests.type-test.ts` verifies custom resource-reference inference, operation/input correlation and rejection of the removed top-level target option. `packages/runtime/tests/provider-requests.test.ts` verifies that payload fields named `target` and `signal` remain ordinary input. Provider incarnation, activation ownership and no replay remain covered by the existing lifecycle/routing tests.
+
+These are command/result and explicit-read checks. Native state subscription/snapshot ordering, cross-client live updates and reconnect recovery remain requirements of issue 8; no event-delivery guarantee or browser-extension cell is implied.
