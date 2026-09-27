@@ -1,8 +1,8 @@
 # @devkit/server
 
-Private Node adapter for installing portable services and plugins into an existing Devframe hub or Vite DevTools kit context. It delegates admission, activation, calls and cleanup to `@devkit/runtime`. The native host remains responsible for its RPC, shared state, HTTP server and reload lifecycle.
+Private Node adapter for starting portable services and plugins into an existing Devframe hub or Vite DevTools kit context. It delegates admission, activation, calls and cleanup to `@devkit/runtime`. The native host remains responsible for its RPC, shared state, HTTP server and reload lifecycle.
 
-## Install a service in a real native context
+## Start a provider in a real native context
 
 This example uses public package imports. The embedding application supplies the actual context created by `createHubContext`, `createKitContext`, or an upstream host setup callback. Zod supplies the operation's Standard Schema validators; the SDK does not require Zod specifically.
 
@@ -10,8 +10,8 @@ This example uses public package imports. The embedding application supplies the
 import { defineCapability, defineOperation, defineService } from '@devkit/core';
 import {
   devframeHubContext,
-  installDevframeProvider,
-  installDevToolsProvider,
+  createDevframeProvider,
+  createDevToolsProvider,
   serverExecution,
 } from '@devkit/server';
 import type { ServerComposition } from '@devkit/server';
@@ -65,18 +65,51 @@ const composition = {
   services: [counterService],
 } satisfies ServerComposition;
 
-export function installInHub(context: DevframeHubContext) {
-  return installDevframeProvider(context, composition);
+export function createInHub(context: DevframeHubContext) {
+  return createDevframeProvider({ context, ...composition });
 }
 
-export function installInDevTools(context: KitNodeContext) {
-  return installDevToolsProvider(context, composition);
+export function createInDevTools(context: KitNodeContext) {
+  return createDevToolsProvider({ context, ...composition });
 }
 ```
 
-Choose the installer matching the actual context and retain its returned handle. Both functions settle after the initial activation pass. The same service declaration works in either host because a genuine `KitNodeContext` extends `DevframeHubContext`. This example uses native shared state directly; the adapter adds no state store or RPC server.
+Choose the factory matching the actual context and retain its returned handle. Both functions settle after the initial activation pass. The same service declaration works in either host because a genuine `KitNodeContext` extends `DevframeHubContext`. This example uses native shared state directly; the adapter adds no state store or RPC server.
 
 `ServerComposition` also accepts `plugins`, `strict`, explicit custom contribution-kind `kinds`, and an optional local `report(diagnostic, cause?)` sink. Strict admission is the runtime default. With `strict: false`, supported recoverable admission conflicts produce ordered skipped results. Native causes stay local; portable diagnostics and installation snapshots do not include them. Without a supplied sink, the adapter emits warnings/errors through the Node console.
+
+## Plugins and remote exposure in the same startup call
+
+The shared example starts its services, plugins and native RPC exposure together:
+
+```ts
+import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
+import { counterActionsPlugin, counterService } from '@devkit/example-server-contexts';
+import { createDevframeProvider } from '@devkit/server';
+
+const provider = await createDevframeProvider({
+  context,
+  providerId: 'example.remote',
+  services: [counterService],
+  plugins: [counterActionsPlugin],
+  expose: {
+    actions: [increaseCounterAction],
+    capabilities: [counterCapability],
+  },
+});
+```
+
+The application supplies its existing native `context`. `createDevToolsProvider` accepts the same object shape with an actual kit context. These factories replace the old two-argument `installDevframeProvider` / `installDevToolsProvider` exports. No separate exposure call is needed. Runtime installation remains available when adding a definition later.
+
+`expose` contains contracts, not implementations. Unlisted contracts remain local. Each listed action and each listed capability operation gets a named native method with arguments `(expectedIncarnation, input)` and its original input/output Standard Schemas. The native host retains authentication, authorization, serialization and request correlation. The adapter adds no server, codec, agent dispatcher or mandatory trust callback.
+
+Native method names use `devkit:` followed by a JSON-encoded identity tuple: `[providerId, "action", actionId, version]` or `[providerId, "capability", capabilityId, version, operationName]`. This is collision-safe naming for native RPC, not a new payload codec. For example, the counter action above is `devkit:["example.remote","action","example.counter.increase",1]`. Calls return the operation value directly. Methods use native action semantics and do not opt into result caching or agent-tool advertisement.
+
+The method set belongs to the native host. Disabling/disposal changes implementation availability; definitions remain registered. A successor on the same context can reuse the same exposed contract set after successful cleanup and receives a new incarnation. Reordered exposure lists are equivalent. Changing the set requires a fresh native host. Omitting `expose` on a successor leaves retained methods unavailable. Existing schemas remain fixed for that contract version; incompatible schema changes require a new version and host declaration.
+
+All names and target requirements are checked before native registration. Foreign method collisions and duplicate descriptors reject setup. Required-target operations reject with a clear unsupported-authority error. Definitions are unavailable until startup completes. Native registry observers can throw after insertion; such a failure leaves retained methods unavailable and requires a fresh host. The adapter does not claim atomic native rollback or mutate private registry internals.
+
+Default strict startup arrays and later `install` / `replace` calls contain direct handles. Relaxed mode retains `{ status: 'admitted', handle }` or `{ status: 'skipped', diagnostic }`; a dynamic boolean strictness returns the union. Handles expose `snapshot`, `subscribe`, `enable`, `disable`, `retry` and `dispose`. A successfully admitted handle can still report waiting or failed contributions.
 
 ## Handles and native resources
 
@@ -121,7 +154,7 @@ pnpm --filter @devkit/server test
 
 The build filter includes this package's workspace dependencies. The tests create genuine headless hub and kit contexts. They exercise native shared state, services/actions, waiting activation, replacement, custom kinds, setup/cleanup failure and ownership. One test opens an ephemeral loopback HTTP server and verifies it still responds after adapter disposal; restricted sandboxes may require permission for that listener. Tests close their own native hosts afterward.
 
-This is currently a local integration package. It does not publish provider discovery, bind portable calls to a remote transport, implement a client router, render a UI, or install Vite reload/close hooks. The [native Vite examples](../../examples/vite-hosts/README.md) provide example-local lifecycle wiring and real server/config-watcher tests for both released hosts. Their failure, preview and browser-HMR limitations remain explicit; this package does not yet expose a general Vite integration API.
+This package supports local integration and explicit target-free native RPC exposure. It does not yet publish a remote provider catalog/discovery or provide a remote `ProviderConnection` for the shared client. Server-side unary cancellation on client disconnect remains unsupported. It does not render a UI or install Vite reload/close hooks. The [native Vite examples](../../examples/vite-hosts/README.md) provide example-local lifecycle wiring and real server/config-watcher tests for both released hosts. Their failure, preview and browser-HMR limitations remain explicit; this package does not yet expose a general Vite integration API.
 
 The package is private and relies on the repository's exact-version declaration patches and dependency metadata for the released Devframe/hub/kit graph. The `devframe@1.0.0` patch also backports opt-in RPC connection isolation from [Devframe draft PR 401](https://github.com/devframes/devframe/pull/401). SDK-owned browser connections use `connection: { isolated: true }` when discovering an endpoint, or set `isolated: true` on a complete `DevframeConnection`. The returned descriptor retains the setting, so reconnecting with `{ connection }` keeps credentials local without another flag. Omitting `isolated` or setting it to `false` preserves shared behavior.
 

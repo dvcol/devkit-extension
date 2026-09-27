@@ -1,6 +1,6 @@
 import { viteDevframeHub } from '@devframes/vite/hub';
 import { counterActionsPlugin, counterService } from '@devkit/example-server-contexts';
-import { installDevframeProvider, installDevToolsProvider } from '@devkit/server';
+import { createDevframeProvider, createDevToolsProvider } from '@devkit/server';
 import type { ServerComposition, ServerProviderHandle } from '@devkit/server';
 import { DevTools } from '@vitejs/devtools';
 import type { Plugin, PreviewServer, ViteDevServer } from 'vite';
@@ -37,7 +37,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
         mcp: false,
         register: false,
         configure(context) {
-          lifetime.prepare(() => installDevframeProvider(context, composition));
+          lifetime.prepare(() => createDevframeProvider({ context: context, ...composition }));
         },
       }),
     ];
@@ -47,7 +47,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
       ...lifetime.plugin(),
       devtools: {
         setup(context) {
-          lifetime.prepare(() => installDevToolsProvider(context, composition));
+          lifetime.prepare(() => createDevToolsProvider({ context: context, ...composition }));
         },
       },
     },

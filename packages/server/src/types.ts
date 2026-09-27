@@ -1,3 +1,6 @@
+import type { DevframeHubContext } from '@devframes/hub/node';
+import type { KitNodeContext } from '@vitejs/devtools-kit/node';
+
 import type {
   ActionDescriptor,
   ActionInvocationRequest,
@@ -19,6 +22,8 @@ import type {
 export interface ServerComposition<Strict extends boolean = true> {
   readonly providerId: string;
   readonly strict?: Strict;
+  /** Explicit host-owned native RPC contracts; omitted contracts stay local. */
+  readonly expose?: ServerExposure;
   readonly services?: readonly ServiceDeclaration[];
   readonly plugins?: readonly PluginDefinition[];
   readonly kinds?: readonly ContributionKindInstaller<ContributionKindDescriptor>[];
@@ -26,7 +31,25 @@ export interface ServerComposition<Strict extends boolean = true> {
   readonly report?: (diagnostic: RuntimeDiagnostic, cause?: unknown) => void;
 }
 
-/** Local integration only. This handle does not publish discovery or create a transport. */
+/** The native host owns these named methods independently of implementation availability. */
+export interface ServerExposure {
+  readonly actions?: readonly ActionDescriptor[];
+  readonly capabilities?: readonly CapabilityDescriptor[];
+}
+
+export interface DevframeProviderOptions<
+  Strict extends boolean = true,
+> extends ServerComposition<Strict> {
+  readonly context: DevframeHubContext;
+}
+
+export interface DevToolsProviderOptions<
+  Strict extends boolean = true,
+> extends ServerComposition<Strict> {
+  readonly context: KitNodeContext;
+}
+
+/** Installs into the supplied native host; discovery and transport remain host-owned. */
 export interface ServerProviderHandle<Strict extends boolean = true> {
   readonly provider: ProviderDescriptor;
   readonly catalog: ProviderCatalog;

@@ -8,21 +8,16 @@ import { join } from 'node:path';
 import { initHub } from '@devframes/hub/initiate';
 import { createInteractiveAuth } from 'devframe/recipes/interactive-auth';
 
-import { counterActionsPlugin, counterService } from './definitions.js';
-import { registerRemoteCounter } from './remote-counter.js';
-import { createRemoteContext } from './remote-context.js';
+import { registerRemoteProbes } from './remote-probes.js';
+import { createRemoteContext, remoteComposition } from './remote-context.js';
 
 /** Example-owned HTTP/RPC lifetime; contribution disposal does not remove host RPC definitions. */
 export async function createRemoteHost(mode: 'devframe' | 'devtools') {
   const directory = await mkdtemp(join(tmpdir(), 'devkit-remote-example-'));
   await using cleanup = new AsyncDisposableStack();
   cleanup.defer(() => rm(directory, { recursive: true, force: true }));
-  const composition = {
-    providerId: `example.${mode}-remote`,
-    services: [counterService],
-    plugins: [counterActionsPlugin],
-  };
-  const { context: nativeContext, install } = await createRemoteContext(mode, directory);
+
+  const { context: nativeContext, createProvider } = await createRemoteContext(mode, directory);
   const token = randomUUID();
   const hub = initHub({
     context: nativeContext,
@@ -37,9 +32,9 @@ export async function createRemoteHost(mode: 'devframe' | 'devtools') {
   cleanup.defer(() => hub.close());
   cleanup.defer(hub.attach(server));
   await hub.ready;
-  const provider = await install(composition);
+  const provider = await createProvider(remoteComposition);
   cleanup.defer(() => provider.dispose());
-  const counter = registerRemoteCounter(nativeContext, provider);
+  const probes = registerRemoteProbes(nativeContext);
   let currentProvider = provider;
   const origin = await listen(server);
   const lifetime = cleanup.move();
@@ -47,16 +42,15 @@ export async function createRemoteHost(mode: 'devframe' | 'devtools') {
     context: nativeContext,
     hub,
     provider,
-    counter,
+    probes,
     token,
     url: `${origin.replace('http:', 'ws:')}/__devkit-remote/__ws`,
     origin,
     async replace() {
       await currentProvider.dispose();
-      const successor = await install(composition);
+      const successor = await createProvider(remoteComposition);
       lifetime.defer(() => successor.dispose());
       currentProvider = successor;
-      counter.replace(successor);
       return successor;
     },
     close: () => lifetime.disposeAsync(),

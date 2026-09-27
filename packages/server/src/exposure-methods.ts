@@ -1,0 +1,87 @@
+import { defineActionContract, defineCapability } from '@devkit/core';
+import type { OperationDefinition } from '@devkit/core';
+
+import type { ServerComposition, ServerProviderHandle } from './types.js';
+
+export type ExposedProvider = Pick<
+  ServerProviderHandle<boolean>,
+  'provider' | 'invoke' | 'resolve'
+>;
+
+export interface ExposedMethod {
+  readonly name: string;
+  readonly operation: OperationDefinition;
+  invoke(provider: ExposedProvider, input: unknown): Promise<unknown>;
+}
+
+/** A native method name encodes a tuple so arbitrary contract identifiers cannot collide. */
+export function exposureMethods(composition: ServerComposition<boolean>): readonly ExposedMethod[] {
+  const methods: ExposedMethod[] = [];
+  const capabilities = new Set<string>();
+  for (const descriptor of composition.expose?.actions ?? []) {
+    const action = defineActionContract({
+      id: descriptor.id,
+      version: descriptor.version,
+      operation: descriptor.operation,
+    });
+    methods.push({
+      name: `devkit:${JSON.stringify([composition.providerId, 'action', action.id, action.version])}`,
+      operation: action.operation,
+      invoke: (provider, input) => provider.invoke({ action, input }),
+    });
+  }
+  for (const descriptor of composition.expose?.capabilities ?? []) {
+    const capability = defineCapability({
+      id: descriptor.id,
+      version: descriptor.version,
+      operations: descriptor.operations,
+    });
+    const identity = JSON.stringify([capability.id, capability.version]);
+    if (capabilities.has(identity))
+      throw new TypeError(`Duplicate exposed capability: ${identity}`);
+    capabilities.add(identity);
+    for (const [operationName, operation] of Object.entries(capability.operations)) {
+      methods.push({
+        name: `devkit:${JSON.stringify([composition.providerId, 'capability', capability.id, capability.version, operationName])}`,
+        operation,
+        async invoke(provider, input) {
+          const resolution = await provider.resolve({ capability });
+          if (resolution.status !== 'available')
+            throw new Error(
+              `Capability ${capability.id}@${capability.version} is unavailable: ${resolution.reason}`,
+            );
+          const handler = resolution.binding.api[operationName];
+          if (handler === undefined)
+            throw new Error(`Missing capability operation ${operationName}`);
+          return handler(input);
+        },
+      });
+    }
+  }
+  validateMethods(methods);
+  return methods;
+}
+
+function validateMethods(methods: readonly ExposedMethod[]): void {
+  const names = new Set<string>();
+  for (const method of methods) {
+    if (names.has(method.name)) throw new TypeError(`Duplicate exposed contract: ${method.name}`);
+    if (method.operation.target !== 'none')
+      throw new TypeError(
+        `Cannot expose ${method.name}: remote target authority is not implemented`,
+      );
+    names.add(method.name);
+  }
+}
+
+/** Native RPC validates the incarnation separately from the unchanged business schema. */
+export const incarnationSchema = {
+  '~standard': {
+    version: 1,
+    vendor: '@devkit/server',
+    validate(value: unknown) {
+      if (typeof value === 'string' && value.trim().length > 0) return { value };
+      return { issues: [{ message: 'Expected a non-empty provider incarnation' }] };
+    },
+  },
+} as const;

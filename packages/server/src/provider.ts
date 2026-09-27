@@ -5,10 +5,17 @@ import type { NativeContextAccess, ProviderDescriptor, RuntimeDiagnostic } from 
 import { createProviderLifecycle } from '@devkit/runtime';
 import type { ProviderLifecycle } from '@devkit/runtime';
 import type { DevframeHubContext } from '@devframes/hub/node';
-import type { KitNodeContext } from '@vitejs/devtools-kit/node';
+
+import { prepareExposure } from './exposure.js';
+import type { PreparedExposure } from './exposure.js';
 
 import { nativeAccess, serverExecution, serverRealm } from './native.js';
-import type { ServerComposition, ServerProviderHandle } from './types.js';
+import type {
+  DevframeProviderOptions,
+  DevToolsProviderOptions,
+  ServerComposition,
+  ServerProviderHandle,
+} from './types.js';
 
 const installedContexts = new WeakSet<DevframeHubContext>();
 
@@ -43,28 +50,32 @@ async function install(
     ...(composition.kinds === undefined ? {} : { kinds: composition.kinds }),
   });
   installedContexts.add(context);
-  const handle = await startProvider(context, composition, lifecycle, provider);
+  const handle = await startProvider({ ...composition, context }, lifecycle, provider);
   return handle;
 }
 
 async function startProvider(
-  context: DevframeHubContext,
-  composition: ServerComposition<boolean>,
+  composition: DevframeProviderOptions<boolean>,
   lifecycle: ProviderLifecycle<boolean>,
   provider: ProviderDescriptor,
 ): Promise<ServerProviderHandle<boolean>> {
+  const { context } = composition;
   let disposal: Promise<void> | undefined;
+  let exposure: PreparedExposure | undefined;
   async function release(): Promise<void> {
     await lifecycle.dispose();
     installedContexts.delete(context);
   }
   function dispose(): Promise<void> {
-    disposal ??= release();
+    if (disposal !== undefined) return disposal;
+    exposure?.clear();
+    disposal = release();
     return disposal;
   }
   try {
+    exposure = prepareExposure(context, composition);
     const startup = await lifecycle.startup(composition);
-    return Object.freeze({
+    const handle = Object.freeze({
       provider,
       catalog: lifecycle.catalog,
       startup,
@@ -74,56 +85,53 @@ async function startProvider(
       invoke: (request) => lifecycle.invoke(request),
       dispose,
     } satisfies ServerProviderHandle<boolean>);
+    exposure?.publish(handle);
+    return handle;
   } catch (startupFailure) {
-    try {
-      await dispose();
-    } catch (cleanupFailure) {
-      throw new AggregateError(
-        [startupFailure, cleanupFailure],
-        'Provider startup cleanup failed',
-        {
-          cause: cleanupFailure,
-        },
-      );
-    }
-    throw startupFailure;
+    return rejectStartup(dispose, startupFailure);
   }
 }
 
-export function installDevframeProvider(
-  context: DevframeHubContext,
-  composition: ServerComposition<false> & { readonly strict: false },
-): Promise<ServerProviderHandle<false>>;
-export function installDevframeProvider(
-  context: DevframeHubContext,
-  composition: ServerComposition,
-): Promise<ServerProviderHandle>;
-export function installDevframeProvider(
-  context: DevframeHubContext,
-  composition: ServerComposition<boolean>,
-): Promise<ServerProviderHandle<boolean>>;
-export function installDevframeProvider(
-  context: DevframeHubContext,
-  composition: ServerComposition<boolean>,
-): Promise<ServerProviderHandle<boolean>> {
-  return install(context, nativeAccess(context), composition);
+async function rejectStartup(
+  dispose: () => Promise<void>,
+  startupFailure: unknown,
+): Promise<never> {
+  try {
+    await dispose();
+  } catch (cleanupFailure) {
+    throw new AggregateError([startupFailure, cleanupFailure], 'Provider startup cleanup failed', {
+      cause: cleanupFailure,
+    });
+  }
+  throw startupFailure;
 }
 
-export function installDevToolsProvider(
-  context: KitNodeContext,
-  composition: ServerComposition<false> & { readonly strict: false },
+export function createDevframeProvider(
+  options: DevframeProviderOptions<false> & { readonly strict: false },
 ): Promise<ServerProviderHandle<false>>;
-export function installDevToolsProvider(
-  context: KitNodeContext,
-  composition: ServerComposition,
+export function createDevframeProvider(
+  options: DevframeProviderOptions,
 ): Promise<ServerProviderHandle>;
-export function installDevToolsProvider(
-  context: KitNodeContext,
-  composition: ServerComposition<boolean>,
+export function createDevframeProvider(
+  options: DevframeProviderOptions<boolean>,
 ): Promise<ServerProviderHandle<boolean>>;
-export function installDevToolsProvider(
-  context: KitNodeContext,
-  composition: ServerComposition<boolean>,
+export function createDevframeProvider(
+  options: DevframeProviderOptions<boolean>,
 ): Promise<ServerProviderHandle<boolean>> {
-  return install(context, nativeAccess(context, context), composition);
+  return install(options.context, nativeAccess(options.context), options);
+}
+
+export function createDevToolsProvider(
+  options: DevToolsProviderOptions<false> & { readonly strict: false },
+): Promise<ServerProviderHandle<false>>;
+export function createDevToolsProvider(
+  options: DevToolsProviderOptions,
+): Promise<ServerProviderHandle>;
+export function createDevToolsProvider(
+  options: DevToolsProviderOptions<boolean>,
+): Promise<ServerProviderHandle<boolean>>;
+export function createDevToolsProvider(
+  options: DevToolsProviderOptions<boolean>,
+): Promise<ServerProviderHandle<boolean>> {
+  return install(options.context, nativeAccess(options.context, options.context), options);
 }

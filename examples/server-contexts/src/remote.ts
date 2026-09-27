@@ -1,4 +1,9 @@
-import { connectRemoteCounter } from './remote-client.js';
+import {
+  connectRemoteCounter,
+  counterActionMethod,
+  counterIncreaseMethod,
+  counterReadMethod,
+} from './remote-client.js';
 import { createRemoteHost } from './remote-host.js';
 
 type RemoteHost = Awaited<ReturnType<typeof createRemoteHost>>;
@@ -13,22 +18,26 @@ export async function runRemoteDemo(mode: 'devframe' | 'devtools') {
   cleanup.defer(denied.close);
   const trusted = connectRemoteCounter(host.url, host.token);
   cleanup.defer(trusted.close);
-  cleanup.defer(host.counter.finish);
+  cleanup.defer(host.probes.finish);
   const calls = await exerciseNativeCalls(host, trusted, denied);
   const pending = rejection(trusted.client.$call('example:counter:pending'));
-  await host.counter.started;
+  await Promise.race([
+    host.probes.started,
+    pending.then((message) => {
+      throw new Error(`Native pending probe failed before dispatch: ${message}`);
+    }),
+  ]);
   await host.hub.close();
   const disconnected = await pending;
-  host.counter.finish();
-  await host.counter.completed;
+  host.probes.finish();
+  await host.probes.completed;
   return {
     mode,
     ...calls,
     disconnected,
     clientClosed: trusted.client.$closed,
     serverCompletedAfterDisconnect: true,
-    nativeMethodCount: host.context.rpc.list().filter((name) => name.startsWith('example:counter:'))
-      .length,
+    nativeMethodCount: host.context.rpc.list().filter((name) => name.startsWith('devkit:')).length,
   };
 }
 
@@ -39,29 +48,48 @@ async function exerciseNativeCalls(
 ) {
   const incarnation = host.provider.provider.incarnation;
   const unauthorized = await rejection(
-    denied.client.$call('example:counter:increase', incarnation, { amount: 100 }),
+    denied.client.$call(counterActionMethod, incarnation, { amount: 100 }),
   );
-  const accepted = await trusted.client.$call('example:counter:increase', incarnation, {
-    amount: 3,
+  const accepted = {
+    value: await trusted.client.$call(counterActionMethod, incarnation, { amount: 3 }),
+    trusted: await trusted.client.$call('example:counter:trusted'),
+  };
+  const readValue = await trusted.client.$call(counterReadMethod, incarnation, {});
+  const capabilityValue = await trusted.client.$call(counterIncreaseMethod, incarnation, {
+    amount: 2,
   });
   const invalidInput = await rejection(
-    trusted.client.$call('example:counter:increase', incarnation, { amount: Number.NaN }),
+    trusted.client.$call(counterActionMethod, incarnation, { amount: Number.NaN }),
   );
   await host.provider.dispose();
   const disposed = await rejection(
-    trusted.client.$call('example:counter:increase', incarnation, { amount: 100 }),
+    trusted.client.$call(counterActionMethod, incarnation, { amount: 100 }),
   );
   const hostAlive = await fetch(host.origin).then((response) => response.text());
   const successor = await host.replace();
   const stale = await rejection(
-    trusted.client.$call('example:counter:increase', incarnation, { amount: 100 }),
+    trusted.client.$call(counterActionMethod, incarnation, { amount: 100 }),
   );
-  const replaced = await trusted.client.$call(
-    'example:counter:increase',
+  const replacementValue = await trusted.client.$call(
+    counterActionMethod,
     successor.provider.incarnation,
     { amount: 4 },
   );
-  return { unauthorized, accepted, invalidInput, disposed, hostAlive, stale, replaced };
+  const replaced = {
+    value: replacementValue,
+    trusted: await trusted.client.$call('example:counter:trusted'),
+  };
+  return {
+    unauthorized,
+    accepted,
+    readValue,
+    capabilityValue,
+    invalidInput,
+    disposed,
+    hostAlive,
+    stale,
+    replaced,
+  };
 }
 
 async function rejection(work: Promise<unknown>): Promise<string> {

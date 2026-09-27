@@ -100,6 +100,8 @@ See the [upstream alignment review](./docs/research/upstream-alignment-review.md
 
 ## Authoring and routing identifiers
 
+An **installation result** is a direct installation handle under strict admission. Relaxed admission returns an admitted handle envelope or a skipped diagnostic; a skipped definition owns no handle. A handle reports current activation status separately from admission.
+
 A **host-owned remote method** is a named native RPC entry point for an explicitly exposed contract. Its registration lasts for the host lifetime, independently of contribution implementation availability. Disabling or disposing an implementation makes calls unavailable; the method's presence alone does not establish readiness or authorization.
 
 `defineActionContract({ id, version, operation, routing? })` describes a callable action and an optional client-visible route default. `defineAction({ contract, id, execution, requires?, handler })` implements it. `defineService({ capability, id, execution, requires?, setup })` implements a capability. All definition helpers use one object; “contribution” describes their shared ownership model, not a second action API.

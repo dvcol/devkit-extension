@@ -2,7 +2,7 @@ import { createHubContext } from '@devframes/hub/node';
 import { createClient, RoutingError } from '@devkit/client';
 import type { Client } from '@devkit/client';
 import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
-import { installDevframeProvider, installDevToolsProvider } from '@devkit/server';
+import { createDevframeProvider, createDevToolsProvider } from '@devkit/server';
 import type { ServerProviderHandle } from '@devkit/server';
 import { createKitContext } from '@vitejs/devtools-kit/node';
 import { counterActionsPlugin, counterService, readCounterCommandId } from './definitions.js';
@@ -68,11 +68,13 @@ export async function runRoutingDemo() {
     let client: Client | undefined;
     try {
       const composition = { services: [counterService], plugins: [counterActionsPlugin] };
-      devframe = await installDevframeProvider(devframeHost.context, {
+      devframe = await createDevframeProvider({
+        context: devframeHost.context,
         ...composition,
         providerId: devframeRoute.provider,
       });
-      devtools = await installDevToolsProvider(devtoolsHost.context, {
+      devtools = await createDevToolsProvider({
+        context: devtoolsHost.context,
         ...composition,
         providerId: devtoolsRoute.provider,
       });

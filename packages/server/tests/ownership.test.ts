@@ -2,7 +2,7 @@ import { defineService } from '@devkit/core';
 import type { RuntimeDiagnostic } from '@devkit/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import { installDevframeProvider, installDevToolsProvider, serverExecution } from '../src/index.js';
+import { createDevframeProvider, createDevToolsProvider, serverExecution } from '../src/index.js';
 
 import { admitted, counterCapability, counterService, deferred } from './fixtures.js';
 import { createDevframeHost, createDevToolsHost, listenHost } from './host-fixtures.js';
@@ -21,19 +21,21 @@ describe('native host ownership', () => {
         return { increment: (value) => value };
       },
     });
-    const installing = installDevToolsProvider(host.context, {
+    const installing = createDevToolsProvider({
+      context: host.context,
       providerId: 'example.stable',
       services: [service],
     });
     await expect(
-      installDevframeProvider(host.context, { providerId: 'example.other' }),
+      createDevframeProvider({ context: host.context, providerId: 'example.other' }),
     ).rejects.toThrow('already owns');
     setup.resolve();
     const provider = await installing;
     const disposal = provider.dispose();
     expect(provider.dispose()).toBe(disposal);
     await disposal;
-    const replacement = await installDevframeProvider(host.context, {
+    const replacement = await createDevframeProvider({
+      context: host.context,
       providerId: 'example.stable',
     });
     expect(replacement.provider.id).toBe(provider.provider.id);
@@ -58,7 +60,8 @@ describe('native host ownership', () => {
     });
     const report = vi.fn<(diagnostic: RuntimeDiagnostic, cause?: unknown) => void>();
     await expect(
-      installDevframeProvider(host.context, {
+      createDevframeProvider({
+        context: host.context,
         providerId: 'example.strict',
         strict: true,
         services: [service, service],
@@ -67,7 +70,8 @@ describe('native host ownership', () => {
     ).rejects.toMatchObject({ code: 'duplicate-registration' });
     expect(setup).not.toHaveBeenCalled();
     expect(report).toHaveBeenCalled();
-    const replacement = await installDevframeProvider(host.context, {
+    const replacement = await createDevframeProvider({
+      context: host.context,
       providerId: 'example.strict',
     });
     expect(replacement.provider.id).toBe('example.strict');
@@ -91,7 +95,8 @@ describe('native host ownership', () => {
         return { increment: (value) => value };
       },
     });
-    const provider = await installDevframeProvider(host.context, {
+    const provider = await createDevframeProvider({
+      context: host.context,
       providerId: 'example.blocked',
       services: [service],
       report,
@@ -102,17 +107,20 @@ describe('native host ownership', () => {
     expect(cleanup).toHaveBeenCalledExactlyOnceWith();
     expect(admitted(provider.startup.services[0]).snapshot().status).toBe('cleanup-blocked');
     await expect(
-      installDevframeProvider(host.context, { providerId: 'example.replacement' }),
+      createDevframeProvider({ context: host.context, providerId: 'example.replacement' }),
     ).rejects.toThrow('already owns');
   });
 
   it('rejects an empty configured identity before claiming a native context', async () => {
     expect.assertions(2);
     const host = await createDevframeHost();
-    await expect(installDevframeProvider(host.context, { providerId: '  ' })).rejects.toThrow(
-      'must not be empty',
-    );
-    const provider = await installDevframeProvider(host.context, { providerId: 'example.valid' });
+    await expect(
+      createDevframeProvider({ context: host.context, providerId: '  ' }),
+    ).rejects.toThrow('must not be empty');
+    const provider = await createDevframeProvider({
+      context: host.context,
+      providerId: 'example.valid',
+    });
     expect(provider.provider.id).toBe('example.valid');
     await provider.dispose();
   });
@@ -121,7 +129,8 @@ describe('native host ownership', () => {
     expect.assertions(3);
     const host = await createDevframeHost();
     const origin = await listenHost(host.httpServer);
-    const provider = await installDevframeProvider(host.context, {
+    const provider = await createDevframeProvider({
+      context: host.context,
       providerId: 'example.http',
       services: [counterService],
     });

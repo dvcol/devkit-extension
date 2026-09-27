@@ -1,12 +1,19 @@
 import { createRpcClient } from 'devframe/rpc/client';
 import { createWsRpcChannel } from 'devframe/rpc/transports/ws-client';
 
+export const counterActionMethod =
+  'devkit:["example.remote","action","example.counter.increase",1]';
+export const counterIncreaseMethod =
+  'devkit:["example.remote","capability","example.counter",1,"increase"]';
+export const counterReadMethod =
+  'devkit:["example.remote","capability","example.counter",1,"read"]';
+
 type RemoteCounterFunctions = {
-  'example:counter:increase': (
-    incarnation: string,
-    input: { amount: number },
-  ) => Promise<{ value: number; trusted: boolean }>;
+  [counterActionMethod]: (incarnation: string, input: { amount: number }) => Promise<number>;
+  [counterIncreaseMethod]: (incarnation: string, input: { amount: number }) => Promise<number>;
+  [counterReadMethod]: (incarnation: string, input: Record<string, never>) => Promise<number>;
   'example:counter:pending': () => Promise<string>;
+  'example:counter:trusted': () => Promise<boolean>;
 };
 
 /** Node's native WebSocket exercises the published channel without browser globals or mocks. */

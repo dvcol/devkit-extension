@@ -2,7 +2,7 @@ import { Server as HttpServer } from 'node:http';
 
 import { initHub } from '@devframes/hub/initiate';
 import { counterActionsPlugin, counterService } from '@devkit/example-server-contexts';
-import { installDevframeProvider, installDevToolsProvider } from '@devkit/server';
+import { createDevframeProvider, createDevToolsProvider } from '@devkit/server';
 import type { ServerProviderHandle } from '@devkit/server';
 import { createDevToolsContext, createDevToolsHub } from '@vitejs/devtools';
 import type { Plugin, PreviewServer } from 'vite';
@@ -55,7 +55,7 @@ class PreviewLifetime {
         register: false,
         mcp: false,
         configure: async (context) => {
-          this.provider = await installDevframeProvider(context, composition);
+          this.provider = await createDevframeProvider({ context, ...composition });
         },
       });
       this.closeHost = () => nativeHost.close();
@@ -70,7 +70,7 @@ class PreviewLifetime {
       host: '127.0.0.1',
     });
     this.closeHost = () => nativeHost.close();
-    this.provider = await installDevToolsProvider(context, composition);
+    this.provider = await createDevToolsProvider({ context, ...composition });
     server.middlewares.use(nativeHost.middleware);
   }
 

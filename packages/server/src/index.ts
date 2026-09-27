@@ -1,4 +1,4 @@
-export { installDevframeProvider, installDevToolsProvider } from './install.js';
+export { createDevframeProvider, createDevToolsProvider } from './provider.js';
 export {
   devframeContext,
   devframeHubContext,
@@ -6,4 +6,10 @@ export {
   serverExecution,
   serverRealm,
 } from './native.js';
-export type { ServerComposition, ServerProviderHandle } from './types.js';
+export type {
+  DevframeProviderOptions,
+  DevToolsProviderOptions,
+  ServerComposition,
+  ServerExposure,
+  ServerProviderHandle,
+} from './types.js';

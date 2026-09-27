@@ -3,7 +3,7 @@ import type { ContributionKindInstaller } from '@devkit/core';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
-import { devframeHubContext, installDevframeProvider, serverExecution } from '../src/index.js';
+import { devframeHubContext, createDevframeProvider, serverExecution } from '../src/index.js';
 
 import { admitted, counterService } from './fixtures.js';
 import { createDevframeHost } from './host-fixtures.js';
@@ -32,7 +32,8 @@ describe('server contribution kinds and diagnostics', () => {
   it('runs an explicit kind installer against the real native host and owns its cleanup', async () => {
     expect.assertions(3);
     const host = await createDevframeHost();
-    const provider = await installDevframeProvider(host.context, {
+    const provider = await createDevframeProvider({
+      context: host.context,
       providerId: 'example.extension',
       kinds: [commandInstaller],
       plugins: [
@@ -60,7 +61,8 @@ describe('server contribution kinds and diagnostics', () => {
     const output = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const host = await createDevframeHost();
     try {
-      const provider = await installDevframeProvider(host.context, {
+      const provider = await createDevframeProvider({
+        context: host.context,
         providerId: 'example.diagnostics',
         strict: false,
         services: [counterService, counterService],

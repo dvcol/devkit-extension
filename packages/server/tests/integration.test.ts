@@ -6,8 +6,8 @@ import {
   devframeContext,
   devframeHubContext,
   devToolsContext,
-  installDevframeProvider,
-  installDevToolsProvider,
+  createDevframeProvider,
+  createDevToolsProvider,
   serverExecution,
 } from '../src/index.js';
 
@@ -36,7 +36,8 @@ describe('local server provider integration', () => {
       title: 'Unrelated command',
       handler: () => 'still-owned',
     });
-    const provider = await installDevframeProvider(host.context, {
+    const provider = await createDevframeProvider({
+      context: host.context,
       providerId: 'example.server',
       services: [counterService],
       plugins: [counterPlugin],
@@ -73,7 +74,8 @@ describe('local server provider integration', () => {
   it('exposes the actual layered kit context without inventing a Vite server', async () => {
     expect.assertions(10);
     const host = await createDevToolsHost();
-    const provider = await installDevToolsProvider(host.context, {
+    const provider = await createDevToolsProvider({
+      context: host.context,
       providerId: 'example.kit',
       services: [counterService],
       plugins: [counterPlugin],
@@ -99,7 +101,8 @@ describe('local server provider integration', () => {
   it('activates waiting actions after dynamic service admission and delegates replacement', async () => {
     expect.assertions(15);
     const host = await createDevframeHost();
-    const provider = await installDevframeProvider(host.context, {
+    const provider = await createDevframeProvider({
+      context: host.context,
       providerId: 'example.dynamic',
       plugins: [counterPlugin],
     });
@@ -155,7 +158,8 @@ describe('local server provider integration', () => {
         throw failure;
       },
     });
-    const provider = await installDevframeProvider(host.context, {
+    const provider = await createDevframeProvider({
+      context: host.context,
       providerId: 'example.failure',
       services: [service],
       report,

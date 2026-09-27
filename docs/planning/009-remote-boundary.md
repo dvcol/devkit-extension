@@ -61,7 +61,7 @@ The [lifecycle investigation](../research/native-rpc-lifecycle.md) also distingu
 
 ## Next implementation slice
 
-1. The fixed-counter native fixture is implemented, and the owner selected explicit host-owned remote methods. Settle the combined startup authoring API, then extend this evidence to SDK catalog synchronization and general contract mapping.
+1. The fixed-counter native fixture is implemented, and the owner selected explicit host-owned remote methods. The combined startup authoring API and explicit target-free native method mapping are implemented. Extend this evidence to SDK catalog synchronization and a general remote client connection.
 2. Establish registration lifetime and disconnect cleanup through public APIs. If a required operation is absent, record the exact limitation and smallest possible extension; do not reach into private collections or add a replacement RPC host.
 3. Map server-owned contract/version/incarnation metadata and target references into that native call. Keep native correlation IDs and native wire encoding. Publish an authoritative, appropriately visible catalog without trusting client-writable state.
 4. Adapt a real extension Port to the existing RPC channel and codec. Verify rich values, malformed/unsupported data, disconnection and listener cleanup on Chromium and Firefox. Bridge sender/target checks must precede privileged dispatch.
@@ -77,3 +77,10 @@ Existing upstream PRs remain drafts. This review opens no new upstream PR.
 - [ ] Real authenticated hosts prove synchronization, native allow/deny behavior, spoofed metadata rejection and disposal.
 - [ ] Real extension hosts prove wire compatibility, page/extension authority and target freshness.
 - [ ] Cancellation, permission revocation and error-detail disclosure meet the complete issue-9 contract.
+
+
+## Next owner decision: remote caller cancellation
+
+The generic remote client connection must define what caller abort and connection loss mean. Actual native WebSocket checks prove that the pending client rejects while an already-started backend handler can finish. Local provider cancellation can signal owned work and wait for settlement, but installed native unary RPC has no equivalent per-call backend cancellation hook.
+
+The owner is reviewing whether to preserve native remote behavior with an explicit realm limitation (stop the client waiting, permit backend completion, never retry/replay automatically), or require native backend cancellation support before offering the generic remote connection. No choice is assumed. The implemented server exposure itself accepts only an expected incarnation and business input; it does not advertise transported AbortSignals or backend cancellation.

@@ -8,14 +8,16 @@ for (const mode of ['devframe', 'devtools'] as const) {
   assert.equal(result.mode, mode);
   assert.match(result.unauthorized, /not authorized/u);
   assert.deepEqual(result.accepted, { value: 3, trusted: true });
+  assert.equal(result.readValue, 3);
+  assert.equal(result.capabilityValue, 5);
   assert.match(result.invalidInput, /valid/u);
   assert.match(result.disposed, /dispos|unavailable/u);
   assert.equal(result.hostAlive, 'host-alive');
   assert.match(result.stale, /incarnation changed/u);
-  assert.deepEqual(result.replaced, { value: 7, trusted: true });
+  assert.deepEqual(result.replaced, { value: 9, trusted: true });
   assert.ok(result.disconnected.length > 0);
   assert.equal(result.clientClosed, true);
   assert.equal(result.serverCompletedAfterDisconnect, true);
-  assert.equal(result.nativeMethodCount, 2);
+  assert.equal(result.nativeMethodCount, 3);
   console.info(styleText('green', '🚀 [native-remote]'), 'Authenticated RPC checks passed:', mode);
 }

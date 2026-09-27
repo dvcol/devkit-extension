@@ -6,8 +6,8 @@ import {
   devframeContext,
   devframeHubContext,
   devToolsContext,
-  installDevframeProvider,
-  installDevToolsProvider,
+  createDevframeProvider,
+  createDevToolsProvider,
 } from '@devkit/server';
 import type { ServerComposition, ServerProviderHandle } from '@devkit/server';
 import { createKitContext } from '@vitejs/devtools-kit/node';
@@ -99,15 +99,15 @@ async function exerciseProvider(provider: ServerProviderHandle, context: Devfram
 async function runContextDemo<Context extends DevframeHubContext>(
   createContext: (options: CreateHubContextOptions) => Promise<Context>,
   installProvider: (
-    context: Context,
-    composition: ServerComposition,
+    options: ServerComposition & { readonly context: Context },
   ) => Promise<ServerProviderHandle>,
   hostName: 'devframe' | 'devtools',
 ) {
   const host = await createHeadlessHost(createContext);
   let provider: ServerProviderHandle | undefined;
   try {
-    provider = await installProvider(host.context, {
+    provider = await installProvider({
+      context: host.context,
       providerId: `example.${hostName}-server`,
       services: [counterService],
       plugins: [counterActionsPlugin],
@@ -124,9 +124,9 @@ async function runContextDemo<Context extends DevframeHubContext>(
 }
 
 export function runDevframeDemo() {
-  return runContextDemo(createHubContext, installDevframeProvider, 'devframe');
+  return runContextDemo(createHubContext, createDevframeProvider, 'devframe');
 }
 
 export function runDevToolsDemo() {
-  return runContextDemo(createKitContext, installDevToolsProvider, 'devtools');
+  return runContextDemo(createKitContext, createDevToolsProvider, 'devtools');
 }
