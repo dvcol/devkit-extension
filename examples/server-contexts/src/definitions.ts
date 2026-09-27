@@ -2,7 +2,9 @@ import { defineAction, definePlugin, defineService } from '@devkit/core';
 import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
 import { devframeHubContext, serverExecution } from '@devkit/server';
 
-export const counterStateKey = 'example:server-counter';
+import { counterStateKey } from './state-key.js';
+
+export { counterStateKey } from './state-key.js';
 export const readCounterCommandId = 'example:read-server-counter';
 
 /** Both server hosts expose the same native shared-state and command APIs through the hub. */

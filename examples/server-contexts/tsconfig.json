@@ -5,5 +5,5 @@
     "types": ["node", "vite/client"],
     "lib": ["ES2024", "DOM", "ESNext.Disposable"]
   },
-  "include": ["src", "checks", "vite.config.ts", "browser"]
+  "include": ["src", "checks", "vite.config.ts", "browser", "tests"]
 }

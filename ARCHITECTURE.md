@@ -264,7 +264,7 @@ return applyFlag(input);
 
 Single-recipient calls return a typed promise. Broadcast runs recipients concurrently and returns their individual outcomes after they settle; it does not stream partial progress. A direct response gives the initiating UI a completion/error path without a second event-correlation API. It cannot prove that a mutation did not happen if the response is lost. Existing cancellation and no-replay rules still apply.
 
-Other clients need state observation to see changes. Reuse native Devframe state rather than introducing an SDK event bus. Snapshot/subscription ordering, reattachment after disconnect, authorization and retained-state policy need real-host evidence under the state contract. The current browser counter reads state initially and updates from its own action result; it does not yet prove live cross-client subscription or missed-update recovery. Provider state remains separate even when contracts or state keys match.
+Other clients need state observation to see changes. Reuse native Devframe state rather than introducing an SDK event bus. Snapshot/subscription ordering, reattachment after disconnect, authorization and retained-state policy need real-host evidence under the state contract. The current browser counter subscribes directly to native state and shows command completion separately. Live checks on both server hosts prove peer updates and explicit page-reload recovery through a fresh client. They do not prove automatic reconnect, atomic snapshot/stream ordering, persistence or backend-only write authority. [State evidence](./docs/research/native-state-observation.md). Provider state remains separate even when contracts or state keys match.
 
 ## Representative shared and native declarations
 

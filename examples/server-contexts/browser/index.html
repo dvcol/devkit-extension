@@ -6,9 +6,16 @@
   </head>
   <body>
     <h1>Native remote provider</h1>
-    <p>One shared client calls an authenticated Devframe or DevTools backend.</p>
+    <p>
+      Open this URL in two tabs. A command in either tab updates both through native shared state.
+    </p>
+    <p id="connection" role="status">Connecting…</p>
     <button id="increase" disabled>Increase counter</button>
-    <pre id="result" role="status">Connecting…</pre>
+    <button id="disconnect" disabled>Disconnect</button>
+    <button id="reconnect">Reload to reconnect</button>
+    <p id="command" role="status">No command sent by this tab.</p>
+    <pre id="result" aria-label="Provider and current value" aria-live="polite">
+Waiting for server state…</pre>
     <script type="module" src="/main.ts"></script>
   </body>
 </html>

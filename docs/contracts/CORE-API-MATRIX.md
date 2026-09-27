@@ -103,3 +103,9 @@ Browser capability authority, automatic endpoint discovery, renderer/extension i
 `packages/core/tests/requests.type-test.ts` verifies custom resource-reference inference, operation/input correlation and rejection of the removed top-level target option. `packages/runtime/tests/provider-requests.test.ts` verifies that payload fields named `target` and `signal` remain ordinary input. Provider incarnation, activation ownership and no replay remain covered by the existing lifecycle/routing tests.
 
 These are command/result and explicit-read checks. Native state subscription/snapshot ordering, cross-client live updates and reconnect recovery remain requirements of issue 8; no event-delivery guarantee or browser-extension cell is implied.
+
+## Native state observation evidence, 2026-09-27
+
+The browser example now uses native `sharedState.get`, `state.value()` and `state.on('updated', ...)` directly. Four example tests on genuine Devframe/DevTools hosts prove peer updates, separate host values, listener removal, fresh-client snapshot recovery, retained incarnation and native client writes. Live two-tab checks confirm rendering, stale-state labels, reconnect and continued operation after peer closure on both hosts. Actual DevTools server shutdown disables actions and marks the view stale. [Detailed receipts and limits](../research/native-state-observation.md).
+
+This evidence does not add a generic SDK state API or settle writer authority, persistence, migration or conflict policy. It does not claim automatic reconnect, atomic snapshot/subscription ordering, JSON rendering or WebExtension conformance.

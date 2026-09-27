@@ -175,4 +175,4 @@ Client selectors choose realm/provider recipients; each recipient implementation
 
 A schema-defined `not-applicable` value is a successful business result, not provider unavailability or pre-dispatch fallback. If multiple selected implementations match, all may act. Applicability is not a permission grant. Services exposed for direct invocation must enforce their own domain/resource checks.
 
-The [canonical diagram and examples](../../ARCHITECTURE.md#recipient-selection-and-request-applicability) describe this contract. Existing browser examples update from their own command result; cross-client native subscriptions and reconnect synchronization still require state-contract evidence.
+The [canonical diagram and examples](../../ARCHITECTURE.md#recipient-selection-and-request-applicability) describe this contract. The initial migration used command results only. The browser example now proves native peer subscriptions and explicit fresh-client recovery on both server hosts; [state evidence](../research/native-state-observation.md) records the remaining policy and ordering limits.

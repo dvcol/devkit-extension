@@ -17,9 +17,9 @@
     "demo:devframe": "node src/demo.ts devframe",
     "demo:devtools": "node src/demo.ts devtools",
     "demo:routing": "node src/routing-demo.ts",
-    "test": "node checks/integration.ts && node checks/routing.ts && node checks/remote.ts && node checks/browser-build.ts",
+    "test": "node checks/integration.ts && node checks/routing.ts && node checks/remote.ts && node checks/browser-build.ts && vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src checks browser vite.config.ts",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src checks tests browser vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
     "demo:remote": "node src/remote-demo.ts",
     "demo:browser": "node src/browser-demo.ts"

@@ -46,6 +46,8 @@ The [native Vite host examples](./examples/vite-hosts/README.md) mount the relea
 
 Both hosts also have maintained production-preview examples. Run `pnpm --filter @devkit/example-vite-hosts build:site`, then `preview:devframe` or `preview:devtools`. Each serves built assets with a live native backend and runs the same typed counter action.
 
+The browser example also observes native shared state across tabs. Disconnect marks its retained value stale; reload reconnects and reads the current snapshot. [Live checks on both server hosts](./docs/research/native-state-observation.md) confirm that behavior while keeping provider values separate.
+
 Watched production publication also retains the last complete build and reports failed rebuilds. Run the independent `build:watch` and `preview` scripts or their combined `dev:production` command in that example. Automatic endpoint discovery, browser capability authority, JSON rendering, WebExtension hosts and complete browser HMR remain outstanding. The example README states the tested lifecycle boundaries and the accepted unpatched Vite cleanup gap.
 
 Oxlint checks correctness, suspicious and pedantic rules as errors, plus explicit TypeScript, imports, promises and test rules. Type-aware linting is enabled. Warnings fail checks. Oxfmt controls formatting, and `format:check` fails on drift. See [tooling conventions](./docs/TOOLING.md) for the enforced rules, documented exceptions and review obligations.
