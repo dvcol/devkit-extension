@@ -41,16 +41,16 @@ Last-successful-build publication concerns asset availability. It does not resto
 
 ## Contracts, contributions and plugins
 
-| Element     | Declaration                                                                                         | Runtime meaning                                                                     |
-| ----------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Capability  | Imported ID, mandatory positive integer contract version, operation schemas and target requirements | A service contract; does not imply availability                                     |
-| Service     | Capability descriptor plus execution assignment, requirements and setup recipe                      | Constructs an owned implementation of exactly that contract                         |
-| Action      | Shared versioned descriptor plus a separate handler contribution                                    | An invocable use case that can consume capabilities                                 |
-| View        | JSON definition, references and bindings                                                            | Published presentation, mounted by a renderer on a surface                          |
-| Transform   | Kind-specific transform definition                                                                  | Owned interception or transformation behavior                                       |
-| Script      | Packaged module and execution declaration                                                           | Runs in its actual background/content/page execution with target scope              |
-| Plugin      | Named lists of services, actions, views, transforms, scripts and custom extensions                  | Installed and controlled together, with independent contribution activation/failure |
-| Custom kind | Imported kind descriptor, payload schema and explicitly installed kind handler                      | Allows new kinds without arbitrary plugin fields or a closed core switch            |
+| Element     | Declaration                                                                        | Runtime meaning                                                                     |
+| ----------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Capability  | Imported ID, mandatory positive integer contract version, operation schemas        | A service contract; does not imply availability                                     |
+| Service     | Capability descriptor plus execution assignment, requirements and setup recipe     | Constructs an owned implementation of exactly that contract                         |
+| Action      | Shared versioned descriptor plus a separate handler contribution                   | An invocable use case that can consume capabilities                                 |
+| View        | JSON definition, references and bindings                                           | Published presentation, mounted by a renderer on a surface                          |
+| Transform   | Kind-specific transform definition                                                 | Owned interception or transformation behavior                                       |
+| Script      | Packaged module and execution declaration                                          | Runs in its actual background/content/page execution with target scope              |
+| Plugin      | Named lists of services, actions, views, transforms, scripts and custom extensions | Installed and controlled together, with independent contribution activation/failure |
+| Custom kind | Imported kind descriptor, payload schema and explicitly installed kind handler     | Allows new kinds without arbitrary plugin fields or a closed core switch            |
 
 A service always declares a capability contract and its version. There is no unversioned service, implicit latest version or required portable raw-object `provide`. Native APIs remain available in eligible native contexts.
 
@@ -68,7 +68,7 @@ Every declaration helper takes one object. Contracts can be imported by a UI wit
 | `defineAction`         | `{ contract, id, execution, requires?, handler }` | Implementation in `plugin.actions`         |
 | `defineExtension`      | `{ descriptor, id, execution, payload }`          | Custom contribution in `plugin.extensions` |
 
-An operation describes one callable input/result pair and its target requirement. A capability names several operations; an action contract describes one invocable use case. “Contribution” remains the shared terminology and typing for owned additions. It does not require a generic `defineContribution` factory. `defineActionContract` replaces the former contract helper named `defineAction`; `defineAction` replaces `defineActionContribution`.
+An operation describes one callable input/result pair. A capability names several operations; an action contract describes one invocable use case. “Contribution” remains the shared terminology and typing for owned additions. It does not require a generic `defineContribution` factory. `defineActionContract` replaces the former contract helper named `defineAction`; `defineAction` replaces `defineActionContribution`.
 
 ## Dependency and execution diagrams
 
@@ -134,12 +134,12 @@ The router belongs to the client application's composition. It can run in a pane
 
 The owner confirmed stable configured provider IDs and fresh backend incarnations on 2026-09-23. The provider descriptor carries `id`, `incarnation` and `realm`. An adapter creates the incarnation once for its backend lifetime. A recreated backend retains its configured ID and gets a fresh incarnation. Reconnecting to the same live backend or updating only a UI module does not create a new backend identity.
 
-| Identity                | Example                            | Changes when                                                                      |
-| ----------------------- | ---------------------------------- | --------------------------------------------------------------------------------- |
-| Provider ID             | `example:project-server`           | Host configuration selects a different logical provider                           |
-| Provider incarnation    | Opaque runtime token               | The provider backend is recreated, including complete disposal and reinstallation |
-| Contribution generation | Local activation counter           | A contribution's owned activation is replaced                                     |
-| Target generation       | Adapter-issued document generation | The inspected document or another target owner is replaced                        |
+| Identity                | Example                                    | Changes when                                                                      |
+| ----------------------- | ------------------------------------------ | --------------------------------------------------------------------------------- |
+| Provider ID             | `example:project-server`                   | Host configuration selects a different logical provider                           |
+| Provider incarnation    | Opaque runtime token                       | The provider backend is recreated, including complete disposal and reinstallation |
+| Contribution generation | Local activation counter                   | A contribution's owned activation is replaced                                     |
+| Resource generation     | Capability-specific document/session token | A capability needs to distinguish successive lifetimes of the same resource       |
 
 These identities do not substitute for authentication, permissions or target validation. A binding remains attached to the provider incarnation that created it. A successor with the same logical ID cannot acquire the old binding or an already dispatched call. Durable state and resynchronization policy remain in the state contract.
 
@@ -155,7 +155,7 @@ flowchart LR
   Client --> UI["JSON views and UI-free consumers"]
 ```
 
-An extension background runtime can coordinate shared discovery for popup/panel consumers through native ports. Local DevTools-only hooks remain in the document that owns them. A web client can compose the registry in its own application runtime. Adapters retain native transports and provider state; registry snapshots contain only permitted portable metadata. The client implements local catalog readiness, routing defaults and broadcast. Native remote adapters synchronize an explicitly exposed catalog through authorized RPC queries and payload-free invalidations. Endpoint discovery, target authority and extension trust filtering remain adapter work. [Routing ownership record](./docs/planning/007-provider-routing.md).
+An extension background runtime can coordinate shared discovery for popup/panel consumers through native ports. Local DevTools-only hooks remain in the document that owns them. A web client can compose the registry in its own application runtime. Adapters retain native transports and provider state; registry snapshots contain only permitted portable metadata. The client implements local catalog readiness, routing defaults and broadcast. Native remote adapters synchronize an explicitly exposed catalog through authorized RPC queries and payload-free invalidations. Endpoint discovery and extension trust filtering remain adapter work. Capability implementations own resource selection, permissions and freshness checks. [Routing ownership record](./docs/planning/007-provider-routing.md).
 
 ### Host-owned native RPC methods
 
@@ -163,7 +163,7 @@ The owner selected explicit host-owned remote method lifetime in [Server adapter
 
 Remote exposure and local implementation ownership remain distinct within one startup call: `createDevframeProvider({ context, providerId, services, plugins, expose? })`, or `createDevToolsProvider` for a kit context. The owner accepted this authoring shape. `expose` lists imported action and capability descriptors; omitted contracts remain local. Startup and later installation/replacement return handles directly in default strict mode, and admitted/skipped outcomes with `strict: false`. A runtime boolean strictness produces the corresponding union type. Admission does not guarantee successful activation.
 
-This choice reuses native registration without requiring an upstream unregister API. It preserves native authentication, schemas and serialization, expected-incarnation checks, and no rerouting after dispatch. The implemented exposure supports target-free unary operations. Target-required exposure rejects before setup until an actual server target authority is supplied. The browser-safe `@devkit/server/client` entry adapts an existing native RPC client into the shared router. Its read-only catalog query uses native authorization, and catalog changes trigger a fresh authorized query through a payload-free notification. It does not establish server-side unary cancellation on caller abort or disconnect.
+This choice reuses native registration without requiring an upstream unregister API. It preserves native authentication, schemas and serialization, expected-incarnation checks, and no rerouting after dispatch. The implemented exposure supports schema-validated unary operations. Capability implementations own domain/resource applicability and native resource checks. The browser-safe `@devkit/server/client` entry adapts an existing native RPC client into the shared router. Its read-only catalog query uses native authorization, and catalog changes trigger a fresh authorized query through a payload-free notification. It does not establish server-side unary cancellation on caller abort or disconnect.
 
 ## Identity, admission and strictness
 
@@ -191,18 +191,18 @@ Public JSON Schema export is needed only by integrations requiring schema inspec
 
 Ordinary operation/action calls return `Promise<Value>` and reject on failure. Stable error codes and `isOperationError` allow runtime narrowing; TypeScript does not specify a promise's rejection type. Availability and lifecycle status remain separately observable. Broadcast uses per-provider outcomes in the routing contract.
 
-| Call path                                                                           | Provider behavior                                                  | Target and context                                                                |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
-| `capabilities.invoke({ capability, operation, input, target?, signal?, routing? })` | Select for this invocation before dispatch                         | Request metadata contains the authoritative target and optional routing directive |
-| `capabilities.resolve({ capability, target?, signal?, routing? })`                  | Resolve a particular provider binding                              | Availability is a snapshot; an operation can still fail afterward                 |
-| `binding.api.operation(input, options)`                                             | Use that binding's provider                                        | No routing override that silently changes the binding's owner/context             |
-| `actions.invoke({ action, input, target?, signal?, routing? })`                     | Select the action provider; its requirements bind there by default | Handler receives validated target, signal and its own local execution context     |
+| Call path                                                                  | Provider behavior                                                  | Target and context                                                              |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `capabilities.invoke({ capability, operation, input, signal?, routing? })` | Select for this invocation before dispatch                         | Request carries schema-defined input and an optional routing policy             |
+| `capabilities.resolve({ capability, signal?, routing? })`                  | Resolve a particular provider binding                              | Availability is a snapshot; an operation can still fail afterward               |
+| `binding.api.operation(input, options)`                                    | Use that binding's provider                                        | No routing override that silently changes the binding's owner/context           |
+| `actions.invoke({ action, input, signal?, routing? })`                     | Select the action provider; its requirements bind there by default | Handler receives schema-validated input, signal and its local execution context |
 
 A bound API stays pinned to its provider. A fresh routed invocation can select another provider before dispatch. Cross-provider orchestration is explicit. After dispatch, no timeout, disconnect or report that execution did not begin permits rerouting or automatic replay. A separately requested invocation starts a new decision.
 
 The 2026-09-24 routing review confirms that equally eligible providers produce an ambiguity error requiring an explicit caller/UI/agent discriminant. Ordinary invocations use current availability at dispatch and do not implicitly wait for a connecting provider. A drop during execution is an error; a caller may explicitly request a new invocation, but the router cannot infer that the previous mutation did not run.
 
-Core client interfaces and local provider handles now use request objects. Local handles accept `resolve({ capability })` and `invoke({ action, input, target?, signal? })`; their provider is already fixed, so they expose no routing override. Bound capability methods retain the two arguments `input, options`. Request types preserve operation/input/target correlation, including unions of operation requests. `@devkit/client` implements these routed interfaces over adapter-owned connections; both local server handles satisfy its `ProviderConnection` contract.
+Core client interfaces and local provider handles now use request objects. Local handles accept `resolve({ capability })` and `invoke({ action, input, signal? })`; their provider is already fixed, so they expose no routing override. Bound capability methods retain the two arguments `input, options`. Request types preserve operation/input correlation, including unions of operation requests. `@devkit/client` implements these routed interfaces over adapter-owned connections; both local server handles satisfy its `ProviderConnection` contract.
 
 Core exports `RouteSelector`, `RoutingDirective`, `RoutingCallback` and `RoutingPolicy`, and validates optional `routing` defaults on public action contracts. The directive contains one selector or a non-empty ordered fallback list. Factories copy and freeze this metadata, including selectors inside structural plugin declarations. An explicit invocation policy replaces the action default, which replaces the client default. Local callback functions retain their identity and are not executed by declaration factories. Backend implementation handlers remain separate. Selectors require a string realm and optional string provider scoped to that realm. This declaration support does not implement remote discovery or selection.
 
@@ -210,11 +210,61 @@ Broadcast has separate capability/action methods with per-provider outcomes and 
 
 An asynchronous routing callback observes fixed candidate owners. It rechecks current readiness for those original live attachments before dispatch. A selected attachment that disappeared or changed incarnation rejects as stale; new providers cannot enter the waiting callback's candidate set. A fresh invocation may select a successor. Cancellation stops waiting and prevents late callback dispatch. These choices are accepted in [Provider discovery and routing](./docs/planning/007-provider-routing.md).
 
-The client registry rejects every duplicate `(realm, provider ID)` attachment and owns subscriptions/cancellation, not backend resources. `detach()` and `client.dispose()` do not close native hosts. A binding stays pinned to its attachment even if another connection later advertises the same logical ID. Selection errors expose local `RoutingError` codes, candidate metadata and unmatched selectors. The client delegates authenticated transport, permissions and target authorization to its connections.
+The client registry rejects every duplicate `(realm, provider ID)` attachment and owns subscriptions/cancellation, not backend resources. `detach()` and `client.dispose()` do not close native hosts. A binding stays pinned to its attachment even if another connection later advertises the same logical ID. Selection errors expose local `RoutingError` codes, candidate metadata and unmatched selectors. The client delegates authenticated transport, connection authorization to its adapters; capability implementations retain resource-specific checks.
 
-Local providers expose `catalog.snapshot()` and `catalog.subscribe(listener)`. This read-only projection includes admitted capability/action IDs, exact versions, operation names, target requirements, execution and contribution status. It contains no schemas, executable handlers, native context or diagnostic causes. It observes the existing installation lifecycle, including late admission, dependency changes, replacement and cleanup failure. An active entry is not proof of permission or target availability. Consumers also require an open provider. The native remote adapter separately projects explicitly exposed contracts through an authorized query; it does not put this catalog in client-writable shared state. Endpoint discovery and target-specific authority remain unfinished.
+Local providers expose `catalog.snapshot()` and `catalog.subscribe(listener)`. This read-only projection includes admitted capability/action IDs, exact versions, operation names, execution and contribution status. It contains no schemas, executable handlers, native context or diagnostic causes. It observes the existing installation lifecycle, including late admission, dependency changes, replacement and cleanup failure. An active entry is not proof of permission or target availability. Consumers also require an open provider. The native remote adapter separately projects explicitly exposed contracts through an authorized query; it does not put this catalog in client-writable shared state. Endpoint discovery remains unfinished. Browser capability authority is domain-specific work.
 
-Operation declarations specify `target: 'required'` or `target: 'none'`. Required-target calls must provide a validated target reference in request metadata or bound-method options; targetless calls reject an execution target. Business payloads can refer to other subjects without changing this execution target. A target reference contains a kind, opaque identity and generation; the routing/trust adapters define resolution and validate freshness. Abort signals remain local. For native remote unary RPC, caller abort or disconnect stops waiting but does not cancel already-dispatched backend work. The owner accepted that native limitation; adapters never retry or replay calls automatically. Local contribution lifecycle cancellation retains its existing ownership guarantees.
+Operation declarations contain input and output schemas. There is no universal target field, target mode or target reference type. A capability that operates on domains, documents or debugger sessions defines those values in its own input schema and checks their applicability, permissions and freshness in its implementation. Provider incarnation and contribution activation generation remain SDK ownership concepts. Abort signals remain local. For native remote unary RPC, caller abort or disconnect stops waiting but does not cancel already-dispatched backend work. The owner accepted that native limitation; adapters never retry or replay calls automatically. Local contribution lifecycle cancellation retains its existing ownership guarantees.
+
+### Recipient selection and request applicability
+
+The owner accepted two selection layers on 2026-09-27. The client chooses recipients using realm/provider selectors. Each selected action or service implementation decides which of its resources the input concerns. Core and transport do not interpret domains, URLs, feature flags, document IDs or debugger sessions.
+
+```mermaid
+flowchart LR
+  ViewA["Client A: shared view"] --> RouterA["Client A recipient selection"]
+  ViewB["Client B: another panel"] --> RouterB["Client B recipient selection"]
+  RouterA -->|"native authenticated connection"| ServerA["devserver / frontend"]
+  RouterA -->|"native authenticated connection"| ServerB["devserver / tools"]
+  RouterB --> ServerA
+  RouterB --> Extension["webext / browser"]
+  ServerA --> ActionA["Action contribution"]
+  ActionA --> ServiceA["Service: input applicability and mutation"]
+  ServerB --> ServiceB["Same contract, own resources and applicability"]
+  Extension --> ServiceC["Same contract, browser-owned resources"]
+  ServiceA -->|"typed command result"| ViewA
+  ServiceA -.->|"native state observation, separate integration"| ViewB
+```
+
+Connections are per client/backend pair. Closing Client A does not dispose Server A or Client B's independent connection. An action delegates to capability bindings in its selected provider unless it explicitly orchestrates across providers. If callers may invoke a capability directly, the service must enforce its own applicability and permissions; an action-only check is insufficient.
+
+| Responsibility                                         | Owner                                                | Example                                                     |
+| ------------------------------------------------------ | ---------------------------------------------------- | ----------------------------------------------------------- |
+| Choose one recipient or broadcast recipient union      | Client policy                                        | `selection: [{ realm: 'devserver' }]`                       |
+| Decide which resources the command concerns            | Action/service implementation                        | Compare `input.domain` with the resources this service owns |
+| Authenticate a connection and authorize native methods | Native host                                          | Existing Devframe session and method policy                 |
+| Validate resource permissions and freshness            | Capability implementation and its native integration | Check an actual document/session before mutation            |
+| Report command completion                              | Typed operation result or rejection                  | Schema-defined `applied` / `not-applicable` value           |
+| Observe changes from other clients                     | Native state integration                             | Read current state and subscribe within each provider       |
+
+```ts
+// The action's input schema defines domain, key and value.
+const outcomes = await client.actions.broadcast({
+  action: setFlag,
+  selection: [{ realm: 'devserver' }],
+  input: { domain: 'dev.example.test', key: 'feature', value: true },
+});
+
+// Inside the service implementing this operation. This is ordinary author code.
+if (!ownedDomains.has(input.domain)) return { status: 'not-applicable' };
+return applyFlag(input);
+```
+
+`not-applicable` is an example business result declared by that operation's output schema. The SDK adds no `accepts` callback, domain matching DSL or special skip result. A successful `not-applicable` response is a fulfilled broadcast outcome. It does not remove the provider, trigger fallback or replay the request. If two selected providers both match, both can act; this is explicit broadcast, not a competing-consumer topic.
+
+Single-recipient calls return a typed promise. Broadcast runs recipients concurrently and returns their individual outcomes after they settle; it does not stream partial progress. A direct response gives the initiating UI a completion/error path without a second event-correlation API. It cannot prove that a mutation did not happen if the response is lost. Existing cancellation and no-replay rules still apply.
+
+Other clients need state observation to see changes. Reuse native Devframe state rather than introducing an SDK event bus. Snapshot/subscription ordering, reattachment after disconnect, authorization and retained-state policy need real-host evidence under the state contract. The current browser counter reads state initially and updates from its own action result; it does not yet prove live cross-client subscription or missed-update recovery. Provider state remains separate even when contracts or state keys match.
 
 ## Representative shared and native declarations
 
@@ -228,7 +278,6 @@ const pageCapability = defineCapability({
     readTitle: defineOperation({
       input: titleInputSchema,
       output: titleResultSchema,
-      target: 'required',
     }),
   },
 });
@@ -244,8 +293,8 @@ const readTitleContribution = defineAction({
   id: 'example.inspector.read-title',
   execution: providerExecution,
   requires: { page: pageCapability },
-  handler({ input, services, target, signal }) {
-    return services.page.api.readTitle(input, { target, signal });
+  handler({ input, services, signal }) {
+    return services.page.api.readTitle(input, { signal });
   },
 });
 

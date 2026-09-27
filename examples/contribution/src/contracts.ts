@@ -8,12 +8,10 @@ export const counterCapability = defineCapability({
     read: defineOperation({
       input: z.strictObject({}),
       output: z.number().int(),
-      target: 'none',
     }),
     increase: defineOperation({
       input: z.strictObject({ amount: z.number().int().positive() }),
       output: z.number().int(),
-      target: 'none',
     }),
   },
 });

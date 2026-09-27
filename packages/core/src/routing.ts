@@ -5,7 +5,6 @@ import type {
   ProviderDescriptor,
   RouteSelector,
   RoutingDirective,
-  TargetReference,
 } from './types.js';
 
 export interface RoutingCandidate {
@@ -19,7 +18,6 @@ export interface RoutingCandidate {
 export interface RoutingContext {
   readonly candidates: readonly RoutingCandidate[];
   readonly input: unknown;
-  readonly target?: TargetReference;
   readonly signal: AbortSignal;
 }
 

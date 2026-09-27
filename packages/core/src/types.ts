@@ -3,7 +3,6 @@ import type { RoutingPolicy } from './routing.js';
 
 export type Awaitable<Value> = Value | Promise<Value>;
 export type Unsubscribe = () => void;
-export type TargetRequirement = 'required' | 'none';
 
 declare const nativeContextValue: unique symbol;
 
@@ -15,13 +14,6 @@ export interface RouteSelector {
 
 /** One selector, or an ordered non-empty fallback list for a single invocation. */
 export type RoutingDirective = RouteSelector | readonly [RouteSelector, ...RouteSelector[]];
-
-/** Validated adapter-issued identity; native tab/document handles are not transported. */
-export interface TargetReference {
-  readonly kind: string;
-  readonly id: string;
-  readonly generation: string;
-}
 
 export interface RealmDescriptor<Identifier extends string = string> {
   readonly id: Identifier;
@@ -68,7 +60,6 @@ export interface RoutedInvocationOptions extends InvocationOptions {
 export interface OperationDefinition {
   readonly input: StandardSchemaV1;
   readonly output: StandardSchemaV1;
-  readonly target: TargetRequirement;
 }
 
 export type OperationInput<Definition extends OperationDefinition> = StandardSchemaV1.InferInput<
@@ -81,16 +72,12 @@ export type OperationValue<Definition extends OperationDefinition> = StandardSch
 export type OperationArguments<
   Definition extends OperationDefinition,
   Options extends InvocationOptions = InvocationOptions,
-> = Definition['target'] extends 'required'
-  ? [input: OperationInput<Definition>, options: Options & { readonly target: TargetReference }]
-  : [input: OperationInput<Definition>, options?: Options & { readonly target?: never }];
+> = [input: OperationInput<Definition>, options?: Options];
 
-export type OperationContext<Definition extends OperationDefinition> = ContextMetadata & {
+export interface OperationContext extends ContextMetadata {
   readonly signal: AbortSignal;
   readonly native: NativeContextAccess;
-} & (Definition['target'] extends 'required'
-    ? { readonly target: TargetReference }
-    : { readonly target?: never });
+}
 
 export interface CapabilityDescriptor<
   Operations extends Readonly<Record<string, OperationDefinition>> = Readonly<
@@ -112,7 +99,7 @@ export type CapabilityApi<Capability extends CapabilityDescriptor> = {
 export type CapabilityImplementation<Capability extends CapabilityDescriptor> = {
   readonly [OperationName in keyof Capability['operations']]: (
     input: OperationInput<Capability['operations'][OperationName]>,
-    context: OperationContext<Capability['operations'][OperationName]>,
+    context: OperationContext,
   ) => Awaitable<OperationValue<Capability['operations'][OperationName]>>;
 };
 
@@ -182,7 +169,7 @@ export interface ActionDefinition<
   readonly contract: Action;
   readonly requires: Requirements;
   handler(
-    context: OperationContext<Action['operation']> & {
+    context: OperationContext & {
       readonly input: OperationInput<Action['operation']>;
       readonly services: RequirementBindings<Requirements>;
     },

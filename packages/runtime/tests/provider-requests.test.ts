@@ -1,22 +1,19 @@
 import { defineAction, defineActionContract, defineOperation, definePlugin } from '@devkit/core';
-import type { TargetReference } from '@devkit/core';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 import { action, deferred, execution, provider } from './provider-fixtures.js';
 
 describe('provider invocation requests', () => {
-  it('keeps business payload separate from execution target and cancellation', async () => {
+  it('keeps domain fields inside input and cancellation in the invocation context', async () => {
     expect.assertions(5);
     const { runtime } = provider();
-    const target: TargetReference = { kind: 'document', id: 'page', generation: 'one' };
     const contract = defineActionContract({
       id: 'example.targeted',
       version: 1,
       operation: defineOperation({
         input: z.object({ target: z.string(), signal: z.string() }),
         output: z.string(),
-        target: 'required',
       }),
     });
     const controller = new AbortController();
@@ -32,8 +29,8 @@ describe('provider invocation requests', () => {
               execution,
               handler(context) {
                 expect(context.input).toBe(input);
-                expect(context.target).toEqual(target);
-                expect(context.target).not.toBe(target);
+                expect(context.input.signal).toBe('business signal');
+                expect(Object.hasOwn(context, 'target')).toBe(false);
                 expect(context.signal.aborted).toBe(false);
                 return context.input.target;
               },
@@ -44,7 +41,7 @@ describe('provider invocation requests', () => {
     });
     try {
       await expect(
-        runtime.invoke({ action: contract, input, target, signal: controller.signal }),
+        runtime.invoke({ action: contract, input, signal: controller.signal }),
       ).resolves.toBe('business value');
     } finally {
       await runtime.dispose();

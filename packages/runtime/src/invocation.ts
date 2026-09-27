@@ -5,7 +5,6 @@ import type {
   NativeContextAccess,
   OperationDefinition,
   RuntimeDiagnostic,
-  TargetReference,
 } from '@devkit/core';
 
 import { operationError } from './errors.js';
@@ -21,12 +20,9 @@ export interface LocalInvocationContext extends ContextMetadata {
 export interface LocalOperationContext extends ContextMetadata {
   readonly native: NativeContextAccess;
   readonly signal: AbortSignal;
-  readonly target?: TargetReference;
 }
 
-export interface LocalInvocationOptions extends InvocationOptions {
-  readonly target?: TargetReference;
-}
+export type LocalInvocationOptions = InvocationOptions;
 
 export interface LocalInvocationRequest {
   readonly operation: OperationDefinition;
@@ -37,7 +33,7 @@ export interface LocalInvocationRequest {
   readonly handler: (value: unknown, context: LocalOperationContext) => unknown;
 }
 
-/** Called only after the owning adapter authorizes and resolves the execution target. */
+/** Native entry points own authorization; implementations own domain applicability. */
 export async function invokeLocalOperation({
   operation,
   input,
@@ -47,12 +43,10 @@ export async function invokeLocalOperation({
   handler,
 }: LocalInvocationRequest): Promise<unknown> {
   const context = { ...sourceContext, provider: snapshotProvider(sourceContext.provider) };
-  const target = options.target ? Object.freeze({ ...options.target }) : undefined;
   const signal = options.signal
     ? AbortSignal.any([activationSignal, options.signal])
     : activationSignal;
   assertNotCancelled(signal, context);
-  assertTarget(operation, target, context);
   await validateOriginal(
     operation.input,
     input,
@@ -62,7 +56,7 @@ export async function invokeLocalOperation({
   let result: unknown;
   try {
     const invocationContext = { ...context, signal };
-    result = await handler(input, target ? { ...invocationContext, target } : invocationContext);
+    result = await handler(input, invocationContext);
   } catch (cause) {
     assertNotCancelled(signal, context);
     if (isOperationError(cause)) throw cause;
@@ -102,23 +96,6 @@ function assertNotCancelled(signal: AbortSignal, context: LocalInvocationContext
     throw operationError(
       diagnostic(context, 'cancelled', 'Operation was cancelled'),
       signal.reason,
-    );
-  }
-}
-
-function assertTarget(
-  operation: OperationDefinition,
-  target: TargetReference | undefined,
-  context: LocalInvocationContext,
-): void {
-  if (operation.target === 'none' && target !== undefined) {
-    throw operationError(
-      diagnostic(context, 'invalid-input', 'Targetless operation received an execution target'),
-    );
-  }
-  if (operation.target === 'required' && !target) {
-    throw operationError(
-      diagnostic(context, 'target-unavailable', 'Operation requires an execution target'),
     );
   }
 }

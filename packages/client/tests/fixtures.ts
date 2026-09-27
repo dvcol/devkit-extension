@@ -18,7 +18,7 @@ import { z } from 'zod';
 import { createClient } from '../src/index.js';
 import type { ClientOptions, ProviderConnection } from '../src/index.js';
 
-export const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
+export const operation = defineOperation({ input: z.string(), output: z.string() });
 export const capability = defineCapability({
   id: 'example.echo',
   version: 1,

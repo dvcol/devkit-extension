@@ -1,28 +1,20 @@
-import type {
-  CapabilityBinding,
-  CapabilityDescriptor,
-  InvocationOptions,
-  TargetReference,
-} from '@devkit/core';
+import type { CapabilityBinding, CapabilityDescriptor, InvocationOptions } from '@devkit/core';
 import { RoutingError } from './errors.js';
-import { assertAvailable, assertNotCancelled, captureTarget } from './selection.js';
+import { assertAvailable, assertNotCancelled } from './selection.js';
 import type { SelectionRequest } from './selection.js';
 import type { ConnectionEntry, ConnectionRegistry } from './registry.js';
 
-export interface CallOptions extends InvocationOptions {
-  readonly target?: TargetReference;
-}
+export type CallOptions = InvocationOptions;
 
 export function callOptions(
   entry: ConnectionEntry,
   options: CallOptions,
 ): CallOptions & { readonly signal: AbortSignal } {
-  const target = captureTarget(options.target);
   const signal =
     options.signal === undefined
       ? entry.cancellation.signal
       : AbortSignal.any([options.signal, entry.cancellation.signal]);
-  return { signal, ...(target === undefined ? {} : { target }) };
+  return { signal };
 }
 
 export async function dispatched<Value>(

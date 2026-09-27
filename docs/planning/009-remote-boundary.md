@@ -9,7 +9,7 @@ Working deliverable for [Permissions and trust](https://github.com/dvcol/devkit-
 ```mermaid
 flowchart LR
   Client["SDK client: select provider"] --> Native["Devframe RPC: native auth and codec"]
-  Native --> Adapter["Thin adapter: contract and target mapping"]
+  Native --> Adapter["Thin adapter: contract and provider lifetime mapping"]
   Adapter --> Provider["Owned contribution execution"]
   Page["Untrusted page"] --> Bridge["Extension bridge: sender and target checks"]
   Bridge --> Connection["Extension-owned connection"]
@@ -61,9 +61,9 @@ The [lifecycle investigation](../research/native-rpc-lifecycle.md) also distingu
 
 ## Remaining implementation
 
-The combined startup API, finite native method lifetime, target-free method mapping, authorized catalog synchronization and shared-client connection are implemented. Remaining work includes:
+The combined startup API, finite native method lifetime, schema-validated method mapping, authorized catalog synchronization and shared-client connection are implemented. Remaining work includes:
 
-1. Resolve authoritative target references through a concrete target-owning host. The [native target investigation](../research/native-target-authority.md) distinguishes native caller authentication from browser document identity and navigation safety. Required-target exposure remains rejected until that integration exists.
+1. Keep resource selection, applicability and freshness in each capability implementation. The universal target API and required-target exposure prohibition were removed after owner review. Browser/debugger capabilities must still check their actual resource identity and permissions; [the investigation](../research/native-target-authority.md) remains evidence for that domain work.
 2. Adapt a real extension Port to the existing RPC channel and codec. Verify rich values, malformed/unsupported data, disconnection and listener cleanup on Chromium and Firefox. Bridge sender/target checks must precede privileged dispatch.
 3. Complete actor permissions, state privacy, error disclosure and real-host conformance. The current native transport tests do not establish those broader guarantees.
 
@@ -74,7 +74,7 @@ Existing upstream PRs remain drafts. This review opens no new upstream PR.
 - [x] Local routing ownership and broadcast semantics are implemented and tested.
 - [x] Native auth/serialization reuse is the implementation direction; Q4/Q5 are no longer pending choices between duplicate systems.
 - [x] Public serializer compatibility and unsupported-function rejection have maintained installed-package tests.
-- [x] Finite native registration and local disconnect cleanup are proven for the target-free adapter, with the accepted backend-cancellation limitation.
+- [x] Finite native registration and local disconnect cleanup are proven for the native adapter, with the accepted backend-cancellation limitation.
 - [x] Real authenticated hosts prove native allow/deny behavior and disposal; socket tests cover catalog synchronization and malformed/mismatched metadata at the native call boundary. Browser smoke checks cover both hosts.
 - [ ] Real extension hosts prove wire compatibility, page/extension authority and target freshness.
 - [ ] Cancellation, permission revocation and error-detail disclosure meet the complete issue-9 contract.
@@ -90,6 +90,6 @@ The owner selected native behavior. Caller abort, attachment disposal or connect
 
 The native adapter borrows a `DevframeRpcClient`; it neither creates nor owns its transport/authentication. The server registers one authorized catalog query and projects exposed descriptors only. Client-writable shared state is not used. A retained native client method receives payload-free invalidations and triggers another authorized query. Response fencing prevents a query begun before invalidation from republishing stale availability. The client validates metadata, pins one provider incarnation and rejects configured native caching for catalog/effect methods.
 
-Caller abort, client disposal, connection disposal and native disconnect all stop local waiting. Real-socket tests confirm an already-dispatched backend handler still finishes exactly once. This is the accepted native behavior, not a claim of backend cancellation. Browser smoke checks on both native hosts invoke the shared action and retain counter value/provider incarnation across reload. Endpoint discovery, target authority, extension actors and complete security conformance remain open.
+Caller abort, client disposal, connection disposal and native disconnect all stop local waiting. Real-socket tests confirm an already-dispatched backend handler still finishes exactly once. This is the accepted native behavior, not a claim of backend cancellation. Browser smoke checks on both native hosts invoke the shared action and retain counter value/provider incarnation across reload. Endpoint discovery, browser capability authority, extension actors and complete security conformance remain open.
 
 [Source investigation](../research/native-catalog-sync.md), [adapter API](../../packages/server/README.md), [browser example](../../examples/server-contexts/README.md#browser-client).

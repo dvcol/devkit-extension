@@ -85,4 +85,4 @@ Both hosts were checked in the in-app browser: initial value `0`, action result 
 
 ## Scope
 
-The local demos exercise in-process routing; `demo:remote` checks low-level native RPC on both hosts; `demo:browser` uses the shared routed client over an actual native browser connection. Catalog synchronization is implemented for explicit target-free exposure. Automatic endpoint discovery, target authority, the JSON renderer, extension execution and complete browser HMR/conformance remain separate work. The DevTools example uses a real kit backend without presenting the DevTools UI.
+The local demos exercise in-process routing; `demo:remote` checks low-level native RPC on both hosts; `demo:browser` uses the shared routed client over an actual native browser connection. Catalog synchronization is implemented for explicit exposure. Automatic endpoint discovery, browser capability authority, the JSON renderer, extension execution and complete browser HMR/conformance remain separate work. The DevTools example uses a real kit backend without presenting the DevTools UI.

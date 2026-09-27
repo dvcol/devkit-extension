@@ -8,14 +8,11 @@ import type {
   CatalogCapability,
   InvocationOptions,
   OperationValue,
-  TargetReference,
 } from '@devkit/core';
 import type { ProviderConnection } from '@devkit/client';
 import { actionMethod, capabilityMethod } from '../rpc-contract.js';
 import type { RemoteCatalog } from './catalog.js';
 import { nativeCall, waitForNative } from './native-call.js';
-
-type CallOptions = InvocationOptions & { readonly target?: TargetReference };
 
 export class RemoteConnection implements ProviderConnection {
   readonly provider;
@@ -44,8 +41,6 @@ export class RemoteConnection implements ProviderConnection {
     );
     if (catalog?.status !== 'open' || contract?.status !== 'active')
       throw new Error('Exposed action is unavailable');
-    if (action.operation.target !== 'none')
-      throw new Error('Remote target authority is not implemented');
     const value = await this.call(
       actionMethod(this.provider.id, action.id, action.version),
       request.input,
@@ -55,10 +50,10 @@ export class RemoteConnection implements ProviderConnection {
   }
 
   resolve<Capability extends CapabilityDescriptor>(
-    request: CapabilityResolutionRequest<Capability> & CallOptions,
+    request: CapabilityResolutionRequest<Capability> & InvocationOptions,
   ): Promise<CapabilityResolution<Capability>>;
   resolve(
-    request: CapabilityResolutionRequest<CapabilityDescriptor> & CallOptions,
+    request: CapabilityResolutionRequest<CapabilityDescriptor> & InvocationOptions,
   ): Promise<CapabilityResolution<CapabilityDescriptor>> {
     return new Promise((resolve) => {
       resolve(this.resolveBinding(request));
@@ -66,7 +61,7 @@ export class RemoteConnection implements ProviderConnection {
   }
 
   private resolveBinding(
-    request: CapabilityResolutionRequest<CapabilityDescriptor> & CallOptions,
+    request: CapabilityResolutionRequest<CapabilityDescriptor> & InvocationOptions,
   ): CapabilityResolution<CapabilityDescriptor> {
     this.signal(request).throwIfAborted();
     const capability = defineCapability({
@@ -95,16 +90,14 @@ export class RemoteConnection implements ProviderConnection {
     capability: CapabilityDescriptor,
     contract: CatalogCapability,
   ): CapabilityResolution<CapabilityDescriptor> {
-    const api: Record<string, (input: unknown, options?: CallOptions) => Promise<unknown>> = {};
-    for (const [name, operation] of Object.entries(capability.operations)) {
-      if (
-        operation.target !== 'none' ||
-        !contract.operations.some((entry) => entry.name === name && entry.target === 'none')
-      )
+    const api: Record<string, (input: unknown, options?: InvocationOptions) => Promise<unknown>> =
+      {};
+    for (const name of Object.keys(capability.operations)) {
+      if (!contract.operations.some((entry) => entry.name === name))
         return { status: 'unavailable', reason: 'unsupported' };
       Object.defineProperty(api, name, {
         enumerable: true,
-        value: (input: unknown, options: CallOptions = {}) => {
+        value: (input: unknown, options: InvocationOptions = {}) => {
           const latest = this.state.snapshot();
           const current = latest?.capabilities.find(
             ({ id, version }) => id === capability.id && version === capability.version,
@@ -128,14 +121,12 @@ export class RemoteConnection implements ProviderConnection {
     };
   }
 
-  private signal(options: CallOptions): AbortSignal {
-    if (options.target !== undefined)
-      throw new TypeError('Target-free operations reject an execution target');
+  private signal(options: InvocationOptions): AbortSignal {
     if (options.signal === undefined) return this.state.signal;
     return AbortSignal.any([options.signal, this.state.signal]);
   }
 
-  private async call(method: string, input: unknown, options: CallOptions): Promise<unknown> {
+  private async call(method: string, input: unknown, options: InvocationOptions): Promise<unknown> {
     const signal = this.signal(options);
     signal.throwIfAborted();
     const value = await waitForNative(

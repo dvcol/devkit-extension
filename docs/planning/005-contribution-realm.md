@@ -1,5 +1,7 @@
 # Contribution and realm contract: review packet
 
+> Current contract: the 2026-09-27 owner amendment removes universal target metadata. Client selectors choose realm/provider recipients; implementations own resource applicability through typed inputs/results. Earlier target-envelope sketches are superseded. [Architecture](../../ARCHITECTURE.md#recipient-selection-and-request-applicability).
+
 Status: explicit descriptors selected by the project owner; activation style and the full contract remain under discussion. This is preparation for [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5), not an accepted public API or SDK implementation. The canonical decision will live in the issue's eventual resolution comment.
 
 ## Grounding and settled constraints

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { defineAction, defineActionContract, defineOperation, definePlugin } from '../src/index.js';
 import type { RouteSelector } from '../src/index.js';
 
-const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
+const operation = defineOperation({ input: z.string(), output: z.string() });
 
 describe('declarative action routing', () => {
   it('retains a local routing callback without executing or freezing caller code', () => {

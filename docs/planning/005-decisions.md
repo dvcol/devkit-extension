@@ -161,3 +161,18 @@ The routing ticket retains detailed selection policy, dispatch races, cancellati
 ## Status
 
 Core architecture and declaration decisions are settled. The canonical glossary, architecture, declaration specification and example/test obligations are available. No SDK runtime or real-host conformance is claimed by these artifacts.
+
+## 2026-09-27 amendment: two selection layers
+
+This supersedes Q23's universal target contract and the later A1/A2/B native-target mapping proposals. The owner chose A for both follow-up questions.
+
+| Question | Accepted decision | Consequence |
+| --- | --- | --- |
+| Q1: Command results or a new topic/event bus | Typed action/capability commands with results; native state observation for other clients | Keep existing invoke/broadcast APIs and per-provider outcomes. Do not add a second event-correlation or state system. |
+| Q2: Implementation-owned applicability or generic acceptance hook | Ordinary implementation-owned code and result schemas | No SDK `accepts` callback or domain filter DSL. Actions/services own domain/resource selection. |
+
+Client selectors choose realm/provider recipients; each recipient implementation decides whether a request concerns its resources. Resource references and any resource-generation checks belong in capability inputs. Remove `TargetRequirement`, `TargetReference`, operation target modes, common target context/options and catalog target metadata. Keep provider incarnation, contribution generation, exact versions, native method authorization and no replay after dispatch.
+
+A schema-defined `not-applicable` value is a successful business result, not provider unavailability or pre-dispatch fallback. If multiple selected implementations match, all may act. Applicability is not a permission grant. Services exposed for direct invocation must enforce their own domain/resource checks.
+
+The [canonical diagram and examples](../../ARCHITECTURE.md#recipient-selection-and-request-applicability) describe this contract. Existing browser examples update from their own command result; cross-client native subscriptions and reconnect synchronization still require state-contract evidence.

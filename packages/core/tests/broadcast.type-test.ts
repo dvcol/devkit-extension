@@ -6,15 +6,14 @@ import type {
   CapabilityClient,
   BroadcastOutcome,
   RoutingCandidate,
-  TargetReference,
 } from '../src/index.js';
 
 const capability = defineCapability({
   id: 'example.broadcast',
   version: 1,
   operations: {
-    read: defineOperation({ input: z.string(), output: z.string(), target: 'required' }),
-    count: defineOperation({ input: z.number(), output: z.number(), target: 'none' }),
+    read: defineOperation({ input: z.string(), output: z.string() }),
+    count: defineOperation({ input: z.number(), output: z.number() }),
   },
 });
 const action = defineActionContract({
@@ -33,12 +32,10 @@ const selection = [{ realm: 'devserver', provider: 'A' }] as const;
 export async function requests(
   capabilities: CapabilityClient,
   actions: ActionClient,
-  target: TargetReference,
 ): Promise<void> {
   (await actions.broadcast({
     action,
     input: 'value',
-    target,
     selection,
   })) satisfies readonly BroadcastOutcome<string>[];
   (await capabilities.broadcast({
@@ -48,23 +45,33 @@ export async function requests(
     selection,
   })) satisfies readonly BroadcastOutcome<number>[];
   // @ts-expect-error Broadcast does not inherit action routing in place of selection.
-  await actions.broadcast({ action, input: 'value', target });
+  await actions.broadcast({ action, input: 'value' });
   // @ts-expect-error Selection must not be empty.
-  await actions.broadcast({ action, input: 'value', target, selection: [] });
+  await actions.broadcast({ action, input: 'value', selection: [] });
   await actions.broadcast({
     action,
     input: 'value',
-    target,
     selection,
     // @ts-expect-error Broadcast has no ordinary routing option.
     routing: { realm: 'devserver' },
   });
-  // @ts-expect-error A broadcast action still requires its execution target.
-  await actions.broadcast({ action, input: 'value', selection });
-  // @ts-expect-error A broadcast capability still requires its execution target.
-  await capabilities.broadcast({ capability, operation: 'read', input: 'value', selection });
+  // @ts-expect-error Broadcast action inputs preserve their contract.
+  await actions.broadcast({ action, input: 2, selection });
+  // @ts-expect-error Broadcast selection cannot contain a provider without its realm.
+  await capabilities.broadcast({
+    capability,
+    operation: 'read',
+    input: 'value',
+    selection: [{ provider: 'A' }],
+  });
   // @ts-expect-error The operation name preserves payload correlation.
   await capabilities.broadcast({ capability, operation: 'count', input: 'value', selection });
-  // @ts-expect-error Targetless operations reject target metadata.
-  await capabilities.broadcast({ capability, operation: 'count', input: 2, selection, target });
+  // @ts-expect-error Broadcast has no universal target option.
+  await capabilities.broadcast({
+    capability,
+    operation: 'count',
+    input: 2,
+    selection,
+    target: { id: 'example' },
+  });
 }

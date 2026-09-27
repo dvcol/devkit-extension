@@ -8,7 +8,7 @@ export const fallback: RoutingDirective = [selector, { realm: 'webext' }];
 export const action = defineActionContract({
   id: 'example.routed',
   version: 1,
-  operation: defineOperation({ input: z.string(), output: z.string(), target: 'none' }),
+  operation: defineOperation({ input: z.string(), output: z.string() }),
   routing: [{ realm: 'devserver', provider: 'frontend' }, { realm: 'webext' }],
 });
 

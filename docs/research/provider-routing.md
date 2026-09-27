@@ -1,5 +1,7 @@
 # Provider discovery and routing research
 
+> Current contract: The 2026-09-27 owner amendment replaces universal target metadata with schema-defined domain/resource input. Client selection remains realm/provider based; implementations own applicability. Earlier target-envelope references below are historical. [Architecture](../../ARCHITECTURE.md#recipient-selection-and-request-applicability).
+
 Research for [Provider discovery and routing, issue 7](https://github.com/dvcol/devkit-extension/issues/7), checked on 2026-09-23. This note identifies reusable APIs and remaining decisions, including an executed two-hub connection-isolation experiment. It does not adopt a routing policy or implement discovery. The full server-plus-extension routing experiment remains unrun.
 
 ## Evidence and scope

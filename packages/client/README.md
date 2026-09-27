@@ -25,7 +25,7 @@ if (resolution.status === 'available') {
 }
 ```
 
-Each invocation keeps the descriptor's input/output types, operation correlation and required-target constraint. Bound operations accept `input, options`, where options contain cancellation and target metadata. Their owner never changes. Target metadata is copied at the call boundary; adapters must still validate authority and freshness.
+Each invocation keeps the descriptor's input/output types and operation correlation. Bound operations accept `input, options`, where options contain cancellation. Their provider owner never changes. Resource identifiers, domain filters and any resource-generation checks belong to the operation's schema and implementation.
 
 | API                                                                            | Ownership and behavior                                                                                                                  |
 | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
@@ -50,13 +50,13 @@ await client.actions.invoke({
   action,
   input,
   signal,
-  routing: async ({ candidates, target, signal: selectionSignal }) => {
-    return chooseProvider({ candidates, target, signal: selectionSignal });
+  routing: async ({ candidates, input, signal: selectionSignal }) => {
+    return chooseProvider({ candidates, input, signal: selectionSignal });
   },
 });
 ```
 
-The callback receives immutable candidate identities/availability, the ordinary `input` as `unknown`, optional copied target metadata and an abort signal. It returns a selector or ordered list. Its candidate owners are fixed for that invocation. Readiness is checked again for those same owners when the callback completes. A selected attachment that was detached/replaced rejects with `stale-selection`; a new invocation can select its successor. Unrelated new attachments do not enter a waiting callback's candidate set. Cancellation stops waiting and late callback completion cannot dispatch. Callback exceptions propagate unchanged. Code stays local and is never advertised or serialized by this package.
+The callback receives immutable candidate identities/availability, the ordinary `input` as `unknown` and an abort signal. It returns a selector or ordered list. Its candidate owners are fixed for that invocation. Readiness is checked again for those same owners when the callback completes. A selected attachment that was detached/replaced rejects with `stale-selection`; a new invocation can select its successor. Unrelated new attachments do not enter a waiting callback's candidate set. Cancellation stops waiting and late callback completion cannot dispatch. Callback exceptions propagate unchanged. Code stays local and is never advertised or serialized by this package.
 
 ## Broadcast preflight
 
@@ -74,10 +74,14 @@ Every selector must match at least one known provider before any dispatch. If on
 
 Known providers with an unknown catalog, unavailable contract or disconnected lifecycle still belong to the recipient set and produce rejected outcomes. Other recipients can succeed. Calls run concurrently; results use attachment order, which conveys no priority. Cancellation after dispatch also leaves individual outcomes. This is not a transaction: cancellation or an error does not prove a side effect did not occur, and nothing is replayed automatically.
 
+## Implementation applicability
+
+Selection chooses recipients. The action or service decides whether its schema-defined input concerns its resources. For example, an operation can return a declared `not-applicable` value when a domain does not match. That is a fulfilled result, not a routing error or a reason to retry elsewhere. Each selected matching backend can act. The SDK supplies no generic `accepts` hook or topic bus. Direct capability calls must enforce the same checks within the service. See the [two-layer architecture](../../ARCHITECTURE.md#recipient-selection-and-request-applicability).
+
 ## Connection requirements and evidence
 
-A `ProviderConnection` supplies its provider identity, catalog snapshot/subscription, `resolve` and `invoke`. Its identity stays fixed; replace an attachment for a new incarnation. An undefined catalog is unsynchronized; an empty catalog is authoritative absence. The adapter must authorize advertised metadata for its principal, validate target freshness, enforce contracts, reject lost transports and honor request cancellation. The router cannot establish those guarantees from a catalog alone. Native context access remains whatever the selected adapter actually owns and exposes.
+A `ProviderConnection` supplies its provider identity, catalog snapshot/subscription, `resolve` and `invoke`. Its identity stays fixed; replace an attachment for a new incarnation. An undefined catalog is unsynchronized; an empty catalog is authoritative absence. The adapter must authorize advertised metadata for its principal, enforce contracts, reject lost transports and honor request cancellation. The router cannot establish those guarantees from a catalog alone. Native context access remains whatever the selected adapter actually owns and exposes.
 
 The package tests execute actual local providers and exercise ambiguity, defaults, exact selection, callback races, cancellation, stale bindings, ownership and broadcast preflight. The [two-server example](../../examples/server-contexts/README.md) routes through genuine local Devframe hub and DevTools kit handles with separate native shared state. The packed consumer checks TypeScript Bundler/NodeNext imports and a portable browser bundle.
 
-The [native remote adapter](../server/README.md) supplies authenticated catalog synchronization and target-free RPC through an existing Devframe/DevTools client. Its accepted cancellation behavior stops the local wait while dispatched backend work may finish. Native catalog authorization controls metadata visibility; native method authorization still controls each call. Endpoint discovery, target authority and WebExtension integration remain unfinished. `RoutingError` and callback errors are local values; a wire error policy remains adapter work.
+The [native remote adapter](../server/README.md) supplies authenticated catalog synchronization and schema-validated RPC through an existing Devframe/DevTools client. Its accepted cancellation behavior stops the local wait while dispatched backend work may finish. Native catalog authorization controls metadata visibility; native method authorization still controls each call. Endpoint discovery and WebExtension integration remain unfinished. `RoutingError` and callback errors are local values; a wire error policy remains adapter work.

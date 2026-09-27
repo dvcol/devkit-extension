@@ -81,10 +81,6 @@ function validateMethods(methods: readonly ExposedMethod[]): void {
   const names = new Set<string>();
   for (const method of methods) {
     if (names.has(method.name)) throw new TypeError(`Duplicate exposed contract: ${method.name}`);
-    if (method.operation.target !== 'none')
-      throw new TypeError(
-        `Cannot expose ${method.name}: remote target authority is not implemented`,
-      );
     names.add(method.name);
   }
 }

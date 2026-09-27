@@ -14,7 +14,7 @@ import {
 } from '../src/index.js';
 
 const execution = defineExecution({ id: 'example.server' });
-const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
+const operation = defineOperation({ input: z.string(), output: z.string() });
 const capability = defineCapability({
   id: 'example.text',
   version: 1,
@@ -82,7 +82,7 @@ describe('invalid declarations', () => {
     },
     {
       name: 'missing output schema',
-      create: () => invokeFactory(defineOperation, { input: z.string(), target: 'none' }),
+      create: () => invokeFactory(defineOperation, { input: z.string() }),
     },
     {
       name: 'unsupported schema protocol',
@@ -111,8 +111,8 @@ describe('invalid declarations', () => {
         }),
     },
     {
-      name: 'invalid target requirement',
-      create: () => invokeFactory(defineOperation, { ...operation, target: 'optional' }),
+      name: 'removed generic target metadata',
+      create: () => invokeFactory(defineOperation, { ...operation, target: 'required' }),
     },
     {
       name: 'blank operation name',

@@ -24,7 +24,7 @@ const context: LocalInvocationContext = {
   },
   contributionId: 'echo',
 };
-const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
+const operation = defineOperation({ input: z.string(), output: z.string() });
 
 function invoke(
   handler: (value: unknown, operationContext: LocalOperationContext) => unknown,
@@ -55,7 +55,6 @@ describe('guarded local invocation', () => {
     const transforming = defineOperation({
       input: z.string().transform(Number),
       output: z.string().transform(Number),
-      target: 'none',
     });
     const handler = vi.fn<(value: unknown) => unknown>((value) => value);
     await expect(
@@ -113,72 +112,6 @@ describe('guarded local invocation', () => {
         handler: () => 'output',
       }),
     ).rejects.toMatchObject({ code: 'invalid-input', cause: failure });
-  });
-
-  it('validates target presence separately from the business payload', async () => {
-    expect.assertions(3);
-    const target = { kind: 'document', id: 'opaque', generation: '1' };
-    await expect(invoke(() => 'output', { target })).rejects.toMatchObject({
-      code: 'invalid-input',
-    });
-    const targeted = defineOperation({ ...operation, target: 'required' });
-    await expect(
-      invokeLocalOperation({
-        operation: targeted,
-        input: 'input',
-        options: {},
-        context,
-        activationSignal: new AbortController().signal,
-        handler: () => 'output',
-      }),
-    ).rejects.toMatchObject({ code: 'target-unavailable' });
-    await expect(
-      invokeLocalOperation({
-        operation: targeted,
-        input: 'input',
-        options: { target },
-        context,
-        activationSignal: new AbortController().signal,
-        handler: (_value, invocationContext) => invocationContext.target?.generation,
-      }),
-    ).resolves.toBe('1');
-  });
-
-  it('pins the authorized target before asynchronous validation', async () => {
-    expect.assertions(2);
-    const validating = deferred<void>();
-    const resumeValidation = deferred<void>();
-    const originalTarget = { kind: 'document', id: 'authorized', generation: '1' };
-    const options = { target: originalTarget };
-    const targeted = defineOperation({
-      ...operation,
-      target: 'required',
-      input: z.string().refine(async () => {
-        validating.resolve();
-        await resumeValidation.promise;
-        return true;
-      }),
-    });
-    const handler = vi.fn<(input: unknown, invocationContext: LocalOperationContext) => unknown>(
-      (_input, invocationContext) => invocationContext.target?.id,
-    );
-    const invocation = invokeLocalOperation({
-      operation: targeted,
-      input: 'input',
-      options,
-      context,
-      activationSignal: new AbortController().signal,
-      handler,
-    });
-    await validating.promise;
-    originalTarget.id = 'mutated';
-    options.target = { kind: 'document', id: 'replacement', generation: '2' };
-    resumeValidation.resolve();
-    await expect(invocation).resolves.toBe('authorized');
-    expect(handler).toHaveBeenCalledWith(
-      'input',
-      expect.objectContaining({ target: { kind: 'document', id: 'authorized', generation: '1' } }),
-    );
   });
 
   it('does not dispatch an already aborted invocation', async () => {

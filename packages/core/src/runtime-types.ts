@@ -8,7 +8,6 @@ import type {
   OperationValue,
   RoutedInvocationOptions,
   SetupContext,
-  TargetReference,
   Unsubscribe,
 } from './types.js';
 import type {
@@ -22,9 +21,6 @@ export type AvailabilityReason =
   | 'unsupported'
   | 'wrong-execution'
   | 'missing-permission'
-  | 'target-unavailable'
-  | 'restricted-target'
-  | 'stale-target'
   | 'disconnected'
   | 'incompatible-contract'
   | 'dependency-unavailable';
@@ -109,8 +105,7 @@ export interface CapabilityClient {
     request: CapabilityInvocationRequest<Capability, OperationName, BroadcastInvocationOptions>,
   ): Promise<readonly BroadcastOutcome<OperationValue<Capability['operations'][OperationName]>>[]>;
   resolve<Capability extends CapabilityDescriptor>(
-    request: CapabilityResolutionRequest<Capability> &
-      RoutedInvocationOptions & { readonly target?: TargetReference },
+    request: CapabilityResolutionRequest<Capability> & RoutedInvocationOptions,
   ): Promise<CapabilityResolution<Capability>>;
   invoke<
     Capability extends CapabilityDescriptor,

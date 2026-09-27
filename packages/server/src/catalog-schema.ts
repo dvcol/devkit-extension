@@ -23,16 +23,12 @@ const contract = {
       'unsupported',
       'wrong-execution',
       'missing-permission',
-      'target-unavailable',
-      'restricted-target',
-      'stale-target',
       'disconnected',
       'incompatible-contract',
       'dependency-unavailable',
     ])
     .optional(),
 };
-const target = z.enum(['none', 'required']);
 
 /** Shared native return schema. Never accepts executable schemas, contexts or arbitrary metadata. */
 export const catalogSchema = z
@@ -45,11 +41,11 @@ export const catalogSchema = z
       .array(
         z.strictObject({
           ...contract,
-          operations: z.array(z.strictObject({ name: identifier, target }).readonly()).readonly(),
+          operations: z.array(z.strictObject({ name: identifier }).readonly()).readonly(),
         }),
       )
       .readonly(),
-    actions: z.array(z.strictObject({ ...contract, target })).readonly(),
+    actions: z.array(z.strictObject(contract)).readonly(),
   })
   .optional();
 

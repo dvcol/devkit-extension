@@ -11,7 +11,6 @@ import type {
   ProviderCatalogSnapshot,
   ProviderDescriptor,
   RoutingPolicy,
-  TargetReference,
   Unsubscribe,
 } from '@devkit/core';
 import type { RoutingError } from './errors.js';
@@ -24,8 +23,7 @@ export interface ProviderConnection {
     subscribe(listener: (snapshot: ProviderCatalogSnapshot | undefined) => void): Unsubscribe;
   };
   resolve<Capability extends CapabilityDescriptor>(
-    request: CapabilityResolutionRequest<Capability> &
-      InvocationOptions & { readonly target?: TargetReference },
+    request: CapabilityResolutionRequest<Capability> & InvocationOptions,
   ): Promise<CapabilityResolution<Capability>>;
   invoke<Action extends ActionDescriptor>(
     request: ActionInvocationRequest<Action>,

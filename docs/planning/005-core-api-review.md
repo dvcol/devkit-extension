@@ -1,5 +1,7 @@
 # Consolidated core API review
 
+> Current contract: This is a historical review. The 2026-09-27 amendment removes its universal target mode/reference/context. Current operation schemas carry domain-owned resource input. See the canonical architecture for the accepted two-layer selection model. [Architecture](../../ARCHITECTURE.md#recipient-selection-and-request-applicability).
+
 Historical review packet. The owner accepted Q20–24 on 2026-09-23. The canonical [architecture](../../ARCHITECTURE.md), [glossary](../../GLOSSARY.md) and [declaration specification](../contracts/core.d.ts) supersede this proposal; the [decision ledger](./005-decisions.md#interview-round-5-owner-decisions) preserves the answers.
 
 Review packet for [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5), following interview rounds 1 through 4. The [decision ledger](./005-decisions.md) records accepted choices. This packet consolidates their consequences and labels the remaining choices; it is not an implemented SDK or the final architecture document.

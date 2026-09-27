@@ -28,7 +28,6 @@ export function snapshotOperation<Operation extends OperationDefinition>(
     ...operation,
     input: operation.input,
     output: operation.output,
-    target: operation.target,
   });
 }
 

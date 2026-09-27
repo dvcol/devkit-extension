@@ -1,6 +1,5 @@
-import { defineActionContract, defineCapability, defineOperation } from '@devkit/core';
+import { defineActionContract, defineCapability } from '@devkit/core';
 import { describe, expect, it } from 'vitest';
-import { z } from 'zod';
 
 import { invokeExposed } from './exposure-fixtures.js';
 
@@ -37,25 +36,6 @@ describe('native exposure startup boundaries', () => {
     expect(host.context.rpc.list().filter((name) => name.startsWith('devkit:'))).toEqual([
       actionMethod,
     ]);
-  });
-
-  it('rejects target-required contracts before registration or contribution setup', async () => {
-    expect.assertions(3);
-    const host = await createDevframeHost();
-    const targetAction = defineActionContract({
-      id: 'example.target',
-      version: 1,
-      operation: defineOperation({ input: z.string(), output: z.string(), target: 'required' }),
-    });
-    await expect(
-      createDevframeProvider({
-        context: host.context,
-        ...composition,
-        expose: { actions: [incrementAction, targetAction] },
-      }),
-    ).rejects.toThrow(/remote target authority/u);
-    expect(host.context.rpc.list().filter((name) => name.startsWith('devkit:'))).toEqual([]);
-    expect(host.context.commands.commands.has('example:counter')).toBe(false);
   });
 
   it('requires a new host when replacing the finite exposure contract set', async () => {

@@ -168,7 +168,7 @@ describe('provider admission and invocation contracts', () => {
       id: capability.id,
       version: capability.version,
       operations: {
-        echo: defineOperation({ input: z.unknown(), output: z.unknown(), target: 'none' }),
+        echo: defineOperation({ input: z.unknown(), output: z.unknown() }),
       },
     });
     const resolution = await runtime.resolve({ capability: counterfeit });

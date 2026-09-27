@@ -46,9 +46,7 @@ export class ProviderCatalogController implements ProviderCatalog {
             id: service.capability.id,
             version: service.capability.version,
             operations: Object.freeze(
-              Object.entries(service.capability.operations).map(([name, operation]) =>
-                Object.freeze({ name, target: operation.target }),
-              ),
+              Object.keys(service.capability.operations).map((name) => Object.freeze({ name })),
             ),
           }),
         );
@@ -61,7 +59,6 @@ export class ProviderCatalogController implements ProviderCatalog {
           ...contractMetadata(contribution),
           id: action.contract.id,
           version: action.contract.version,
-          target: action.contract.operation.target,
         }),
       );
     }

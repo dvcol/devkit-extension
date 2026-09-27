@@ -20,7 +20,7 @@ const stringSchema: StandardSchemaV1<string> = {
     },
   },
 };
-const operation = defineOperation({ input: stringSchema, output: stringSchema, target: 'none' });
+const operation = defineOperation({ input: stringSchema, output: stringSchema });
 const action = defineActionContract({
   id: 'consumer.action', version: 1, operation,
   routing: [{ realm: 'devserver', provider: 'frontend' }, { realm: 'webext' }],

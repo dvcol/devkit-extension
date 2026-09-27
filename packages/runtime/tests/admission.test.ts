@@ -16,7 +16,7 @@ import { createAdmissionRegistry } from '../src/admission';
 import type { Admission } from '../src/admission';
 
 const execution = defineExecution({ id: 'test.server' });
-const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
+const operation = defineOperation({ input: z.string(), output: z.string() });
 const capability = defineCapability({
   id: 'test.echo',
   version: 1,

@@ -1,5 +1,7 @@
 # Explicit native RPC exposure
 
+> Current contract: The 2026-09-27 owner amendment removed universal target metadata and the required-target exposure prohibition. Native methods now carry schema-defined input; capability implementations own resource applicability. The targetless restriction discussed below records the earlier investigation. [Architecture](../../ARCHITECTURE.md#recipient-selection-and-request-applicability).
+
 Research for [Server adapter contract](https://github.com/dvcol/devkit-extension/issues/6), checked on 2026-09-27. The owner selected host-owned methods and one provider startup object containing `services`, `plugins` and `expose`. This note covers the smallest implementation using the installed public Devframe API; it does not define remote discovery or a second transport.
 
 ## Recommendation

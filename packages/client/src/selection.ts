@@ -3,7 +3,6 @@ import type {
   RoutingCandidate,
   RoutingDirective,
   RoutingPolicy,
-  TargetReference,
 } from '@devkit/core';
 import { RoutingError } from './errors.js';
 import { readCatalog } from './registry.js';
@@ -14,7 +13,6 @@ export interface SelectionRequest {
   readonly id: string;
   readonly version: number;
   readonly operation?: string;
-  readonly target?: TargetReference;
   readonly input?: unknown;
   readonly signal?: AbortSignal;
   readonly routing?: RoutingPolicy;
@@ -56,17 +54,6 @@ export function selectors(value: unknown): readonly RouteSelector[] {
   );
 }
 
-export function captureTarget(target: TargetReference | undefined): TargetReference | undefined {
-  if (target === undefined) return undefined;
-  if (!identifier(target.kind) || !identifier(target.id) || !identifier(target.generation))
-    throw new RoutingError({
-      code: 'invalid-routing',
-      message:
-        'Execution target requires kind, ID and generation; authorization remains with its adapter',
-    });
-  return Object.freeze({ kind: target.kind, id: target.id, generation: target.generation });
-}
-
 export function availability(
   entry: ConnectionEntry,
   request: SelectionRequest,
@@ -94,8 +81,12 @@ export function availability(
     });
   if (
     request.operation !== undefined &&
-    'operations' in contract &&
-    !contract.operations.some((operation) => operation.name === request.operation)
+    !catalog.capabilities.some(
+      (capability) =>
+        capability.id === contract.id &&
+        capability.version === contract.version &&
+        capability.operations.some((operation) => operation.name === request.operation),
+    )
   )
     return Object.freeze({ status: 'unavailable', reason: 'unsupported' });
   return Object.freeze({ status: 'available' });
@@ -193,7 +184,6 @@ async function callbackSelection(
       candidates: descriptions,
       input: request.input,
       signal,
-      ...(request.target === undefined ? {} : { target: request.target }),
     }),
   );
   const directive = await waitForSelection(result, signal);

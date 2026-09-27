@@ -9,13 +9,12 @@ import {
   definePlugin,
   defineService,
 } from '../src/index.js';
-import type { TargetRequirement } from '../src/index.js';
 
 const setup = () => ({ echo: (value: string) => value });
 const handler = () => 'result';
 
 function mutableDeclarations() {
-  const operation = { input: z.string(), output: z.string(), target: 'none' as TargetRequirement };
+  const operation = { input: z.string(), output: z.string() };
   const capability = {
     kind: 'capability' as const,
     id: 'example.text',
@@ -29,7 +28,7 @@ function mutableDeclarations() {
 
 describe('declaration ownership', () => {
   it('snapshots capability and action operation envelopes while retaining schema identity', () => {
-    expect.assertions(10);
+    expect.assertions(8);
     const source = mutableDeclarations();
     const input = source.operation.input;
     const output = source.operation.output;
@@ -44,13 +43,10 @@ describe('declaration ownership', () => {
       operation: source.operation,
     });
 
-    source.operation.target = 'required';
     source.operation.input = z.string().min(10);
     source.operation.output = z.string().min(10);
     source.capability.operations.echo = source.operation;
 
-    expect(capability.operations.echo.target).toBe('none');
-    expect(action.operation.target).toBe('none');
     expect(capability.operations.echo.input).toBe(input);
     expect(capability.operations.echo.output).toBe(output);
     expect(action.operation.input).toBe(input);
@@ -64,6 +60,7 @@ describe('declaration ownership', () => {
   it('snapshots service and action contribution identities and requirements', () => {
     expect.assertions(12);
     const source = mutableDeclarations();
+    const originalOutput = source.operation.output;
     const requires = { text: source.capability };
     const service = defineService({
       capability: source.capability,
@@ -85,7 +82,7 @@ describe('declaration ownership', () => {
     source.contract.id = 'mutated';
     source.contract.version = 2;
     source.execution.id = 'mutated';
-    source.operation.target = 'required';
+    source.operation.output = z.string().min(10);
     requires.text = { ...source.capability, id: 'replacement' };
 
     expect(service.capability.id).toBe('example.text');
@@ -96,8 +93,8 @@ describe('declaration ownership', () => {
     expect(action.requires.text.id).toBe('example.text');
     expect(service.execution.id).toBe('example.server');
     expect(action.execution.id).toBe('example.server');
-    expect(service.capability.operations.echo.target).toBe('none');
-    expect(action.contract.operation.target).toBe('none');
+    expect(service.capability.operations.echo.output).toBe(originalOutput);
+    expect(action.contract.operation.output).toBe(originalOutput);
     expect(service).toHaveProperty('setup', setup);
     expect(action).toHaveProperty('handler', handler);
   });
@@ -121,6 +118,7 @@ describe('declaration ownership', () => {
       requires: { text: source.capability },
       handler: () => 'result',
     };
+    const originalOutput = source.operation.output;
     const input = { id: 'example.plugin', services: [service], actions: [action] };
     const plugin = definePlugin(input);
 
@@ -130,7 +128,7 @@ describe('declaration ownership', () => {
     source.capability.version = 2;
     source.contract.version = 2;
     source.execution.id = 'mutated';
-    source.operation.target = 'required';
+    source.operation.output = z.string().min(10);
     service.requires.text = { ...source.capability, id: 'replacement' };
     input.services.pop();
 
@@ -142,7 +140,7 @@ describe('declaration ownership', () => {
     expect(plugin.actions[0]?.contract.version).toBe(1);
     expect(plugin.services[0]?.requires.text.id).toBe('example.text');
     expect(plugin.actions[0]?.execution.id).toBe('example.server');
-    expect(plugin.services[0]?.capability.operations.echo.target).toBe('none');
+    expect(plugin.services[0]?.capability.operations.echo.output).toBe(originalOutput);
     expect(Object.isFrozen(service)).toBe(false);
   });
 

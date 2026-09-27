@@ -17,7 +17,7 @@ import { z } from 'zod';
 
 import { devframeHubContext, serverExecution } from '../src/index.js';
 
-const increment = defineOperation({ input: z.number(), output: z.number(), target: 'none' });
+const increment = defineOperation({ input: z.number(), output: z.number() });
 export const counterCapability = defineCapability({
   id: 'example.counter',
   version: 1,

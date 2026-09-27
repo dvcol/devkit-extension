@@ -87,7 +87,7 @@ describe('provider catalog', () => {
         contributionId,
         execution,
         status: 'active',
-        operations: [{ name: 'echo', target: 'none' }],
+        operations: [{ name: 'echo' }],
       })),
     );
     expect(before.actions).toEqual([
@@ -97,7 +97,6 @@ describe('provider catalog', () => {
         contributionId: 'handler',
         execution,
         status: 'active',
-        target: 'none',
       },
     ]);
     expect(JSON.parse(JSON.stringify(before))).toEqual(before);

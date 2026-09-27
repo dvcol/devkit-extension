@@ -19,7 +19,7 @@ import { createProviderLifecycle } from '../src/provider.js';
 import type { ProviderLifecycle, ProviderLifecycleOptions } from '../src/provider.js';
 
 export const execution = defineExecution({ id: 'example.server' });
-export const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
+export const operation = defineOperation({ input: z.string(), output: z.string() });
 export const capability = defineCapability({
   id: 'example.echo',
   version: 1,

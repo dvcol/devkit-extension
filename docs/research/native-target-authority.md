@@ -1,5 +1,7 @@
 # Native target authority
 
+> Current contract: The owner withdrew the universal SDK target contract and A1/A2/B mapping choices on 2026-09-27. Resource references now belong to operation input schemas; applicability and freshness belong to implementations. Required-target remote rejection has been removed. The investigation below is historical evidence for browser/debugger capability work, not a pending generic adapter requirement. [Architecture](../../ARCHITECTURE.md#recipient-selection-and-request-applicability).
+
 Research for [Server adapter contract #6](https://github.com/dvcol/devkit-extension/issues/6), [Permissions and trust #9](https://github.com/dvcol/devkit-extension/issues/9), and the target-dependent debugger/injection contracts, checked on 2026-09-27. This report investigates whether existing Devframe or DevTools primitives can authorize and resolve the SDK's `TargetReference` without a new target subsystem.
 
 ## Finding

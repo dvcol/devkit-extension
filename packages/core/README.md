@@ -13,7 +13,6 @@ export const title = defineCapability({
     read: defineOperation({
       input: z.object({ prefix: z.string() }),
       output: z.string(),
-      target: 'required',
     }),
   },
 });
@@ -25,7 +24,7 @@ export const title = defineCapability({
 | `defineActionContract({ id, version, operation, routing? })` | `defineAction({ contract, id, execution, requires?, handler })`  | `actions`       |
 | `defineContributionKind({ id, schema })`                     | `defineExtension({ descriptor, id, execution, payload })`        | `extensions`    |
 
-Each helper takes one object. Contracts preserve inference for handler input, result, target and named dependencies. `defineAction` now defines the handler; the former contract helper is named `defineActionContract`.
+Each helper takes one object. Contracts preserve inference for handler input, result and named dependencies. `defineAction` now defines the handler; the former contract helper is named `defineActionContract`.
 
 Factories reject invalid identifiers, non-positive or unsafe contract versions, unknown core declaration fields, wrong contribution kinds, malformed Standard Schema protocols and invalid execution/requirement descriptors. They snapshot and freeze declaration records, nested contract and operation envelopes, execution identities, requirements and plugin lists. Mutating a structural input afterward cannot change an admitted definition's identity or dependencies. Imported schemas, payload values and handlers keep their identity and ownership; factories never freeze caller-owned objects.
 
@@ -45,7 +44,7 @@ pnpm --filter @devkit/core test
 pnpm --filter @devkit/core build
 ```
 
-`tests/core.type-test.ts` compiles against the implementation and preserves the 28 negative declaration fixtures. `tests/requests.type-test.ts` adds 12 negative request fixtures, including dynamic operation/input correlation and rejection of the removed positional calls. `tests/routing.type-test.ts` adds seven negative selector/default fixtures. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
+`tests/core.type-test.ts` compiles against the implementation and checks negative declaration fixtures. `tests/requests.type-test.ts` adds 12 negative request fixtures, including dynamic operation/input correlation and rejection of the removed positional calls. `tests/routing.type-test.ts` adds seven negative selector/default fixtures. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
 
 ## Invocation requests
 
@@ -56,16 +55,17 @@ const value = await capabilities.invoke({
   capability: title,
   operation: 'read',
   input: { prefix: 'Current: ' },
-  target,
   signal,
 });
-const selected = await capabilities.resolve({ capability: title, target });
-const result = await actions.invoke({ action: readTitle, input: { prefix: '' }, target });
+const selected = await capabilities.resolve({ capability: title });
+const result = await actions.invoke({ action: readTitle, input: { prefix: '' } });
 ```
 
-`CapabilityInvocationRequest`, `ActionInvocationRequest`, `OperationRequest` and `CapabilityResolutionRequest` expose these types to adapters and callers. Operation names and descriptors determine payload, result and required-target types; input cannot widen the imported contract. When an operation name is a union, callers must preserve its corresponding payload and target as a union of complete requests.
+`CapabilityInvocationRequest`, `ActionInvocationRequest`, `OperationRequest` and `CapabilityResolutionRequest` expose these types to adapters and callers. Operation names and descriptors determine payload and result types; input cannot widen the imported contract. When an operation name is a union, callers must preserve its corresponding payload as a union of complete requests.
 
-Local provider handles accept `resolve({ capability })` and `invoke({ action, input, target?, signal? })`. They are already owned by one provider and accept no routing options. A resolved capability still uses `binding.api.read(input, { target, signal })`. Business input remains nested under `input`, so payload fields named `target` or `signal` cannot alter execution metadata.
+Local provider handles accept `resolve({ capability })` and `invoke({ action, input, signal? })`. They are already owned by one provider and accept no routing options. A resolved capability still uses `binding.api.read(input, { signal })`. Business input remains nested under `input`, so payload fields named `target` or `signal` cannot alter execution metadata.
+
+Resource identifiers and domain filters belong to each operation’s input schema. There is no common `TargetReference`, target declaration mode or top-level target option. An implementation may return its own schema-defined `not-applicable` result. Provider incarnation and activation ownership remain SDK concerns.
 
 ## Declarative routing
 
@@ -84,6 +84,6 @@ The factory snapshots and freezes the selectors and list. The default belongs to
 
 This package implements declaration validation, immutable metadata and request types. It does not execute selection. Local provider handles continue to use their fixed provider. `@devkit/client` implements local multi-provider selection, callbacks and broadcast; authenticated remote discovery remains issue 7 work.
 
-`RoutingPolicy` also accepts a local `RoutingCallback` receiving immutable candidate identities/availability, ordinary input, target metadata and cancellation. Factories preserve callback identity without executing or freezing caller code. Callbacks are not portable catalog metadata.
+`RoutingPolicy` also accepts a local `RoutingCallback` receiving immutable candidate identities/availability, ordinary input and cancellation. Factories preserve callback identity without executing or freezing caller code. Callbacks are not portable catalog metadata.
 
-`CapabilityClient.broadcast` and `ActionClient.broadcast` preserve request input/output/target inference and return typed `BroadcastOutcome<Value>[]`. They require a non-empty `selection` list and reject ordinary `routing` options. `tests/broadcast.type-test.ts` verifies these constraints. See the [client contract](../client/README.md) for preflight errors, dispatch behavior and ownership.
+`CapabilityClient.broadcast` and `ActionClient.broadcast` preserve request input/output inference and return typed `BroadcastOutcome<Value>[]`. They require a non-empty `selection` list and reject ordinary `routing` options. `tests/broadcast.type-test.ts` verifies these constraints. See the [client contract](../client/README.md) for preflight errors, dispatch behavior and ownership.

@@ -74,12 +74,9 @@ export function assertOperation(
   label: string,
 ): asserts value is OperationDefinition {
   assertRecord(value, label);
-  assertKeys(value, ['input', 'output', 'target'], label);
+  assertKeys(value, ['input', 'output'], label);
   assertSchema(value.input, `${label}.input`);
   assertSchema(value.output, `${label}.output`);
-  if (value.target !== 'none' && value.target !== 'required') {
-    throw new TypeError(`${label}.target must be required or none`);
-  }
 }
 
 export function assertCapability(

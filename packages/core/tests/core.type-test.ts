@@ -21,7 +21,6 @@ import type {
   ContextMetadata,
   NativeContextAccess,
   ProviderDescriptor,
-  TargetReference,
 } from '../src/index.js';
 
 const serverRealm = defineRealm({ id: 'example.custom-server' });
@@ -37,13 +36,11 @@ const titleCapability = defineCapability({
     read: defineOperation({
       input: z.object({ prefix: z.string() }),
       output: z.string(),
-      target: 'required',
     }),
-    status: defineOperation({ input: z.object({}), output: z.boolean(), target: 'none' }),
+    status: defineOperation({ input: z.object({}), output: z.boolean() }),
     normalize: defineOperation({
       input: z.string().transform(Number),
       output: z.string().transform(Number),
-      target: 'none',
     }),
   },
 });
@@ -60,11 +57,12 @@ export const titleService = defineService({
     scope.onDispose(() => Promise.resolve());
     return {
       read(input, context) {
-        context.target satisfies TargetReference;
+        context.signal satisfies AbortSignal;
         return `${input.prefix}${nativeServer?.serverName ?? 'unknown'}`;
       },
       status(_input, context) {
-        context.target satisfies undefined;
+        // @ts-expect-error Resource identity is operation input, not generic context.
+        context.target satisfies never;
         return true;
       },
       normalize(input) {
@@ -87,12 +85,12 @@ export const readContribution = defineAction({
   id: 'example.read-handler',
   execution: serverExecution,
   requires: { titles: titleCapability },
-  handler({ input, services, target, signal }) {
+  handler({ input, services, signal }) {
     // @ts-expect-error Dependencies preserve operation names.
     services.titles.api.missing satisfies never;
     // @ts-expect-error Requirements do not acquire unrelated services.
     services.other satisfies never;
-    return services.titles.api.read(input, { target, signal });
+    return services.titles.api.read(input, { signal });
   },
 });
 
@@ -116,22 +114,19 @@ export const plugin = definePlugin({
 export async function checkClients(
   capabilities: CapabilityClient,
   actions: ActionClient,
-  target: TargetReference,
 ): Promise<void> {
   serverRealm.id satisfies 'example.custom-server';
   serverExecution.id satisfies 'example.server';
-  const selected = await capabilities.resolve({ capability: titleCapability, target });
+  const selected = await capabilities.resolve({ capability: titleCapability });
   if (selected.status === 'available') {
-    const value = await selected.binding.api.read({ prefix: '' }, { target });
+    const value = await selected.binding.api.read({ prefix: '' });
     value satisfies string;
     // @ts-expect-error Successful results remain exact.
     value satisfies number;
     (await selected.binding.api.status({})) satisfies boolean;
     (await selected.binding.api.normalize('12')) satisfies string;
-    // @ts-expect-error A required target cannot be omitted.
-    await selected.binding.api.read({ prefix: '' });
-    // @ts-expect-error A targetless operation rejects a target.
-    await selected.binding.api.status({}, { target });
+    // @ts-expect-error Resource references are not generic invocation options.
+    await selected.binding.api.status({}, { target: { document: 'example' } });
     // @ts-expect-error Input schema transformations do not change accepted input type.
     await selected.binding.api.normalize(12);
     // @ts-expect-error A pinned binding cannot silently reroute.
@@ -141,19 +136,12 @@ export async function checkClients(
     capability: titleCapability,
     operation: 'read',
     input: { prefix: '' },
-    target,
   })) satisfies string;
-  (await actions.invoke({ action: readAction, input: { prefix: '' }, target })) satisfies string;
-  // @ts-expect-error Routed calls also require a target.
-  await capabilities.invoke({
-    capability: titleCapability,
-    operation: 'read',
-    input: { prefix: '' },
-  });
+  (await actions.invoke({ action: readAction, input: { prefix: '' } })) satisfies string;
   // @ts-expect-error Wrong operation is rejected instead of widening the descriptor.
   await capabilities.invoke({ capability: titleCapability, operation: 'missing', input: {} });
   // @ts-expect-error Action inputs match their descriptor.
-  await actions.invoke({ action: readAction, input: { prefix: 1 }, target });
+  await actions.invoke({ action: readAction, input: { prefix: 1 } });
 }
 
 export function checkContexts(
@@ -178,7 +166,7 @@ defineCapability({ id: 'example.unversioned', operations: {} });
 // @ts-expect-error Contract versions are numeric.
 defineCapability({ id: 'example.wrong-version', version: '1', operations: {} });
 // @ts-expect-error Wire return schema is mandatory.
-defineOperation({ input: z.string(), target: 'none' });
+defineOperation({ input: z.string() });
 // @ts-expect-error Plugin property names are checked.
 definePlugin({ id: 'example.typo', actons: [readContribution] });
 // @ts-expect-error Service definitions cannot appear in the action list.

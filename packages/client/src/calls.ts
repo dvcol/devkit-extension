@@ -8,7 +8,7 @@ import type {
 import type { CallOptions } from './dispatch.js';
 import { RoutingError } from './errors.js';
 import type { ConnectionEntry, ConnectionRegistry } from './registry.js';
-import { assertNotCancelled, broadcastRecipients, captureTarget, selectors } from './selection.js';
+import { assertNotCancelled, broadcastRecipients, selectors } from './selection.js';
 import type { SelectionRequest } from './selection.js';
 
 export interface RoutedCall extends CallOptions {
@@ -49,14 +49,12 @@ export function scopedRequest(
   request: RoutedCall,
   routing?: RoutingPolicy,
 ): RoutedCall {
-  const target = captureTarget(request.target);
   const policy = captureRouting(routing);
   return {
     signal:
       request.signal === undefined
         ? registry.signal
         : AbortSignal.any([registry.signal, request.signal]),
-    ...(target === undefined ? {} : { target }),
     ...(policy === undefined ? {} : { routing: policy }),
   };
 }

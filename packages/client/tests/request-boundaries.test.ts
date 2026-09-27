@@ -1,14 +1,5 @@
-import { defineCapability, defineOperation, defineService } from '@devkit/core';
 import { describe, expect, it } from 'vitest';
-import {
-  action,
-  backend,
-  capability,
-  client,
-  deferred,
-  operation,
-  requireBinding,
-} from './fixtures.js';
+import { action, backend, capability, client, deferred } from './fixtures.js';
 
 describe('routing request boundaries', () => {
   it.each([null, [], '', { provider: 'A' }])(
@@ -66,36 +57,5 @@ describe('routing request boundaries', () => {
     await first.service.enable();
     pending.resolve();
     await expect(invocation).resolves.toBe('A:restored');
-  });
-
-  it('captures a bound operation target before asynchronous dispatch', async () => {
-    expect.assertions(2);
-    const first = await backend({ id: 'A' });
-    const targeted = defineCapability({
-      id: 'example.targeted',
-      version: 1,
-      operations: {
-        read: defineOperation({
-          input: operation.input,
-          output: operation.output,
-          target: 'required',
-        }),
-      },
-    });
-    await first.runtime.services.install(
-      defineService({
-        capability: targeted,
-        id: 'targeted',
-        execution: { id: 'example.local' },
-        setup: () => ({ read: (_input, context) => context.target.generation }),
-      }),
-    );
-    const instance = client({ connections: [first.connection] });
-    const binding = requireBinding(await instance.capabilities.resolve({ capability: targeted }));
-    const target = { kind: 'document', id: 'page', generation: 'original' };
-    const invocation = binding.api.read('input', { target });
-    target.generation = 'mutated';
-    await expect(invocation).resolves.toBe('original');
-    expect(target.generation).toBe('mutated');
   });
 });

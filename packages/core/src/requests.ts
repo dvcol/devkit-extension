@@ -4,21 +4,17 @@ import type {
   InvocationOptions,
   OperationDefinition,
   OperationInput,
-  TargetReference,
 } from './types.js';
 
-/** The operation descriptor alone determines the payload and required execution target. */
+/** The operation descriptor alone determines the payload. */
 export type OperationRequest<
   Definition extends OperationDefinition,
   Options extends InvocationOptions = InvocationOptions,
 > = {
   readonly input: OperationInput<Definition>;
-} & Options &
-  (Definition['target'] extends 'required'
-    ? { readonly target: TargetReference }
-    : { readonly target?: never });
+} & Options;
 
-/** Preserve operation/payload/target correlation when several operation names are possible. */
+/** Preserve operation/payload correlation when several operation names are possible. */
 export type CapabilityInvocationRequest<
   Capability extends CapabilityDescriptor,
   OperationName extends keyof Capability['operations'] = keyof Capability['operations'],

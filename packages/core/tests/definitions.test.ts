@@ -17,7 +17,7 @@ import {
 } from '../src/index.js';
 
 const execution = defineExecution({ id: 'example.server' });
-const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
+const operation = defineOperation({ input: z.string(), output: z.string() });
 const capability = defineCapability({
   id: 'example.text',
   version: 1,
@@ -140,11 +140,11 @@ describe('portable definitions', () => {
     expect.assertions(3);
     const schema = z.string().transform(Number);
     const asyncSchema = z.string().refine(() => Promise.resolve(true));
-    const definition = defineOperation({ input: schema, output: asyncSchema, target: 'required' });
+    const definition = defineOperation({ input: schema, output: asyncSchema });
 
     expect(definition.input).toBe(schema);
     expect(definition.output).toBe(asyncSchema);
-    expect(definition.target).toBe('required');
+    expect(Object.keys(definition).toSorted()).toEqual(['input', 'output']);
   });
 
   it('preserves duplicate declarations for the provider admission strictness policy', () => {
