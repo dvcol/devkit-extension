@@ -8,6 +8,7 @@ import {
   createActivationScope, createAdmissionRegistry, createProviderLifecycle, invokeLocalOperation,
 } from '@devkit/runtime';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
+import { createClient, RoutingError } from '@devkit/client';
 
 const stringSchema: StandardSchemaV1<string> = {
   '~standard': {
@@ -54,6 +55,28 @@ export async function runConsumer(): Promise<string> {
   await provider.startup({ services: [service] });
   check(provider.catalog.snapshot().capabilities[0]?.id === capability.id, 'Packed catalog lost the contract');
   check(catalogs.some((snapshot) => snapshot.capabilities[0]?.status === 'active'), 'Packed catalog did not publish activation');
+  const client = createClient({ connections: [{
+    provider: provider.catalog.snapshot().provider,
+    catalog: provider.catalog, resolve: provider.resolve.bind(provider), invoke: provider.invoke.bind(provider),
+  }] });
+  const returnedByClient: string = await client.capabilities.invoke({
+    capability, operation: 'echo', input: 'routed', routing: () => ({ realm: 'custom' }),
+  });
+  check(returnedByClient === 'routed', 'Packed client lost typed callback dispatch');
+  const outcomes = await client.capabilities.broadcast({
+    capability, operation: 'echo', input: 'broadcast', selection: [{ realm: 'custom' }],
+  });
+  check(outcomes[0]?.status === 'fulfilled' && outcomes[0].value === 'broadcast', 'Packed broadcast failed');
+  try {
+    await client.capabilities.broadcast({
+      capability, operation: 'echo', input: 'missing', selection: [{ realm: 'missing' }],
+    });
+    throw new Error('Missing recipient accepted');
+  } catch (error) {
+    check(error instanceof RoutingError && error.code === 'unmatched-selection', 'Missing selector diagnostic was lost');
+  }
+  client.dispose();
+  check(provider.catalog.snapshot().status === 'open', 'Client disposed the adapter owner');
   unsubscribe();
   await provider.dispose();
   check(provider.catalog.snapshot().status === 'disposed', 'Packed catalog did not finish disposal');

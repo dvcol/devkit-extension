@@ -82,4 +82,8 @@ const readTitle = defineActionContract({
 
 The factory snapshots and freezes the selectors and list. The default belongs to the public action contract so clients can inspect it before choosing a backend. A routed request's explicit `routing` replaces the whole default. An ordered list describes fallback before dispatch to one provider; it never requests broadcast or permits replay after dispatch.
 
-This package implements declaration validation, immutable metadata and request types. It does not execute selection. Local provider handles continue to use their fixed provider. Remote discovery, a multi-provider client, callback selection and broadcast remain issue 7 work.
+This package implements declaration validation, immutable metadata and request types. It does not execute selection. Local provider handles continue to use their fixed provider. `@devkit/client` implements local multi-provider selection, callbacks and broadcast; authenticated remote discovery remains issue 7 work.
+
+`RoutingPolicy` also accepts a local `RoutingCallback` receiving immutable candidate identities/availability, ordinary input, target metadata and cancellation. Factories preserve callback identity without executing or freezing caller code. Callbacks are not portable catalog metadata.
+
+`CapabilityClient.broadcast` and `ActionClient.broadcast` preserve request input/output/target inference and return typed `BroadcastOutcome<Value>[]`. They require a non-empty `selection` list and reject ordinary `routing` options. `tests/broadcast.type-test.ts` verifies these constraints. See the [client contract](../client/README.md) for preflight errors, dispatch behavior and ownership.

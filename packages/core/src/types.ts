@@ -1,4 +1,5 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
+import type { RoutingPolicy } from './routing.js';
 
 export type Awaitable<Value> = Value | Promise<Value>;
 export type Unsubscribe = () => void;
@@ -61,7 +62,7 @@ export interface InvocationOptions {
 }
 
 export interface RoutedInvocationOptions extends InvocationOptions {
-  readonly routing?: RoutingDirective;
+  readonly routing?: RoutingPolicy;
 }
 
 export interface OperationDefinition {
@@ -164,8 +165,8 @@ export interface ActionDescriptor<Operation extends OperationDefinition = Operat
   readonly id: string;
   readonly version: number;
   readonly operation: Operation;
-  /** Client-visible default; an invocation's explicit routing replaces this entire directive. */
-  readonly routing?: RoutingDirective;
+  /** Client-visible default; an invocation's explicit routing replaces this entire policy. */
+  readonly routing?: RoutingPolicy;
 }
 
 export interface ActionDeclaration extends ContributionDeclaration<'action'> {

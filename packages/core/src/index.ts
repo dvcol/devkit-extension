@@ -16,3 +16,4 @@ export type * from './types.js';
 export type * from './runtime-types.js';
 export type * from './requests.js';
 export type * from './catalog.js';
+export type * from './routing.js';

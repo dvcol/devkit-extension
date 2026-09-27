@@ -1,4 +1,5 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
+import type { RoutingPolicy } from './routing.js';
 
 import type {
   ActionDescriptor,
@@ -8,7 +9,6 @@ import type {
   ContributionKindDescriptor,
   OperationDefinition,
   RouteSelector,
-  RoutingDirective,
   ExtensionDefinition,
   ServiceDeclaration,
 } from './types.js';
@@ -116,7 +116,8 @@ function assertRouteSelector(value: unknown, label: string): asserts value is Ro
   if (Object.hasOwn(value, 'provider')) assertIdentifier(value.provider, `${label}.provider`);
 }
 
-function assertRouting(value: unknown, label: string): asserts value is RoutingDirective {
+function assertRouting(value: unknown, label: string): asserts value is RoutingPolicy {
+  if (typeof value === 'function') return;
   if (!Array.isArray(value)) {
     assertRouteSelector(value, label);
     return;

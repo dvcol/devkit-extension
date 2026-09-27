@@ -8,6 +8,7 @@ export default defineConfig({
         /^node:/u,
         '@devframes/hub/initiate',
         '@devframes/hub/node',
+        '@devkit/client',
         '@devkit/core',
         '@devkit/example-contribution',
         '@devkit/server',

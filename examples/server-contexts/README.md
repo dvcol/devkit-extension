@@ -15,6 +15,7 @@ pnpm install --frozen-lockfile
 pnpm --filter @devkit/example-server-contexts... run build
 pnpm --filter @devkit/example-server-contexts run demo:devframe
 pnpm --filter @devkit/example-server-contexts run demo:devtools
+pnpm --filter @devkit/example-server-contexts run demo:routing
 pnpm --filter @devkit/example-server-contexts run test
 ```
 
@@ -28,6 +29,12 @@ pnpm --filter @devkit/example-server-contexts run lint
 pnpm --filter @devkit/example-server-contexts run format:check
 ```
 
+## Two-provider routing
+
+`demo:routing` creates both native hosts together and attaches their provider handles to `@devkit/client`. An ordered default initially increments the Devframe counter to `3`. Disabling that service routes the next increment to DevTools, reaching `4`; a callback selects DevTools again, reaching `6`. After re-enabling Devframe, a broadcast requesting its provider and a missing provider rejects before dispatch. Capability broadcast reads confirm unchanged counters `[3, 6]`.
+
+A broadcast with overlapping realm/provider selectors then increments each counter once, returning `[4, 7]`. Client disposal leaves native commands and state alive; reading them still returns `[4, 7]`. The runner subsequently disposes both providers and closes both hosts. `checks/routing.ts` asserts these receipts through the built package export.
+
 ## Scope
 
-This is headless local integration. It does not run a DevTools UI, a remote client or router, Vite HMR, a JSON renderer, or browser extension execution. The kit context has no Vite server in this example. Browser-hosted examples and reload behavior remain separate work.
+This is headless local integration. It does not run a DevTools UI, remote transport or discovery, Vite HMR, a JSON renderer, or browser extension execution. The kit context has no Vite server in this example. Browser-hosted examples and reload behavior remain separate work.

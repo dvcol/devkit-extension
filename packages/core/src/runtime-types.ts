@@ -16,6 +16,7 @@ import type {
   CapabilityInvocationRequest,
   CapabilityResolutionRequest,
 } from './requests.js';
+import type { BroadcastInvocationOptions, BroadcastOutcome } from './routing.js';
 
 export type AvailabilityReason =
   | 'unsupported'
@@ -97,6 +98,12 @@ export interface ContributionKindInstaller<Kind extends ContributionKindDescript
 }
 
 export interface CapabilityClient {
+  broadcast<
+    Capability extends CapabilityDescriptor,
+    const OperationName extends keyof Capability['operations'],
+  >(
+    request: CapabilityInvocationRequest<Capability, OperationName, BroadcastInvocationOptions>,
+  ): Promise<readonly BroadcastOutcome<OperationValue<Capability['operations'][OperationName]>>[]>;
   resolve<Capability extends CapabilityDescriptor>(
     request: CapabilityResolutionRequest<Capability> &
       RoutedInvocationOptions & { readonly target?: TargetReference },
@@ -110,6 +117,9 @@ export interface CapabilityClient {
 }
 
 export interface ActionClient {
+  broadcast<Action extends ActionDescriptor>(
+    request: ActionInvocationRequest<Action, BroadcastInvocationOptions>,
+  ): Promise<readonly BroadcastOutcome<OperationValue<Action['operation']>>[]>;
   invoke<Action extends ActionDescriptor>(
     request: ActionInvocationRequest<Action, RoutedInvocationOptions>,
   ): Promise<OperationValue<Action['operation']>>;

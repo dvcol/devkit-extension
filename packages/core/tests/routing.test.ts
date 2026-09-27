@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { defineAction, defineActionContract, defineOperation, definePlugin } from '../src/index.js';
 import type { RouteSelector } from '../src/index.js';
@@ -6,6 +6,15 @@ import type { RouteSelector } from '../src/index.js';
 const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
 
 describe('declarative action routing', () => {
+  it('retains a local routing callback without executing or freezing caller code', () => {
+    expect.assertions(3);
+    const routing = vi.fn<() => RouteSelector>(() => ({ realm: 'devserver' }));
+    const action = defineActionContract({ id: 'example.callback', version: 1, operation, routing });
+    expect(action.routing).toBe(routing);
+    expect(routing).not.toHaveBeenCalled();
+    expect(Object.isFrozen(routing)).toBe(false);
+  });
+
   it('retains custom string identifiers without coercion or normalization', () => {
     expect.assertions(3);
     const source = { realm: 'Example.Custom', provider: 'Provider A' };

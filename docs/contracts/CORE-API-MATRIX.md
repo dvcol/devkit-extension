@@ -65,3 +65,17 @@ This table records headless local server integration only. The maintained [`exam
 These are partial DF/DT lifecycle cells, not complete host conformance. Failed-restart candidate cleanup, failed native setup, preview, bundled dev, browser-side HMR delivery, remote SDK transport, authentication and browser UI need separate evidence. No Chromium/Firefox extension cell is satisfied by these tests.
 
 Provider routing, state, transport, real-host lifecycle and the complete API-to-example catalogue remain required. View, script and transform entries still need domain-specific implementation. Do not infer supported host cells from these local controller tests.
+
+
+## Local routing implementation evidence
+
+| Implemented API | Example and automated evidence | Proven scope |
+| --- | --- | --- |
+| `RoutingPolicy`, `RoutingCallback`, `RoutingContext`, `RoutingCandidate` | Core inert-callback test and compile fixtures; client callback tests | Local callbacks retain author-owned function identity, receive immutable candidate metadata and cancellation, preserve original candidate owners and recheck readiness. No callback serialization. |
+| `createClient`, `ProviderConnection`, `ProviderAttachment`, `ConnectionSnapshot` | Client registry tests; server `demo:routing` | Fixed identity, duplicate rejection, attach/detach/dispose ownership, authoritative versus unknown catalogs, observer isolation. Native server handles satisfy the interface. |
+| Routed action/capability invoke and capability resolve | Client routing/request-boundary tests; real two-server demo | Default precedence, ordered fallback, ambiguity, exact contract selection, no replay, binding ownership, target copying and malformed-input rejection. Permissions remain adapter-owned. |
+| Capability/action broadcast, `BroadcastInvocationOptions`, `BroadcastOutcome` | Core positive/negative type fixtures; client broadcast tests; real two-server counter check | Required recipient union, missing-recipient rejection before any dispatch, overlap deduplication, retained successful siblings and known-unavailable outcomes. |
+| `RoutingError`, `RoutingErrorCode` | Client tests and packed consumer | Local codes and actionable unmatched-selector diagnostics; no network serialization claim. |
+| Portable package exports | `scripts/check-packages.ts` | Core/runtime/client tarballs installed without workspace sources; strict Bundler and NodeNext compilation, execution and host-free browser bundling. |
+
+These checks add local DF/DT composition evidence. Authenticated remote catalog synchronization, discovery, target authority and all WebExtension cells still require their domain implementations and real-host checks.

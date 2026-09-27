@@ -16,13 +16,15 @@
     "build": "vite build && tsc -p tsconfig.build.json",
     "demo:devframe": "node src/demo.ts devframe",
     "demo:devtools": "node src/demo.ts devtools",
-    "test": "node checks/integration.ts",
+    "demo:routing": "node src/routing-demo.ts",
+    "test": "node checks/integration.ts && node checks/routing.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src checks vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check ."
   },
   "dependencies": {
     "@devframes/hub": "1.0.0",
+    "@devkit/client": "workspace:*",
     "@devkit/core": "workspace:*",
     "@devkit/example-contribution": "workspace:*",
     "@devkit/server": "workspace:*",

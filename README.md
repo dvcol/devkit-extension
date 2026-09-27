@@ -32,8 +32,11 @@ The [headless server examples](./examples/server-contexts/README.md) reuse those
 pnpm --filter @devkit/example-server-contexts... run build
 pnpm --filter @devkit/example-server-contexts run demo:devframe
 pnpm --filter @devkit/example-server-contexts run demo:devtools
+pnpm --filter @devkit/example-server-contexts run demo:routing
 pnpm --filter @devkit/example-server-contexts run test
 ```
+
+The [routing client](./packages/client/README.md) composes those local providers. `demo:routing` runs both hosts simultaneously, exercises fallback and callbacks, rejects an incomplete broadcast before either counter changes, and dispatches overlapping selectors once per provider. Client disposal retains native state and host ownership.
 
 The [native Vite host examples](./examples/vite-hosts/README.md) mount the released Devframe hub and Vite DevTools plugins. Both run the shared counter and exercise HTTP startup, delayed cleanup, config-watcher restarts, fresh incarnations and client-module invalidation. Run `pnpm --filter @devkit/example-vite-hosts demo:devframe` or `demo:devtools` after building that example's dependency graph.
 

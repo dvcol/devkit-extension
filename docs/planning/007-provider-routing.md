@@ -1,6 +1,6 @@
 # Provider identity, discovery and routing contract
 
-Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed identity and discovery ownership on 2026-09-23, then ambiguity, dispatch-time availability, separate broadcast methods and a compact invocation API on 2026-09-24. The owner accepted defaults on the public action declaration. Required realm/optional provider string selectors and single-object declaration helpers are now accepted. The remaining routing semantics are listed below. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
+Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed identity and discovery ownership on 2026-09-23, then ambiguity, dispatch-time availability, separate broadcast methods and a compact invocation API on 2026-09-24. The owner accepted defaults on the public action declaration. Required realm/optional provider string selectors and single-object declaration helpers are now accepted. The local client behavior is implemented below; authenticated remote discovery and catalog transport remain outstanding. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
 
 ## Accepted ownership
 
@@ -49,7 +49,7 @@ The earlier Q6/Q8 core decisions already established that a per-call policy repl
 | Broadcast | Separate capability/action broadcast methods return per-provider outcomes. Ordinary invocation still returns `Promise<Value>`; an individual broadcast failure retains successful sibling results. |
 | Invocation arguments | Prefer a single request object, or at most two or three clear arguments separating business input from common options. Replace the positional contract/operation/input/options chain in the final routed API. The implemented request signatures and their proof are recorded below. |
 
-These are contract decisions, not claims that a multi-provider router has been implemented. Core client interfaces and local provider handles now use request objects. They still expose no implemented multi-provider routing or broadcast methods.
+These decisions are now executed by `@devkit/client` for attached provider connections. Local handles remain pinned to their provider. The chronological research notes below preserve earlier proposals; the implementation record at the end states current behavior.
 
 ## Earlier declaration review, superseded by the accepted follow-up
 
@@ -192,6 +192,55 @@ Catalog entries contain no schemas, handlers, native contexts or diagnostic caus
 
 The contribution demo exercises snapshot/subscription against actual lifecycle work. Runtime tests cover versions, immutable snapshots, late admission, rejected duplicates, dependency restoration, replacement and cleanup failure. Native hub/kit tests verify the same catalog on real local server handles. Remote catalog publication and the multi-provider client remain outstanding.
 
-### Next owner decision
+### Accepted missing-recipient decision
 
-Q3: Broadcast names A and B, but B matches no known provider. Reject before any dispatch, or execute A and retain an explicit missing-recipient outcome? Recommended: reject before dispatch if any selector matches no known provider, including a completely empty match. Known disconnected or permission-blocked providers can still produce their own failed outcomes. This choice determines whether A's side effect occurs and remains pending.
+Q3 is settled: reject the entire broadcast before dispatch when any selector matches no known provider. The error must identify all unmatched selectors clearly. Known providers that are disconnected or permission-blocked can still produce individual failed outcomes. A's side effect must not occur when B is missing.
+
+## Implemented local routing client
+
+`@devkit/client` implements the core action/capability interfaces over adapter-owned `ProviderConnection`s. Both local server handles satisfy that interface directly. This is an in-process client composition, without a daemon, replacement RPC engine or global state store.
+
+| Contract | Implementation |
+| --- | --- |
+| Identity and ownership | Registry key is `(realm, provider ID)`; every duplicate throws. Attachment/incarnation fencing prevents stale callbacks and bindings from switching owners. Detach removes subscriptions and cancels client work, leaving backend ownership intact. |
+| Catalog readiness | Undefined means unsynchronized. Selection requires an open provider, exact contract version and active contribution. Known unsupported/disabled/unsynchronized providers appear in candidate diagnostics. Target authorization and permissions remain adapter obligations. |
+| Precedence | Per-call policy replaces action default, then client default. Malformed explicit routes reject rather than falling back to defaults. |
+| Ordinary routing | Ordered groups are checked before dispatch. Zero eligible candidates advances; several reject as ambiguous and require a discriminant. No implicit wait or post-dispatch replay. |
+| Callback | Fixed original candidate owners, current readiness for still-attached owners, stale-owner rejection and cancellation of waiting. Input is `unknown` and must be narrowed by the policy. Callback exceptions propagate unchanged. |
+| Bound capability | Selected adapter returns its native context and API. The client validates owner identity, captures per-call target metadata and keeps the binding pinned to that attachment. |
+| Broadcast | Required non-empty recipient union; no ordinary defaults or `routing` property. Preflight rejects every unmatched selector before any provider call. Overlap deduplicates; known unavailable recipients have rejected outcomes alongside successes. |
+| Error reporting | Local `RoutingError` codes include ambiguity, unavailable provider, stale selection, cancellation and unmatched selection. Unmatched errors expose `.selectors` and an actionable message. Callback/adapter errors remain their original values. Wire-safe error disclosure is separate work. |
+
+```ts
+const client = createClient({
+  connections: [devframeProvider, devtoolsProvider],
+  routing: [
+    { realm: 'devserver', provider: 'frontend' },
+    { realm: 'devserver', provider: 'tools' },
+  ],
+});
+await client.actions.invoke({ action, input });
+await client.actions.broadcast({
+  action,
+  input,
+  selection: [{ realm: 'devserver', provider: 'frontend' }, { realm: 'webext' }],
+});
+```
+
+```mermaid
+flowchart TD
+  Call[Typed client request] --> Mode{Ordinary or broadcast?}
+  Mode -->|Ordinary| Policy[Call / action / client policy]
+  Policy --> Select[Select original eligible owner]
+  Select --> Recheck[Check attachment, readiness and cancellation]
+  Mode -->|Broadcast| Preflight[Match every selector before dispatch]
+  Preflight -->|Any missing| Error[Reject with all unmatched selectors]
+  Preflight -->|All known| Union[Deduplicate attached recipients]
+  Union --> Recheck
+  Recheck --> Adapter[Selected connection executes]
+  Adapter --> Result[Value or per-provider outcome]
+```
+
+The package tests use actual local lifecycle providers, including disable/enable, in-flight detach, replacement while a callback waits, mutable target aliases, malformed callback results and mixed broadcast outcomes. New compile fixtures verify callback context and broadcast input/output/target correlation. The isolated packed consumer imports all three portable packages, executes callback/broadcast behavior, checks Bundler and NodeNext declarations and bundles them without host dependencies.
+
+`examples/server-contexts` now provides `demo:routing` and an executable check against simultaneous genuine Devframe hub and DevTools kit contexts. Each owns native shared state. A missing-recipient increment leaves both counters unchanged; overlapping recipient selectors increment each once. This establishes local multi-host routing only. Remote catalog endpoints, authenticated client synchronization, verified discovery and principal/target filtering remain incomplete. Neither the headless demo nor a browser-compatible bundle proves remote or WebExtension behavior.

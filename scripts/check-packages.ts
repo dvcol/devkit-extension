@@ -11,7 +11,7 @@ import { consumerSource } from './fixtures/core-runtime-package-source.ts';
 
 const repositoryDirectory = resolvePath(import.meta.dirname, '..');
 const consumerDirectory = await realpath(await mkdtemp(join(tmpdir(), 'devkit-package-consumer-')));
-const packageNames = ['core', 'runtime'] as const;
+const packageNames = ['core', 'runtime', 'client'] as const;
 
 function run(command: string, arguments_: readonly string[], directory: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -87,8 +87,8 @@ async function inspectInstalledPackages() {
     if (packageName === 'core') coreVersion = manifest['version'];
     assert.ok(isRecord(manifest['dependencies']));
     const dependencies = manifest['dependencies'];
-    assert.equal(dependencies['@standard-schema/spec'], '1.1.0');
-    if (packageName === 'runtime') {
+    if (packageName !== 'client') assert.equal(dependencies['@standard-schema/spec'], '1.1.0');
+    if (packageName !== 'core') {
       assert.equal(
         dependencies['@devkit/core'],
         coreVersion,
@@ -96,7 +96,7 @@ async function inspectInstalledPackages() {
       );
     }
     const permitted = new Set(['@standard-schema/spec']);
-    if (packageName === 'runtime') permitted.add('@devkit/core');
+    if (packageName !== 'core') permitted.add('@devkit/core');
     assert.ok(Object.keys(dependencies).every((dependency) => permitted.has(dependency)));
     const files = await readdir(directory);
     assert.ok(files.includes('dist'));
@@ -209,7 +209,7 @@ async function checkBrowserBundle() {
 try {
   console.info(
     styleText('cyan', '📦 [artifacts]'),
-    'Packing and installing core/runtime in a clean consumer using cached dependencies where available.',
+    'Packing and installing core/runtime/client in a clean consumer using cached dependencies where available.',
   );
   await packAndInstall();
   await inspectInstalledPackages();

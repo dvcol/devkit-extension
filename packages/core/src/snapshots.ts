@@ -12,6 +12,7 @@ import type {
   RoutingDirective,
   ServiceDeclaration,
 } from './types.js';
+import type { RoutingPolicy } from './routing.js';
 
 /** Own declaration envelopes, retaining author-owned schemas, payloads and executable functions. */
 export function snapshotExecution<Execution extends ExecutionDescriptor>(
@@ -81,7 +82,8 @@ function snapshotRouteSelector(selector: RouteSelector): RouteSelector {
   return Object.freeze({ ...selector, realm: selector.realm });
 }
 
-function snapshotRouting(routing: RoutingDirective): RoutingDirective {
+function snapshotRouting(routing: RoutingPolicy): RoutingPolicy {
+  if (typeof routing === 'function') return routing;
   if (!isRoutingFallback(routing)) return snapshotRouteSelector(routing);
   const [first, ...remaining] = routing;
   return Object.freeze([
