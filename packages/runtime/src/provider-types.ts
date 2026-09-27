@@ -38,16 +38,16 @@ export interface ProviderLifecycleOptions {
   report(diagnostic: RuntimeDiagnostic, cause?: unknown): void;
 }
 
-export interface StartupInstallationResult {
-  readonly services: readonly InstallationResult[];
-  readonly plugins: readonly InstallationResult[];
+export interface StartupInstallationResult<Strict extends boolean = true> {
+  readonly services: readonly InstallationResult<Strict>[];
+  readonly plugins: readonly InstallationResult<Strict>[];
 }
 
-export interface ProviderLifecycle {
+export interface ProviderLifecycle<Strict extends boolean = true> {
   readonly catalog: ProviderCatalog;
-  readonly services: DefinitionInstallationApi<ServiceDeclaration>;
-  readonly plugins: DefinitionInstallationApi<PluginDefinition>;
-  startup(composition: StartupComposition): Promise<StartupInstallationResult>;
+  readonly services: DefinitionInstallationApi<ServiceDeclaration, Strict>;
+  readonly plugins: DefinitionInstallationApi<PluginDefinition, Strict>;
+  startup(composition: StartupComposition): Promise<StartupInstallationResult<Strict>>;
   resolve<Capability extends CapabilityDescriptor>(
     request: CapabilityResolutionRequest<Capability>,
   ): Promise<CapabilityResolution<Capability>>;

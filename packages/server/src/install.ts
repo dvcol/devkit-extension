@@ -23,8 +23,8 @@ function reportDiagnostic(diagnostic: RuntimeDiagnostic, cause?: unknown): void 
 async function install(
   context: DevframeHubContext,
   native: NativeContextAccess,
-  composition: ServerComposition,
-): Promise<ServerProviderHandle> {
+  composition: ServerComposition<boolean>,
+): Promise<ServerProviderHandle<boolean>> {
   if (composition.providerId.trim().length === 0)
     throw new TypeError('Provider ID must not be empty');
   if (installedContexts.has(context))
@@ -49,10 +49,10 @@ async function install(
 
 async function startProvider(
   context: DevframeHubContext,
-  composition: ServerComposition,
-  lifecycle: ProviderLifecycle,
+  composition: ServerComposition<boolean>,
+  lifecycle: ProviderLifecycle<boolean>,
   provider: ProviderDescriptor,
-): Promise<ServerProviderHandle> {
+): Promise<ServerProviderHandle<boolean>> {
   let disposal: Promise<void> | undefined;
   async function release(): Promise<void> {
     await lifecycle.dispose();
@@ -73,7 +73,7 @@ async function startProvider(
       resolve: (request) => lifecycle.resolve(request),
       invoke: (request) => lifecycle.invoke(request),
       dispose,
-    } satisfies ServerProviderHandle);
+    } satisfies ServerProviderHandle<boolean>);
   } catch (startupFailure) {
     try {
       await dispose();
@@ -92,14 +92,38 @@ async function startProvider(
 
 export function installDevframeProvider(
   context: DevframeHubContext,
+  composition: ServerComposition<false> & { readonly strict: false },
+): Promise<ServerProviderHandle<false>>;
+export function installDevframeProvider(
+  context: DevframeHubContext,
   composition: ServerComposition,
-): Promise<ServerProviderHandle> {
+): Promise<ServerProviderHandle>;
+export function installDevframeProvider(
+  context: DevframeHubContext,
+  composition: ServerComposition<boolean>,
+): Promise<ServerProviderHandle<boolean>>;
+export function installDevframeProvider(
+  context: DevframeHubContext,
+  composition: ServerComposition<boolean>,
+): Promise<ServerProviderHandle<boolean>> {
   return install(context, nativeAccess(context), composition);
 }
 
 export function installDevToolsProvider(
   context: KitNodeContext,
+  composition: ServerComposition<false> & { readonly strict: false },
+): Promise<ServerProviderHandle<false>>;
+export function installDevToolsProvider(
+  context: KitNodeContext,
   composition: ServerComposition,
-): Promise<ServerProviderHandle> {
+): Promise<ServerProviderHandle>;
+export function installDevToolsProvider(
+  context: KitNodeContext,
+  composition: ServerComposition<boolean>,
+): Promise<ServerProviderHandle<boolean>>;
+export function installDevToolsProvider(
+  context: KitNodeContext,
+  composition: ServerComposition<boolean>,
+): Promise<ServerProviderHandle<boolean>> {
   return install(context, nativeAccess(context, context), composition);
 }

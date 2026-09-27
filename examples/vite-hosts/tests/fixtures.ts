@@ -12,8 +12,8 @@ import { createServer } from 'vite';
 import type { ViteDevServer } from 'vite';
 
 export function admitted(result: InstallationResult | undefined) {
-  if (result?.status !== 'admitted') throw new Error('Expected an admitted installation');
-  return result.handle;
+  if (result === undefined) throw new Error('Expected an admitted installation');
+  return result;
 }
 
 export async function bindingFor(provider: ServerProviderHandle) {

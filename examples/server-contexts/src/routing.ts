@@ -27,12 +27,12 @@ async function rejectedSelection(client: Client) {
 
 async function exerciseRoutes(client: Client, devframe: ServerProviderHandle) {
   const installation = devframe.startup.services[0];
-  if (installation?.status !== 'admitted') throw new Error('Counter service was not admitted');
+  if (installation === undefined) throw new Error('Counter service was not admitted');
   const first = await client.actions.invoke({
     action: increaseCounterAction,
     input: { amount: 3 },
   });
-  await installation.handle.disable();
+  await installation.disable();
   const fallback = await client.actions.invoke({
     action: increaseCounterAction,
     input: { amount: 4 },
@@ -42,7 +42,7 @@ async function exerciseRoutes(client: Client, devframe: ServerProviderHandle) {
     input: { amount: 2 },
     routing: () => devtoolsRoute,
   });
-  await installation.handle.enable();
+  await installation.enable();
   const rejected = await rejectedSelection(client);
   const beforeBroadcast = await client.capabilities.broadcast({
     capability: counterCapability,

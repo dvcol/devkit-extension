@@ -16,7 +16,7 @@ import { vi } from 'vitest';
 import { z } from 'zod';
 
 import { createProviderLifecycle } from '../src/provider.js';
-import type { ProviderLifecycleOptions } from '../src/provider.js';
+import type { ProviderLifecycle, ProviderLifecycleOptions } from '../src/provider.js';
 
 export const execution = defineExecution({ id: 'example.server' });
 export const operation = defineOperation({ input: z.string(), output: z.string(), target: 'none' });
@@ -27,6 +27,17 @@ export const capability = defineCapability({
 });
 export const action = defineActionContract({ id: 'example.action', version: 1, operation });
 
+export function provider(options: Partial<ProviderLifecycleOptions> & { readonly strict: false }): {
+  runtime: ProviderLifecycle<false>;
+  diagnostics: RuntimeDiagnostic[];
+};
+export function provider(
+  options?: Partial<ProviderLifecycleOptions> & { readonly strict?: true },
+): { runtime: ProviderLifecycle; diagnostics: RuntimeDiagnostic[] };
+export function provider(options: Partial<ProviderLifecycleOptions>): {
+  runtime: ProviderLifecycle<boolean>;
+  diagnostics: RuntimeDiagnostic[];
+};
 export function provider(options: Partial<ProviderLifecycleOptions> = {}) {
   const diagnostics: RuntimeDiagnostic[] = [];
   const runtime = createProviderLifecycle({
@@ -54,8 +65,10 @@ export function echoService(id = 'example.service', valuePrefix = '') {
   });
 }
 
-export function admitted(result: InstallationResult | undefined) {
-  if (result?.status !== 'admitted') throw new Error('Expected admitted installation');
+export function admitted(result: InstallationResult<boolean> | undefined) {
+  if (result === undefined) throw new Error('Expected admitted installation');
+  if (!('status' in result)) return result;
+  if (result.status === 'skipped') throw new Error(result.diagnostic.message);
   return result.handle;
 }
 

@@ -21,8 +21,8 @@ import {
 import { createHeadlessHost } from './host.js';
 
 function admitted(result: InstallationResult | undefined) {
-  if (result?.status !== 'admitted') throw new Error('The counter installation was not admitted');
-  return result.handle;
+  if (result === undefined) throw new Error('The counter installation was not admitted');
+  return result;
 }
 
 function describeNativeContexts(native: NativeContextAccess, context: DevframeHubContext) {

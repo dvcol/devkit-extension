@@ -1,4 +1,4 @@
-import type { InstallationHandle, InstallationSnapshot } from '@devkit/core';
+import type { InstallationHandle, InstallationResult, InstallationSnapshot } from '@devkit/core';
 
 import type { Reservation } from './admission.js';
 import { operationError } from './errors.js';
@@ -9,7 +9,11 @@ import {
   notifyListener,
   providerDiagnostic,
 } from './provider-status.js';
-import type { ExecutableContribution, OwnedInstallation } from './provider-types.js';
+import type {
+  ExecutableContribution,
+  OwnedInstallation,
+  StartupInstallationResult,
+} from './provider-types.js';
 
 export function createInstallation(reservation: Reservation): OwnedInstallation {
   const installation: OwnedInstallation = {
@@ -184,4 +188,24 @@ class InstallationController implements InstallationHandle {
     this.installation.listeners.clear();
     this.environment.refresh();
   }
+}
+
+/** Admission internals retain outcomes; callers receive the configured strictness shape. */
+export function installationResult(
+  result: InstallationResult<false>,
+  strict: boolean | undefined,
+): InstallationResult<boolean> {
+  if (strict === false) return result;
+  if (result.status === 'skipped') throw operationError(result.diagnostic);
+  return result.handle;
+}
+
+export function installationResults(
+  results: StartupInstallationResult<false>,
+  strict: boolean | undefined,
+): StartupInstallationResult<boolean> {
+  return {
+    services: results.services.map((result) => installationResult(result, strict)),
+    plugins: results.plugins.map((result) => installationResult(result, strict)),
+  };
 }

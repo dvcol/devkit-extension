@@ -79,14 +79,13 @@ export async function backend(options: BackendOptions) {
     }),
   );
   await runtime.plugins.install(actionPlugin(contract, execution));
-  if (service.status !== 'admitted') throw new Error('Service was not admitted');
   const connection: ProviderConnection = {
     provider: runtime.catalog.snapshot().provider,
     catalog: runtime.catalog,
     resolve: (request) => runtime.resolve(request),
     invoke: (request) => runtime.invoke(request),
   };
-  return { runtime, calls, connection, action: contract, service: service.handle };
+  return { runtime, calls, connection, action: contract, service };
 }
 
 function execute(

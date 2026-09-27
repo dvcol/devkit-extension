@@ -52,7 +52,10 @@ export async function runConsumer(): Promise<string> {
   });
   const catalogs: ProviderCatalogSnapshot[] = [];
   const unsubscribe = provider.catalog.subscribe((snapshot) => { catalogs.push(snapshot); });
-  await provider.startup({ services: [service] });
+  const startup = await provider.startup({ services: [service] });
+  const installation = startup.services[0];
+  check(installation?.snapshot().status === 'ready', 'Strict packed startup did not return a handle');
+  check(!('handle' in installation), 'Strict packed startup retained an admission envelope');
   check(provider.catalog.snapshot().capabilities[0]?.id === capability.id, 'Packed catalog lost the contract');
   check(catalogs.some((snapshot) => snapshot.capabilities[0]?.status === 'active'), 'Packed catalog did not publish activation');
   const client = createClient({ connections: [{

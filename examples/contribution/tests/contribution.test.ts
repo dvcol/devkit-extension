@@ -18,8 +18,8 @@ import {
 } from '../src/provider.js';
 
 function installationHandle(result: InstallationResult | undefined): InstallationHandle {
-  if (result?.status !== 'admitted') throw new Error('Expected an admitted example installation');
-  return result.handle;
+  if (result === undefined) throw new Error('Expected an admitted example installation');
+  return result;
 }
 
 function createLocalProvider(native: NativeContextAccess) {

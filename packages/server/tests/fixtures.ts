@@ -69,8 +69,10 @@ export const counterPlugin = definePlugin({
   ],
 });
 
-export function admitted(result: InstallationResult | undefined) {
-  if (result?.status !== 'admitted') throw new Error('Expected admitted installation');
+export function admitted(result: InstallationResult<boolean> | undefined) {
+  if (result === undefined) throw new Error('Expected admitted installation');
+  if (!('status' in result)) return result;
+  if (result.status === 'skipped') throw new Error(result.diagnostic.message);
   return result.handle;
 }
 

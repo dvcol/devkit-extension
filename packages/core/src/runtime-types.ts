@@ -81,14 +81,18 @@ export interface InstallationHandle {
   retry(contributionId: string): Promise<InstallationSnapshot>;
   dispose(): Promise<void>;
 }
-export type InstallationResult =
-  | { readonly status: 'admitted'; readonly handle: InstallationHandle }
-  | { readonly status: 'skipped'; readonly diagnostic: RuntimeDiagnostic };
+/** Strict admission returns its handle; relaxed admission can explicitly skip a definition. */
+export type InstallationResult<Strict extends boolean = true> = Strict extends true
+  ? InstallationHandle
+  :
+      | { readonly status: 'admitted'; readonly handle: InstallationHandle }
+      | { readonly status: 'skipped'; readonly diagnostic: RuntimeDiagnostic };
 
-export interface DefinitionInstallationApi<Definition> {
-  install(definition: Definition): Promise<InstallationResult>;
-  replace(handle: InstallationHandle, definition: Definition): Promise<InstallationResult>;
+export interface DefinitionInstallationApi<Definition, Strict extends boolean = true> {
+  install(definition: Definition): Promise<InstallationResult<Strict>>;
+  replace(handle: InstallationHandle, definition: Definition): Promise<InstallationResult<Strict>>;
 }
+
 export interface ContributionKindInstaller<Kind extends ContributionKindDescriptor> {
   readonly descriptor: Kind;
   activate(
