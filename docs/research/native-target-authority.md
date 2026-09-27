@@ -75,7 +75,135 @@ The final edge is essential. A callback returning `true` cannot by itself preven
 
 ## Decisions needed before required-target exposure
 
-The next owner question is cross-provider target mapping. The current router passes one reference unchanged to the selected provider. Proposed behavior A lets the host map the UI's selected document to that provider's native reference before dispatch, rejecting missing/stale mappings. Alternative B requires the caller to obtain a new provider-specific reference when switching providers. A matches the shared-UI routing goal; neither a mapping API nor an implementation is accepted yet. Both preserve adapter authorization, exact-document execution and no remapping after dispatch.
+The next owner question is cross-provider target mapping. The current router passes one reference unchanged to the selected provider. The earlier A/B summary combined two separate choices: whether the UI retains one document selection, and where mapping lives. Provider-specific invocation does not require a human to select the page again; host code can obtain the reference. The expanded comparison below corrects that false restriction. No target-mapping API or implementation is accepted yet.
+
+## Expanded owner review
+
+### Concrete problem and current behavior
+
+Suppose a shared panel highlights `#checkout` in its inspected document. A development provider and an extension provider may both implement that action, but use different references for the same document. A backend instance is the **provider**; the document affected is the **target**. Selecting the provider does not identify or authorize the document.
+
+Two open tabs can have the same URL. Reloading a tab creates a new document even if its URL stays the same. A mapping must therefore come from the host's actual browser/page-connection association and preserve document generation. URL equality, an authenticated RPC session, or a guessed ID cannot establish it. The development provider must have a concrete page executor before it can implement this example at all; the existing counter example affects server state and needs no document.
+
+Current public code accepts `TargetReference { kind, id, generation }`, snapshots it, selects a provider using catalog availability and routing policy, and forwards that same reference. Routing callbacks return selectors only. They cannot return a replacement target. Native required-target exposure currently rejects because its target authority is unfinished. [Target type](../../packages/core/src/types.ts), [selection and dispatch](../../packages/client/src/selection.ts), [routing callback](../../packages/core/src/routing.ts).
+
+```mermaid
+flowchart LR
+  UI["Caller: action + one target reference"] --> Router["Shared client selects provider"]
+  Router --> Connection["Connection receives unchanged target"]
+  Connection --> Guard["Native required-target exposure currently rejects"]
+```
+
+The sketches below are proposals. `highlightElementAction`, `selectedDocument`, resolver hooks and document integrations do not exist as maintained exports.
+
+### A1: Shared client invokes a host-supplied resolver
+
+The UI passes a host-issued document selection. After choosing a provider, the shared client calls a local resolver to obtain that provider's reference, then dispatches. The resolver remains host code; the shared client does not discover browser documents itself.
+
+```ts
+// Proposed API: resolveTarget is not in ClientOptions today.
+const client = createClient({
+  connections: [developmentConnection, extensionConnection],
+  resolveTarget: ({ target, provider, signal }) =>
+    inspectedDocuments.resolve({ selection: target, provider, signal }),
+});
+
+await client.actions.invoke({
+  action: highlightElementAction,
+  input: { selector: '#checkout' },
+  target: selectedDocument,
+  routing: [{ realm: 'devserver' }, { realm: 'webext' }],
+});
+```
+
+```mermaid
+flowchart LR
+  UI["Shared UI: selected document"] --> Router["Shared client selects provider"]
+  Router --> Resolver["Host resolver: document + selected provider"]
+  Resolver --> Dispatch["Dispatch with provider-specific reference"]
+  Dispatch --> Adapter["Backend validates authority and exact document"]
+```
+
+This gives every host one consistent hook. It also adds mapping to the shared client's public contract: logical selection versus resolved reference types, cancellation during asynchronous resolution, provider/target freshness after that await, and behavior for bound capability methods and broadcast. A logical-selection resolver does not remove the backend's authority checks.
+
+### A2: Host connection adapters resolve targets
+
+Keep the shared client's current opaque target contract. The host issues a document selection with a kind, ID and generation understood by its connection adapters. Each selected adapter resolves that reference for its fixed provider before forwarding through native RPC or an extension Port. The router treats the target as opaque and its API remains unchanged.
+
+```ts
+// Illustrative host integration; these document connection factories do not exist.
+const client = createClient({
+  connections: [
+    developmentDocuments.connection({ rpc: nativeDevframeClient }),
+    extensionDocuments.connection({ port: nativeExtensionPort }),
+  ],
+});
+
+await client.actions.invoke({
+  action: highlightElementAction,
+  input: { selector: '#checkout' },
+  target: selectedDocument,
+  routing: [{ realm: 'devserver' }, { realm: 'webext' }],
+});
+```
+
+```mermaid
+flowchart LR
+  UI["Shared UI: selected document"] --> Router["Existing shared client selects provider"]
+  Router --> Development["Development connection adapter"]
+  Router --> Extension["Extension connection adapter"]
+  Development --> Page["Resolve known page association; native RPC"]
+  Extension --> Document["Resolve native document association; extension Port"]
+  Page --> Verify["Owning backend checks authority and exact execution target"]
+  Document --> Verify
+```
+
+The host may obtain associations from native services it already owns. This does not justify a new SDK-wide registry, daemon, transport or auth service. The development adapter still needs an actual page execution integration, and a trusted extension bridge still needs browser-supplied sender checks. A concrete adapter must preserve both action and capability binding semantics, including cleanup and invocation options. The sketch is not a claim that wrapping only `invoke()` is sufficient.
+
+This is the smallest recommended implementation boundary: shared-UI behavior A with provider-specific resolution confined to host integration. Different adapters need common conformance tests so identical logical selections do not acquire inconsistent freshness semantics. No generic resolver helper should be added until a real integration establishes what is necessary.
+
+### B: Caller supplies an explicit provider-specific target
+
+The caller obtains a target from a concrete host integration and invokes its pinned connection. The caller may be application orchestration code; it need not be the end user. The core retains its current target type, and no generic mapping callback is added.
+
+```ts
+// Illustrative target acquisition; ProviderConnection.invoke already exists.
+const target = await extensionDocuments.reference({ selection: selectedDocument });
+await extensionConnection.invoke({
+  action: highlightElementAction,
+  input: { selector: '#checkout' },
+  target,
+});
+```
+
+```mermaid
+flowchart LR
+  UI["UI or application orchestration"] --> Choose["Choose concrete provider and acquire its target"]
+  Choose --> Call["Invoke pinned connection"]
+  Call --> Backend["Backend validates authority and exact document"]
+```
+
+This is useful for deliberately provider-specific tools. For automatic development/extension switching, the caller must coordinate provider selection and reference acquisition. If every UI does that independently, composition and failure handling are repeated. A shared host facade can hide that work, effectively producing behavior A outside the generic client. Any such facade must reuse routing and ownership checks instead of copying the router or reselecting a same-ID provider after asynchronous target acquisition.
+
+### Observable behavior and costs
+
+| Scenario                                            | A1: shared-client resolver                                          | A2: host connection adapters                                | B: explicit provider target                                                     |
+| --------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| One UI switches providers before dispatch           | Shared client invokes the host resolver                             | Selected connection resolves the same host-issued selection | Caller obtains the selected provider's reference; a host facade can automate it |
+| Where browser/page knowledge lives                  | Host resolver                                                       | Concrete host connection integration                        | Calling application or its host facade                                          |
+| Shared client API change                            | New resolver contract and logical-selection typing                  | None required for the proposed boundary                     | None for explicitly pinned calls                                                |
+| Provider selected but no valid document association | Explicit failure                                                    | Explicit failure                                            | Acquisition/invocation fails                                                    |
+| Navigation or two tabs sharing a URL                | Must reject stale/ambiguous identity; never infer equality from URL | Same                                                        | Same                                                                            |
+| Backend fails after dispatch                        | Reject; no reroute or replay                                        | Same                                                        | Same                                                                            |
+| Main maintenance cost                               | Generic async mapping/binding/broadcast behavior                    | Host integration plus cross-adapter conformance             | Provider/target coordination in caller code                                     |
+
+For A2, target resolution occurs after the router enters the selected connection. Mapping failure therefore rejects that invocation under the existing no-reroute rule. A1 should also fail a selected route's mapping explicitly in the first implementation. Making target suitability participate in pre-dispatch fallback is a separate extension; neither ordinary catalog availability nor the existence of a resolver currently guarantees it. This proposal does not silently expand fallback behavior.
+
+In every option, the document selection is a snapshot for one invocation. Navigation can refresh the UI selection for a later invocation, but must not change the document underneath an in-flight call. An entry check alone is insufficient: the owning operation must execute against the exact native document/executor or reject if it is gone. Client cancellation still has the accepted native behavior and cannot undo dispatched backend work.
+
+**Recommendation for review:** A2, host connection adapters, as the first concrete integration. It preserves one UI and dynamic provider selection while keeping browser/page identity out of the generic routing API. A1 becomes justified if real hosts demonstrate repeated orchestration that belongs in the common client. B remains available for consumers that intentionally pin a provider. This is a refinement of the earlier broad A recommendation, not an accepted decision.
+
+### Subsequent implementation decisions
 
 | Concrete decision             | Smallest justified direction                                                                                                                                       | Why it needs to be settled                                                                                                                                                              |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

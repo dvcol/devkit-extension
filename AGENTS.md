@@ -5,3 +5,5 @@ Read [ARCHITECTURE.md](./ARCHITECTURE.md#upstream-compatibility-and-minimal-adap
 The [upstream alignment review](./docs/research/upstream-alignment-review.md) records intentional SDK differences and current integration gaps. Preserve accepted routing and contribution lifecycle behavior when simplifying. Maintained package exports define the current API; declaration probes under `docs/contracts` are historical evidence.
 
 Keep implementation commits scoped to their issue and update that issue with evidence. Validate the affected package or dependency graph locally; use CI for the full workspace. See [tooling conventions](./docs/TOOLING.md) for strict Oxlint, Oxfmt and TypeScript checks.
+
+Before asking the owner to settle a major decision, explain the current behavior and concrete problem, sketch each option with example calls and an ownership/interaction diagram, compare failure cases and API/maintenance costs, and recommend a direction with reasons. Clearly label implemented APIs versus proposals. Do not ask for a choice from short labels alone.
