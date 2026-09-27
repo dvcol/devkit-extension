@@ -1,5 +1,7 @@
 # Provider identity, discovery and routing contract
 
+Current direction: [ARCHITECTURE.md](../../ARCHITECTURE.md#upstream-compatibility-and-minimal-adapters) and the [2026-09-27 implementation/map review](../research/upstream-alignment-review.md) govern new adapter work. Dated experiments and superseded proposal sketches below remain historical evidence, not additional APIs to implement.
+
 Working deliverable for [issue 7](https://github.com/dvcol/devkit-extension/issues/7). The owner confirmed identity and discovery ownership on 2026-09-23, then ambiguity, dispatch-time availability, separate broadcast methods and a compact invocation API on 2026-09-24. The owner accepted defaults on the public action declaration. Required realm/optional provider string selectors and single-object declaration helpers are now accepted. The local client behavior is implemented below; authenticated remote discovery and catalog transport remain outstanding. The [research report](../research/provider-routing.md) and its real two-hub evidence establish native integration constraints; they do not implement the complete router.
 
 ## Accepted ownership

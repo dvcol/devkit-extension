@@ -1,6 +1,6 @@
 # Portable contribution architecture
 
-This is the canonical core architecture settled through the owner review of [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5). [GLOSSARY.md](./GLOSSARY.md) defines the vocabulary. [Core declarations](./docs/contracts/core.d.ts) preserve the reviewed API specification. [The core package](./packages/core/README.md) implements its shared types and inert declaration factories. [Private adapter runtime internals](./packages/runtime/README.md) implement admission, guarded invocation and generation ownership. Complete provider adapters and host conformance remain in progress.
+This is the canonical core architecture settled through the owner review of [Contribution and realm contract](https://github.com/dvcol/devkit-extension/issues/5). [GLOSSARY.md](./GLOSSARY.md) defines the vocabulary. [Archived declarations](./docs/contracts/README.md) preserve the original review; maintained package source and generated exports define the current API. [The core package](./packages/core/README.md) implements its shared types and inert declaration factories. [Private adapter runtime internals](./packages/runtime/README.md) implement admission, guarded invocation and generation ownership. Complete provider adapters and host conformance remain in progress.
 
 The core decisions are settled. The linked domain tickets still own the exact server, routing, state, security, debugger, injection, renderer and reload integrations. Settling this document does not claim those implementations or their real-host tests exist.
 
@@ -11,6 +11,16 @@ Build a generic, modular client and contribution ecosystem shared by browser ext
 Executable contributions are assembled from packaged code at build time. Startup and later installation accept the same definitions; runtime installation does not mean downloading executable plugins. Public authoring is framework-neutral. Renderer implementations can use a framework and remain replaceable.
 
 The monorepo uses pnpm/Turbo, Vite/Oxc, strict type-aware Oxlint and enforced Oxfmt formatting with TypeScript 7. The old frontend scaffold and active ESLint, Stylelint and Prettier integrations have been replaced. [Tooling conventions](./docs/TOOLING.md) record enforced checks and narrow exceptions; [migration gates](./docs/planning/016-tooling-migration.md) retain the required acceptance criteria. Default-rule feasibility probes do not satisfy these gates. Chromium and Firefox are the initial browser hosts. Development HMR and watched production builds with live preview have separate, explicit update/restart/reload behavior.
+
+### Upstream compatibility and minimal adapters
+
+Use Devframe's public APIs and terminology directly wherever they express the required behavior. Reuse its authentication/authorization, RPC, serialization, shared state, JSON model and renderer contract; use Vite for compilation, watching, HMR and server lifecycle. An adapter supplies missing realm integration, not an alternative implementation of those systems.
+
+Before adding an SDK API or mechanism, identify the public upstream entry point, the concrete missing behavior, and why direct composition cannot supply it. Keep any necessary difference confined to the adapter or the agreed portable contribution contract. Prefer deleting a local mechanism when upstream covers its behavior. Avoid renaming facades, copied vendor types, private imports, independent wire formats and generic extension points without a demonstrated consumer.
+
+Native connections retain their own authentication and authorization. Ordinary native calls need no mandatory second SDK authorization callback. A page-to-extension bridge still checks its actual sender and target because the trusted extension connection does not authenticate the originating page. Reuse Devframe serialization for operation values; JSON-authored UI does not imply JSON-only business payloads. Unsupported-value rejection must be tested at each actual transport boundary.
+
+The accepted numeric contract versions, explicit dependency lifetimes, replacement barriers and multi-provider routing remain SDK responsibilities where native APIs do not provide equivalent behavior. The [implementation and map review](./docs/research/upstream-alignment-review.md) records the comparison and the remaining integration gaps. Preserve existing behavioral tests when replacing a local mechanism with an upstream API.
 
 ### Host-managed build and reload
 
@@ -111,7 +121,7 @@ Provider identity, realm, execution, UI surface and target are separate axes. In
 A route selector has a required `realm: string` and an optional `provider: string`. A provider selector constrains both fields. Provider-only selectors are unsupported. Identifiers are non-empty strings; callers choose stable unique names. Core performs no symbol or number coercion and maintains no alias registry. Registry collisions are checked within the `(realm, provider)` namespace; incarnation identifies a particular backend lifetime within that logical selection.
 
 ```ts
-// Exported by @devkit/core; the multi-provider router remains outstanding.
+// Exported by @devkit/core and consumed by @devkit/client.
 type RouteSelector = {
   readonly realm: string;
   readonly provider?: string;
@@ -200,7 +210,7 @@ Operation declarations specify `target: 'required'` or `target: 'none'`. Require
 
 ## Representative shared and native declarations
 
-The following pseudocode follows [the declaration types](./docs/contracts/core.d.ts). Package import paths are illustrative until the monorepo package layout is implemented. `titleInputSchema` and `titleResultSchema` are application-owned Standard Schema validators; `titleResultSchema` accepts `{ title: string }`.
+The following pseudocode follows the maintained [core package](./packages/core/README.md). View and browser adapter integration remain domain-ticket work. `titleInputSchema` and `titleResultSchema` are application-owned Standard Schema validators; `titleResultSchema` accepts `{ title: string }`.
 
 ```ts
 const pageCapability = defineCapability({
@@ -325,7 +335,7 @@ Log failures at their owning execution and retain current lifecycle diagnostic s
 
 ## Public API and proof obligations
 
-[Core declarations](./docs/contracts/core.d.ts) enumerate every core type and method. [The API proof matrix](./docs/contracts/CORE-API-MATRIX.md) maps their behaviors to named fixtures/examples and host assertions. Those are implementation obligations; declaration checks alone do not satisfy runtime conformance.
+[Core package exports](./packages/core/src/index.ts) define the current core types and methods; archived declaration probes are historical evidence, not a second maintained API. [The API proof matrix](./docs/contracts/CORE-API-MATRIX.md) maps their behaviors to named fixtures/examples and host assertions. Those are implementation obligations; declaration checks alone do not satisfy runtime conformance.
 
 The monorepo must contain runnable contribution, custom renderer, standalone Devframe host, Vite DevTools host, Chromium host and Firefox host examples. Each supported API/hook requires success, failure, unavailable, disposal and applicable navigation/permission/disconnect/recovery assertions. Unsupported combinations must prove explicit unavailability rather than disappear from coverage.
 

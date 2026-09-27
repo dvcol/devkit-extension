@@ -20,6 +20,20 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 | Plugin                 | A named composition of contribution definitions installed and controlled together                                                     | Neither a browser extension nor a provider; its contributions can fail independently |
 | Definition helper      | A function preserving declaration types and checking declarative invariants                                                           | Does not install a service, register a listener or start a runtime                   |
 
+## Relationship to native Devframe terms
+
+Use native APIs and types directly when their semantics fit. Similar words do not imply identical contracts:
+
+| SDK term           | Native Devframe concept                                             | Boundary                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Service definition | Local `services.provide` or a package-based wire-service definition | The SDK adds exact capability contracts and owned dependency/replacement lifecycle. Native wire-service identity/version is npm package/semver. |
+| Plugin             | Native host plugin/definition                                       | An SDK plugin groups owned contributions. It can be installed by a native plugin; it does not replace host plugin setup.                        |
+| Client             | Native RPC/client context                                           | The SDK client selects among provider connections. Each connection retains native transport, authentication and serialization.                  |
+| Shared state       | Native `SharedState` and host state publication                     | Reuse the native value/event/mutation/patch API. SDK scope, persistence and recovery additions belong to their domain contract.                 |
+| View/renderer      | Native JSON-render model, refs and hub mount/dispose                | Reuse the upstream model. Extension surface integration does not justify another JSON protocol.                                                 |
+
+See the [upstream alignment review](./docs/research/upstream-alignment-review.md) for the source comparison and remaining gaps.
+
 ## Hosting and execution
 
 | Term                      | Definition                                                                                           | Distinction                                                                                     |

@@ -1,5 +1,7 @@
 # Server adapter contract
 
+Current direction: [ARCHITECTURE.md](../../ARCHITECTURE.md#upstream-compatibility-and-minimal-adapters) and the [2026-09-27 implementation/map review](../research/upstream-alignment-review.md) govern new adapter work. Dated experiments and superseded proposal sketches below remain historical evidence, not additional APIs to implement.
+
 Working deliverable for [Server adapter contract](https://github.com/dvcol/devkit-extension/issues/6), based on the settled [core architecture](../../ARCHITECTURE.md). The owner has confirmed the process workflow, failed-build policy and host-managed lifecycle boundary below. Adapter implementation and domain-specific integration contracts remain in progress; this document does not claim complete host conformance.
 
 ## Accepted workflow

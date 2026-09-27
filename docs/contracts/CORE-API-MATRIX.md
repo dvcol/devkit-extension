@@ -1,6 +1,6 @@
 # Core API proof matrix
 
-Required implementation evidence for [ARCHITECTURE.md](../../ARCHITECTURE.md) and [core declarations](./core.d.ts). Example/test names are planned obligations, not claims that those applications or runtime tests exist today.
+Required implementation evidence for [ARCHITECTURE.md](../../ARCHITECTURE.md) and the maintained [core package](../../packages/core/README.md). The declaration probe in this directory is an archived review snapshot. Planned rows below are obligations; dated implementation sections record the evidence actually completed.
 
 Host codes: **DF** standalone Devframe, **DT** Vite DevTools, **CH** Chromium extension, **FF** Firefox extension. Each runtime row applies to all four unless it names a native restriction. The renderer-independent example also runs with the renderer absent. Target-bearing rows run against real target/document generations.
 

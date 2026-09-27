@@ -2,6 +2,8 @@
 
 A framework-neutral contribution SDK for development-server and WebExtension providers. The monorepo is being rebuilt from the former Vue extension template. The settled [architecture](./ARCHITECTURE.md), [glossary](./GLOSSARY.md) and [implementation map](https://github.com/dvcol/devkit-extension/issues/1) define the intended behavior. Host adapters, renderer integrations and browser examples remain implementation work.
 
+Prefer Devframe's public APIs over new SDK facades. The [upstream compatibility rule](./ARCHITECTURE.md#upstream-compatibility-and-minimal-adapters) and [implementation/map review](./docs/research/upstream-alignment-review.md) identify what is reused and which gaps justify local code.
+
 Use Node 24 or newer and the pnpm version pinned in `package.json`.
 
 ```sh
@@ -42,7 +44,7 @@ The [native Vite host examples](./examples/vite-hosts/README.md) mount the relea
 
 Both hosts also have maintained production-preview examples. Run `pnpm --filter @devkit/example-vite-hosts build:site`, then `preview:devframe` or `preview:devtools`. Each serves built assets with a live native backend and runs the same typed counter action.
 
-Remote routing, JSON rendering, WebExtension hosts, watched-production publication and browser HMR remain outstanding. The example README states the tested lifecycle boundaries and the accepted unpatched Vite cleanup gap.
+Watched production publication also retains the last complete build and reports failed rebuilds. Run the independent `build:watch` and `preview` scripts or their combined `dev:production` command in that example. Authenticated remote routing, JSON rendering, WebExtension hosts and browser HMR remain outstanding. The example README states the tested lifecycle boundaries and the accepted unpatched Vite cleanup gap.
 
 Oxlint checks correctness, suspicious and pedantic rules as errors, plus explicit TypeScript, imports, promises and test rules. Type-aware linting is enabled. Warnings fail checks. Oxfmt controls formatting, and `format:check` fails on drift. See [tooling conventions](./docs/TOOLING.md) for the enforced rules, documented exceptions and review obligations.
 
