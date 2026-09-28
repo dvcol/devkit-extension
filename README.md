@@ -50,6 +50,8 @@ The browser example also observes native shared state across tabs. Disconnect ma
 
 The [native JSON renderer example](./examples/json-render/README.md) renders the same counter through the published Devframe renderer on both native backends. It demonstrates native action validation, peer updates, unmount/remount and disconnect cleanup, with framework-neutral JSON authoring. Build its dependency graph, then run `pnpm --filter @devkit/example-json-render demo devframe` or `demo devtools`.
 
+The [native extension Port proof](./docs/probes/native-port/README.md) validates a candidate upstream integration with real Chromium Ports and the native JSON renderer. Its native API changes are separate review commits on a fork; the maintained packages and dependency patches remain unchanged. Full WebExtension provider/surface support and Firefox evidence remain open.
+
 Watched production publication also retains the last complete build and reports failed rebuilds. Run the independent `build:watch` and `preview` scripts or their combined `dev:production` command in that example. Automatic endpoint discovery, browser capability authority, cross-provider renderer integration, WebExtension hosts and complete browser HMR remain outstanding. The example README states the tested lifecycle boundaries and the accepted unpatched Vite cleanup gap.
 
 Oxlint checks correctness, suspicious and pedantic rules as errors, plus explicit TypeScript, imports, promises and test rules. Type-aware linting is enabled. Warnings fail checks. Oxfmt controls formatting, and `format:check` fails on drift. See [tooling conventions](./docs/TOOLING.md) for the enforced rules, documented exceptions and review obligations.

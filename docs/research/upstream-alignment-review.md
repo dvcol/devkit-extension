@@ -65,3 +65,11 @@ The [original reuse audit](./upstream-reuse-resolution.md) records pinned publis
 For an adapter change or dependency upgrade, name the public export used, demonstrate the missing behavior, and run the affected type, runtime and packed-consumer checks. Delete a patch when the unpatched release passes its existing checks. A root pnpm patch does not automatically reach a published package's consumers. Devframe isolation remains an explicit backport; Vite remains unpatched. No new upstream PR is part of this review.
 
 Concrete technical investigations remain: native RPC registration cleanup, public disconnect/cancellation ownership, a real authenticated remote fixture, actual extension Ports and renderer host typing. Reuse must be demonstrated at those seams; private fields, fabricated transports and a successful mock do not establish compatibility.
+
+## Native browser integration prototype, 2026-09-28
+
+The owner chose to expose the missing native integration points instead of adopting the in-page channel's reduced shared-state interface. [Two review commits](../probes/native-port/README.md#review-commits), based on upstream v1.1.0, expose native shared-state factories, a browser renderer import and JSON view publication with structural native dependencies. Per-connection birpc metadata supplies subscription identity. Existing node paths and default renderer context types remain compatible.
+
+The prototype also corrects initial state-fetch rejection propagation and cleans up a partially mounted reference renderer. A focused regression first reproduced the waiting promise and passes with the rejection forwarded. The real Chromium proof validates both accepted and denied admission, native actions/writes, serialization, per-peer disconnect and reconnect without replay. Scoped upstream lint, type checks, 43 tests and browser artifact checks pass; the proof's TypeScript 7/Oxlint checks pass too.
+
+The working SDK baseline remains v1.0.0 and its existing patches. The new branch is available on the personal fork for review. A new upstream draft PR requires owner approval; applying a compatible downstream backport and implementing the portable WebExtension provider remain subsequent work. The prototype does not justify importing Node or a full hub context into a worker.
