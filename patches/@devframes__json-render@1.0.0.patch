@@ -1,0 +1,154 @@
+diff --git a/dist/hub.d.mts b/dist/hub.d.mts
+index e1578b935c1c4ee6763e07bc1f4c772c59f0962f..55b80a1f7adc42dc18864a3d90e801eeee9630ec 100644
+--- a/dist/hub.d.mts
++++ b/dist/hub.d.mts
+@@ -1,6 +1,8 @@
+ import { a as JsonRenderViewRef, r as JsonRenderView } from "./types-ByXkazOp.mjs";
+-import { DockRenderer, DockRendererMountOptions } from "@devframes/hub/client";
++import { DevframeClientContext, DockRendererInstance, DockRendererMountOptions } from "@devframes/hub/client";
+ import { DevframeDockEntryBase } from "@devframes/hub/types";
++import { DevframeRpcClient } from "devframe/client";
++import { ConnectionMeta } from "devframe/types";
+ //#region src/hub.d.ts
+ /**
+  * A `json-render` dock entry. Contributed to the hub's **open** dock union
+@@ -20,12 +22,21 @@ declare module '@devframes/hub/types' {
+ }
+ /**
+  * The mount options a hub viewer hands a json-render dock renderer: the
+- * hub's `DockRendererMountOptions` narrowed to the `'json-render'` entry.
++ * hub's `DockRendererMountOptions` narrowed to the `'json-render'` entry
++ * and an optional context type. Existing renderers keep the full client context.
+  * This protocol package owns the renderer contract so every frontend
+  * (`@devframes/json-render-ui`, a community renderer, a host page's own)
+  * implements one shared shape instead of re-declaring it.
+  */
+-export type JsonRenderDockMountOptions = DockRendererMountOptions<DevframeJsonRenderDockEntry>;
++export type JsonRenderDockMountOptions<Context = DevframeClientContext> = Omit<DockRendererMountOptions<DevframeJsonRenderDockEntry>, 'context'> & {
++  context: Context;
++};
++/** Native RPC calls and shared state consumed by the reference JSON renderer. */
++export interface JsonRenderRpcContext {
++  rpc: Pick<DevframeRpcClient, 'call' | 'sharedState'> & {
++    connectionMeta?: Pick<ConnectionMeta, 'backend'>;
++  };
++}
+ /**
+  * The renderer contract for `'json-render'` docks: a hub `DockRenderer`
+  * narrowed to {@link DevframeJsonRenderDockEntry}. Implement it to replace
+@@ -34,7 +45,7 @@ export type JsonRenderDockMountOptions = DockRendererMountOptions<DevframeJsonRe
+  * module registered through the hub's renderer manifest
+  * (`initHub({ renderers })`).
+  */
+-export type JsonRenderDockRenderer = DockRenderer<DevframeJsonRenderDockEntry>;
++export type JsonRenderDockRenderer<Context = DevframeClientContext> = (options: JsonRenderDockMountOptions<Context>) => DockRendererInstance | Promise<DockRendererInstance>;
+ /**
+  * Build a `json-render` dock entry from a {@link JsonRenderView} and the dock
+  * metadata (id, title, icon, …). Projects the view down to its serializable
+diff --git a/dist/node/index.d.mts b/dist/node/index.d.mts
+index 34b9df6c75c569cd7fa0f8d0c66cd4440e4d3c25..443578a03b9e79ba3d51ef0598123a7e7f878fd7 100644
+--- a/dist/node/index.d.mts
++++ b/dist/node/index.d.mts
+@@ -1,6 +1,6 @@
+ import { n as DevframeJsonRenderSpec, r as JsonRenderView } from "../types-ByXkazOp.mjs";
+ import { DevframeDiagnostics } from "devframe/utils/nostics";
+-import { DevframeNodeContext, DevframeScopedNodeContext } from "devframe";
++import type { JsonRenderViewContext, JsonRenderScopedViewContext } from "../view.mjs";
+ import { StandardSchemaV1 } from "devframe/utils/simple-schema";
+ //#region src/node/create-view.d.ts
+ /** Options for {@link createJsonRenderView}. */
+@@ -28,7 +28,7 @@ interface CreateJsonRenderViewOptions<SpecType extends DevframeJsonRenderSpec =
+    */
+   title?: string;
+ }
+-type AnyContext = DevframeNodeContext | DevframeScopedNodeContext<string>;
++type AnyContext = JsonRenderViewContext | JsonRenderScopedViewContext;
+ /**
+  * Create a JSON-render view bound to a devframe context. Registers a
+  * server-side shared state (patches enabled) carrying the live spec + state,
+diff --git a/dist/view.d.mts b/dist/view.d.mts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e6aba7be61abe115b547c94e28d178892ba6e3e
+--- /dev/null
++++ b/dist/view.d.mts
+@@ -0,0 +1,58 @@
++import { n as DevframeJsonRenderSpec, r as JsonRenderView } from "./types-ByXkazOp.mjs";
++import { RpcSharedStateHost } from "devframe/types";
++import { StandardSchemaV1 } from "devframe/utils/simple-schema";
++//#region src/node/create-view.d.ts
++/** Options for {@link createJsonRenderView}. */
++export interface CreateJsonRenderViewOptions<SpecType extends DevframeJsonRenderSpec = DevframeJsonRenderSpec> {
++  /**
++   * Stable, author-supplied id, unique within the view's scope. Forms the
++   * shared-state key `devframe:json-render:<scope>:<id>` and never changes
++   * across updates, so a client keeps its subscription across reconnects.
++   */
++  id: string;
++  /** The initial spec. */
++  spec: SpecType;
++  /** A replacement Standard Schema validator, or `false` to disable validation. */
++  schema?: StandardSchemaV1 | false;
++  /**
++   * Override the scope segment of the view's stable id. Defaults to the
++   * context's namespace when created from a scoped context, otherwise
++   * `'global'`.
++   */
++  scope?: string;
++  /**
++   * Human-facing label published in the view index and used by a multi-view
++   * frontend (e.g. the standalone SPA's view switcher) to name this view.
++   * Defaults to {@link CreateJsonRenderViewOptions.id}.
++   */
++  title?: string;
++}
++/** Reuse one context per native shared-state instance for view discovery and duplicate detection. */
++export interface JsonRenderViewContext {
++  rpc: {
++    sharedState: RpcSharedStateHost;
++  };
++}
++/** Namespace and base shared state supplied by a scoped node context. */
++export interface JsonRenderScopedViewContext {
++  base: JsonRenderViewContext;
++  namespace: string;
++}
++type AnyContext = JsonRenderViewContext | JsonRenderScopedViewContext;
++/**
++ * Create a JSON-render view bound to a devframe context. Registers a
++ * server-side shared state (patches enabled) carrying the live spec + state,
++ * validates element props at ingress against the base catalog, and returns a
++ * handle plus the serializable {@link JsonRenderView.ref} a client subscribes
++ * through.
++ *
++ * @example
++ * ```ts
++ * const view = createJsonRenderView(ctx, { id: 'metrics', spec })
++ * view.update(nextSpec)
++ * view.patchState([{ op: 'replace', path: '/count', value: 3 }])
++ * view.dispose()
++ * ```
++ */
++export declare function createJsonRenderView<SpecType extends DevframeJsonRenderSpec = DevframeJsonRenderSpec>(ctx: AnyContext, options: CreateJsonRenderViewOptions<SpecType>): JsonRenderView<SpecType>;
++//#endregion
+\ No newline at end of file
+diff --git a/dist/view.mjs b/dist/view.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..3bd5c724e57a58852c2c2ab606fce3f83761301e
+--- /dev/null
++++ b/dist/view.mjs
+@@ -0,0 +1 @@
++export { createJsonRenderView } from "./node/index.mjs";
+diff --git a/package.json b/package.json
+index fb61bd22574695f9cbf3fef053b23dc9e778bff4..eabef59880c51b303fe73ee45929b9514bf13e28 100644
+--- a/package.json
++++ b/package.json
+@@ -23,7 +23,8 @@
+     "./core": "./dist/core.mjs",
+     "./hub": "./dist/hub.mjs",
+     "./node": "./dist/node/index.mjs",
+-    "./package.json": "./package.json"
++    "./package.json": "./package.json",
++    "./view": "./dist/view.mjs"
+   },
+   "types": "./dist/index.d.mts",
+   "files": [

@@ -35,3 +35,11 @@ The `devframe@1.0.0` patch also backports [RPC/state draft 410](https://github.c
 The added browser module is generated from those upstream factories, with `devframe/*` imports external and native browser diagnostics/debug support bundled. Existing Node and client artifacts receive the matching subscription/rejection fixes. The published 1.0 RPC registry's bundled Node-only hash implementation is replaced with its existing public `devframe/utils/hash` implementation, which provides the same stable hash without `node:crypto`. No SDK codec or state engine is introduced.
 
 The maintained WebExtension tests exercise native subscriptions across two Port peers, state writes, disconnect isolation and rejection during initial fetch. The existing 48 native-server tests also pass with the patch, including auth, catalog synchronization, cancellation boundaries and connection isolation. The root patch remains private-workspace installation policy; published consumers do not receive it automatically.
+
+## Native JSON view and renderer exports
+
+The exact-version patches for `@devframes/json-render@1.0.0` and `@devframes/json-render-ui@1.0.0` backport [draft 411](https://github.com/devframes/devframe/pull/411) at `f6c36c33`. `@devframes/json-render/view` re-exports the existing view factory, preserving its registry and index identity with the node entry. Its declarations accept native shared state directly. Default custom-renderer declarations retain the full client context.
+
+`@devframes/json-render-ui/renderer` exposes the existing bundled reference renderer and declares its optional protocol peer. Only the failed-mount cleanup block changes inside that bundle: it disconnects the observer and removes the partial content root before propagating the failure. No renderer implementation, JSON schema or framework is copied into an SDK package.
+
+The installed-package test checks cross-entry duplicate detection, discovery and replacement. The actual patched 1.0 dependency graph passes the 12-scenario Chromium proof, including denied admission and failed-mount cleanup, with zero page errors. This removes the prototype checkout requirement for the runtime APIs; full portable provider/catalog composition and browser surface coverage remain separate work.

@@ -1,0 +1,82 @@
+diff --git a/dist/renderer/json-render.mjs b/dist/renderer/json-render.mjs
+index d7d3eed3e1e39916452ad03804d932fbb78ad677..3e8d931c82e974b273cb97c717b4b74bfda06e15 100644
+--- a/dist/renderer/json-render.mjs
++++ b/dist/renderer/json-render.mjs
+@@ -23203,11 +23203,18 @@ var XF = qF(), ZF = async ({ entry: e, container: t, context: r }) => {
+ 		attributes: !0,
+ 		attributeFilter: ["class"]
+ 	}), a.append(o), i.append(a);
+-	let l = await XF({
+-		entry: e,
+-		container: o,
+-		context: r
+-	});
++	let l;
++	try {
++		l = await XF({
++			entry: e,
++			container: o,
++			context: r
++		});
++	} catch (error) {
++		c.disconnect();
++		a.remove();
++		throw error;
++	}
+ 	return { dispose() {
+ 		c.disconnect(), l.dispose?.(), a.remove();
+ 	} };
+diff --git a/dist/renderer.d.mts b/dist/renderer.d.mts
+new file mode 100644
+index 0000000000000000000000000000000000000000..772ad636741e8dfce8bf3d2e6fb5977f44cfb36b
+--- /dev/null
++++ b/dist/renderer.d.mts
+@@ -0,0 +1,11 @@
++import { JsonRenderDockRenderer, JsonRenderRpcContext } from "@devframes/json-render/hub";
++//#region src/renderer-module/index.d.ts
++/**
++ * The self-styling `'json-render'` dock renderer. It attaches its own shadow
++ * root inside the viewer's container and adopts the compiled stylesheet
++ * there, fully styled in a light-DOM host page and inside a viewer's shadow
++ * root alike, without leaking the reset or any global rule into the page.
++ */
++declare const jsonRenderDockRenderer: JsonRenderDockRenderer<JsonRenderRpcContext>;
++//#endregion
++export { jsonRenderDockRenderer as default };
+\ No newline at end of file
+diff --git a/package.json b/package.json
+index c6c9bbf4ce1ada3a65fd6ff84773e4e63264abcd..d7a112c1c10f6e2ae25d143a9d741ae6c708ab29 100644
+--- a/package.json
++++ b/package.json
+@@ -22,14 +22,19 @@
+   "exports": {
+     "./hub": "./dist/hub.mjs",
+     "./spa": "./dist/spa.mjs",
+-    "./package.json": "./package.json"
++    "./package.json": "./package.json",
++    "./renderer": {
++      "types": "./dist/renderer.d.mts",
++      "default": "./dist/renderer/json-render.mjs"
++    }
+   },
+   "files": [
+     "dist"
+   ],
+   "peerDependencies": {
+     "@devframes/hub": "1.0.0",
+-    "devframe": "1.0.0"
++    "devframe": "1.0.0",
++    "@devframes/json-render": "1.0.0"
+   },
+   "peerDependenciesMeta": {
+     "@devframes/hub": {
+@@ -37,6 +42,9 @@
+     },
+     "devframe": {
+       "optional": true
++    },
++    "@devframes/json-render": {
++      "optional": true
+     }
+   },
+   "devDependencies": {
