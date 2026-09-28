@@ -1,4 +1,4 @@
-export { counterActionsPlugin, counterService } from './definitions.js';
+export { counterActionsPlugin, counterService, counterStateKey } from './definitions.js';
 export { runDevframeDemo, runDevToolsDemo } from './run.js';
 export { runRoutingDemo } from './routing.js';
 export { runRemoteDemo } from './remote.js';

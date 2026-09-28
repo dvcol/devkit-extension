@@ -111,3 +111,11 @@ The browser example now uses native `sharedState.get`, `state.value()` and `stat
 The owner subsequently accepted native lifetime and write policy. Contributions/hosts own keys, scope, validation, persistence, migration and conflicts; there is no generic SDK state API or mandatory enforcement layer. It does not claim automatic reconnect, atomic snapshot/subscription ordering, JSON rendering or WebExtension conformance.
 
 The native-lifetime follow-up adds two real-host tests to `tests/state.test.ts`, six total. They verify provider disposal/replacement with retained state and existing observers, stale action binding rejection, fresh attachment and a separate fresh host starting at the initial value. The browser launcher exposes the same existing `replace` operation for manual confirmation.
+
+## Native JSON renderer evidence, 2026-09-28
+
+`examples/json-render` uses built public exports for the existing shared counter and both native hosts. `createJsonRenderView`, `toJsonRenderDockEntry`, `jsonRenderUiRenderer`, `createDevframeClientRuntime` and the native mount/dispose registry are composed directly. No SDK renderer facade or context cast is introduced.
+
+Five automated tests verify native dock/manifest publication, exact renderer asset bytes, authorized action execution, denied/invalid calls, subscribed view patches, owned projection cleanup and a browser bundle free of Node/provider implementation modules. Live two-tab checks on Devframe and DevTools verify native-rendered peer updates, error banners, unmount/remount with current state and actual host-disconnect teardown. [Commands, evidence and native limitations](../../examples/json-render/README.md).
+
+This satisfies the single-provider server rendering path only. Cross-provider selection, a custom renderer, extension Ports/surfaces, renderer-module replacement and automated real-browser coverage remain open. The native reference renderer's persistent error banner and console rejection on deliberately invalid input are recorded rather than concealed.

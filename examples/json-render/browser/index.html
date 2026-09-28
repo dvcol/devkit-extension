@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Native JSON renderer example</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 2rem auto;
+        max-width: 48rem;
+        padding: 0 1rem;
+      }
+      button {
+        margin: 0 0.5rem 1rem 0;
+      }
+      #view {
+        min-height: 16rem;
+        border: 1px solid #999;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Native JSON renderer</h1>
+    <p>Open this URL in two tabs. Both views share one native backend counter.</p>
+    <p id="status" role="status">Connecting…</p>
+    <button id="mount" disabled>Mount view</button>
+    <button id="unmount" disabled>Unmount view</button>
+    <section id="view" aria-label="JSON contribution view"></section>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

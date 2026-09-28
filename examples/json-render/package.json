@@ -1,0 +1,32 @@
+{
+  "name": "@devkit/example-json-render",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src browser tests vite.config.ts",
+    "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
+    "test": "vitest run",
+    "demo": "node src/demo.ts"
+  },
+  "dependencies": {
+    "@devframes/hub": "1.0.0",
+    "@devframes/json-render": "1.0.0",
+    "@devframes/json-render-ui": "1.0.0",
+    "@devkit/example-contribution": "workspace:*",
+    "@devkit/example-server-contexts": "workspace:*",
+    "@devkit/server": "workspace:*",
+    "devframe": "1.0.0"
+  }
+}

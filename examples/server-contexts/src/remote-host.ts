@@ -6,13 +6,17 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { initHub } from '@devframes/hub/initiate';
+import type { InitHubOptions } from '@devframes/hub/initiate';
 import { createInteractiveAuth } from 'devframe/recipes/interactive-auth';
 
 import { registerRemoteProbes } from './remote-probes.js';
 import { createRemoteContext, remoteComposition } from './remote-context.js';
 
 /** Example-owned HTTP/RPC lifetime; contribution disposal does not remove host RPC definitions. */
-export async function createRemoteHost(mode: 'devframe' | 'devtools') {
+export async function createRemoteHost(
+  mode: 'devframe' | 'devtools',
+  options: Pick<InitHubOptions, 'renderers'> = {},
+) {
   const directory = await mkdtemp(join(tmpdir(), 'devkit-remote-example-'));
   await using cleanup = new AsyncDisposableStack();
   cleanup.defer(() => rm(directory, { recursive: true, force: true }));
@@ -21,6 +25,7 @@ export async function createRemoteHost(mode: 'devframe' | 'devtools') {
   const token = randomUUID();
   const hub = initHub({
     context: nativeContext,
+    renderers: options.renderers ?? [],
     base: '/__devkit-remote/',
     auth: createInteractiveAuth(nativeContext, { clientAuthTokens: [token], banner() {} }),
     register: false,

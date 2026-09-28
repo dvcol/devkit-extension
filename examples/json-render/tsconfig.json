@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node", "vite/client"],
+    "lib": ["ES2024", "DOM", "ESNext.Disposable"]
+  },
+  "include": ["src", "browser", "tests", "vite.config.ts"]
+}

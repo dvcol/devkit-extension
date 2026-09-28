@@ -416,6 +416,8 @@ Log failures at their owning execution and retain current lifecycle diagnostic s
 
 The monorepo must contain runnable contribution, custom renderer, standalone Devframe host, Vite DevTools host, Chromium host and Firefox host examples. Each supported API/hook requires success, failure, unavailable, disposal and applicable navigation/permission/disconnect/recovery assertions. Unsupported combinations must prove explicit unavailability rather than disappear from coverage.
 
+The [native JSON renderer example](./examples/json-render/README.md) now composes upstream view publication, native state/action dispatch and the published renderer asset with a real native browser runtime on both server backends. Its explicit browser mount/dispose controls add no SDK rendering contract. Five automated integration/build tests and live browser checks establish this single-provider path. Cross-provider rendering, renderer replacement, extension Ports/surfaces and automated browser conformance remain open.
+
 ## Domain boundaries and implementation sequence
 
 | Contract                                                                                  | Owns remaining decisions                                                                                                      |
