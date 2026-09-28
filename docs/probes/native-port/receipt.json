@@ -1,0 +1,18 @@
+{
+  "browser": "153.0.8010.12",
+  "checks": [
+    "two real Ports",
+    "native renderer action",
+    "caller identity",
+    "native state write",
+    "Map/BigInt round trip",
+    "function rejection",
+    "pending call rejects on disconnect",
+    "renderer unmount",
+    "backend completion without replay",
+    "reconnect with retained worker state",
+    "denied sender and failed-mount cleanup",
+    "worker-initiated disconnect"
+  ],
+  "pageErrors": []
+}
