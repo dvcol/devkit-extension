@@ -6,13 +6,13 @@ import { RpcFunctionsCollectorBase } from 'devframe/rpc';
 import { createRpcClient } from 'devframe/rpc/client';
 import { createRpcSharedStateClientHost } from 'devframe/rpc/shared-state';
 import { createEventEmitter } from 'devframe/utils/events';
-import { portChannel } from './channel';
+import { createPortChannel } from '@devkit/webext';
 
 const port = chrome.runtime.connect({ name: 'native-port-probe' });
 const client = new RpcFunctionsCollectorBase<DevframeRpcClientFunctions, undefined>(undefined);
 const rpc = createRpcClient<DevframeRpcServerFunctions, DevframeRpcClientFunctions>(
   client.functions,
-  { channel: portChannel(port) },
+  { channel: createPortChannel({ port, onDisconnect: close }) },
 );
 const sharedState = createRpcSharedStateClientHost({
   call: rpc.$call,
@@ -30,14 +30,12 @@ let closed = false;
 function close(): void {
   if (closed) return;
   closed = true;
-  port.onDisconnect.removeListener(close);
   rpc.$close();
   for (const key of sharedState.keys()) sharedState.delete(key);
   mounted?.dispose?.();
   port.disconnect();
   status.textContent = 'Disconnected';
 }
-port.onDisconnect.addListener(close);
 window.addEventListener('pagehide', close, { once: true });
 document.querySelector('#disconnect')!.addEventListener('click', close);
 

@@ -127,3 +127,16 @@ The [isolated extension proof](../probes/native-port/README.md) consumes built c
 The source changes are separated into [RPC/state for #7](https://github.com/dvcolomban/devframe/commit/fe0fb623da5032b512cedf4956a215cff7a7f594) and [renderer/view for #12](https://github.com/dvcolomban/devframe/commit/5677ecd69e7b1a758233173846aead05b0654023). Existing native renderer context types keep their defaults. The native factories and reference renderer accept their actual dependencies; no local state engine, JSON dialect or fabricated native context is introduced.
 
 This is candidate upstream integration evidence, reviewed and submitted as [Devframe draft PR #410](https://github.com/devframes/devframe/pull/410). It does not satisfy complete CH/FF provider conformance: the proof has no portable provider catalog/router binding, content/page bridge, debugger, browser toolbar popup/DevTools/side-panel lifecycle, worker suspension policy or extension HMR. Firefox remains untested. No downstream dependency patch has been applied.
+
+
+## Maintained WebExtension channel, 2026-09-29
+
+`@devkit/webext.createPortChannel({ port, onDisconnect })` returns the existing native RPC channel type. It accepts structural Chrome/Firefox Port members, uses Devframe's records serializer and removes message/disconnect listeners through native `off`. The caller owns sender admission, native `$close()` and Port lifetime. No request protocol, auth policy, retry or routing implementation is added.
+
+| Contract | Automated evidence | Live evidence |
+| --- | --- | --- |
+| Native requests and rich values | `packages/webext/tests/channel.test.ts`, real MessageChannels with JSON and clone delivery | Two Chromium Ports, native renderer action, Map/BigInt and function rejection |
+| Native close and listener ownership | Pending calls reject, both listener sets empty, started work completes once | UI and worker disconnect, renderer unmount, reconnect without replay |
+| Browser type/bundle compatibility | Strict TS7 declarations, package build, type-aware Oxlint | Built public package imported by the extension example; zero page errors |
+
+The [recorded example](../probes/native-port/README.md) now imports the maintained package instead of a local channel copy. It uses the split native drafts [410](https://github.com/devframes/devframe/pull/410) and [411](https://github.com/devframes/devframe/pull/411). [Snapshot repair 412](https://github.com/devframes/devframe/pull/412) is independent. The SDK baseline remains Devframe 1.0.0; the native shared-state/renderer backport and complete provider/catalog composition are still pending. Simulated clone delivery is not Firefox browser conformance.

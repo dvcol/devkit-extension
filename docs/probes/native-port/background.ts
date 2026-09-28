@@ -9,7 +9,7 @@ import { RpcFunctionsCollectorBase } from 'devframe/rpc';
 import { createRpcServer } from 'devframe/rpc/server';
 import { createRpcSharedStateServerHost } from 'devframe/rpc/shared-state';
 import { createSharedState } from 'devframe/utils/shared-state';
-import { portChannel } from './channel';
+import { createPortChannel } from '@devkit/webext';
 import { spec } from './spec';
 
 const collector = new RpcFunctionsCollectorBase<DevframeRpcServerFunctions, undefined>(undefined);
@@ -99,16 +99,14 @@ chrome.runtime.onConnect.addListener((port) => {
     port,
     close: disconnect,
   };
-  const channel = { ...portChannel(port), meta };
+  const channel = { ...createPortChannel({ port, onDisconnect: disconnect }), meta };
   group.updateChannels((channels) => {
     channels.push(channel);
   });
   function disconnect(): void {
-    port.onDisconnect.removeListener(disconnect);
     group.clients.find((client) => client.$meta === meta)?.$close();
     group.updateChannels((channels) => {
       channels.splice(channels.indexOf(channel), 1);
     });
   }
-  port.onDisconnect.addListener(disconnect);
 });

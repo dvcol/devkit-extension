@@ -7,6 +7,7 @@ if (!upstream) throw new Error('Pass the path to the built Devframe prototype ch
 const directory = dirname(fileURLToPath(import.meta.url));
 const repository = resolve(directory, '../../..');
 const dependencies = {
+  '@devkit/webext': resolve(repository, 'packages/webext'),
   devframe: resolve(upstream, 'packages/devframe'),
   '@devframes/json-render': resolve(upstream, 'packages/json-render'),
   '@devframes/json-render-ui': resolve(upstream, 'packages/json-render-ui'),

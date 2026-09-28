@@ -1,0 +1,27 @@
+{
+  "name": "@devkit/webext",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Native Devframe channel bindings for WebExtension runtime Ports.",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
+    "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "devframe": "1.0.0"
+  }
+}

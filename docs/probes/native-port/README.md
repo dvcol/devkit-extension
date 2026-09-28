@@ -1,8 +1,8 @@
 # Native extension Port integration proof
 
-Local proof for [routing #7](https://github.com/dvcol/devkit-extension/issues/7) and [renderer #12](https://github.com/dvcol/devkit-extension/issues/12), following the owner's accepted native integration direction. It uses candidate public Devframe exports, built from the separate upstream prototype based on `9aa752a1` / v1.1.0. The SDK's maintained packages still use v1.0.0 and have no dependency on this unapproved prototype.
+Local proof for [routing #7](https://github.com/dvcol/devkit-extension/issues/7) and [renderer #12](https://github.com/dvcol/devkit-extension/issues/12), following the owner's accepted native integration direction. It uses candidate public Devframe exports, built from the separate upstream prototype based on `9aa752a1` / v1.1.0. The maintained `@devkit/webext` channel uses v1.0.0. The native shared-state and renderer exports still come from the reviewed upstream drafts.
 
-The extension contains a module service worker and two instances of one packaged page. Both pages mount the existing JSON renderer. The worker publishes its view through native shared state. Application action handlers, state synchronization, subscription identity and serialization all use Devframe/birpc. `channel.ts` only connects native channel hooks to `runtime.Port`.
+The extension contains a module service worker and two instances of one packaged page. Both pages mount the existing JSON renderer. The worker publishes its view through native shared state. Application action handlers, state synchronization, subscription identity and serialization all use Devframe/birpc. `@devkit/webext.createPortChannel()` connects native channel hooks and disconnect handling to `runtime.Port`. The example imports its built package export.
 
 ```mermaid
 flowchart LR
@@ -16,16 +16,18 @@ flowchart LR
 
 ## Review commits
 
-- [RPC/state, issue #7](https://github.com/dvcolomban/devframe/commit/fe0fb623da5032b512cedf4956a215cff7a7f594).
-- [JSON renderer/view, issue #12](https://github.com/dvcolomban/devframe/commit/5677ecd69e7b1a758233173846aead05b0654023).
+- [RPC/state draft #410](https://github.com/devframes/devframe/pull/410), narrowed to [fb8cf6a6](https://github.com/devframes/devframe/commit/fb8cf6a6).
+- [JSON renderer/view draft #411](https://github.com/devframes/devframe/pull/411), [f6c36c33](https://github.com/devframes/devframe/commit/f6c36c33).
+- [Baseline snapshot repair #412](https://github.com/devframes/devframe/pull/412) is independent and changes no runtime code.
 
-The reviewed branch is open as [Devframe draft PR #410](https://github.com/devframes/devframe/pull/410). Follow-up commits preserve the existing diagnostic export, cover the Node subscription path, declare the renderer peer dependency and document context reuse for view discovery. Scoped upstream lint, Knip, four-package type checks, 44 focused tests, 110 API snapshot checks and browser artifact checks pass. The Chromium proof passed again against the reviewed build with zero page errors. The proof also passes strict SDK Oxlint and TypeScript 7 checks, with `skipLibCheck` disabled.
+The split removes the renderer declaration shim and implementation file moves. Native diagnostics stay in their original module. RPC/state passes its six focused tests, package type check, lint, Knip and browser build guard. JSON rendering passes its affected builds, type checks, focused tests and 30 API snapshot checks. The combined runtime is the two feature commits above, applied to `9aa752a1`.
 
 ## Run against the prototype
 
 Build the changed `devframe`, `@devframes/hub`, `@devframes/json-render` and reference renderer outputs in the upstream checkout first. The browser proof imports their package exports without source aliases, private imports or fabricated Node/hub contexts.
 
 ```sh
+pnpm --filter @devkit/webext build
 pnpm with current --dir docs/probes/native-port install --ignore-workspace --ignore-scripts
 node docs/probes/native-port/prepare.mjs /path/to/built/devframe-prototype
 cd docs/probes/native-port
@@ -34,7 +36,7 @@ node build.mjs
 node check.mjs
 ```
 
-`prepare.mjs` links already installed upstream tools and built packages into this isolated probe. TypeScript comes from the SDK's TS7 installation. Native declarations currently also reference Node types; these are compile-time dependencies, and the Vite browser build contains no Node runtime. `check.mjs` uses the installed Playwright Chromium with a disposable profile, closes it afterward and removes the profile. The in-app browser cannot load unpacked extensions.
+`prepare.mjs` links already installed upstream tools, built upstream packages and the maintained WebExtension package into this isolated probe. TypeScript comes from the SDK's TS7 installation. Native declarations currently also reference Node types; these are compile-time dependencies, and the Vite browser build contains no Node runtime. `check.mjs` uses the installed Playwright Chromium with a disposable profile, closes it afterward and removes the profile. The in-app browser cannot load unpacked extensions.
 
 Alternatively, load `dist` unpacked in Chromium and open its options page twice. The extension requests no host permissions and admits only the exact packaged `panel.html` URL and its own extension ID. `denied.html` exercises a rejected sender. No content/page bridge is admitted by this fixture.
 
