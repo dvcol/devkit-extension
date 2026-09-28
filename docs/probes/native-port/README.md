@@ -19,7 +19,7 @@ flowchart LR
 - [RPC/state, issue #7](https://github.com/dvcolomban/devframe/commit/fe0fb623da5032b512cedf4956a215cff7a7f594).
 - [JSON renderer/view, issue #12](https://github.com/dvcolomban/devframe/commit/5677ecd69e7b1a758233173846aead05b0654023).
 
-The branch is pushed to the existing personal fork. Opening a new upstream draft PR awaits owner approval. Scoped upstream lint, four-package type checks, 43 focused tests and the browser artifact checks pass. The checked-in proof also passes strict SDK Oxlint and TypeScript 7 checks, with `skipLibCheck` disabled.
+The reviewed branch is open as [Devframe draft PR #410](https://github.com/devframes/devframe/pull/410). Follow-up commits preserve the existing diagnostic export, cover the Node subscription path, declare the renderer peer dependency and document context reuse for view discovery. Scoped upstream lint, Knip, four-package type checks, 44 focused tests, 110 API snapshot checks and browser artifact checks pass. The Chromium proof passed again against the reviewed build with zero page errors. The proof also passes strict SDK Oxlint and TypeScript 7 checks, with `skipLibCheck` disabled.
 
 ## Run against the prototype
 
