@@ -8,7 +8,7 @@ import { createRpcSharedStateClientHost } from 'devframe/rpc/shared-state';
 import { createEventEmitter } from 'devframe/utils/events';
 import { createPortChannel } from '@devkit/webext';
 
-const port = chrome.runtime.connect({ name: 'native-port-probe' });
+const port = chrome.runtime.connect({ name: 'devkit-native-port-example' });
 const client = new RpcFunctionsCollectorBase<DevframeRpcClientFunctions, undefined>(undefined);
 const rpc = createRpcClient<DevframeRpcServerFunctions, DevframeRpcClientFunctions>(
   client.functions,

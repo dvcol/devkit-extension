@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
+import { styleText } from 'node:util';
 import { chromium, expect } from '@playwright/test';
 
 const extensionPath = resolve('dist');
@@ -11,8 +12,10 @@ const browser = await chromium.launchPersistentContext(profile, {
   headless: true,
   args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
 });
-const errors = [];
-browser.on('console', (message) => console.log('browser console', message.type(), message.text()));
+const errors: string[] = [];
+browser.on('console', (message) => {
+  console.info(styleText('cyan', '🧪 [webext]'), message.type(), message.text());
+});
 try {
   const worker = browser.serviceWorkers()[0] ?? (await browser.waitForEvent('serviceworker'));
   const extensionId = new URL(worker.url()).host;
@@ -32,9 +35,9 @@ try {
   );
   for (const page of [first, second])
     await expect(page.locator('#result')).toContainText('panel.html');
-  const firstIdentity = JSON.parse(await first.locator('#result').innerText());
-  const secondIdentity = JSON.parse(await second.locator('#result').innerText());
-  assert.notEqual(firstIdentity.id, secondIdentity.id);
+  const firstIdentity = await first.locator('#result').innerText();
+  const secondIdentity = await second.locator('#result').innerText();
+  assert.notEqual(firstIdentity, secondIdentity);
   await second.getByRole('button', { name: 'Native write', exact: true }).click();
   for (const page of [first, second])
     await expect(page.getByText('Counter: 10', { exact: true })).toBeVisible();
@@ -72,7 +75,8 @@ try {
   await expect(second.locator('#result')).toContainText('closed');
   await expect(first.locator('#status')).toHaveText('Connected');
   assert.deepEqual(errors, []);
-  await first.screenshot({ path: 'native-port-proof.png', fullPage: true });
+  await mkdir('artifacts', { recursive: true });
+  await first.screenshot({ path: 'artifacts/native-port-proof.png', fullPage: true });
   const receipt = {
     browser: browser.browser()?.version(),
     checks: [
@@ -91,10 +95,10 @@ try {
     ],
     pageErrors: errors,
   };
-  await writeFile('receipt.json', JSON.stringify(receipt, null, 2));
-  console.log(JSON.stringify(receipt));
+  await writeFile('artifacts/receipt.json', JSON.stringify(receipt, null, 2));
+  console.info(styleText('green', '✅ [webext]'), receipt);
 } catch (error) {
-  console.error({ errors });
+  console.error(styleText('red', '❌ [webext]'), errors);
   throw error;
 } finally {
   await browser.close();

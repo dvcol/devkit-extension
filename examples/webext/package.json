@@ -1,0 +1,25 @@
+{
+  "name": "@devkit/example-webext",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
+    "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
+    "test": "vitest run",
+    "test:browser": "node tests/browser.ts"
+  },
+  "dependencies": {
+    "@devframes/hub": "1.0.0",
+    "@devframes/json-render": "1.0.0",
+    "@devframes/json-render-ui": "1.0.0",
+    "@devkit/webext": "workspace:*",
+    "devframe": "1.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/chrome": "0.3.0"
+  }
+}

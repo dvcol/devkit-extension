@@ -85,7 +85,7 @@ let nextSessionId = 0;
 chrome.runtime.onConnect.addListener((port) => {
   /** Only packaged extension pages are admitted by this fixture. */
   if (
-    port.name !== 'native-port-probe' ||
+    port.name !== 'devkit-native-port-example' ||
     port.sender?.id !== chrome.runtime.id ||
     port.sender.url !== chrome.runtime.getURL('panel.html')
   ) {

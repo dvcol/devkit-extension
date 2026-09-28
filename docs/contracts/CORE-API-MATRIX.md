@@ -140,3 +140,10 @@ This is candidate upstream integration evidence, reviewed and submitted as [Devf
 | Browser type/bundle compatibility | Strict TS7 declarations, package build, type-aware Oxlint | Built public package imported by the extension example; zero page errors |
 
 The [recorded example](../probes/native-port/README.md) now imports the maintained package instead of a local channel copy. It uses the split native drafts [410](https://github.com/devframes/devframe/pull/410) and [411](https://github.com/devframes/devframe/pull/411). [Snapshot repair 412](https://github.com/devframes/devframe/pull/412) is independent. The SDK baseline remains Devframe 1.0.0; the native shared-state/renderer backport and complete provider/catalog composition are still pending. Simulated clone delivery is not Firefox browser conformance.
+
+
+## Installed native extension example, 2026-09-29
+
+The shared-state and renderer exports are now backported to the workspace's pinned 1.0 packages. [examples/webext](../../examples/webext/README.md) replaces the temporary prototype and imports only installed public exports. It passes all 12 live Chromium scenarios with zero page errors, plus strict TS7, Oxlint and a browser graph check that rejects Node modules. CI executes the real Chromium test after the normal workspace gates.
+
+The RPC/state backport is in [5ebcb5a](https://github.com/dvcol/devkit-extension/commit/5ebcb5a), and the JSON backport is in [631db2b](https://github.com/dvcol/devkit-extension/commit/631db2b). Tests cover native subscriptions across Port peers and shared ownership between the portable/node view exports. The server regression suite passes all 48 tests and the JSON server example passes six tests. Portable provider/catalog composition and full browser surface coverage remain open.

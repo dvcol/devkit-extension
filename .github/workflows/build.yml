@@ -17,3 +17,7 @@ jobs:
       - uses: ./.github/actions/install
       - name: Build, types, strict lint, format and tests
         run: pnpm run ci
+      - name: Install Chromium for the extension example
+        run: pnpm --filter @devkit/example-webext exec playwright install --with-deps chromium
+      - name: Run the real extension browser test
+        run: pnpm --filter @devkit/example-webext test:browser

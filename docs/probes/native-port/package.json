@@ -1,9 +1,0 @@
-{
-  "name": "devkit-native-port-probe",
-  "private": true,
-  "type": "module",
-  "devDependencies": {
-    "@types/chrome": "0.3.0"
-  },
-  "packageManager": "pnpm@12.5.1"
-}
