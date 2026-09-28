@@ -46,7 +46,7 @@ index 8db367b73d7aabfa28a93cb8641ab3010f1b8650..eb945956c69c3f9c9fff1ee6917ddb8a
    };
    /** Streaming host scoped to this namespace. */
 diff --git a/dist/client/index.mjs b/dist/client/index.mjs
-index a26af04daee8a1d93897225fa8efa43b9b1efb32..0ee4600274878d75bce81be8dba5d27d37e2d301 100644
+index a26af04daee8a1d93897225fa8efa43b9b1efb32..42957be4e0723750019aa4ef905c7b2e978d3460 100644
 --- a/dist/client/index.mjs
 +++ b/dist/client/index.mjs
 @@ -481,31 +481,29 @@ function getDevframeConnection() {
@@ -125,6 +125,24 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..0ee4600274878d75bce81be8dba5d27d
  		} catch (error) {
  			errors.push(error);
  		}
+@@ -733,7 +730,7 @@ function createRpcSharedStateClientHost(rpc) {
+ 					return state;
+ 				}
+ 			}
+-			return new Promise((resolve) => {
++			return new Promise((resolve, reject) => {
+ 				if (!rpc.isTrusted) {
+ 					resolve(state);
+ 					let initialized = false;
+@@ -743,7 +740,7 @@ function createRpcSharedStateClientHost(rpc) {
+ 							initSharedState();
+ 						}
+ 					});
+-				} else initSharedState().then(resolve);
++				} else initSharedState().then(resolve, reject);
+ 			});
+ 		}
+ 	};
 @@ -1864,9 +1861,17 @@ async function getDevframeRpcClient(options = {}) {
  		wsOptions: options.wsOptions
  	});
@@ -181,6 +199,1020 @@ index db223a17802de0b41ba214693546fa06aa4e0276..a5bd8bb625ab472fcfe74bc7f973043d
      <T extends Record<string, any> = Record<string, any>>(key: string, options?: RpcSharedStateGetOptions<T>): Promise<SharedState<T>>;
    };
    /** Streaming host scoped to this namespace. */
+diff --git a/dist/context-BqpgC5tq.mjs b/dist/context-BqpgC5tq.mjs
+index c7d302ef2197084e76f035343de25330ffb63ce6..532428b26005756af2072cd8873b03dc1c8d1a6f 100644
+--- a/dist/context-BqpgC5tq.mjs
++++ b/dist/context-BqpgC5tq.mjs
+@@ -152,13 +152,13 @@ function createRpcSharedStateServerHost(rpc) {
+ 		name: "devframe:rpc:server-state:subscribe",
+ 		type: "event",
+ 		handler(key) {
+-			const session = rpc.getCurrentRpcSession();
+-			if (!session) return;
++			const meta = this?.$meta;
++			if (!meta) return;
+ 			debugSubscribe("subscribe", {
+ 				key,
+-				session: session.meta.id
++				session: meta.id
+ 			});
+-			session.meta.subscribedStates.add(key);
++			meta.subscribedStates.add(key);
+ 		}
+ 	});
+ 	rpc.register({
+diff --git a/dist/rpc/shared-state.d.mts b/dist/rpc/shared-state.d.mts
+new file mode 100644
+index 0000000000000000000000000000000000000000..e87bca08f32eed08db6839413bbe43fa607765d5
+--- /dev/null
++++ b/dist/rpc/shared-state.d.mts
+@@ -0,0 +1,18 @@
++import type { RpcFunctionsCollector } from 'devframe/rpc';
++import type { DevframeRpcClient } from 'devframe/client';
++import type { ConnectionMeta, DevframeRpcClientFunctions, DevframeRpcServerFunctions, RpcFunctionsHost, RpcSharedStateHost } from 'devframe/types';
++//#region src/client/rpc-shared-state.d.ts
++/** Native shared-state synchronization over an authenticated RPC connection. */
++export declare function createRpcSharedStateClientHost<Context>(rpc: Pick<DevframeRpcClient, 'call' | 'callEvent' | 'events' | 'isTrusted'> & {
++  client: Pick<RpcFunctionsCollector<DevframeRpcClientFunctions, Context>, 'register'>;
++  connectionMeta: Pick<ConnectionMeta, 'backend'>;
++}): RpcSharedStateHost;
++//#endregion
++//#region src/node/rpc-shared-state.d.ts
++/**
++ * Publish native shared state over registered RPC functions and broadcasts.
++ * Each channel supplies session metadata with a `subscribedStates` set and
++ * retains birpc's default RPC `this` binding for subscription handlers.
++ */
++export declare function createRpcSharedStateServerHost<Context>(rpc: Pick<RpcFunctionsCollector<DevframeRpcServerFunctions, Context>, 'register'> & Pick<RpcFunctionsHost, 'broadcast'>): RpcSharedStateHost;
++//#endregion
+\ No newline at end of file
+diff --git a/dist/rpc/shared-state.mjs b/dist/rpc/shared-state.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..59c250a7496f0fabda81408d6af73db762072250
+--- /dev/null
++++ b/dist/rpc/shared-state.mjs
+@@ -0,0 +1,779 @@
++import { createSharedState } from "devframe/utils/shared-state";
++import { defineDiagnostics } from "devframe/utils/nostics";
++//#region packages/devframe/src/events.ts
++/**
++* Centralized registry of the core devframe event names: the node-side host
++* bus events, the client RPC connection events, and the server→client
++* broadcast notifications, so these names live in one place instead of
++* scattered string literals.
++*
++* **Keep this in sync with [`docs/content/8.references/3.events.md`](../../../docs/content/8.references/3.events.md)**
++* (the "Core devframe events" section): every name here appears in that page's
++* tables, and every name there resolves to an entry here. Add, rename, or
++* remove a name in both places in the same change, and reference
++* `DEVFRAME_EVENTS.*` from call sites instead of re-typing a literal.
++*
++* This map covers **notifications** (events, broadcasts). The request/response
++* RPC endpoints of the shared-state, streaming, and auth-handshake protocols
++* (`devframe:rpc:server-state:*`, `devframe:streaming:subscribe`,
++* `anonymous:devframe:auth`, …) are defined at their handlers and typed in
++* `types/rpc-augments.ts`; they aren't events and stay out of this map.
++*
++* The `EventEmitter` maps (`RpcClientEvents`, `DevframeAgentHostEvents`) and the
++* `DevframeRpcClientFunctions` augmentation declare these names as type-level
++* keys (a literal is unavoidable in a type position); those declarations mirror
++* this map and move with it.
++*/
++const DEVFRAME_EVENTS = {
++	/**
++	* Node-side host `EventEmitter` events. The agent host (`ctx.agent.events`)
++	* emits these as its tool/resource surface changes; protocol adapters (e.g.
++	* MCP) subscribe to re-publish their manifest.
++	*/
++	bus: {
++		agentManifestChanged: "agent:manifest:changed",
++		agentToolRegistered: "agent:tool:registered",
++		agentToolUnregistered: "agent:tool:unregistered",
++		agentResourceRegistered: "agent:resource:registered",
++		agentResourceUnregistered: "agent:resource:unregistered"
++	},
++	/**
++	* Client-side RPC connection `EventEmitter` events (`rpc.events`) a UI
++	* subscribes to for connection lifecycle and error surfacing.
++	*/
++	client: {
++		isTrustedUpdated: "rpc:is-trusted:updated",
++		error: "rpc:error",
++		connectionStatus: "connection:status",
++		connectionError: "connection:error"
++	},
++	/**
++	* Broadcast notifications the server pushes to clients (server → client),
++	* `devframe:` prefix. The paired request methods (subscribe/get/set/…) are
++	* RPC endpoints, not events, and are omitted deliberately.
++	*/
++	broadcast: {
++		authRevoked: "devframe:auth:revoked",
++		clientStateUpdated: "devframe:rpc:client-state:updated",
++		clientStatePatch: "devframe:rpc:client-state:patch",
++		streamingChunk: "devframe:streaming:chunk",
++		streamingEnd: "devframe:streaming:end",
++		streamingUploadCancel: "devframe:streaming:upload-cancel"
++	},
++	/**
++	* In-page channel notifications the page script pushes to its panels
++	* (page script → panel), `devframe:` prefix. The paired request methods
++	* (`devframe:in-page:page-state:subscribe`/`set`/`patch`) are call
++	* endpoints, not events, and are defined at their handlers
++	* (`in-page-channel/state.ts`).
++	*/
++	inPageChannel: {
++		panelStateUpdated: "devframe:in-page:panel-state:updated",
++		panelStatePatch: "devframe:in-page:panel-state:patch"
++	},
++	/** `postMessage` channels the runtime posts across window boundaries. */
++	postMessage: {
++		remoteAssetsError: "devframe:remote-assets-error",
++		inPageChannel: "devframe:in-page-channel"
++	}
++};
++//#endregion
++//#region packages/devframe/src/client/rpc-shared-state.ts
++/** Native shared-state synchronization over an authenticated RPC connection. */
++function createRpcSharedStateClientHost(rpc) {
++	const sharedState = /* @__PURE__ */ new Map();
++	const stateDisposers = /* @__PURE__ */ new Map();
++	const initialValues = /* @__PURE__ */ new Map();
++	const keyAddedListeners = /* @__PURE__ */ new Set();
++	const isStaticBackend = rpc.connectionMeta.backend === "static";
++	function mergeWithInitialValue(key, serverState) {
++		const initial = initialValues.get(key);
++		if (initial && typeof initial === "object" && !Array.isArray(initial) && typeof serverState === "object" && !Array.isArray(serverState)) return {
++			...initial,
++			...serverState
++		};
++		return serverState;
++	}
++	rpc.client.register({
++		name: DEVFRAME_EVENTS.broadcast.clientStateUpdated,
++		type: "event",
++		handler: (key, fullState, syncId) => {
++			const state = sharedState.get(key);
++			if (!state || state.syncIds.has(syncId)) return;
++			state.mutate(() => mergeWithInitialValue(key, fullState), syncId);
++		}
++	});
++	rpc.client.register({
++		name: DEVFRAME_EVENTS.broadcast.clientStatePatch,
++		type: "event",
++		handler: (key, patches, syncId) => {
++			const state = sharedState.get(key);
++			if (!state || state.syncIds.has(syncId)) return;
++			state.patch(patches, syncId);
++		}
++	});
++	function registerSharedState(key, state) {
++		const offs = [];
++		offs.push(state.on("updated", (fullState, patches, syncId) => {
++			if (isStaticBackend) return;
++			if (patches) rpc.callEvent("devframe:rpc:server-state:patch", key, patches, syncId);
++			else rpc.callEvent("devframe:rpc:server-state:set", key, fullState, syncId);
++		}));
++		return () => {
++			for (const off of offs) off();
++		};
++	}
++	return {
++		keys: () => Array.from(sharedState.keys()),
++		onKeyAdded(fn) {
++			keyAddedListeners.add(fn);
++			return () => {
++				keyAddedListeners.delete(fn);
++			};
++		},
++		delete(key) {
++			const dispose = stateDisposers.get(key);
++			stateDisposers.delete(key);
++			const existed = sharedState.delete(key);
++			initialValues.delete(key);
++			dispose?.();
++			return existed;
++		},
++		get: async (key, options) => {
++			if (options?.initialValue !== void 0) initialValues.set(key, options.initialValue);
++			if (sharedState.has(key)) return sharedState.get(key);
++			const state = createSharedState({
++				initialValue: options?.initialValue,
++				enablePatches: false
++			});
++			async function initSharedState() {
++				if (!isStaticBackend) rpc.callEvent("devframe:rpc:server-state:subscribe", key);
++				if (options?.initialValue !== void 0) {
++					sharedState.set(key, state);
++					for (const fn of keyAddedListeners) fn(key);
++					rpc.call("devframe:rpc:server-state:get", key).then((serverState) => {
++						if (serverState !== void 0) state.mutate(() => mergeWithInitialValue(key, serverState));
++					}).catch((error) => {
++						console.error("Error getting server state", error);
++					});
++					stateDisposers.set(key, registerSharedState(key, state));
++					return state;
++				} else {
++					const serverValue = await rpc.call("devframe:rpc:server-state:get", key);
++					state.mutate(() => mergeWithInitialValue(key, serverValue));
++					sharedState.set(key, state);
++					for (const fn of keyAddedListeners) fn(key);
++					stateDisposers.set(key, registerSharedState(key, state));
++					return state;
++				}
++			}
++			return new Promise((resolve, reject) => {
++				if (!rpc.isTrusted) {
++					resolve(state);
++					let initialized = false;
++					rpc.events.on(DEVFRAME_EVENTS.client.isTrustedUpdated, (isTrusted) => {
++						if (isTrusted && !initialized) {
++							initialized = true;
++							initSharedState();
++						}
++					});
++				} else initSharedState().then(resolve, reject);
++			});
++		}
++	};
++}
++//#endregion
++//#region node_modules/.pnpm/obug@3.0.0/node_modules/obug/dist/core.js
++/**
++* Coerce `value`.
++*/
++function coerce(value) {
++	if (value instanceof Error) return value.stack || value.message;
++	return value;
++}
++/**
++* Selects a color for a debug namespace
++* @return An ANSI color code for the given namespace
++*/
++function selectColor(colors, namespace) {
++	let hash = 0;
++	for (let i = 0; i < namespace.length; i++) {
++		hash = (hash << 5) - hash + namespace.charCodeAt(i);
++		hash |= 0;
++	}
++	return colors[Math.abs(hash) % colors.length];
++}
++/**
++* Checks if the given string matches a namespace template, honoring
++* asterisks as wildcards.
++*/
++function matchesTemplate(search, template) {
++	let searchIndex = 0;
++	let templateIndex = 0;
++	let starIndex = -1;
++	let matchIndex = 0;
++	while (searchIndex < search.length) if (templateIndex < template.length && (template[templateIndex] === search[searchIndex] || template[templateIndex] === "*")) {
++		if (template[templateIndex] === "*") {
++			starIndex = templateIndex;
++			matchIndex = searchIndex;
++			templateIndex++;
++		} else {
++			searchIndex++;
++			templateIndex++;
++		}
++	} else if (starIndex !== -1) {
++		templateIndex = starIndex + 1;
++		matchIndex++;
++		searchIndex = matchIndex;
++	} else return false;
++	while (templateIndex < template.length && template[templateIndex] === "*") templateIndex++;
++	return templateIndex === template.length;
++}
++function humanize(value) {
++	if (value >= 1e3) return `${(value / 1e3).toFixed(1)}s`;
++	return `${value}ms`;
++}
++let globalNamespaces = "";
++function createDebug$2(namespace, options) {
++	let prevTime;
++	let enableOverride;
++	let namespacesCache;
++	let enabledCache;
++	const debug = ((...args) => {
++		if (!debug.enabled) return;
++		const curr = Date.now();
++		const diff = curr - (prevTime || curr);
++		prevTime = curr;
++		args[0] = coerce(args[0]);
++		if (typeof args[0] !== "string") args.unshift("%O");
++		let index = 0;
++		args[0] = args[0].replace(/%([a-z%])/gi, (match, format) => {
++			if (match === "%%") return "%";
++			index++;
++			const formatter = options.formatters[format];
++			if (typeof formatter === "function") {
++				const value = args[index];
++				match = formatter.call(debug, value);
++				args.splice(index, 1);
++				index--;
++			}
++			return match;
++		});
++		options.formatArgs.call(debug, diff, args);
++		debug.log(...args);
++	});
++	debug.extend = function(namespace, delimiter = ":") {
++		return createDebug$2(this.namespace + delimiter + namespace, {
++			useColors: this.useColors,
++			color: this.color,
++			formatArgs: this.formatArgs,
++			formatters: this.formatters,
++			inspectOpts: this.inspectOpts,
++			log: this.log,
++			humanize: this.humanize
++		});
++	};
++	Object.assign(debug, options);
++	debug.namespace = namespace;
++	Object.defineProperty(debug, "enabled", {
++		enumerable: true,
++		configurable: false,
++		get: () => {
++			if (enableOverride != null) return enableOverride;
++			if (namespacesCache !== globalNamespaces) {
++				namespacesCache = globalNamespaces;
++				enabledCache = enabled(namespace);
++			}
++			return enabledCache;
++		},
++		set: (v) => {
++			enableOverride = v;
++		}
++	});
++	return debug;
++}
++let names = [];
++let skips = [];
++function enable(namespaces) {
++	globalNamespaces = namespaces;
++	names = [];
++	skips = [];
++	const split = globalNamespaces.trim().replace(/\s+/g, ",").split(",").filter(Boolean);
++	for (const ns of split) if (ns[0] === "-") skips.push(ns.slice(1));
++	else names.push(ns);
++}
++/**
++* Returns true if the given mode name is enabled, false otherwise.
++*/
++function enabled(name) {
++	for (const skip of skips) if (matchesTemplate(name, skip)) return false;
++	for (const ns of names) if (matchesTemplate(name, ns)) return true;
++	return false;
++}
++//#endregion
++//#region node_modules/.pnpm/obug@3.0.0/node_modules/obug/dist/plain.js
++function formatArgs$1(diff, args) {
++	args[0] = `${this.namespace} ${args[0]} +${this.humanize(diff)}`;
++}
++const defaultOptions = {
++	useColors: false,
++	color: "",
++	formatArgs: formatArgs$1,
++	formatters: { 
++	/**
++	* Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
++	*/
++j(v) {
++		try {
++			return JSON.stringify(v);
++		} catch (error) {
++			return `[UnexpectedJSONParseError]: ${error.message}`;
++		}
++	} },
++	inspectOpts: {},
++	humanize,
++	log: console.debug || console.log || (() => {})
++};
++function createDebug$1(namespace, options) {
++	return createDebug$2(namespace, Object.assign({}, defaultOptions, options));
++}
++function load() {
++	let r;
++	try {
++		r = localStorage.getItem("debug") || localStorage.getItem("DEBUG");
++	} catch (_unused) {}
++	if (!r && typeof process !== "undefined" && "env" in process) r = process.env.DEBUG;
++	return r || "";
++}
++enable(load());
++//#endregion
++//#region node_modules/.pnpm/obug@3.0.0/node_modules/obug/dist/browser.js
++const colors = [
++	"#0000CC",
++	"#0000FF",
++	"#0033CC",
++	"#0033FF",
++	"#0066CC",
++	"#0066FF",
++	"#0099CC",
++	"#0099FF",
++	"#00CC00",
++	"#00CC33",
++	"#00CC66",
++	"#00CC99",
++	"#00CCCC",
++	"#00CCFF",
++	"#3300CC",
++	"#3300FF",
++	"#3333CC",
++	"#3333FF",
++	"#3366CC",
++	"#3366FF",
++	"#3399CC",
++	"#3399FF",
++	"#33CC00",
++	"#33CC33",
++	"#33CC66",
++	"#33CC99",
++	"#33CCCC",
++	"#33CCFF",
++	"#6600CC",
++	"#6600FF",
++	"#6633CC",
++	"#6633FF",
++	"#66CC00",
++	"#66CC33",
++	"#9900CC",
++	"#9900FF",
++	"#9933CC",
++	"#9933FF",
++	"#99CC00",
++	"#99CC33",
++	"#CC0000",
++	"#CC0033",
++	"#CC0066",
++	"#CC0099",
++	"#CC00CC",
++	"#CC00FF",
++	"#CC3300",
++	"#CC3333",
++	"#CC3366",
++	"#CC3399",
++	"#CC33CC",
++	"#CC33FF",
++	"#CC6600",
++	"#CC6633",
++	"#CC9900",
++	"#CC9933",
++	"#CCCC00",
++	"#CCCC33",
++	"#FF0000",
++	"#FF0033",
++	"#FF0066",
++	"#FF0099",
++	"#FF00CC",
++	"#FF00FF",
++	"#FF3300",
++	"#FF3333",
++	"#FF3366",
++	"#FF3399",
++	"#FF33CC",
++	"#FF33FF",
++	"#FF6600",
++	"#FF6633",
++	"#FF9900",
++	"#FF9933",
++	"#FFCC00",
++	"#FFCC33"
++];
++/**
++* Colorize log arguments if enabled.
++*/
++function formatArgs(diff, args) {
++	const { useColors } = this;
++	args[0] = `${(useColors ? "%c" : "") + this.namespace + (useColors ? " %c" : " ") + args[0] + (useColors ? "%c " : " ")}+${this.humanize(diff)}`;
++	if (!useColors) return;
++	const c = `color: ${this.color}`;
++	args.splice(1, 0, c, "color: inherit");
++	let index = 0;
++	let lastC = 0;
++	args[0].replace(/%[a-z%]/gi, (match) => {
++		if (match === "%%") return;
++		index++;
++		if (match === "%c") lastC = index;
++	});
++	args.splice(lastC, 0, c);
++}
++function createDebug(namespace, options) {
++	var _ref;
++	const color = (_ref = options && options.color) !== null && _ref !== void 0 ? _ref : selectColor(colors, namespace);
++	return createDebug$1(namespace, Object.assign({
++		useColors: true,
++		color,
++		formatArgs
++	}, options));
++}
++//#endregion
++//#region packages/devframe/src/node/diagnostics.ts
++/**
++* DF00xx codes are allocated across packages (e.g. @devframes/json-render
++* owns DF0037–DF0041), so this file alone doesn't show the next free
++* number; check `docs/content/6.errors/` for the full allocation before adding one.
++*/
++const diagnostics = defineDiagnostics({
++	docsBase: "https://devfra.me/errors",
++	codes: {
++		DF0006: { why: (p) => `RPC function "${p.name}" is not registered` },
++		DF0007: { why: "AsyncLocalStorage is not set, it likely to be an internal bug of the Devframe foundation" },
++		DF0008: { why: (p) => `distDir ${p.distDir} does not exist` },
++		DF0012: { why: (p) => `Failed to parse storage file: ${p.filepath}, falling back to defaults.` },
++		DF0013: { why: (p) => `Shared state of "${p.key}" is not found, please provide an initial value for the first time` },
++		DF0014: {
++			why: (p) => `RPC function "${p.name}" has an invalid \`agent\` field: \`description\` must be a non-empty string.`,
++			fix: "Provide a short description (~1–3 sentences) explaining what the tool does and when agents should invoke it."
++		},
++		DF0015: {
++			why: (p) => `Agent tool "${p.id}" is already registered.`,
++			fix: "Tool ids must be unique across RPC functions with an `agent` field and tools registered via `ctx.agent.registerTool()`."
++		},
++		DF0016: { why: (p) => `Agent resource "${p.id}" is already registered.` },
++		DF0017: { why: (p) => `Failed to start MCP server (${p.transport}): ${p.reason}` },
++		DF0029: {
++			why: (p) => `Stream "${p.channel}#${p.id}" dropped ${p.dropped} chunk(s) after exceeding the client high-water mark.`,
++			fix: "The consumer is too slow for the producer. Raise `highWaterMark` on the subscription, slow the producer, or batch chunks."
++		},
++		DF0030: {
++			why: (p) => `Stream "${p.channel}#${p.id}" is unknown; no producer has called \`channel.start({ id: "${p.id}" })\`.`,
++			fix: "Ensure the server-side producer is running before clients subscribe, or check for typos in the stream id."
++		},
++		DF0031: {
++			why: (p) => `Cannot write to closed stream "${p.channel}#${p.id}".`,
++			fix: "Track the producer lifecycle by guarding writes with the `stream.signal.aborted` flag."
++		},
++		DF0032: {
++			why: (p) => `Streaming channel "${p.channel}" is already registered.`,
++			fix: "Each channel name must be unique within a context. Pick a different name or reuse the existing channel handle."
++		},
++		DF0033: {
++			why: (p) => `Failed to start dev RPC bridge for "${p.id}": ${p.reason}`,
++			fix: "Verify the bridge port is free and the devframe setup function does not throw. Pin a port via `cli.port` / `cli.portRange` on the definition, or via `port` on `devframeViteBridge` (`@devframes/vite`)."
++		},
++		DF0034: {
++			why: (p) => `Scoped RPC registration for namespace "${p.namespace}" received an already-namespaced function name "${p.name}".`,
++			fix: "A scoped context auto-namespaces ids. Pass a bare name without a \":\" separator (e.g. `register({ name: \"get-cwd\" })`), or use the unscoped `ctx.base.rpc.register` for a fully-qualified name."
++		},
++		DF0035: {
++			why: (p) => `Failed to persist storage file: ${p.filepath}`,
++			fix: "Check that the storage directory is writable and has free space."
++		},
++		DF0036: {
++			why: (p) => `RPC call to "${p.name}" was rejected: the caller is not authorized.`,
++			fix: "Complete the auth handshake (or connect with a static/pre-shared token) before calling a trusted method. Untrusted callers may only call `anonymous:`-prefixed methods; see `isAnonymousRpcMethod`."
++		},
++		DF0037: {
++			why: (p) => `A service is already provided under "${p.id}".`,
++			fix: "Service ids are unique per context. Revoke the existing provider first (the `provide()` call returns a revoke function), or namespace the id with your plugin id to avoid collisions."
++		},
++		DF0042: {
++			why: (p) => `"${p.id}" declares \`capabilities.build: false\`, so its static export is not meaningful (writes are excluded and any live-served data won't be there).`,
++			fix: "Pass `{ force: true }` to `createBuild()` if the degraded export is still useful to you, or drop `capabilities.build: false` on the definition."
++		},
++		DF0045: {
++			why: (p) => `Failed to update the devframe instance registry at "${p.file}": ${p.reason}`,
++			fix: "Discovery tooling (`devframe connect`) will not see this instance. Check that the registry directory is writable, point `DEVFRAME_INSTANCES_DIR` at a writable directory, or set `DEVFRAME_DISABLE_INSTANCE_REGISTRY=1` to opt out of registration."
++		},
++		DF0046: {
++			why: (p) => `\`devframe connect\` requires the optional peer dependency @devframes/agentic: ${p.reason}`,
++			fix: "Install it next to devframe (e.g. `npm install @devframes/agentic`) and run `devframe connect` again."
++		},
++		DF0047: {
++			why: (p) => `Agent tool "${p.id}" is hidden from the MCP surface: its wire name "${p.name}" collides with the tool "${p.existing}".`,
++			fix: "Wire names derive from tool ids (characters outside [a-zA-Z0-9_-] become \"_\"). Rename one of the two ids so they sanitize to distinct names."
++		},
++		DF0048: {
++			why: (p) => `Unknown shared-state key "${p.key}".`,
++			fix: "Call the devframe_state_read tool without arguments to list the available keys, then retry with one of them."
++		},
++		DF0049: {
++			why: "The devframe_connect_call-tool tool requires { port: number, tool: string }.",
++			fix: "Call devframe_connect_list-instances to get the port and tool names, then retry."
++		},
++		DF0050: {
++			why: (p) => `No running devframe instance on port ${p.port}.`,
++			fix: "Call devframe_connect_list-instances for the current instance list; the instance may have stopped or changed port."
++		},
++		DF0051: {
++			why: (p) => `The devframe instance on port ${p.port} has no MCP endpoint.`,
++			fix: "Restart the instance with the --mcp flag to expose its tools, then list instances again."
++		},
++		DF0052: {
++			why: (p) => `Failed to listen on ${p.host}:${p.port}: ${p.reason}`,
++			fix: "The port is likely already taken by another process (often a previous devframe instance). Free it, or pick another via `--port`, `cli.port` / `cli.portRange` on the definition, or `port` on `devframeViteBridge` (`@devframes/vite`). The original node error is available as `error.cause`."
++		},
++		DF0054: {
++			why: (p) => `connectionMeta() was called before initDevframe("${p.id}") finished initializing.`,
++			fix: "Await `instance.ready` (or any request through `instance.handler`) before reading `connectionMeta()`; the WebSocket binding it describes is only known once initialization completes."
++		},
++		DF0055: {
++			why: (p) => `This instance already owns its WebSocket transport (${p.tier}), so it cannot take over the host's upgrade events.`,
++			fix: "Drop `handleUpgrade`/`attach` and let the configured transport serve the socket, or remove `server` / `ws.port` / `ws.sidecar` from the options so the instance leaves the binding to you."
++		},
++		DF0056: {
++			why: (p) => `This instance advertises an external WebSocket endpoint (${p.url}), so it serves no socket of its own.`,
++			fix: "The server behind `ws.url` owns the transport (and its auth). Drop `ws.url` to have the instance serve the socket, or pair it with `server` / `ws.port` / `ws.sidecar` for the tunnel pattern, where a local binding is advertised through the relay."
++		},
++		DF0057: {
++			why: () => "This instance disables its WebSocket transport (`ws: false`), so there is no socket to drive upgrades into.",
++			fix: "Clients connect over the SSE endpoint instead, so no upgrade wiring is needed. Remove `ws: false` if the instance should serve a WebSocket after all."
++		},
++		DF0058: {
++			why: (p) => `"${p.id}" declares \`capabilities.dev: false\`, so it does not support a live dev server (its value is a static export only).`,
++			fix: "Pass `{ force: true }` to `createDevServer()` to run it anyway, or drop `capabilities.dev: false` on the definition."
++		},
++		DF0059: {
++			why: (p) => `Failed to fetch the file listing for "${p.package}@${p.version}" from ${p.provider}: ${p.reason}`,
++			fix: "Requests fall back to probing the provider per file. Check network access to the provider, or install the assets package locally so no listing is needed."
++		},
++		DF0060: {
++			why: (p) => `Failed to fetch a remote asset of "${p.package}" (${p.url}): ${p.reason}`,
++			fix: "Install the assets package locally (`npm install <package>`) to serve it with zero network, or check network access to the configured provider."
++		},
++		DF0061: {
++			why: (p) => `The locally installed "${p.package}@${p.installed}" is a different major version than the required "${p.required}".`,
++			fix: "Align the installed assets package with the version its node package declares; they are published in lockstep."
++		},
++		DF0062: {
++			why: (p) => `The locally installed "${p.package}@${p.installed}" differs from the required "${p.required}"; serving the installed one.`,
++			fix: "Install the exact declared version to serve byte-identical assets."
++		},
++		DF0063: {
++			why: (p) => `Failed to persist a remote asset into the cache at "${p.filepath}": ${p.reason}`,
++			fix: "The response was still served; only caching failed. Check that the cache directory is writable and has free space."
++		},
++		DF0064: {
++			why: (p) => `Failed to materialize the remote assets of "${p.package}@${p.version}": ${p.reason}`,
++			fix: "Static builds need every asset file up front. Install the assets package locally, or ensure the provider (and its file-listing API) is reachable during the build."
++		},
++		DF0065: {
++			why: (p) => `Invalid remote-assets ${p.field} "${p.value}".`,
++			fix: "A remote-assets `package` must be a valid npm package name and `version` an exact semver version (e.g. `1.2.3`); they are interpolated into CDN URLs and the cache path."
++		},
++		DF0066: {
++			why: (p) => `Service "${p.package}" is already installed; keeping the first installation and ignoring this one's options.`,
++			fix: "Option sets only merge before `ctx.services.ready()` fires. Install the service (or declare it in `DevframeDefinition.services`) before the barrier so its options join the merge."
++		},
++		DF0067: {
++			why: (p) => `Failed to import the required service package "${p.package}": ${p.reason}`,
++			fix: "Install the service package next to whoever declares it (a plugin declaring it in `services` should list it in its own dependencies), or drop `required: true` to degrade gracefully when it is absent."
++		},
++		DF0068: {
++			why: (p) => `The installed service "${p.package}@${p.installed}" does not satisfy the required range "${p.required}".`,
++			fix: "Align the installed service package with the range its declarer requires, or drop `required: true` to downgrade the mismatch to a warning."
++		},
++		DF0069: {
++			why: (p) => `The installed service "${p.package}@${p.installed}" does not satisfy the declared range "${p.required}"; installing it anyway.`,
++			fix: "The advertised meta carries the real version, so clients can gate on it. Align the installed service package with the declared range to silence this warning."
++		},
++		DF0070: {
++			why: (p) => `Invalid service "${p.package}": ${p.reason}`,
++			fix: "A service package's default export must be a factory returning a `DevframeServiceDefinition`, an object with `package`, `version`, `scope`, and a `setup` function."
++		},
++		DF0072: {
++			why: (p) => `\`rpc.snapshot\` names "${p.method}", but no RPC function is registered under that id, so nothing to bake into the static build.`,
++			fix: "Check the method id, and ensure the service/plugin that registers it is installed (e.g. declared in `services`) before the build collects the dump."
++		},
++		DF0075: {
++			why: (p) => `On ${p.runtime} the shared server's WebSocket upgrade needs crossws's Node adapter, which refuses to run off Node, and SSE is disabled, so this instance advertises no RPC transport at all.`,
++			fix: "Keep the SSE endpoint enabled (drop `sse: false`) so clients connect over it on Bun/Deno, or move the socket to a side-car (`ws: { sidecar: true }`) which binds the native WebSocket adapter on its own port."
++		},
++		DF0076: {
++			why: (p) => `\`attach\` / \`handleUpgrade\` drive a raw \`node:http\` upgrade into crossws's Node adapter, which refuses to run on ${p.runtime}.`,
++			fix: "On Bun/Deno, serve the advertised `__ws` route from `Bun.serve` / `Deno.serve` with `attachBunWsTransport` / `attachDenoWsTransport` (see the hub-deno example), or connect over the SSE endpoint instead."
++		},
++		DF0078: {
++			why: "This devframe exposes agent tools, but the MCP endpoint stays off: the optional peer \"@devframes/agentic\" is not installed.",
++			fix: "Install `@devframes/agentic` next to devframe to serve the MCP endpoint, or set `mcp: false` to opt out silently."
++		},
++		DF0079: {
++			why: (p) => `The \`mcp\` option is enabled, but the optional peer "@devframes/agentic" could not be loaded: ${p.reason}`,
++			fix: "Install `@devframes/agentic` next to devframe (the MCP adapter and the MCP SDK live there), or remove the explicit `mcp` setting."
++		}
++	}
++});
++//#endregion
++//#region packages/devframe/src/node/rpc-shared-state.ts
++const debug = createDebug("devframe:rpc:state:changed");
++const debugSubscribe = createDebug("devframe:rpc:state:subscribe");
++/**
++* Publish native shared state over registered RPC functions and broadcasts.
++* Each channel supplies session metadata with a `subscribedStates` set and
++* retains birpc's default RPC `this` binding for subscription handlers.
++*/
++function createRpcSharedStateServerHost(rpc) {
++	const sharedState = /* @__PURE__ */ new Map();
++	const stateDisposers = /* @__PURE__ */ new Map();
++	const keyAddedListeners = /* @__PURE__ */ new Set();
++	function registerSharedState(key, state) {
++		const offs = [];
++		offs.push(state.on("updated", (fullState, patches, syncId) => {
++			if (patches) {
++				debug("patch", {
++					key,
++					syncId
++				});
++				rpc.broadcast({
++					method: DEVFRAME_EVENTS.broadcast.clientStatePatch,
++					args: [
++						key,
++						patches,
++						syncId
++					],
++					filter: (client) => client.$meta.subscribedStates.has(key)
++				});
++			} else {
++				debug("updated", {
++					key,
++					syncId
++				});
++				rpc.broadcast({
++					method: DEVFRAME_EVENTS.broadcast.clientStateUpdated,
++					args: [
++						key,
++						fullState,
++						syncId
++					],
++					filter: (client) => client.$meta.subscribedStates.has(key)
++				});
++			}
++		}));
++		return () => {
++			for (const off of offs) off();
++		};
++	}
++	const host = {
++		get: async (key, options) => {
++			if (sharedState.has(key)) return sharedState.get(key);
++			if (options?.initialValue === void 0 && options?.sharedState === void 0) throw diagnostics.DF0013({ key });
++			debug("new-state", key);
++			const state = options.sharedState ?? createSharedState({
++				initialValue: options.initialValue,
++				enablePatches: false
++			});
++			stateDisposers.set(key, registerSharedState(key, state));
++			sharedState.set(key, state);
++			for (const fn of keyAddedListeners) fn(key);
++			return state;
++		},
++		keys() {
++			return Array.from(sharedState.keys());
++		},
++		onKeyAdded(fn) {
++			keyAddedListeners.add(fn);
++			return () => {
++				keyAddedListeners.delete(fn);
++			};
++		},
++		delete(key) {
++			const dispose = stateDisposers.get(key);
++			if (!dispose) return false;
++			dispose();
++			stateDisposers.delete(key);
++			sharedState.delete(key);
++			return true;
++		}
++	};
++	rpc.register({
++		name: "devframe:rpc:server-state:subscribe",
++		type: "event",
++		handler(key) {
++			/** birpc binds this handler to the calling connection across transports. */
++			const meta = this?.$meta;
++			if (!meta) return;
++			debugSubscribe("subscribe", {
++				key,
++				session: meta.id
++			});
++			meta.subscribedStates.add(key);
++		}
++	});
++	rpc.register({
++		name: "devframe:rpc:server-state:get",
++		type: "query",
++		handler: async (key) => {
++			if (!sharedState.has(key)) return void 0;
++			return (await host.get(key)).value();
++		},
++		/**
++		* Pre-compute snapshots for the build-mode static dump so the SPA
++		* can read them without a live server. The `undefined` fallback makes
++		* a key the build never created resolve like the live handler does
++		* (returning `undefined`) instead of failing the dump lookup.
++		*/
++		dump: () => ({
++			inputs: host.keys().map((key) => [key]),
++			fallback: void 0
++		})
++	});
++	rpc.register({
++		name: "devframe:rpc:server-state:set",
++		type: "query",
++		handler: async (key, value, syncId) => {
++			(await host.get(key, { initialValue: value })).patch([{
++				op: "replace",
++				path: [],
++				value
++			}], syncId);
++		}
++	});
++	rpc.register({
++		name: "devframe:rpc:server-state:patch",
++		type: "query",
++		handler: async (key, patches, syncId) => {
++			if (!sharedState.has(key)) return;
++			(await host.get(key)).patch(patches, syncId);
++		}
++	});
++	return host;
++}
++//#endregion
++export { createRpcSharedStateClientHost, createRpcSharedStateServerHost };
+diff --git a/dist/validation-BzxTTYaV.mjs b/dist/validation-BzxTTYaV.mjs
+index d27315a7d32f913033803658cab3077ebd724829..f4f059d67e54a059de96a1d46524c51fa07cf8b5 100644
+--- a/dist/validation-BzxTTYaV.mjs
++++ b/dist/validation-BzxTTYaV.mjs
+@@ -1,176 +1,5 @@
+ import { r as diagnostics } from "./serialization-BhuOoL80.mjs";
+-import { createHash } from "node:crypto";
+-//#region ../../node_modules/.pnpm/ohash@2.0.12/node_modules/ohash/dist/_chunks/is-equal.mjs
+-function serialize(input) {
+-	if (typeof input === "string") return `'${input}'`;
+-	return new Serializer().serialize(input);
+-}
+-const asciiOrder = " _-,;:!?.'\"()[]{}@*/\\&#%`^+<=>|~$0123456789abcdefghijklmnopqrstuvwxyz";
+-const asciiWeights = /*@__PURE__*/ (function() {
+-	const weights = /* @__PURE__ */ new Uint8Array(128);
+-	for (let i = 0; i < 69; i++) weights[asciiOrder.charCodeAt(i)] = i + 1;
+-	for (let code = 65; code <= 90; code++) weights[code] = weights[code + 32];
+-	return weights;
+-})();
+-function compareStrings(a, b) {
+-	if (a === b) return 0;
+-	const length = Math.min(a.length, b.length);
+-	let tieBreaker = 0;
+-	for (let i = 0; i < length; i++) {
+-		const codeA = a.charCodeAt(i);
+-		const codeB = b.charCodeAt(i);
+-		if (codeA === codeB) continue;
+-		const weightA = codeA < 128 && asciiWeights[codeA] ? asciiWeights[codeA] : codeA + 128;
+-		const weightB = codeB < 128 && asciiWeights[codeB] ? asciiWeights[codeB] : codeB + 128;
+-		if (weightA !== weightB) return weightA < weightB ? -1 : 1;
+-		if (tieBreaker === 0) tieBreaker = codeA > codeB ? -1 : 1;
+-	}
+-	if (a.length !== b.length) return a.length < b.length ? -1 : 1;
+-	return tieBreaker;
+-}
+-const Serializer = /*@__PURE__*/ (function() {
+-	class Serializer {
+-		#context = /* @__PURE__ */ new Map();
+-		compare(a, b) {
+-			const typeA = typeof a;
+-			const typeB = typeof b;
+-			if (typeA === "string" && typeB === "string") return compareStrings(a, b);
+-			if (typeA === "number" && typeB === "number") return a - b;
+-			return compareStrings(this.serialize(a, true), this.serialize(b, true));
+-		}
+-		serialize(value, noQuotes) {
+-			if (value === null) return "null";
+-			switch (typeof value) {
+-				case "string": return noQuotes ? value : `'${value}'`;
+-				case "bigint": return `${value}n`;
+-				case "object": return this.$object(value);
+-				case "function": return this.$function(value);
+-			}
+-			return String(value);
+-		}
+-		serializeObject(object) {
+-			const objString = Object.prototype.toString.call(object);
+-			if (objString !== "[object Object]") return this.serializeBuiltInType(objString.length < 10 ? `unknown:${objString}` : objString.slice(8, -1), object);
+-			const constructor = object.constructor;
+-			const objName = constructor === Object || constructor === void 0 ? "" : constructor.name;
+-			if (objName !== "" && globalThis[objName] === constructor) return this.serializeBuiltInType(objName, object);
+-			if ("toJSON" in object && typeof object.toJSON === "function") {
+-				const json = object.toJSON();
+-				return objName + (json !== null && typeof json === "object" ? this.$object(json) : `(${this.serialize(json)})`);
+-			}
+-			const keys = Object.keys(object).sort(compareStrings);
+-			let content = `${objName}{`;
+-			for (let i = 0; i < keys.length; i++) {
+-				const key = keys[i];
+-				content += `${key}:${this.serialize(object[key])}`;
+-				if (i < keys.length - 1) content += ",";
+-			}
+-			return content + "}";
+-		}
+-		serializeBuiltInType(type, object) {
+-			const handler = this["$" + type];
+-			if (handler) return handler.call(this, object);
+-			if (typeof object.entries === "function") return this.serializeObjectEntries(type, object.entries());
+-			throw new Error(`Cannot serialize ${type}`);
+-		}
+-		serializeObjectEntries(type, entries) {
+-			const sortedEntries = Array.from(entries).sort((a, b) => this.compare(a[0], b[0]));
+-			let content = `${type}{`;
+-			for (let i = 0; i < sortedEntries.length; i++) {
+-				const [key, value] = sortedEntries[i];
+-				content += `${this.serialize(key, true)}:${this.serialize(value)}`;
+-				if (i < sortedEntries.length - 1) content += ",";
+-			}
+-			return content + "}";
+-		}
+-		$object(object) {
+-			let content = this.#context.get(object);
+-			if (content === void 0) {
+-				this.#context.set(object, `#${this.#context.size}`);
+-				content = this.serializeObject(object);
+-				this.#context.set(object, content);
+-			}
+-			return content;
+-		}
+-		$function(fn) {
+-			const fnStr = Function.prototype.toString.call(fn);
+-			if (fnStr.slice(-15) === "[native code] }") return `${fn.name || ""}()[native]`;
+-			return `${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`;
+-		}
+-		$Array(arr) {
+-			let content = "[";
+-			for (let i = 0; i < arr.length; i++) {
+-				content += this.serialize(arr[i]);
+-				if (i < arr.length - 1) content += ",";
+-			}
+-			return content + "]";
+-		}
+-		$Date(date) {
+-			try {
+-				return `Date(${date.toISOString()})`;
+-			} catch {
+-				return `Date(null)`;
+-			}
+-		}
+-		$ArrayBuffer(arr) {
+-			return `ArrayBuffer[${new Uint8Array(arr).join(",")}]`;
+-		}
+-		$Set(set) {
+-			return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
+-		}
+-		$Map(map) {
+-			return this.serializeObjectEntries("Map", map.entries());
+-		}
+-	}
+-	for (const type of [
+-		"Error",
+-		"RegExp",
+-		"URL"
+-	]) Serializer.prototype["$" + type] = function(val) {
+-		return `${type}(${val})`;
+-	};
+-	for (const type of [
+-		"Int8Array",
+-		"Uint8Array",
+-		"Uint8ClampedArray",
+-		"Int16Array",
+-		"Uint16Array",
+-		"Int32Array",
+-		"Uint32Array",
+-		"Float32Array",
+-		"Float64Array"
+-	]) Serializer.prototype["$" + type] = function(arr) {
+-		return `${type}[${arr.join(",")}]`;
+-	};
+-	for (const type of ["BigInt64Array", "BigUint64Array"]) Serializer.prototype["$" + type] = function(arr) {
+-		return `${type}[${arr.join("n,")}${arr.length > 0 ? "n" : ""}]`;
+-	};
+-	return Serializer;
+-})();
+-//#endregion
+-//#region ../../node_modules/.pnpm/ohash@2.0.12/node_modules/ohash/dist/crypto/node/index.mjs
+-const fastHash = /*@__PURE__*/ (() => globalThis.process?.getBuiltinModule?.("crypto")?.hash)();
+-const algorithm = "sha256";
+-const encoding = "base64url";
+-function digest(data) {
+-	if (fastHash) return fastHash(algorithm, data, encoding);
+-	const h = createHash(algorithm).update(data);
+-	return globalThis.process?.versions?.webcontainer ? h.digest().toString(encoding) : h.digest(encoding);
+-}
+-//#endregion
+-//#region ../../node_modules/.pnpm/ohash@2.0.12/node_modules/ohash/dist/index.mjs
+-function hash$1(input) {
+-	return digest(serialize(input));
+-}
+-//#endregion
+-//#region src/utils/hash.ts
+-/**
+-* Stable, deterministic hash of any structured-cloneable value.
+-*/
+-function hash(value) {
+-	return hash$1(value);
+-}
+-//#endregion
++import { hash } from "./utils/hash.mjs";
+ //#region src/rpc/agent-json-serialization.ts
+ /**
+ * Prevents using a coding-agent-exposed RPC function that is explicitly
 diff --git a/dist/ws-server-y2R76aSW.d.mts b/dist/ws-server-y2R76aSW.d.mts
 index fdf74c88dedd9524ed5018350530193644f89717..81053a5ca782be1810cf43d8196412c4c2573dbc 100644
 --- a/dist/ws-server-y2R76aSW.d.mts
@@ -194,3 +1226,17 @@ index fdf74c88dedd9524ed5018350530193644f89717..81053a5ca782be1810cf43d8196412c4
  import { NodeAdapter } from "crossws/adapters/node";
  import { Buffer } from "node:buffer";
  import { IncomingMessage, Server } from "node:http";
+diff --git a/package.json b/package.json
+index 66be82db51896b0e7985b12d7c38ecb48d0928e1..4fea9c9807a56af4a5dab2632e9343e18bb6de90 100644
+--- a/package.json
++++ b/package.json
+@@ -65,7 +65,8 @@
+     "./utils/structured-clone": "./dist/utils/structured-clone.mjs",
+     "./utils/url": "./dist/utils/url.mjs",
+     "./utils/when": "./dist/utils/when.mjs",
+-    "./package.json": "./package.json"
++    "./package.json": "./package.json",
++    "./rpc/shared-state": "./dist/rpc/shared-state.mjs"
+   },
+   "types": "./dist/index.d.mts",
+   "bin": {

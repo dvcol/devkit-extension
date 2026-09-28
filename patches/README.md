@@ -27,3 +27,11 @@ const client = await connectDevframe({ connection });
 The maintained [installed-package tests](../packages/server/tests/connection-isolation.test.ts) and [negative type fixtures](../packages/server/tests/connection-isolation.type-test.ts) guard this backport alongside the native server tests. Patching this dependency does not rewrite prebundled upstream UI assets with their own embedded client.
 
 [Vite draft 23574](https://github.com/vitejs/vite/pull/23574) is separate. No Vite dependency patch is installed; the accepted exceptional restart-cleanup gap remains. Both upstream PRs remain drafts for the repository owner to take over.
+
+## Native RPC and shared state over Ports
+
+The `devframe@1.0.0` patch also backports [RPC/state draft 410](https://github.com/devframes/devframe/pull/410) at `fb8cf6a6`. The relevant factory, event and diagnostic sources are identical between v1.0.0 and that draft's v1.1.0 base. The new `devframe/rpc/shared-state` entry uses the native factories and public native types. It retains per-connection subscription metadata and propagates a failed initial snapshot request.
+
+The added browser module is generated from those upstream factories, with `devframe/*` imports external and native browser diagnostics/debug support bundled. Existing Node and client artifacts receive the matching subscription/rejection fixes. The published 1.0 RPC registry's bundled Node-only hash implementation is replaced with its existing public `devframe/utils/hash` implementation, which provides the same stable hash without `node:crypto`. No SDK codec or state engine is introduced.
+
+The maintained WebExtension tests exercise native subscriptions across two Port peers, state writes, disconnect isolation and rejection during initial fetch. The existing 48 native-server tests also pass with the patch, including auth, catalog synchronization, cancellation boundaries and connection isolation. The root patch remains private-workspace installation policy; published consumers do not receive it automatically.
