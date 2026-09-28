@@ -26,4 +26,15 @@ const terminal = createInterface({ input: process.stdin, output: process.stdout 
 cleanup.defer(() => {
   terminal.close();
 });
-await terminal.question('Press Enter to stop the demo.\n');
+while (
+  (await terminal.question(
+    'Type replace to replace the provider; any other input stops the demo.\n',
+  )) === 'replace'
+) {
+  const successor = await host.replace();
+  console.info(
+    styleText('cyan', '🚀 [remote-browser]'),
+    'Provider replaced. Reload the page to attach; native host state is retained.',
+    successor.provider,
+  );
+}

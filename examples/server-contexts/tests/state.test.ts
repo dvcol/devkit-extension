@@ -58,6 +58,36 @@ async function connect(server: Awaited<ReturnType<typeof host>>) {
 }
 
 describe.each(['devframe', 'devtools'] as const)('%s native shared state', (mode) => {
+  it('preserves host state and native observers across portable-provider replacement', async () => {
+    expect.assertions(10);
+    const server = await host(mode);
+    const original = await connect(server);
+    const observer = await connect(server);
+    await expect(original.increase(3)).resolves.toBe(3);
+    await expect.poll(() => observer.state.value().value).toBe(3);
+
+    await server.provider.dispose();
+    original.state.mutate((value) => {
+      value.value = 7;
+    });
+    await expect.poll(() => observer.state.value().value).toBe(7);
+    const successor = await server.replace();
+    expect(successor.provider.incarnation).not.toBe(original.provider.incarnation);
+    await expect(original.increase(1)).rejects.toThrow(
+      /No currently available provider|unavailable|incarnation/u,
+    );
+
+    const reattached = await connect(server);
+    expect(reattached.provider.incarnation).toBe(successor.provider.incarnation);
+    expect(reattached.state.value().value).toBe(7);
+    await expect(reattached.increase(1)).resolves.toBe(8);
+    await expect.poll(() => observer.state.value().value).toBe(8);
+
+    const freshHost = await host(mode);
+    const freshClient = await connect(freshHost);
+    expect(freshClient.state.value().value).toBe(0);
+  });
+
   it('retains native client mutation semantics without implying command-only authority', async () => {
     expect.assertions(2);
     const server = await host(mode);

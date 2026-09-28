@@ -20,6 +20,8 @@ Before adding an SDK API or mechanism, identify the public upstream entry point,
 
 Native connections retain their own authentication and authorization. Ordinary native calls need no mandatory second SDK authorization callback. A page-to-extension bridge still checks its actual sender and target because the trusted extension connection does not authenticate the originating page. Reuse Devframe serialization for operation values; JSON-authored UI does not imply JSON-only business payloads. Unsupported-value rejection must be tested at each actual transport boundary.
 
+The portability layer preserves native state lifetime and write behavior. Replacing a portable provider does not reset host-owned state, and an SDK action is not a mandatory gateway for native state writes. Contributions and hosts choose keys, resource scope, validation, persistence and conflict policy through native APIs. Add an adapter only for a demonstrated transport or lifecycle gap; do not impose a second state policy to make hosts appear identical.
+
 The accepted numeric contract versions, explicit dependency lifetimes, replacement barriers and multi-provider routing remain SDK responsibilities where native APIs do not provide equivalent behavior. The [implementation and map review](./docs/research/upstream-alignment-review.md) records the comparison and the remaining integration gaps. Preserve existing behavioral tests when replacing a local mechanism with an upstream API.
 
 ### Host-managed build and reload
@@ -264,7 +266,25 @@ return applyFlag(input);
 
 Single-recipient calls return a typed promise. Broadcast runs recipients concurrently and returns their individual outcomes after they settle; it does not stream partial progress. A direct response gives the initiating UI a completion/error path without a second event-correlation API. It cannot prove that a mutation did not happen if the response is lost. Existing cancellation and no-replay rules still apply.
 
-Other clients need state observation to see changes. Reuse native Devframe state rather than introducing an SDK event bus. Snapshot/subscription ordering, reattachment after disconnect, authorization and retained-state policy need real-host evidence under the state contract. The current browser counter subscribes directly to native state and shows command completion separately. Live checks on both server hosts prove peer updates and explicit page-reload recovery through a fresh client. They do not prove automatic reconnect, atomic snapshot/stream ordering, persistence or backend-only write authority. [State evidence](./docs/research/native-state-observation.md). Provider state remains separate even when contracts or state keys match.
+Other clients observe changes through native state. The browser counter subscribes directly to native state and shows command completion separately. Live checks on both server hosts prove peer updates and explicit page-reload recovery through a fresh client. They do not prove automatic reconnect, atomic snapshot/stream ordering or persistence. [State evidence](./docs/research/native-state-observation.md).
+
+### Native state ownership
+
+State follows the native host's key space and lifetime. Separate hosts keep separate values under the same key. Portable providers sharing one host share its native key space; contributions choose distinct keys when they need separate records. Provider incarnation pins operation ownership, not state storage.
+
+| Concern                                               | Owner and behavior                                                                                                                                    |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Value, updates, mutation and patches                  | Native shared-state API and synchronization. Both native writes and typed actions remain usable under the host's authorization policy.                |
+| Keys and resource scope                               | Contribution/host. A document, tab or origin can be part of an application-owned key when needed. No automatic provider-incarnation prefix.           |
+| Provider disposal/replacement                         | Adapter removes its owned contributions and subscriptions. Existing host state retains its native lifetime.                                           |
+| Surface closure/disconnection                         | Surface removes its listeners and owned connection. A displayed last value is stale; a new client reads the current native snapshot.                  |
+| Native host restart                                   | Native host decides retention. The counter fixture is in-memory and a fresh host starts at its initial value.                                         |
+| Validation, persistence, migration and edit conflicts | Contribution/host policy using native facilities. The SDK adds no mandatory revision, storage, single-writer or replication protocol.                 |
+| HMR and extension reload                              | Actual host lifecycle determines which owners survive. Verify each supported integration; a retained asset build alone promises no state restoration. |
+
+The example uses `sharedState.get`, `state.value()`, `state.on('updated', ...)` and native mutation directly. TypeScript state types are not runtime validation, and choosing actions in a UI does not prohibit native client writes. Authoritative permissions and provider catalogs stay in their owning APIs. Cross-provider synchronization requires explicit contribution logic; broadcast does not merge or replicate state.
+
+The [state contract](https://github.com/dvcol/devkit-extension/issues/8) tracks remaining host integration evidence. Browser storage, extension worker restart and document lifetime must be tested at those real boundaries before claiming support. Their absence does not justify a generic recovery or enforcement layer.
 
 ## Representative shared and native declarations
 
