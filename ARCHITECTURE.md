@@ -195,6 +195,8 @@ Standard Schema is mandatory for public wire inputs and returns. Validation chec
 
 Public JSON Schema export is needed only by integrations requiring schema inspection, such as generated forms or an MCP adapter. Missing or unsupported export is explicit; never invent a permissive schema. Validation, serialization and authorization remain separate checks. Native objects and functions are never made transportable by a successful schema check.
 
+Debugger and interception implementations are optional capability integrations. CDB is one independent library an implementation can use; its targets, leases, domain demand, Fetch configuration and recovery belong inside that integration. The generic packages must not depend on CDB, interpret its commands or require its configuration choices before supporting other capabilities. Native integration tests and dependency patches in the debugger example do not change this ownership. [CDB integration scope](./docs/planning/011-interception-ownership.md).
+
 Ordinary operation/action calls return `Promise<Value>` and reject on failure. Stable error codes and `isOperationError` allow runtime narrowing; TypeScript does not specify a promise's rejection type. Availability and lifecycle status remain separately observable. Broadcast uses per-provider outcomes in the routing contract.
 
 | Call path                                                                  | Provider behavior                                                  | Target and context                                                              |

@@ -1,6 +1,10 @@
-# Who configures intercepted traffic
+# Optional CDB interception configuration
 
-Status: owner decision required. The examples below are proposals, not maintained SDK APIs. This is the next contract decision for [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11). It is separate from the pending JSON renderer routing choice and approval for the CDB subscription-fix draft.
+Status: capability-specific investigation, not a generic SDK blocker. The owner clarified this boundary on 2026-09-29. CDB-backed functionality is an optional capability/service integration built using the framework; CDB itself remains an independent native library. The earlier framing as a required SDK architecture choice is superseded.
+
+The options below concern that integration's Chrome Fetch implementation under [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10). They do not gate native rendering, action broadcast, provider filtering or other capabilities. The generic [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11) remains required, but its shared API must follow cross-backend needs rather than inherit CDB domain-demand or Chrome Fetch configuration.
+
+The maintained SDK packages contain no CDB dependency or CDB-specific routing logic. Native CDB dependencies, ownership and recovery examples live in `examples/debugger`. Existing local CDB patches support that optional integration. They are not framework prerequisites. The illustrative declarations below are integration sketches, not proposed mandatory SDK types. No choice in this document authorizes a new upstream PR.
 
 ## Implemented behavior
 
@@ -28,7 +32,7 @@ flowchart LR
 
 Changing the port's stored parameters alone cannot update active interception. CDB's current public demand method accepts `methodPrefix`, `active` and optional `sessionId`. Another subscriber adds demand but does not cause another configured `Fetch.enable`. Sending an independent raw enable would introduce a competing owner. These facts are documented in the [native response investigation](../research/cdb-response-transform.md#ownership-and-limits).
 
-The decision is about who can change **which traffic Chrome pauses**, not how clients choose a realm/provider. Domain and URL matching remain provider/capability concerns. RPC continues to carry validated inputs and results, never executable callbacks.
+The integration decision concerns who can change **which traffic Chrome pauses**. Domain and URL matching remain provider/capability concerns. RPC continues to carry validated inputs and results, never executable callbacks.
 
 ## A: the host fixes interception coverage
 
@@ -66,7 +70,7 @@ The exact unsupported outcome would be explicit where coverage can be establishe
 
 ## B: contributions request interception coverage
 
-Each contribution declares native interception patterns alongside its local handler. Installing or disabling a contribution changes active demand. The native CDB domain owner reconciles pattern demand. Provider-local code owns the response handlers. CDB does not import SDK contribution types or application transforms; the generic SDK does not send competing enable/disable commands or maintain a second debugger broker.
+Each contribution declares native interception patterns alongside its local handler. Installing or disabling a contribution changes active demand. The native CDB integration reconciles pattern demand within its capability implementation. Provider-local code owns the response handlers. CDB does not import SDK contribution types or application transforms; the generic SDK does not send competing enable/disable commands or maintain a second debugger broker.
 
 ```ts
 // Proposed authoring shape only; names and remaining fields are not settled.
@@ -101,7 +105,7 @@ flowchart LR
   Portable -->|activate or dispose| Two
 ```
 
-This better supports independently installed plugins. The current CDB demand API cannot express the configuration update, so it needs a narrow native design and proof before a local patch. That native work would handle domain configuration only; application transformation logic stays downstream. An upstream draft would still require explicit approval after a concrete diff and tests are prepared.
+Within a CDB-backed interception capability, this supports independently installed transforms. The current CDB demand API cannot express the configuration update, so it needs a narrow native design and proof before a local patch. That native work would handle domain configuration only; application transformation logic stays downstream. An upstream draft would still require explicit approval after a concrete diff and tests are prepared.
 
 Native reconciliation must preserve existing handlers and already paused requests while demand changes. A failed update must reject the new registration or report its failure, rather than claim that Chrome uses a configuration it never accepted. Disabling one contribution must preserve another's coverage. Updating configuration cannot replay an action or silently move an already dispatched operation to another provider.
 
@@ -117,6 +121,8 @@ Native reconciliation must preserve existing handlers and already paused request
 | Runtime configuration failure | Mostly host startup/reconfiguration | Also plugin installation and disable |
 | Maintenance cost | Smaller adapter; more host configuration | Additional native contract and compatibility tests |
 
-For the stated goal of independently extensible plugins, I recommend **B**, with the configuration mechanism owned by CDB and a minimal portability adapter. A is simpler if fixed host coverage is an acceptable product constraint. The maintained fixed example remains useful evidence for either choice; it does not silently choose A as the final API.
+For a CDB-backed capability that needs independently installed transforms, B offers dynamic coverage; A supplies fixed host coverage with less native integration work. That tradeoff belongs to the capability author. It does not select a framework-wide interception policy. The maintained fixed example supplies evidence for the optional integration, not the final generic transform API.
 
-Transform ordering, unmatched-response handling and failure policy follow this decision. Those options will need their own concrete native evidence and sketches. No general callback pipeline, retry controller, dynamic patch or new upstream PR is implemented by this note.
+The current remote demand path is a notification, and the browser reports native setup failures locally. Adding dynamic patterns would therefore also need an explicit decision about native configuration acknowledgement and failure visibility. This is not a parameters-only patch and is not a reason to add a generic SDK recovery or enforcement layer.
+
+Transform ordering, unmatched-response handling and failure policy remain integration work when dynamic CDB transforms are pursued. Preserve ordinary capability boundaries and native ownership. No general callback pipeline, retry controller, dynamic patch or new upstream PR is implemented by this note. Generic framework implementation can proceed independently.
