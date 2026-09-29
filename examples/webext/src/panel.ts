@@ -1,5 +1,6 @@
 import { createExampleConnection } from './connection';
 import { mountServerControls } from './servers';
+import { createRendererRpc } from './renderer-actions';
 import type { DevframeJsonRenderSpec } from '@devframes/json-render';
 import renderer from '@devframes/json-render-ui/renderer';
 import { createClient } from '@devkit/client';
@@ -12,6 +13,7 @@ if (chrome.extension.getViews?.({ type: 'popup' }).includes(window))
   document.documentElement.classList.add('popup');
 
 const listeners = new AbortController();
+const viewLifetime = new AbortController();
 const { port, client, events, rpc, sharedState } = createExampleConnection(close);
 const container = document.querySelector<HTMLElement>('#renderer')!;
 const status = document.querySelector<HTMLElement>('#status')!;
@@ -25,6 +27,7 @@ let unsubscribeCatalog: (() => void) | undefined;
 function close(): void {
   if (closed) return;
   closed = true;
+  viewLifetime.abort(new Error('Renderer connection closed'));
   rpc.$close();
   events.emit('connection:status', 'disconnected', 'connected');
   unsubscribeCatalog?.();
@@ -47,7 +50,13 @@ document
 import.meta.hot?.dispose(dispose);
 import.meta.hot?.accept();
 
-const nativeContext = { rpc: { call: rpc.$call, sharedState } };
+const nativeContext = {
+  rpc: createRendererRpc({
+    rpc: { call: rpc.$call, sharedState },
+    actions: routedClient.actions,
+    signal: viewLifetime.signal,
+  }),
+};
 try {
   mounted = await renderer({
     entry: {

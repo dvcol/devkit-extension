@@ -9,7 +9,14 @@ import type { NativeContextDescriptor } from '@devkit/core';
 import { createRpcProvider } from '@devkit/devframe';
 import type { ProviderRpc } from '@devkit/devframe';
 import type { createJsonRenderView } from '@devframes/json-render/view';
-import { counterCapability, increaseCounterAction, providerId, realm } from './contracts';
+import { createMatchingCounterPlugin } from '@devkit/example-contribution/provider';
+import {
+  counterCapability,
+  increaseCounterAction,
+  increaseMatchingCounterAction,
+  providerId,
+  realm,
+} from './contracts';
 
 const execution = defineExecution({ id: 'example.background' });
 const counterView = defineNativeContext<ReturnType<typeof createJsonRenderView>>({
@@ -59,7 +66,16 @@ export function createExampleProvider(options: {
     context: { rpc: options.rpc, realm, execution, native: { get } },
     providerId,
     services: [counterService],
-    plugins: [counterPlugin],
-    expose: { actions: [increaseCounterAction], capabilities: [counterCapability] },
+    plugins: [
+      counterPlugin,
+      createMatchingCounterPlugin({
+        execution,
+        domains: ['shared.example.test', 'deployed.example.test'],
+      }),
+    ],
+    expose: {
+      actions: [increaseCounterAction, increaseMatchingCounterAction],
+      capabilities: [counterCapability],
+    },
   });
 }

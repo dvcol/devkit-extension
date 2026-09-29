@@ -8,7 +8,17 @@
   <body>
     <h1>Native Port proof</h1>
     <p id="status">Connecting</p>
+    <label
+      >JSON action recipients
+      <select id="json-selection">
+        <option value="extension">Extension</option>
+        <option value="servers">Dev servers</option>
+        <option value="all">All connected realms</option>
+        <option value="devframe">Devframe provider only</option>
+      </select>
+    </label>
     <main id="renderer"></main>
+    <p>JSON action results: <output id="json-result"></output></p>
     <p>Provider: <output id="provider"></output></p>
     <p>Counter service: <output id="catalog"></output></p>
     <button id="routed">Routed increase</button><button id="capability">Read capability</button>

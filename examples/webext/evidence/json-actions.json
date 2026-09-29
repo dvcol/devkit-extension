@@ -1,0 +1,27 @@
+{
+  "browser": "153.0.8010.12",
+  "checks": [
+    "unchanged native JSON renderer dispatches the shared action",
+    "outgoing realm and explicit provider selection",
+    "two server providers both apply to one domain",
+    "provider-owned domain applicability across all three native hosts",
+    "ordinary not-applicable result remains fulfilled",
+    "unknown domain has no effects",
+    "unavailable provider preserves successful siblings",
+    "disconnected native server reports failure without rerouting",
+    "detached rendered button cannot dispatch after unmount",
+    "reconnect retains background state without replay",
+    "native input state binding and onSuccess callback",
+    "native onError handles unmatched recipients; onSuccess clears the application status"
+  ],
+  "finalCounters": {
+    "devframe": 3,
+    "devtools": 4,
+    "extension": 3
+  },
+  "pageErrors": [],
+  "limitations": [
+    "Native renderer last-error banner remains visible after successful retry",
+    "Domain applicability matrix currently runs in Chromium"
+  ]
+}

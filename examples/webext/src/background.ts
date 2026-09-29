@@ -12,7 +12,6 @@ import { createSharedState } from 'devframe/utils/shared-state';
 import { createPortChannel } from '@devkit/webext';
 import { spec } from './spec';
 import { createExampleProvider } from './provider';
-import { increaseCounterAction } from './contracts';
 
 /** Initialize once during the native background entrypoint's synchronous startup. */
 export function startExampleBackground(): void {
@@ -59,12 +58,6 @@ function createBackground() {
 type Background = ReturnType<typeof createBackground>;
 
 function registerProbeActions({ collector, provider }: Background): void {
-  collector.register({
-    name: 'probe:increase',
-    type: 'action',
-    handler: async () =>
-      (await provider).invoke({ action: increaseCounterAction, input: { amount: 1 } }),
-  });
   collector.register({
     name: 'probe:disable-service',
     type: 'action',

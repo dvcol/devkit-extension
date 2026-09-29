@@ -1,17 +1,18 @@
 # Native renderer and portable action dispatch
 
-Status: architectural direction clarified by the owner on 2026-09-29. Keep the native renderer unchanged. Connect its JSON actions to declared portable actions through the existing client routing integration. The earlier choice between adding renderer handlers and special per-button RPC branches is superseded. This is implementation work under [Renderer and surface contract](https://github.com/dvcol/devkit-extension/issues/12), not an unresolved renderer API decision.
+Status: implemented for the maintained native WebExtension renderer in issue #12. `createActionCall` binds imported action declarations to the existing client router. The native renderer remains unchanged. The earlier renderer-handler versus per-button RPC decision is superseded.
 
-## Current implementation and missing wiring
+## Implemented wiring
 
-The WebExtension page already owns native connections to extension, Devframe and DevTools providers and an instance of the portable client. Its separate HTML controls exercise recipient selection and broadcast. Its JSON counter still calls `probe:increase`, whose example-owned handler invokes only the extension background provider.
+The WebExtension page owns native connections to extension, Devframe and DevTools providers and a portable client. Its JSON counter now binds the imported counter action directly; the background-only `probe:increase` handler has been removed. A second JSON control broadcasts a domain-bearing action, with outgoing selection owned by the client and applicability checked inside each provider's action implementation.
 
 ```text
-Current JSON control -> native renderer -> probe:increase -> background provider
-Current HTML controls -> portable client router -> selected connected providers
+JSON control -> native renderer -> declared action binding -> existing router -> selected providers
 ```
 
-The custom DOM renderer is a separate replaceability example. It does not change the default renderer or supply the missing portable action binding. The native reference renderer already exposes the necessary call boundary through its supplied context.
+The call-only binding is exported from `@devkit/devframe/client`. Native state, metadata, built-ins and unrelated RPC remain native. One binding maps an imported action ID/version to either ordinary invocation or broadcast; no function is transmitted through JSON. Duplicate IDs and conflicting dispatch policies reject at setup. See the [implemented API](../../packages/devframe/README.md#bind-native-json-actions-to-the-portable-client).
+
+The custom DOM renderer remains an independent replaceability example.
 
 ## Required interaction
 
@@ -60,7 +61,7 @@ return applyFlag(input);
 | Provider action/service | Interpret business input, check applicability and operate on its own resources |
 | Native backend | Authentication, RPC, serialization and its state lifecycle |
 
-Implement a generic binding from the existing declarations, not a hand-written command handler for every button. Its exact helper signature is implementation work, not a new renderer contract. Preserve input validation, action identity/version and per-provider outcomes. Do not send executable handlers through JSON or native RPC.
+`createActionCall({ rpc, actions, bindings, signal? })` implements the generic binding. It preserves existing router and provider validation, action identity/version and per-provider outcomes. The application supplies ordinary action declarations and recipient policies, not per-button executable handlers.
 
 The renderer's supplied call boundary can delegate known portable actions to that binding. Unrelated native calls retain their normal target and arguments. Keep the actual native shared-state instance and optional connection metadata; a static backend must retain its native noninteractive behavior. Native view loading and state subscriptions are not broadcast commands. This requires no fabricated full Devframe context, new transport or native renderer patch.
 
@@ -77,3 +78,9 @@ Each backend keeps its native state. The application can project per-provider co
 - Keep the custom renderer example optional and independent.
 
 CDB interception configuration is not a prerequisite for this work. The [canonical two-layer routing contract](../../ARCHITECTURE.md#recipient-selection-and-request-applicability) remains authoritative. No native handler API or new upstream PR is required by this direction.
+
+## Executed evidence and remaining scope
+
+`pnpm --filter @devkit/example-webext test:json-actions` exercises the actual packaged Chromium extension, Devframe and DevTools hosts. The [receipt](../../examples/webext/evidence/json-actions.json) records recipient selection, multiple matching providers, provider-owned applicability, partial failures, unmatched selection, unmount and reconnect without replay. The [screenshot](../../examples/webext/evidence/json-actions.png) shows native rendering and the application-owned per-provider output. No native renderer or CDB patch is involved.
+
+The existing Chromium and Firefox suites also passed after the counter button moved onto the binding, including actual popup/options/DevTools/sidebar actions. The new domain applicability matrix is currently Chromium-only. Full renderer catalog coverage, provider view discovery/composition and mixed-backend JSON HMR remain outside this slice. Independent backend stores are not merged. The reference renderer retains its last-error banner after a successful retry; its native `onError`/`onSuccess` callbacks do update the example's own status. That upstream presentation behavior is preserved and documented.

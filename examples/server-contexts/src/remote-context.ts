@@ -1,9 +1,14 @@
 import { join } from 'node:path';
 
-import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
+import {
+  counterCapability,
+  increaseCounterAction,
+  increaseMatchingCounterAction,
+} from '@devkit/example-contribution';
+import { createMatchingCounterPlugin } from '@devkit/example-contribution/provider';
 
 import { createHubContext } from '@devframes/hub/node';
-import { createDevframeProvider, createDevToolsProvider } from '@devkit/server';
+import { createDevframeProvider, createDevToolsProvider, serverExecution } from '@devkit/server';
 import type { ServerComposition } from '@devkit/server';
 import { createKitContext } from '@vitejs/devtools-kit/node';
 
@@ -12,8 +17,17 @@ import { counterActionsPlugin, counterService } from './definitions.js';
 export const remoteComposition = {
   providerId: 'example.remote',
   services: [counterService],
-  plugins: [counterActionsPlugin],
-  expose: { actions: [increaseCounterAction], capabilities: [counterCapability] },
+  plugins: [
+    counterActionsPlugin,
+    createMatchingCounterPlugin({
+      execution: serverExecution,
+      domains: ['shared.example.test', 'dev.example.test'],
+    }),
+  ],
+  expose: {
+    actions: [increaseCounterAction, increaseMatchingCounterAction],
+    capabilities: [counterCapability],
+  },
 };
 
 export async function createRemoteContext(mode: 'devframe' | 'devtools', directory: string) {

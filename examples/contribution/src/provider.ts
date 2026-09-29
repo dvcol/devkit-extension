@@ -12,6 +12,7 @@ import { counterCapability, increaseCounterAction } from './contracts.js';
 import type { MemoryCounter } from './counter-source.js';
 
 export { MemoryCounter } from './counter-source.js';
+export { createMatchingCounterPlugin } from './matching-counter.js';
 
 export const exampleExecution = defineExecution({ id: 'example.local-provider' });
 /** Stable host configuration; each backend owner supplies its own incarnation at startup. */

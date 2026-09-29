@@ -70,7 +70,7 @@ flowchart LR
 
 The shared browser scenario in `tests/native-surfaces.ts` runs through both maintained production suites. It uses native `runtime.openOptionsPage`, `action.openPopup` and `extension.getViews({ type: 'popup' })`. From the surviving options document, it inspects and clicks the actual popup DOM, including its native JSON renderer. It never substitutes an ordinary tab for a popup or adds application test hooks. Firefox invalidates closed-window references, so closure is observed through the native view registry.
 
-The retained screenshots show the surviving options page after the popup checks, not a recreated popup. Popup sizing is asserted on the actual window, including absence of horizontal overflow. This proves packaged popup/options behavior. The development checks below cover popup module HMR and HTML reload separately. Background suspension and cross-provider JSON action dispatch remain open.
+The retained screenshots show the surviving options page after the popup checks, not a recreated popup. Popup sizing is asserted on the actual window, including absence of horizontal overflow. This proves packaged popup/options behavior. The development checks below cover popup module HMR and HTML reload separately. Background suspension remains open. Cross-provider JSON action dispatch is covered by the dedicated scenario below.
 
 ## Native DevTools panel
 
@@ -278,3 +278,26 @@ The before/after snapshots are retained in [Chromium's receipt](./evidence/scrip
 Chromium's CDP observer receives browser exit asynchronously. After native WXT shutdown, the test uses Playwright's bounded assertion to observe disconnection; it does not assume the observer's cached flag has already changed when `stop()` resolves.
 
 This proves native reload behavior for the selected MAIN case. It does not promise mutation rollback, in-place script replacement, automatic registration restoration, browser-restart persistence or ISOLATED-world reload semantics. A contribution that needs future injections after an extension restart must register again through its normal startup lifetime. Existing document effects remain application-owned.
+
+## Native JSON actions across providers
+
+The reference renderer's `rpc.call` is bound through `createActionCall` from `@devkit/devframe/client`. **Increase counter** uses the shared portable action against the extension provider. **Increase matching domain** broadcasts another shared action to the recipients selected by the local page. The JSON specification contains only the action ID and input expressions. The removed `probe:increase` background RPC is no longer needed.
+
+| Domain                  | Extension implementation | Devframe and DevTools implementations |
+| ----------------------- | ------------------------ | ------------------------------------- |
+| `shared.example.test`   | Applies                  | Both apply                            |
+| `dev.example.test`      | Not applicable           | Both apply                            |
+| `deployed.example.test` | Applies                  | Not applicable                        |
+| Any other domain        | Not applicable           | Not applicable                        |
+
+Each provider installs the same example plugin with its own domain list. This is application logic. The SDK only selects recipients and carries validated inputs/results. A `not-applicable` value is a successful domain result; provider failures remain rejected outcomes beside successful siblings. The page displays outcomes locally in **JSON action results**, leaving each backend's native counter state independent. Choosing **All connected realms** requires both an extension and at least one configured development-server recipient, following the existing broadcast preflight contract.
+
+```sh
+pnpm --filter @devkit/example-webext test:json-actions
+```
+
+The dedicated Chromium scenario clicks actual JSON-rendered controls against three real backends. It checks realm/provider selection, provider applicability, two matching servers, unknown domains, unavailable/disconnected providers, native input binding/error callbacks and no dispatch after unmount. CI runs it separately from the existing Chromium and Firefox surface suites. The latter still verify the original counter control through the new binding on both browsers; the new domain matrix is not yet repeated in Firefox.
+
+The reference renderer retains its last-error banner after a successful retry. The example's `onSuccess` callback clears its own status and subsequent actions execute correctly. This native presentation behavior is preserved. The current receipt and screenshot deliberately include the failed-selection/retry sequence.
+
+[Executed receipt](./evidence/json-actions.json) · [Rendered example](./evidence/json-actions.png)

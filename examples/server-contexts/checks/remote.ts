@@ -18,6 +18,6 @@ for (const mode of ['devframe', 'devtools'] as const) {
   assert.ok(result.disconnected.length > 0);
   assert.equal(result.clientClosed, true);
   assert.equal(result.serverCompletedAfterDisconnect, true);
-  assert.equal(result.nativeMethodCount, 4);
+  assert.equal(result.nativeMethodCount, 5);
   console.info(styleText('green', '🚀 [native-remote]'), 'Authenticated RPC checks passed:', mode);
 }

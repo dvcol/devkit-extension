@@ -40,6 +40,44 @@ The raw composition supplies existing native members. `events` is Devframe's `Rp
 
 `signal?` cancels startup only. Connection disposal or a native disconnect clears availability and stops local waits without closing the caller's native resources. A dispatched operation may still finish; neither the connection nor router replays it. The same live backend keeps its incarnation across UI reconnects. A replaced backend requires a fresh connection and attachment.
 
+## Bind native JSON actions to the portable client
+
+```ts
+import { createActionCall } from '@devkit/devframe/client';
+
+const rendererContext = {
+  rpc: {
+    ...nativeRpc,
+    call: createActionCall({
+      rpc: nativeRpc,
+      actions: client.actions,
+      bindings: [
+        {
+          action: increaseMatchingCounterAction,
+          selection: [{ realm: 'devserver' }, { realm: 'webext' }],
+        },
+        { action: increaseCounterAction, routing: { realm: 'webext' } },
+      ],
+      signal: viewLifetime.signal,
+    }),
+  },
+};
+
+// Inside an ordinary native JSON Button definition:
+const on = {
+  press: {
+    action: increaseMatchingCounterAction.id,
+    params: { domain: { $state: '/domain' }, amount: 1 },
+  },
+};
+```
+
+Pass `rendererContext` to the unchanged native renderer. The binding uses the imported action ID and contract version. `params` is the action's single input; existing provider validation checks it. An explicit `selection` broadcasts and returns the router's per-provider outcomes. A binding with `routing`, or neither property, uses ordinary invocation and its existing defaults. Duplicate action IDs, including different versions of the same ID, and conflicting selection/routing fail at setup.
+
+Only explicitly bound IDs change dispatch. Unrelated native calls keep their arguments, receiver and result. Native renderer built-ins execute before this boundary. Keep native shared state and connection metadata, including static-backend metadata; this helper only replaces `call`. The host owns selection changes, outcome presentation and view disposal. Aborting its signal forwards cancellation through the existing router and adapters; it does not close native connections, roll back backend work or replay commands. Direct TypeScript callers continue to use `client.actions` for typed portable inputs/results. Native `call` retains its upstream signature; no portable methods are added to the global native RPC type registry.
+
+The [WebExtension example](../../examples/webext/README.md#native-json-actions-across-providers) supplies the live application composition. Domain applicability is ordinary action implementation code in the contribution example; the binding contains no domain policy.
+
 ## Evidence and limits
 
 - Native collector tests cover schema validation, retained definitions, replacement and raw-client typing.
@@ -48,4 +86,4 @@ The raw composition supplies existing native members. `events` is Devframe's `Rp
 - The maintained Chromium and Firefox example verifies actual runtime Ports, the native renderer, mixed native backends and selected-page connections. Its browser builds reject Node imports.
 - `pnpm artifacts:native` checks installed tarballs under strict Bundler and NodeNext resolution, executes both server factories and Port RPC composition, and bundles the browser consumer without workspace source imports.
 
-Cross-provider renderer composition, full browser surfaces and the complete conformance inventory remain separate work. The workspace and isolated native consumer explicitly install the pinned upstream patches documented in [the patch inventory](../../patches/README.md); those patches do not propagate automatically to published consumers.
+Native JSON action dispatch across providers has a maintained Chromium acceptance test. Provider view discovery/composition, the full renderer catalog and the complete conformance inventory remain separate work. The workspace and isolated native consumer explicitly install the pinned upstream patches documented in [the patch inventory](../../patches/README.md); those patches do not propagate automatically to published consumers.

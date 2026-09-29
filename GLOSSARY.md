@@ -73,21 +73,22 @@ See the [upstream alignment review](./docs/research/upstream-alignment-review.md
 
 ## Calls and presentation
 
-| Term                | Definition                                                                               | Distinction                                                                             |
-| ------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Resource / target   | A subject defined by a capability, such as a domain, document or debugger session        | Its identity and freshness rules belong to that capability, with no universal SDK shape |
-| Invocation          | One requested operation call with schema-defined input, cancellation and routing context | Resource identifiers and filters are ordinary typed input                               |
-| Routing policy      | Rules selecting eligible providers before dispatch                                       | Distinct from service construction and provider-state synchronization                   |
-| Applicability       | Whether a request concerns resources owned by an implementation                          | Implementation code and schema-defined results; not provider readiness or authorization |
-| Command result      | The typed value or error returned to the initiating caller                               | Other clients observe state separately; no implicit event bus or automatic replay       |
-| Ambiguous selection | More than one equally eligible provider satisfies the current selector                   | Requires an explicit caller/UI/agent discriminant; discovery order cannot pick a winner |
-| Dispatch            | The routing boundary after which an invocation's selected route cannot change            | A timeout or reported failure does not authorize fallback or replay                     |
-| Broadcast           | Explicit execution across several selected providers with individual outcomes            | Does not merge provider state or replace ordinary value-returning methods               |
-| Diagnostic          | A serializable report identifying a failure's code, owner and phase                      | Native exceptions remain local; diagnostics support logs and current/later UI           |
-| View                | A declared JSON presentation and its bindings                                            | Its availability need not depend on every action it references                          |
-| Renderer            | An implementation turning the JSON view contract into UI                                 | Replaceable; its own framework does not become a dependency of authoring contracts      |
-| UI surface          | Where a view is mounted, such as popup, options, panel or sidebar                        | Separate from realm, provider and execution ownership                                   |
-| Live preview        | Built assets served with a live provider for actions and state                           | Separate from a static snapshot and from a source development server                    |
+| Term                | Definition                                                                               | Distinction                                                                               |
+| ------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Resource / target   | A subject defined by a capability, such as a domain, document or debugger session        | Its identity and freshness rules belong to that capability, with no universal SDK shape   |
+| Invocation          | One requested operation call with schema-defined input, cancellation and routing context | Resource identifiers and filters are ordinary typed input                                 |
+| Routing policy      | Rules selecting eligible providers before dispatch                                       | Distinct from service construction and provider-state synchronization                     |
+| Applicability       | Whether a request concerns resources owned by an implementation                          | Implementation code and schema-defined results; not provider readiness or authorization   |
+| Command result      | The typed value or error returned to the initiating caller                               | Other clients observe state separately; no implicit event bus or automatic replay         |
+| Ambiguous selection | More than one equally eligible provider satisfies the current selector                   | Requires an explicit caller/UI/agent discriminant; discovery order cannot pick a winner   |
+| Dispatch            | The routing boundary after which an invocation's selected route cannot change            | A timeout or reported failure does not authorize fallback or replay                       |
+| Broadcast           | Explicit execution across several selected providers with individual outcomes            | Does not merge provider state or replace ordinary value-returning methods                 |
+| Diagnostic          | A serializable report identifying a failure's code, owner and phase                      | Native exceptions remain local; diagnostics support logs and current/later UI             |
+| View                | A declared JSON presentation and its bindings                                            | Its availability need not depend on every action it references                            |
+| Renderer            | An implementation turning the JSON view contract into UI                                 | Replaceable; its own framework does not become a dependency of authoring contracts        |
+| Action binding      | Client-local association between an imported action contract and its dispatch policy     | Connects native JSON action IDs to the router; does not install handlers or own providers |
+| UI surface          | Where a view is mounted, such as popup, options, panel or sidebar                        | Separate from realm, provider and execution ownership                                     |
+| Live preview        | Built assets served with a live provider for actions and state                           | Separate from a static snapshot and from a source development server                      |
 
 ## Relationship summary
 

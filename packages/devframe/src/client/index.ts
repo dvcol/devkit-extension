@@ -34,3 +34,5 @@ export async function createRpcProviderConnection<Context>(
 }
 
 export type { ProviderRpcClient } from './types.js';
+export { createActionCall } from './action-call.js';
+export type { ActionBinding, ActionCallOptions } from './action-call.js';
