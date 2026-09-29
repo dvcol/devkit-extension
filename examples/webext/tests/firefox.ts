@@ -6,8 +6,7 @@ import { By, until } from 'selenium-webdriver';
 import { Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
 import { checkFirefoxServers } from './firefox-servers.ts';
 import { checkFirefoxSelectedPage } from './firefox-selected-page.ts';
-import { nativeSurfaceScript } from './native-surfaces.ts';
-import { checkFirefoxDevtools } from './firefox-devtools.ts';
+import { checkFirefoxHosts } from './firefox-hosts.ts';
 
 const extensionUuid = crypto.randomUUID();
 const options = new Options()
@@ -66,15 +65,7 @@ try {
   await waitText('#status', 'Connected');
   await click('#capability');
   await waitText('#result', '16');
-  await driver.manage().setTimeouts({ script: 60_000 });
-  const surfaceResult = await driver.executeAsyncScript<{ checks?: string[]; error?: string }>(
-    `const done = arguments[arguments.length - 1]; ${nativeSurfaceScript}
-checkNativeSurfaces().then(checks => done({ checks }), error => done({ error: error.stack ?? String(error) }));`,
-  );
-  assert.equal(surfaceResult.error, undefined);
-  assert.ok(surfaceResult.checks !== undefined);
-  const devtoolsChecks = await checkFirefoxDevtools(driver);
-  await saveEvidence([...surfaceResult.checks, ...devtoolsChecks]);
+  await saveEvidence(await checkFirefoxHosts(driver));
 } catch (error) {
   const result = await text('#server-result').catch(() => 'Extension page unavailable');
   console.error(styleText('red', '❌ [webext/firefox]'), result);

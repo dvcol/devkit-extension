@@ -4,7 +4,7 @@ Status: owner review required. These are proposals, not implemented APIs. This n
 
 ## What works now
 
-The extension example passes 34 real Chromium scenarios and 28 Firefox scenario groups, including actual popup/options and native DevTools panel lifetimes. Its page-owned router connects to native Devframe, DevTools and extension providers. The JSON-rendered counter button still invokes its own worker. Separate HTML controls exercise selection, fallback and broadcast.
+The extension example passes 39 real Chromium scenarios and 32 Firefox scenario groups, including actual popup/options, native DevTools panel and browser sidebar lifetimes. Its page-owned router connects to native Devframe, DevTools and extension providers. The JSON-rendered counter button still invokes its own worker. Separate HTML controls exercise selection, fallback and broadcast.
 
 ```mermaid
 flowchart LR

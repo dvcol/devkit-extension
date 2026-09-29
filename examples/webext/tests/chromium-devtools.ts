@@ -3,9 +3,9 @@ import { writeFile } from 'node:fs/promises';
 import { setTimeout } from 'node:timers/promises';
 import { expect } from '@playwright/test';
 import type { CDPSession, Page } from '@playwright/test';
-import { attachDevtoolsSession } from './devtools-session.ts';
+import { attachTargetSession } from './target-session.ts';
 
-type DevtoolsSession = Awaited<ReturnType<typeof attachDevtoolsSession>>;
+type DevtoolsSession = Awaited<ReturnType<typeof attachTargetSession>>;
 
 /** Open the genuine frontend, select its native extension tab, then close and reopen it. */
 export async function checkChromiumDevtools(options: Page): Promise<string[]> {
@@ -73,7 +73,7 @@ async function openPanel({
     targetId: inspectedId,
     panelId: 'network',
   });
-  const frontend = await attachDevtoolsSession(control, targetId);
+  const frontend = await attachTargetSession(control, targetId);
   await frontend.send('Page.bringToFront');
   await expect
     .poll(async () =>
@@ -93,7 +93,7 @@ async function openPanel({
     })
     .toBeDefined();
   assert.ok(panelTargetId !== undefined);
-  const panel = await attachDevtoolsSession(control, panelTargetId);
+  const panel = await attachTargetSession(control, panelTargetId);
   await expect
     .poll(() => panel.evaluate("document.querySelector('#status')?.textContent"))
     .toBe('Connected');

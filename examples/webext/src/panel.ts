@@ -7,6 +7,10 @@ import { createRpcProviderConnection } from '@devkit/devframe/client';
 import type { RpcProviderConnection } from '@devkit/devframe/client';
 import { counterCapability, increaseCounterAction, providerId, realm } from './contracts';
 
+/** Only popups need an intrinsic minimum width; Firefox omits getViews in DevTools contexts. */
+if (chrome.extension.getViews?.({ type: 'popup' }).includes(window))
+  document.documentElement.classList.add('popup');
+
 const listeners = new AbortController();
 const { port, client, events, rpc, sharedState } = createExampleConnection(close);
 const container = document.querySelector<HTMLElement>('#renderer')!;

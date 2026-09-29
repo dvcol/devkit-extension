@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import type { CDPSession } from '@playwright/test';
 
-/** Playwright omits DevTools pages; attach an observer through the public CDP target API. */
-export async function attachDevtoolsSession(control: CDPSession, targetId: string) {
+/** Observe native UI documents omitted by Playwright through the public CDP target API. */
+export async function attachTargetSession(control: CDPSession, targetId: string) {
   const { sessionId } = await control.send('Target.attachToTarget', { targetId, flatten: false });
   let nextRequestId = 0;
   const pending = new Map<number, (response: Record<string, unknown>) => void>();
@@ -16,7 +16,7 @@ export async function attachDevtoolsSession(control: CDPSession, targetId: strin
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         pending.delete(requestId);
-        reject(new Error(`DevTools observer timed out: ${method}`));
+        reject(new Error(`Target observer timed out: ${method}`));
       }, 10_000);
       pending.set(requestId, (response) => {
         clearTimeout(timeout);

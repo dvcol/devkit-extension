@@ -6,13 +6,21 @@ it.each([
     browser: 'Chromium',
     mode: 'production',
     background: { service_worker: 'background.js', type: 'module' },
-    browserSettings: {},
+    browserSettings: {
+      permissions: ['scripting', 'sidePanel'],
+      side_panel: { default_path: 'panel.html' },
+    },
   },
   {
     browser: 'Firefox',
     mode: 'firefox',
     background: { scripts: ['background.js'], type: 'module' },
     browserSettings: {
+      sidebar_action: {
+        default_panel: 'panel.html',
+        default_title: 'Devkit',
+        open_at_install: false,
+      },
       browser_specific_settings: {
         gecko: {
           id: 'devkit-native-port@example.invalid',

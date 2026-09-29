@@ -34,7 +34,12 @@
     "native DevTools panel mounts the existing renderer and shares background state",
     "hiding DevTools panel retains its document, connection and live subscriptions",
     "closing DevTools removes its panel and pending action completes without replay",
-    "reopened DevTools panel has a new caller, retained provider and working JSON action"
+    "reopened DevTools panel has a new caller, retained provider and working JSON action",
+    "native side panel rejects opening without an active user gesture",
+    "native side panel renders the shared JSON view within its actual narrow viewport",
+    "global side panel retains its caller, local form and shared state across tab navigation",
+    "closing side panel removes its context while the dispatched action completes once",
+    "reopened side panel has a fresh document and caller, retained provider and no replay"
   ],
   "pageErrors": []
 }

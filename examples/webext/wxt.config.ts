@@ -39,9 +39,19 @@ export function createManifest(firefox: boolean): UserManifest {
         "script-src 'self'; object-src 'none'; connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:*",
     },
   } satisfies UserManifest;
-  if (!firefox) return manifest;
+  if (!firefox)
+    return {
+      ...manifest,
+      permissions: [...manifest.permissions, 'sidePanel'],
+      side_panel: { default_path: 'panel.html' },
+    };
   return {
     ...manifest,
+    sidebar_action: {
+      default_panel: 'panel.html',
+      default_title: 'Devkit',
+      open_at_install: false,
+    },
     browser_specific_settings: {
       gecko: {
         id: 'devkit-native-port@example.invalid',

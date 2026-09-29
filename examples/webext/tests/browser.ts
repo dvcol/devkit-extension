@@ -6,8 +6,7 @@ import { styleText } from 'node:util';
 import { chromium, expect } from '@playwright/test';
 import { checkConfiguredServers } from './configured-servers.ts';
 import { checkSelectedPage } from './selected-page.ts';
-import { nativeSurfaceScript } from './native-surfaces.ts';
-import { checkChromiumDevtools } from './chromium-devtools.ts';
+import { checkChromiumHosts } from './chromium-hosts.ts';
 
 const extensionPath = resolve('dist/chromium');
 const profile = await mkdtemp(join(tmpdir(), 'native-port-chromium-'));
@@ -110,10 +109,7 @@ try {
   await expect(first.locator('#status')).toHaveText('Connected');
   await first.getByRole('button', { name: 'Read capability', exact: true }).click();
   await expect(first.locator('#result')).toHaveText('16');
-  const surfaceChecks = await first.evaluate<string[]>(
-    `"use strict";\n${nativeSurfaceScript}\ncheckNativeSurfaces()`,
-  );
-  const devtoolsChecks = await checkChromiumDevtools(first);
+  const hostChecks = await checkChromiumHosts(first);
   assert.deepEqual(errors, []);
   await first.screenshot({ path: 'artifacts/native-port-proof.png', fullPage: true });
   const receipt = {
@@ -143,8 +139,7 @@ try {
       'selected document hands off its natively published connection',
       'absent, malformed and closed selected documents reject without attaching',
       'native scripting permission rejection and independent adopted connection lifetime',
-      ...surfaceChecks,
-      ...devtoolsChecks,
+      ...hostChecks,
     ],
     pageErrors: errors,
   };

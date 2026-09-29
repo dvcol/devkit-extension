@@ -30,7 +30,11 @@
     "native DevTools panel mounts the existing renderer and shares background state",
     "hiding DevTools panel retains its document, connection and live subscriptions",
     "closing DevTools removes its panel and pending action completes without replay",
-    "reopened DevTools panel has a new caller, retained provider and working JSON action"
+    "reopened DevTools panel has a new caller, retained provider and working JSON action",
+    "native sidebar user gestures mount the renderer without horizontal overflow and share state",
+    "switching tabs retains the sidebar document, caller and live subscription",
+    "closing sidebar removes its document and pending action completes without replay",
+    "reopened sidebar has a new caller, retained provider and working JSON action"
   ],
   "limitations": ["No global page-error capture through WebDriver Classic"]
 }
