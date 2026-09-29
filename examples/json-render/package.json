@@ -18,6 +18,7 @@
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src browser tests vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
     "test": "vitest run",
+    "test:browser": "node tests/browser.ts",
     "demo": "node src/demo.ts"
   },
   "dependencies": {
@@ -27,6 +28,10 @@
     "@devkit/example-contribution": "workspace:*",
     "@devkit/example-server-contexts": "workspace:*",
     "@devkit/server": "workspace:*",
+    "@json-render/core": "0.20.0",
     "devframe": "1.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
   }
 }

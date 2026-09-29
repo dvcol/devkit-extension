@@ -294,9 +294,16 @@ importers:
       '@devkit/server':
         specifier: workspace:*
         version: link:../../packages/server
+      '@json-render/core':
+        specifier: 0.20.0
+        version: 0.20.0(zod@4.6.5)
       devframe:
         specifier: 1.0.0
         version: 1.0.0(patch_hash=6033f5717f6adf7d74420484134aeda0338a3bc38b554ca42d926884ba8d91d0)(@devframes/agentic@1.0.0)(cac@7.0.0)(srvx@1.0.5)
+    devDependencies:
+      '@playwright/test':
+        specifier: 1.63.0
+        version: 1.63.0
 
   examples/server-contexts:
     dependencies:

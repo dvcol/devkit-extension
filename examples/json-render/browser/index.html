@@ -25,6 +25,11 @@
     <h1>Native JSON renderer</h1>
     <p>Open this URL in two tabs. Both views share one native backend counter.</p>
     <p id="status" role="status">Connecting…</p>
+    <label for="renderer">Renderer</label>
+    <select id="renderer" disabled>
+      <option value="reference">Native reference</option>
+      <option value="custom">Custom DOM</option>
+    </select>
     <button id="mount" disabled>Mount view</button>
     <button id="unmount" disabled>Unmount view</button>
     <section id="view" aria-label="JSON contribution view"></section>

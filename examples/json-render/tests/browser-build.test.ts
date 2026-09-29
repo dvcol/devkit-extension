@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { build } from 'vite';
 import { expect, it } from 'vitest';
 
-it('builds the surface host without Node or provider implementation modules', async () => {
+it('builds the surface and custom renderer without Node, provider or frontend framework modules', async () => {
   expect.assertions(1);
   const modules: string[] = [];
   await build({
@@ -21,6 +21,6 @@ it('builds the surface host without Node or provider implementation modules', as
     ],
   });
   const forbidden =
-    /(?:^node:|browser-external|\/(?:packages\/|@devkit\/)(?:runtime|server)\/dist\/)/u;
+    /(?:^node:|browser-external|\/(?:packages\/|@devkit\/)(?:runtime|server)\/dist\/|\/node_modules\/(?:@vue\/|vue\/|react\/|react-dom\/))/u;
   expect(modules.filter((identifier) => forbidden.test(identifier))).toEqual([]);
 });

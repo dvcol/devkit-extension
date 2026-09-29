@@ -3,6 +3,7 @@ import type { DevframeClientRuntime, DockRendererManifest } from '@devframes/hub
 import { DOCK_RENDERERS_STATE_KEY, HUB_EVENTS } from '@devframes/hub/constants';
 import type { DevframeDockEntry } from '@devframes/hub/types';
 import { connectDevframe } from 'devframe/client';
+import { domRenderer } from './renderer.js';
 
 /** Temporary credential injected by this loopback-only demo launcher. */
 declare const DEMO_AUTH_TOKEN: string;
@@ -21,6 +22,7 @@ const container = element('#view', HTMLElement);
 const status = element('#status', HTMLElement);
 const mountButton = element('#mount', HTMLButtonElement);
 const unmountButton = element('#unmount', HTMLButtonElement);
+const rendererSelect = element('#renderer', HTMLSelectElement);
 const cleanup = new DisposableStack();
 const events = new AbortController();
 let disposeView: (() => void) | undefined;
@@ -40,6 +42,7 @@ function dispose(): void {
   unmount();
   cleanup.dispose();
   mountButton.disabled = true;
+  rendererSelect.disabled = true;
   status.textContent = 'Disconnected. Reload the page to reconnect.';
 }
 
@@ -51,6 +54,7 @@ function own(disposeResource: () => void): void {
 
 async function mount(runtime: DevframeClientRuntime): Promise<void> {
   mountButton.disabled = true;
+  rendererSelect.disabled = true;
   try {
     const entry = runtime.context.docks.entries.find(
       (candidate) => candidate.id === 'example:counter',
@@ -66,12 +70,31 @@ async function mount(runtime: DevframeClientRuntime): Promise<void> {
     }
     disposeView = result.dispose;
     unmountButton.disabled = false;
-    status.textContent = 'Mounted using the native renderer and native state.';
+    status.textContent = `Mounted using the ${rendererSelect.value} renderer and native state.`;
   } catch (cause) {
     if (!cleanup.disposed) status.textContent = `Mount failed: ${String(cause)}`;
   } finally {
     mountButton.disabled = cleanup.disposed || disposeView !== undefined;
+    rendererSelect.disabled = cleanup.disposed;
   }
+}
+
+function registerRendererChoice(runtime: DevframeClientRuntime): void {
+  let unregister: (() => void) | undefined;
+  own(() => unregister?.());
+  rendererSelect.addEventListener(
+    'change',
+    () => {
+      const mounted = disposeView !== undefined;
+      unmount();
+      unregister?.();
+      unregister = undefined;
+      if (rendererSelect.value === 'custom')
+        unregister = runtime.context.renderers.register('json-render', domRenderer);
+      if (mounted) void mount(runtime);
+    },
+    { signal: events.signal },
+  );
 }
 
 async function start(): Promise<void> {
@@ -98,6 +121,7 @@ async function start(): Promise<void> {
   });
   own(runtime.dispose);
   if (cleanup.disposed) return;
+  registerRendererChoice(runtime);
   own(
     nativeClient.events.on('connection:status', (value) => {
       if (value !== 'connected' && value !== 'connecting') dispose();

@@ -23,6 +23,8 @@ jobs:
         run: pnpm --filter @devkit/example-webext test:browser
       - name: Run native Vite HTML timing in development and preview
         run: pnpm --filter @devkit/example-vite-hosts test:browser
+      - name: Run custom and reference renderers on both native backends
+        run: pnpm --filter @devkit/example-json-render test:browser
       - name: Run the Chromium debugger contribution browser test
         run: pnpm --filter @devkit/example-debugger test:browser
       - name: Run authenticated native CDB browser integration

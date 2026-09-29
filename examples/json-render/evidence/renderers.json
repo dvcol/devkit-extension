@@ -1,0 +1,33 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "mode": "devframe",
+      "checks": [
+        "unchanged JSON view with reference and custom renderer",
+        "native action and state shared across both rendered pages",
+        "native input rejection displayed without an unhandled error",
+        "unmount removes subscriptions, DOM and click listeners",
+        "remount reads current state; unregister restores reference renderer",
+        "unsupported component fails explicitly on update and mount; valid remount recovers",
+        "host disconnect disposes both views and controls"
+      ],
+      "finalValue": 5,
+      "pageErrors": []
+    },
+    {
+      "mode": "devtools",
+      "checks": [
+        "unchanged JSON view with reference and custom renderer",
+        "native action and state shared across both rendered pages",
+        "native input rejection displayed without an unhandled error",
+        "unmount removes subscriptions, DOM and click listeners",
+        "remount reads current state; unregister restores reference renderer",
+        "unsupported component fails explicitly on update and mount; valid remount recovers",
+        "host disconnect disposes both views and controls"
+      ],
+      "finalValue": 5,
+      "pageErrors": []
+    }
+  ]
+}
