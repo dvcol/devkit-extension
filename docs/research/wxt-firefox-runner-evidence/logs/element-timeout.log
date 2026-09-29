@@ -1,0 +1,25 @@
+✔ Started dev server @ http://localhost:61381 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 55 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.08 kB 
+  ├─ .output/firefox-mv3-dev/popup.html                476 B   
+  ├─ .output/firefox-mv3-dev/background.js             22.95 kB
+  └─ .output/firefox-mv3-dev/chunks/popup-BG1kB7Lb.js  8.25 kB 
+Σ Total size: 32.76 kB                               
+✔ Opened browser in 850 ms
+ℹ Press o + enter to reopen the browser
+1790650709539	geckodriver	INFO	Listening on 127.0.0.1:61389
+1790650725081	webdriver::server	INFO	Shutting down
+1790650725092	geckodriver::marionette	ERROR	Failed to close browser connection: unknown error
+/private/tmp/devkit-wxt-managed-firefox-d5WFbC/node_modules/.pnpm/selenium-webdriver@4.49.0/node_modules/selenium-webdriver/lib/webdriver.js:938
+              reject(new error.TimeoutError(`${timeoutMessage}Wait timed out after ${elapsed}ms`))
+                     ^
+
+TimeoutError: Waiting for element to be located By(css selector, *[id="result"])
+Wait timed out after 15188ms
+    at /private/tmp/devkit-wxt-managed-firefox-d5WFbC/node_modules/.pnpm/selenium-webdriver@4.49.0/node_modules/selenium-webdriver/lib/webdriver.js:938:22
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  remoteStacktrace: ''
+}
+
+Node.js v26.9.0

@@ -1,0 +1,39 @@
+{
+  "runId": "7cf2a1e2-f11a-4ccf-8828-5fdeffc347dd",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "marionettePort": 60996,
+  "developmentPort": 60997,
+  "extensionId": "managed-wxt-firefox@example.invalid",
+  "extensionUuid": "d27038ed-7393-454c-af96-4ae275d5c234",
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790650582339
+    },
+    {
+      "event": "closed",
+      "at": 1790650598628
+    }
+  ],
+  "browserProcesses": [
+    52780
+  ],
+  "browserVersion": "156.0.1",
+  "geckodriverVersion": "0.37.1",
+  "error": "TimeoutError: Navigation timed out after 15000 ms",
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ],
+  "remainingBrowserProcesses": [
+    52780
+  ]
+}

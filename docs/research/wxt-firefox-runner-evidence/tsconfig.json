@@ -1,0 +1,38 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": [
+      "ES2023",
+      "DOM"
+    ],
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": false,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "node",
+      "chrome",
+      "vite/client"
+    ],
+    "noEmit": true
+  },
+  "include": [
+    "wxt.config.ts",
+    "popup.ts",
+    "entrypoints/**/*.ts",
+    ".wxt/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

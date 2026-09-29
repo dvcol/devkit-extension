@@ -1,0 +1,85 @@
+{
+  "runId": "7b041c70-c85c-43fe-87b2-15eae36b5626",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "marionettePort": 62432,
+  "developmentPort": 62433,
+  "extensionId": "managed-wxt-firefox@example.invalid",
+  "uuidPolicy": "Firefox-assigned UUID from the owned profile prefs.js",
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790651069533
+    },
+    {
+      "event": "closed",
+      "at": 1790651071418
+    },
+    {
+      "event": "started",
+      "at": 1790651071425
+    },
+    {
+      "event": "closed",
+      "at": 1790651073309
+    }
+  ],
+  "browserProcesses": [
+    55258,
+    55273
+  ],
+  "profileIdentities": [
+    {
+      "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-profilewInM50",
+      "extensionId": "managed-wxt-firefox@example.invalid",
+      "nativeUuid": "1c84f2c3-4ad4-4b29-89f4-226772e24a1a"
+    },
+    {
+      "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-profileG2iPpc",
+      "extensionId": "managed-wxt-firefox@example.invalid",
+      "nativeUuid": "eab07c21-b818-4d13-95a3-332f5bb253c6"
+    }
+  ],
+  "browserVersion": "156.0.1",
+  "geckodriverVersion": "0.37.1",
+  "before": {
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "23a9f7b0-feec-4249-aea2-f9ac662e73cb",
+      "count": 1,
+      "generation": "2b6bca09-ffc3-4dc4-8786-c7e741aa7e63",
+      "version": "1.0.0"
+    }
+  },
+  "changeAt": 1790651071323,
+  "initialBrowserClosedAt": 1790651071525,
+  "after": {
+    "manifestVersion": "1.0.1",
+    "action": {
+      "requestId": "f68bdf0c-0092-4e28-8f7e-a4c46d57d01b",
+      "count": 1,
+      "generation": "25eaa9d4-c5c5-4873-b3be-72b55f0da663",
+      "version": "1.0.1"
+    }
+  },
+  "stopClosedBrowser": true,
+  "passed": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ],
+  "remainingBrowserProcesses": []
+}

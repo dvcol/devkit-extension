@@ -1,0 +1,25 @@
+✔ Started dev server @ http://localhost:62198 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 59 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.08 kB 
+  ├─ .output/firefox-mv3-dev/popup.html                476 B   
+  ├─ .output/firefox-mv3-dev/background.js             22.95 kB
+  └─ .output/firefox-mv3-dev/chunks/popup-B_s6X1Vj.js  8.25 kB 
+Σ Total size: 32.76 kB                               
+✔ Opened browser in 941 ms
+ℹ Press o + enter to reopen the browser
+1790650986175	geckodriver	INFO	Listening on 127.0.0.1:62207
+1790650986525	webdriver::server	INFO	Shutting down
+1790650986532	geckodriver::marionette	ERROR	Failed to close browser connection: unknown error
+<anonymous_script>:1
+"{"managed-wxt-firefox@example.invalid":"44809c69-0327-42a5-8f08-7d1f38f892e8"}"
+   ^
+
+SyntaxError: Unexpected non-whitespace character after JSON at position 3 (line 1 column 4)
+    at JSON.parse (<anonymous>)
+    at file:///private/tmp/devkit-wxt-managed-firefox-d5WFbC/check-managed-firefox.mjs:66:53
+    at Array.map (<anonymous>)
+    at attachFirefox (file:///private/tmp/devkit-wxt-managed-firefox-d5WFbC/check-managed-firefox.mjs:62:44)
+    at async file:///private/tmp/devkit-wxt-managed-firefox-d5WFbC/check-managed-firefox.mjs:144:19
+
+Node.js v26.9.0

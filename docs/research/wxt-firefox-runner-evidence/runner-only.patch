@@ -1,0 +1,45 @@
+diff --git a/dist/core/create-server.mjs b/dist/core/create-server.mjs
+index c9792af0fa9918961ce31e10e91d7d3fcc1451f6..43ca720ec97537d4035b95f6dc4bda43f974e2e3 100644
+--- a/dist/core/create-server.mjs
++++ b/dist/core/create-server.mjs
+@@ -34,6 +34,7 @@ async function createServerInternal() {
+ 	};
+ 	let builderServer = await wxt.builder.createServer(getServerInfo());
+ 	let wasStopped = false;
++	let browserRunner = wxt.config.runner;
+ 	const server = {
+ 		get host() {
+ 			return getServerInfo().host;
+@@ -74,7 +75,7 @@ async function createServerInternal() {
+ 		async stop() {
+ 			wasStopped = true;
+ 			keyboardShortcuts.stop();
+-			await wxt.config.runner.closeBrowser?.();
++			await browserRunner.closeBrowser?.();
+ 			await builderServer.close();
+ 			await wxt.hooks.callHook("server:closed", wxt, server);
+ 			deinitWxtModules();
+@@ -97,10 +98,11 @@ async function createServerInternal() {
+ 			server.ws.send("wxt:reload-extension");
+ 		},
+ 		async restartBrowser() {
+-			await wxt.config.runner.closeBrowser?.();
++			await browserRunner.closeBrowser?.();
+ 			keyboardShortcuts.stop();
+ 			await wxt.reloadConfig();
+-			await wxt.config.runner.openBrowser();
++			browserRunner = wxt.config.runner;
++			await browserRunner.openBrowser();
+ 			keyboardShortcuts.start();
+ 			keyboardShortcuts.printHelp({ canReopenBrowser: !wxt.config.webExt.config.disabled && !!wxt.config.runner.canOpen?.() });
+ 		}
+@@ -131,7 +133,8 @@ async function createServerInternal() {
+ 		} catch (err) {
+ 			wxt.config.logger.warn("Failed to register additional file paths:", err);
+ 		}
+-		await wxt.config.runner.openBrowser();
++		browserRunner = wxt.config.runner;
++		await browserRunner.openBrowser();
+ 		keyboardShortcuts.start();
+ 		keyboardShortcuts.printHelp({ canReopenBrowser: !wxt.config.webExt.config.disabled && !!wxt.config.runner.canOpen?.() });
+ 	};

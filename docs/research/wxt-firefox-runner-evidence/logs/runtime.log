@@ -1,0 +1,112 @@
+✔ Started dev server @ http://localhost:63314 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 60 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.08 kB 
+  ├─ .output/firefox-mv3-dev/popup.html                476 B   
+  ├─ .output/firefox-mv3-dev/background.js             23.39 kB
+  └─ .output/firefox-mv3-dev/chunks/popup-DbpWWmOB.js  8.25 kB 
+Σ Total size: 33.20 kB                               
+✔ Opened browser in 943 ms
+ℹ Press o + enter to reopen the browser
+1790651330773	geckodriver	INFO	Listening on 127.0.0.1:63324
+ℹ Config changed, restarting server...
+✔ Started dev server @ http://localhost:63314 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 33 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.08 kB 
+  ├─ .output/firefox-mv3-dev/popup.html                476 B   
+  ├─ .output/firefox-mv3-dev/background.js             23.39 kB
+  └─ .output/firefox-mv3-dev/chunks/popup-DbpWWmOB.js  8.25 kB 
+Σ Total size: 33.20 kB                               
+1790651331791	webdriver::server	INFO	Shutting down
+1790651331791	geckodriver::marionette	ERROR	Failed to close browser connection: unknown error
+1790651331805	geckodriver	INFO	Listening on 127.0.0.1:63337
+✔ Opened browser in 894 ms
+ℹ Press o + enter to reopen the browser
+1790651333561	webdriver::server	INFO	Shutting down
+1790651333561	geckodriver::marionette	ERROR	Failed to close browser connection: unknown error
+{
+  "runId": "e3270cfb-f1db-4843-a42f-ebb327df3ee6",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "marionettePort": 63313,
+  "developmentPort": 63314,
+  "extensionId": "managed-wxt-firefox@example.invalid",
+  "uuidPolicy": "Firefox-assigned UUID from the owned profile prefs.js",
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790651329757
+    },
+    {
+      "event": "closed",
+      "at": 1790651331680
+    },
+    {
+      "event": "started",
+      "at": 1790651331687
+    },
+    {
+      "event": "closed",
+      "at": 1790651333458
+    }
+  ],
+  "browserProcesses": [
+    56932,
+    56952
+  ],
+  "profileIdentities": [
+    {
+      "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-profilejiPwm2",
+      "extensionId": "managed-wxt-firefox@example.invalid",
+      "nativeUuid": "a5588cc8-f8fa-4534-973c-e8b437c735ab"
+    },
+    {
+      "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-profileTX6LlR",
+      "extensionId": "managed-wxt-firefox@example.invalid",
+      "nativeUuid": "6b82cc2c-47ce-416b-9af4-4bb3151ca4c1"
+    }
+  ],
+  "browserVersion": "156.0.1",
+  "geckodriverVersion": "0.37.1",
+  "before": {
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "6b540d1b-f572-4785-8dbe-f1887e8f6170",
+      "count": 1,
+      "generation": "3e78ba88-2522-4a4c-b303-2f668564cf0d",
+      "version": "1.0.0"
+    }
+  },
+  "changeAt": 1790651331588,
+  "initialBrowserClosedAt": 1790651331791,
+  "after": {
+    "manifestVersion": "1.0.1",
+    "action": {
+      "requestId": "2ff7e456-6952-4ec4-8b64-98f94918390f",
+      "count": 1,
+      "generation": "abd9917f-a5f2-487d-b48c-e972d3902dc0",
+      "version": "1.0.1"
+    }
+  },
+  "stopClosedBrowser": true,
+  "passed": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ],
+  "remainingBrowserProcesses": []
+}

@@ -1,0 +1,2 @@
+55938 /bin/zsh -lc ps -ax -o pid=,command= | rg -- 'firefox-profile(wInM50|G2iPpc)|geckodriver.*62432|devkit-wxt-managed-firefox-d5WFbC' > logs/final-process-audit.log; result=$?; cat logs/final-process-audit.log; exit "$result"
+55947 rg -- firefox-profile(wInM50|G2iPpc)|geckodriver.*62432|devkit-wxt-managed-firefox-d5WFbC

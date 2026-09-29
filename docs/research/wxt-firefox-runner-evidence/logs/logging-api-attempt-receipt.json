@@ -1,0 +1,30 @@
+{
+  "runId": "03c6ac42-8c62-40d8-baed-86e8fa7accf7",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "marionettePort": 60860,
+  "developmentPort": 60861,
+  "extensionId": "managed-wxt-firefox@example.invalid",
+  "extensionUuid": "4b5c8418-6f66-4f0a-9133-e671865bbf91",
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790650531934
+    },
+    {
+      "event": "closed",
+      "at": 1790650533112
+    }
+  ],
+  "browserProcesses": [],
+  "error": "TypeError: (intermediate value).addArguments(...).loggingTo is not a function",
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ],
+  "remainingBrowserProcesses": []
+}

@@ -1,0 +1,20 @@
+✔ Started dev server @ http://localhost:60861 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 62 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.08 kB 
+  ├─ .output/firefox-mv3-dev/popup.html                476 B   
+  ├─ .output/firefox-mv3-dev/background.js             22.95 kB
+  └─ .output/firefox-mv3-dev/chunks/popup-CNSHBtqd.js  8.25 kB 
+Σ Total size: 32.76 kB                               
+✔ Opened browser in 1.113 s
+ℹ Press o + enter to reopen the browser
+file:///private/tmp/devkit-wxt-managed-firefox-d5WFbC/check-managed-firefox.mjs:51
+    .loggingTo(`logs/geckodriver-${label}.log`)
+     ^
+
+TypeError: (intermediate value).addArguments(...).loggingTo is not a function
+    at attachFirefox (file:///private/tmp/devkit-wxt-managed-firefox-d5WFbC/check-managed-firefox.mjs:51:6)
+    at file:///private/tmp/devkit-wxt-managed-firefox-d5WFbC/check-managed-firefox.mjs:127:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v26.9.0

@@ -1,0 +1,46 @@
+{
+  "runId": "14e79d21-a2bc-4e94-b9cc-3f2df5ff27bf",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "marionettePort": 62197,
+  "developmentPort": 62198,
+  "extensionId": "managed-wxt-firefox@example.invalid",
+  "extensionUuid": "44809c69-0327-42a5-8f08-7d1f38f892e8",
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790650985163
+    },
+    {
+      "event": "closed",
+      "at": 1790650986525
+    }
+  ],
+  "browserProcesses": [],
+  "error": "SyntaxError: Unexpected non-whitespace character after JSON at position 3 (line 1 column 4)",
+  "navigationDiagnostics": [
+    {
+      "status": "fulfilled",
+      "value": "about:blank"
+    },
+    {
+      "status": "fulfilled",
+      "value": "<html><head></head><body></body></html>"
+    }
+  ],
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ],
+  "remainingBrowserProcesses": []
+}

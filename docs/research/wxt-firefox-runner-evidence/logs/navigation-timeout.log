@@ -1,0 +1,35 @@
+✔ Started dev server @ http://localhost:60997 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 55 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.08 kB 
+  ├─ .output/firefox-mv3-dev/popup.html                476 B   
+  ├─ .output/firefox-mv3-dev/background.js             22.95 kB
+  └─ .output/firefox-mv3-dev/chunks/popup-C46GhJGN.js  8.25 kB 
+Σ Total size: 32.76 kB                               
+✔ Opened browser in 909 ms
+ℹ Press o + enter to reopen the browser
+1790650583321	geckodriver	INFO	Listening on 127.0.0.1:61019
+1790650598625	webdriver::server	INFO	Shutting down
+1790650598653	geckodriver::marionette	ERROR	Failed to close browser connection: unknown error
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   52780
++ ]
+- []
+
+    at file:///private/tmp/devkit-wxt-managed-firefox-d5WFbC/check-managed-firefox.mjs:159:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [ 52780 ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.9.0
