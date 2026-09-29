@@ -25,6 +25,7 @@ browser.on('console', (message) => {
   console.info(styleText('cyan', '🧪 [webext]'), message.type(), sanitized);
 });
 try {
+  await mkdir('artifacts', { recursive: true });
   const worker = browser.serviceWorkers()[0] ?? (await browser.waitForEvent('serviceworker'));
   const extensionId = new URL(worker.url()).host;
   await worker.evaluate(() => chrome.runtime.openOptionsPage());
@@ -114,7 +115,6 @@ try {
   );
   const devtoolsChecks = await checkChromiumDevtools(first);
   assert.deepEqual(errors, []);
-  await mkdir('artifacts', { recursive: true });
   await first.screenshot({ path: 'artifacts/native-port-proof.png', fullPage: true });
   const receipt = {
     browser: browser.browser()?.version(),

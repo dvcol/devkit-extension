@@ -23,6 +23,7 @@ const driver = Driver.createSession(options, service.build());
 const origin = `moz-extension://${extensionUuid}`;
 
 try {
+  await mkdir('artifacts/firefox', { recursive: true });
   await driver.installAddon(resolve('dist/firefox'), true);
   await driver.get(`${origin}/denied.html`);
   const launcher = await driver.getWindowHandle();
@@ -233,7 +234,6 @@ async function saveEvidence(surfaceChecks: string[]): Promise<void> {
     ],
     limitations: ['No global page-error capture through WebDriver Classic'],
   };
-  await mkdir('artifacts/firefox', { recursive: true });
   await writeFile(
     'artifacts/firefox/native-port-proof.png',
     await driver.takeScreenshot(),
