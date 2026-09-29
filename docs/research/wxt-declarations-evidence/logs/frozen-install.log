@@ -1,0 +1,11 @@
+✓ Lockfile passes supply-chain policies (verified 2m ago)
+Lockfile is up to date, resolution step is skipped
+Error: ERR_PNPM_NO_OFFLINE_TARBALL
+
+  × installing dependencies
+  ╰─▶ Failed to fetch tarball for undici-types@8.9.0 from https://
+      registry.npmjs.org/undici-types/-/undici-types-8.9.0.tgz in offline
+      mode: snapshot not present in local store
+  help: Drop `--offline` (or `offline=true` in pnpm-workspace.yaml) or run an
+        online install first to populate the store.
+

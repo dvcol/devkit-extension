@@ -1,0 +1,75 @@
+{
+    "compilerOptions": {
+        "allowImportingTsExtensions": true,
+        "exactOptionalPropertyTypes": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "lib": [
+            "es2023",
+            "dom"
+        ],
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "moduleDetection": "force",
+        "noEmit": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitOverride": true,
+        "paths": {
+            "@": [
+                ".."
+            ],
+            "@/*": [
+                "../*"
+            ],
+            "~": [
+                ".."
+            ],
+            "~/*": [
+                "../*"
+            ],
+            "@@": [
+                ".."
+            ],
+            "@@/*": [
+                "../*"
+            ],
+            "~~": [
+                ".."
+            ],
+            "~~/*": [
+                "../*"
+            ]
+        },
+        "skipLibCheck": false,
+        "strict": true,
+        "target": "es2023",
+        "types": [
+            "vite/client",
+            "node"
+        ],
+        "verbatimModuleSyntax": true,
+        "preserveConstEnums": true
+    },
+    "files": [
+        "./wxt.config.ts",
+        "./entrypoints/background.ts",
+        "./.wxt/wxt.d.ts",
+        "./.wxt/types/globals.d.ts",
+        "./.wxt/types/i18n.d.ts",
+        "./.wxt/types/imports-module.d.ts",
+        "./.wxt/types/paths.d.ts",
+        "./type-contracts.ts"
+    ],
+    "include": [
+        "wxt.config.ts",
+        "entrypoints/**/*.ts",
+        ".wxt/**/*.d.ts",
+        "type-contracts.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

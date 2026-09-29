@@ -1,0 +1,9 @@
+✓ Lockfile passes supply-chain policies (verified 42s ago)
+Packages: +6 -4
+++++++----
+Progress: resolved 6, reused 126, downloaded 0, added 6, done
+
+devDependencies:
++ rollup 4.63.4
+
+Done in 734ms using pnpm v12.5.1

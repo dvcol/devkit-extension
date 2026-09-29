@@ -1,0 +1,170 @@
+[
+  {
+    "label": "final-configuration-0",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--showConfig",
+      "-p",
+      "minimum/tsconfig.with-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-configuration-1",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--showConfig",
+      "-p",
+      "minimum/tsconfig.without-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-configuration-2",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--showConfig",
+      "-p",
+      "tsconfig.with-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-configuration-3",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--showConfig",
+      "-p",
+      "tsconfig.without-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-prepare-chrome",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "node",
+      "--input-type=module",
+      "-e",
+      "import { prepare } from \"wxt\"; await prepare({ browser: \"chrome\", manifestVersion: 3 });"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-chrome-0",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "minimum/tsconfig.with-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-chrome-1",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "minimum/tsconfig.without-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-chrome-2",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "tsconfig.with-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-chrome-3",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "tsconfig.without-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-prepare-firefox",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "node",
+      "--input-type=module",
+      "-e",
+      "import { prepare } from \"wxt\"; await prepare({ browser: \"firefox\", manifestVersion: 3 });"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-firefox-0",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "minimum/tsconfig.with-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-firefox-1",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "minimum/tsconfig.without-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-firefox-2",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "tsconfig.with-chrome.json"
+    ],
+    "status": 0
+  },
+  {
+    "label": "final-firefox-3",
+    "arguments": [
+      "pnpm",
+      "exec",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "tsconfig.without-chrome.json"
+    ],
+    "status": 0
+  }
+]

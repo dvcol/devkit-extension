@@ -1,0 +1,2 @@
+.wxt/types/i18n.d.ts(15,36): error TS2503: Cannot find namespace 'I18n'.
+node_modules/.pnpm/@aklinker1+rollup-plugin-visualizer@5.12.0/node_modules/@aklinker1/rollup-plugin-visualizer/dist/plugin/index.d.ts(1,39): error TS2307: Cannot find module 'rollup' or its corresponding type declarations.

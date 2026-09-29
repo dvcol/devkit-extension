@@ -1,0 +1,2 @@
+type-contracts.ts(23,50): error TS2339: Property 'getUILanguage' does not exist on type 'WxtI18n'.
+type-contracts.ts(24,57): error TS2339: Property 'getAcceptLanguages' does not exist on type 'WxtI18n'.

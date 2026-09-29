@@ -1,0 +1,2 @@
+node_modules/.pnpm/@wxt-dev+browser@0.3.0/node_modules/@wxt-dev/browser/src/gen/index.d.ts(21,21): error TS2304: Cannot find name 'chrome'.
+node_modules/.pnpm/@wxt-dev+browser@0.3.0/node_modules/@wxt-dev/browser/src/gen/index.d.ts(28,29): error TS2304: Cannot find name 'chrome'.

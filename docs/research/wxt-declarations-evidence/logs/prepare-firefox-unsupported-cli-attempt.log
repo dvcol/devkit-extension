@@ -1,0 +1,14 @@
+file:///private/tmp/devkit-wxt-declarations-Bp1xbL/node_modules/.pnpm/cac@7.0.0/node_modules/cac/dist/index.js:372
+			for (const name of Object.keys(options)) if (name !== "--" && !this.hasOption(name) && !globalCommand.hasOption(name)) throw new CACError(`Unknown option \`${name.length > 1 ? `--${name}` : `-${name}`}\``);
+			                                                                                                                             ^
+
+CACError: Unknown option `-b`
+    at Command.checkUnknownOptions (file:///private/tmp/devkit-wxt-declarations-Bp1xbL/node_modules/.pnpm/cac@7.0.0/node_modules/cac/dist/index.js:372:129)
+    at CAC.runMatchedCommand (file:///private/tmp/devkit-wxt-declarations-Bp1xbL/node_modules/.pnpm/cac@7.0.0/node_modules/cac/dist/index.js:616:11)
+    at file:///private/tmp/devkit-wxt-declarations-Bp1xbL/node_modules/.pnpm/wxt@0.21.4_patch_hash=af4a7513aed2c54a0a7f2e2b8eeba7eabcb3facc6bdeb5e799321fc51dcb25bb__7df4f31f6612f051d998cdc86fc97a87/node_modules/wxt/dist/cli/index.mjs:11:11
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v26.9.0
