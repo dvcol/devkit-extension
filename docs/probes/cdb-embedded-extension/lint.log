@@ -1,0 +1,261 @@
+build.mjs:14:63: error unicorn(explicit-length-check): Use `.length > 0` when checking length is not zero. help: Replace `chunk.imports.length !== 0` with `chunk.imports.length > 0`.
+run.mjs:11:41: error eslint(no-promise-executor-return): Return statement should not be used in Promise executor. help: Use `resolve()` or `reject()` instead of returning a value.
+run.mjs:11:20: error promise(param-names): Promise constructor parameters must be named to match `^_?resolve$`
+run.mjs:46:54: error eslint(no-promise-executor-return): Return statement should not be used in Promise executor. help: Use `resolve()` or `reject()` instead of returning a value.
+run.mjs:46:22: error promise(param-names): Promise constructor parameters must be named to match `^_?resolve$`
+run.mjs:46:37: error promise(param-names): Promise constructor parameters must be named to match `^_?reject$`
+background.mjs:4:1: error eslint(max-lines-per-function): The async function `runProbe` has too many lines (87). Maximum allowed is 50. help: Consider splitting it into smaller functions.
+run.mjs:7:7: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:7:26: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:8:7: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:8:22: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:9:7: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:9:23: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:10:7: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:10:16: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:10:54: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+run.mjs:10:63: error typescript(no-unsafe-member-access): Unsafe member access .writeHead on an `any` value.
+run.mjs:10:112: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+run.mjs:10:121: error typescript(no-unsafe-member-access): Unsafe member access .end on an `any` value.
+background.mjs:9:38: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+background.mjs:10:13: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:10:20: error typescript(no-unsafe-member-access): Unsafe member access .debugger on an `error` typed value.
+background.mjs:13:38: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+build.mjs:4:7: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+build.mjs:4:26: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+build.mjs:4:46: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+build.mjs:5:7: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+build.mjs:5:35: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+build.mjs:5:52: error typescript(no-unsafe-member-access): Unsafe member access .resolve on an `error` typed value.
+run.mjs:11:41: error typescript(strict-void-return): Value returned in a context where a void return is expected.
+run.mjs:11:41: error typescript(no-unsafe-return): Unsafe return of a value of type error.
+run.mjs:11:41: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:11:48: error typescript(no-unsafe-member-access): Unsafe member access .listen on an `error` typed value.
+run.mjs:12:56: error typescript(no-unsafe-member-access): Unsafe member access .port on an `error` typed value.
+run.mjs:12:39: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:12:46: error typescript(no-unsafe-member-access): Unsafe member access .address on an `error` typed value.
+run.mjs:16:3: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:16:19: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:16:28: error typescript(no-unsafe-member-access): Unsafe member access .launchPersistentContext on an `error` typed value.
+run.mjs:16:138: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:16:182: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+build.mjs:6:30: error typescript(no-unsafe-argument): Unsafe argument of type error typed assigned to a parameter of type Iterable<any> | null | undefined.
+build.mjs:6:30: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+build.mjs:6:45: error typescript(no-unsafe-member-access): Unsafe member access .map on an `error` typed value.
+run.mjs:17:3: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:17:28: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:17:46: error typescript(no-unsafe-member-access): Unsafe member access .version on an `error` typed value.
+run.mjs:17:28: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:17:36: error typescript(no-unsafe-member-access): Unsafe member access .browser on an `error` typed value.
+build.mjs:6:59: error typescript(no-unsafe-return): Unsafe return of a value of type `any`.
+build.mjs:6:59: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+build.mjs:6:64: error typescript(no-unsafe-member-access): Unsafe member access .replace on an `any` value.
+run.mjs:18:3: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:18:24: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:18:33: error typescript(no-unsafe-member-access): Unsafe member access .executablePath on an `error` typed value.
+background.mjs:14:13: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:14:20: error typescript(no-unsafe-member-access): Unsafe member access .debugger on an `error` typed value.
+run.mjs:19:9: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:19:28: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:19:36: error typescript(no-unsafe-member-access): Unsafe member access .newPage on an `error` typed value.
+run.mjs:20:9: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:20:20: error typescript(no-unsafe-member-access): Unsafe member access .goto on an `error` typed value.
+run.mjs:21:9: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:21:43: error typescript(no-unsafe-member-access): Unsafe member access [0] on an `error` typed value.
+run.mjs:21:18: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:21:26: error typescript(no-unsafe-member-access): Unsafe member access .serviceWorkers on an `error` typed value.
+run.mjs:21:55: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:21:63: error typescript(no-unsafe-member-access): Unsafe member access .waitForEvent on an `error` typed value.
+run.mjs:22:9: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:22:29: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:22:37: error typescript(no-unsafe-member-access): Unsafe member access .newPage on an `error` typed value.
+run.mjs:23:9: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:23:21: error typescript(no-unsafe-member-access): Unsafe member access .goto on an `error` typed value.
+build.mjs:7:7: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+run.mjs:23:56: error typescript(no-unsafe-argument): Unsafe argument of type error typed assigned to a parameter of type string | URL.
+run.mjs:23:56: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:23:63: error typescript(no-unsafe-member-access): Unsafe member access .url on an `error` typed value.
+build.mjs:7:22: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+run.mjs:24:9: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:24:26: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:24:38: error typescript(no-unsafe-member-access): Unsafe member access .evaluate on an `error` typed value.
+build.mjs:9:29: error typescript(strict-boolean-expressions): Unexpected any value in conditional. Use a more specific type to ensure type safety.
+build.mjs:9:29: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+build.mjs:9:39: error typescript(no-unsafe-member-access): Unsafe member access .startsWith on an `any` value.
+background.mjs:17:24: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+background.mjs:17:32: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+build.mjs:11:7: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+build.mjs:13:9: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+build.mjs:13:24: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+build.mjs:13:31: error typescript(no-unsafe-member-access): Unsafe member access .write on an `any` value.
+background.mjs:20:15: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:20:30: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+build.mjs:14:7: error typescript(strict-boolean-expressions): Unexpected any value in conditional. Use a more specific type to ensure type safety.
+background.mjs:20:37: error typescript(no-unsafe-member-access): Unsafe member access .debugger on an `error` typed value.
+build.mjs:14:7: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+build.mjs:14:14: error typescript(no-unsafe-member-access): Unsafe member access .output on an `any` value.
+run.mjs:24:56: error typescript(no-unsafe-return): Unsafe return of a value of type error.
+run.mjs:24:56: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:24:63: error typescript(no-unsafe-member-access): Unsafe member access .runtime on an `error` typed value.
+run.mjs:24:98: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+build.mjs:14:43: error typescript(no-unsafe-member-access): Unsafe member access .type on an `any` value.
+build.mjs:14:69: error typescript(no-unsafe-member-access): Unsafe member access .imports on an `any` value.
+run.mjs:25:3: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:22:9: error typescript(no-unsafe-return): Unsafe return of a value of type error.
+build.mjs:15:19: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+build.mjs:15:26: error typescript(no-unsafe-member-access): Unsafe member access .close on an `any` value.
+run.mjs:26:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:26:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:26:25: error typescript(no-unsafe-member-access): Unsafe member access .passed on an `error` typed value.
+build.mjs:16:7: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:27:9: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+run.mjs:28:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:28:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:28:23: error typescript(no-unsafe-member-access): Unsafe member access .command on an `error` typed value.
+run.mjs:29:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:29:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:29:23: error typescript(no-unsafe-member-access): Unsafe member access .event on an `error` typed value.
+run.mjs:30:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:30:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:30:23: error typescript(no-unsafe-member-access): Unsafe member access .event on an `error` typed value.
+build.mjs:17:7: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:31:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:31:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:31:23: error typescript(no-unsafe-member-access): Unsafe member access .nativeWhileSubscribed on an `error` typed value.
+run.mjs:32:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:32:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:32:23: error typescript(no-unsafe-member-access): Unsafe member access .nativeAfterClientDisposal on an `error` typed value.
+build.mjs:18:14: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:33:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:33:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:33:23: error typescript(no-unsafe-member-access): Unsafe member access .disposedClientError on an `error` typed value.
+run.mjs:34:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:34:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:34:74: error typescript(no-unsafe-member-access): Unsafe member access .length on an `error` typed value.
+run.mjs:34:16: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:34:23: error typescript(no-unsafe-member-access): Unsafe member access .trace on an `error` typed value.
+run.mjs:34:53: error typescript(no-unsafe-member-access): Unsafe member access .method on an `any` value.
+run.mjs:35:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:35:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:35:74: error typescript(no-unsafe-member-access): Unsafe member access .length on an `error` typed value.
+run.mjs:35:16: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:35:23: error typescript(no-unsafe-member-access): Unsafe member access .trace on an `error` typed value.
+run.mjs:35:53: error typescript(no-unsafe-member-access): Unsafe member access .method on an `any` value.
+run.mjs:36:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:36:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:36:82: error typescript(no-unsafe-member-access): Unsafe member access .length on an `error` typed value.
+run.mjs:36:16: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:36:23: error typescript(no-unsafe-member-access): Unsafe member access .trace on an `error` typed value.
+run.mjs:36:53: error typescript(no-unsafe-member-access): Unsafe member access .method on an `any` value.
+run.mjs:37:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:37:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:37:83: error typescript(no-unsafe-member-access): Unsafe member access .length on an `error` typed value.
+run.mjs:37:16: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:37:23: error typescript(no-unsafe-member-access): Unsafe member access .trace on an `error` typed value.
+run.mjs:37:53: error typescript(no-unsafe-member-access): Unsafe member access .method on an `any` value.
+run.mjs:38:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:38:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:38:81: error typescript(no-unsafe-member-access): Unsafe member access .status on an `error` typed value.
+run.mjs:38:16: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:38:23: error typescript(no-unsafe-member-access): Unsafe member access .trace on an `error` typed value.
+run.mjs:38:51: error typescript(no-unsafe-member-access): Unsafe member access .method on an `any` value.
+run.mjs:39:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:39:10: error typescript(no-unsafe-member-access): Unsafe member access .match on an `error` typed value.
+run.mjs:39:23: error typescript(no-unsafe-member-access): Unsafe member access .nativeAfterDetachError on an `error` typed value.
+run.mjs:40:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:40:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:40:23: error typescript(no-unsafe-member-access): Unsafe member access .disposedBrokerError on an `error` typed value.
+run.mjs:41:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:41:10: error typescript(no-unsafe-member-access): Unsafe member access .equal on an `error` typed value.
+run.mjs:41:23: error typescript(no-unsafe-member-access): Unsafe member access .listenerRemoved on an `error` typed value.
+run.mjs:43:58: error typescript(no-unsafe-member-access): Unsafe member access .exitCode on an `error` typed value.
+run.mjs:45:9: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:45:18: error typescript(no-unsafe-member-access): Unsafe member access .close on an `error` typed value.
+run.mjs:46:54: error typescript(strict-void-return): Value returned in a context where a void return is expected.
+run.mjs:46:54: error typescript(no-unsafe-return): Unsafe return of a value of type error.
+run.mjs:46:54: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+run.mjs:46:61: error typescript(no-unsafe-member-access): Unsafe member access .close on an `error` typed value.
+run.mjs:46:84: error typescript(strict-boolean-expressions): Unexpected any value in conditional. Use a more specific type to ensure type safety.
+run.mjs:46:91: error typescript(prefer-promise-reject-errors): Expected the Promise rejection reason to be an Error.
+background.mjs:32:39: error typescript(no-confusing-void-expression): Returning a void expression from an arrow function shorthand is forbidden. help: Add braces to the arrow function.
+background.mjs:36:60: error typescript(no-confusing-void-expression): Returning a void expression from an arrow function shorthand is forbidden. help: Add braces to the arrow function.
+run.mjs:47:9: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:36:84: error typescript(no-unsafe-argument): Unsafe argument of type any assigned to a parameter of type ChromeDebuggerEventSource.
+background.mjs:36:92: error typescript(no-unsafe-argument): Unsafe argument of type any assigned to a parameter of type string.
+background.mjs:36:100: error typescript(no-unsafe-argument): Unsafe argument of type any assigned to a parameter of type JsonObjectShape.
+run.mjs:48:9: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:37:3: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:37:10: error typescript(no-unsafe-member-access): Unsafe member access .debugger on an `error` typed value.
+run.mjs:50:14: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:38:9: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:38:15: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:38:45: error typescript(no-unsafe-member-access): Unsafe member access .find on an `error` typed value.
+background.mjs:38:22: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:38:29: error typescript(no-unsafe-member-access): Unsafe member access .tabs on an `error` typed value.
+background.mjs:38:75: error typescript(no-unsafe-member-access): Unsafe member access .url on an `any` value.
+background.mjs:39:12: error typescript(no-unsafe-member-access): Unsafe member access .id on an `error` typed value.
+background.mjs:43:46: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:43:61: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:43:87: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+background.mjs:43:57: error typescript(no-unsafe-member-access): Unsafe member access .id on an `error` typed value.
+background.mjs:43:76: error typescript(no-unsafe-member-access): Unsafe member access .incognito on an `error` typed value.
+background.mjs:64:11: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+background.mjs:65:11: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:65:66: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:65:77: error typescript(no-unsafe-member-access): Unsafe member access .id on an `error` typed value.
+background.mjs:70:64: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:71:11: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:71:70: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:71:81: error typescript(no-unsafe-member-access): Unsafe member access .id on an `error` typed value.
+background.mjs:72:56: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+background.mjs:72:63: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:72:86: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:72:113: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:78:7: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:78:14: error typescript(no-unsafe-member-access): Unsafe member access .debugger on an `error` typed value.
+background.mjs:81:9: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:81:34: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:81:41: error typescript(no-unsafe-member-access): Unsafe member access .debugger on an `error` typed value.
+background.mjs:83:15: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:83:22: error typescript(no-unsafe-member-access): Unsafe member access .debugger on an `error` typed value.
+background.mjs:83:45: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:83:56: error typescript(no-unsafe-member-access): Unsafe member access .id on an `error` typed value.
+background.mjs:84:19: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:86:56: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:89:30: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:89:54: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:89:75: error typescript(no-unsafe-assignment): Unsafe assignment of an error typed value.
+background.mjs:89:157: error typescript(no-unsafe-member-access): Unsafe member access .attached on an `error` typed value.
+background.mjs:89:97: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:89:114: error typescript(no-unsafe-member-access): Unsafe member access .find on an `error` typed value.
+background.mjs:89:138: error typescript(no-unsafe-member-access): Unsafe member access .tabId on an `any` value.
+background.mjs:89:152: error typescript(no-unsafe-member-access): Unsafe member access .id on an `error` typed value.
+background.mjs:89:185: error typescript(strict-boolean-expressions): Unexpected any value in conditional. Use a more specific type to ensure type safety.
+background.mjs:89:185: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:89:192: error typescript(no-unsafe-member-access): Unsafe member access .debugger on an `error` typed value.
+background.mjs:95:5: error typescript(no-unsafe-return): Unsafe return of a value of type `any`.
+background.mjs:96:7: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+background.mjs:96:44: error typescript(no-unsafe-member-access): Unsafe member access .next on an `any` value.
+background.mjs:96:7: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+background.mjs:96:20: error typescript(no-unsafe-member-access): Unsafe member access [Symbol.asyncIterator] on an `any` value.
+background.mjs:97:69: error typescript(no-confusing-void-expression): Returning a void expression from an arrow function shorthand is forbidden. help: Add braces to the arrow function.
+background.mjs:104:1: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:104:8: error typescript(no-unsafe-member-access): Unsafe member access .runtime on an `error` typed value.
+background.mjs:105:14: error typescript(no-unsafe-member-access): Unsafe member access .id on an `any` value.
+background.mjs:105:28: error typescript(no-unsafe-member-access): Unsafe member access .runtime on an `error` typed value.
+background.mjs:105:49: error typescript(no-unsafe-member-access): Unsafe member access .url on an `any` value.
+background.mjs:105:57: error typescript(no-unsafe-call): Unsafe call of a(n) `error` type typed value.
+background.mjs:105:64: error typescript(no-unsafe-member-access): Unsafe member access .runtime on an `error` typed value.
+background.mjs:106:16: error typescript(no-unsafe-member-access): Unsafe member access .kind on an `any` value.
+background.mjs:106:49: error typescript(no-unsafe-member-access): Unsafe member access .targetUrl on an `any` value.
+background.mjs:107:20: error typescript(no-unsafe-member-access): Unsafe member access .targetUrl on an `any` value.
+background.mjs:108:17: error typescript(no-unsafe-return): Unsafe return of a value of type `any`.
+background.mjs:108:17: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+background.mjs:109:16: error typescript(no-unsafe-return): Unsafe return of a value of type `any`.
+background.mjs:109:16: error typescript(no-unsafe-call): Unsafe call of a(n) `any` typed value.
+background.mjs:109:50: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+background.mjs:109:74: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+background.mjs:109:92: error typescript(no-unsafe-assignment): Unsafe assignment of an any value.
+background.mjs:109:65: error typescript(no-unsafe-member-access): Unsafe member access .message on an `any` value.
+background.mjs:109:86: error typescript(no-unsafe-member-access): Unsafe member access .code on an `any` value.
+background.mjs:109:105: error typescript(no-unsafe-member-access): Unsafe member access .stack on an `any` value.
