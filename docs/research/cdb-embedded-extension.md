@@ -92,7 +92,7 @@ The raw native calls intentionally bypass CDB leases. They do not attach another
 ## Remaining implementation gates
 
 - The maintained example now covers the portable contribution lifecycle, native context access and explicit Firefox unavailability under strict TypeScript and Oxlint. The original scratch scripts remain frozen research; their earlier type-aware lint limitation is recorded in [validation](../probes/cdb-embedded-extension/validation.json).
-- Exercise navigation, target closure, child sessions, worker termination, permissions, cancellation, conflicting native lifecycle calls and both native DevTools attachment orders through the final composition.
+- The maintained Chromium suite now covers supported navigation, explicit publisher revocation, actual tab closure and unsupported-page revocation with a pending subscription and lease. It checks stale-call rejection, native causes, no replay and listener cleanup. Child sessions, worker termination, permission changes, in-flight cancellation and both native DevTools attachment orders still need acceptance evidence through the final composition.
 - Repeat through an authenticated Devframe peer. The embedded client is trusted in-process; this result does not establish remote grants.
 - The follow-on [configured response experiment](./cdb-response-transform.md) proves a fixed host policy through the public `ChromeDebuggerPort`, preserving CDB ownership without a patch. Dynamic contribution configuration, paused-request failure handling and complete Fetch lifecycle remain open.
 - Prove asynchronous cleanup where needed. Subscription close and embedded disposal are synchronous; observing this Runtime disable does not establish a universal drain guarantee.

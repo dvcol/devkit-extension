@@ -49,6 +49,8 @@ The private [`examples/debugger`](../../examples/debugger/README.md) composes na
 | Firefox availability | Actual Firefox temporary add-on | No Chromium debugger permission/API; no installed debugger service; dependency remains waiting and invocation rejects as unavailable |
 | Browser import graph | Vite build | Public package imports only, with no Node builtins or external runtime imports in either extension bundle |
 
+The maintained Chromium lifecycle receipt also covers supported navigation with the same native target reference, publisher revocation, actual tab closure and unsupported-page revocation. Each path checks pending subscription completion, lease removal, stale-action failure with the native cause, no automatic reattachment/replay and removal of all lifecycle listeners.
+
 These cases do not establish remote peer authorization, configured Fetch demand, child-session behavior, permission transitions, worker termination, every navigation race or native DevTools attachment order. Those remain obligations of [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10).
 
 ## Local implementation evidence

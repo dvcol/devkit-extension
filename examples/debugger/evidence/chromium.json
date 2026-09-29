@@ -12,14 +12,14 @@
             "level": "debug"
           },
           "generation": 1,
-          "id": "dd3a90bd-07c1-4cf6-8381-88172af0b70c",
-          "scopeId": "598b0b67-3309-462c-8ee3-ef90a136d678",
+          "id": "52cf44fc-b4d7-4087-8946-d5d6bd730a35",
+          "scopeId": "627324e1-1b03-47d5-bf17-4a1c5c619fae",
           "type": "page"
         }
       ],
       "events": {
         "result": {
-          "operationId": "67a87e50-26b9-4588-9f8d-45008593b52c",
+          "operationId": "9d0f189a-4834-4637-b082-a45829f890c1",
           "value": {
             "result": {
               "description": "42",
@@ -51,13 +51,13 @@
                   }
                 ]
               },
-              "timestamp": 1790668707018.877,
+              "timestamp": 1790670220466.444,
               "type": "log"
             },
             "sequence": 1,
-            "subscriptionId": "3651f8ad-e51b-4e20-b9c7-73c0901b3a2d",
+            "subscriptionId": "387c2d8e-5d51-4c0b-ae4b-f7c63bda11cc",
             "targetGeneration": 1,
-            "targetId": "dd3a90bd-07c1-4cf6-8381-88172af0b70c"
+            "targetId": "52cf44fc-b4d7-4087-8946-d5d6bd730a35"
           }
         }
       },
@@ -69,7 +69,7 @@
           "value": 63
         }
       },
-      "nativeAfterRevoke": "Error: Debugger is not attached to the tab with id: 1254778337.",
+      "nativeAfterRevoke": "Error: Debugger is not attached to the tab with id: 887579530.",
       "brokerAfterDisposal": "Error: The target broker is disposed.",
       "trace": [
         {

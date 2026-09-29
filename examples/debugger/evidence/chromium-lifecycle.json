@@ -1,0 +1,303 @@
+{
+  "browser": "153.0.8010.12",
+  "pageErrors": [],
+  "receipt": {
+    "passed": true,
+    "result": [
+      {
+        "scenario": "revoke",
+        "target": {
+          "availability": "available",
+          "capabilities": {
+            "level": "debug"
+          },
+          "generation": 1,
+          "id": "1d18a028-f1a8-4e03-bddd-471e7f4d7465",
+          "scopeId": "1a1aa6b9-575c-4fd9-9daf-0693c738b766",
+          "type": "page"
+        },
+        "initialTitle": "Owned debugger target",
+        "navigatedTitle": "Navigated debugger target",
+        "targetsAfterNavigation": [
+          {
+            "availability": "available",
+            "capabilities": {
+              "level": "debug"
+            },
+            "generation": 1,
+            "id": "1d18a028-f1a8-4e03-bddd-471e7f4d7465",
+            "scopeId": "1a1aa6b9-575c-4fd9-9daf-0693c738b766",
+            "type": "page"
+          }
+        ],
+        "revocation": {
+          "kind": "revoked",
+          "reason": "explicit",
+          "targetGeneration": 1,
+          "targetId": "1d18a028-f1a8-4e03-bddd-471e7f4d7465",
+          "sequence": 2
+        },
+        "subscriptionResult": {
+          "done": true
+        },
+        "targetsAfterRevocation": [],
+        "leasesAfterRevocation": [],
+        "staleAction": {
+          "rejected": true,
+          "message": "OperationError: Operation handler failed",
+          "code": "operation-failed",
+          "cause": {
+            "code": "TARGET_NOT_FOUND",
+            "message": "The requested target operation is not available."
+          }
+        },
+        "trace": [
+          {
+            "method": "attach",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Target.setAutoAttach",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.evaluate",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.disable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.evaluate",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.disable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "detach",
+            "status": "fulfilled"
+          }
+        ],
+        "errors": [],
+        "diagnostics": ["operation-failed", "operation-failed"],
+        "listenersAfterDisposal": {
+          "event": false,
+          "detach": false,
+          "updated": false,
+          "removed": false
+        }
+      },
+      {
+        "scenario": "close",
+        "target": {
+          "availability": "available",
+          "capabilities": {
+            "level": "debug"
+          },
+          "generation": 1,
+          "id": "4e482418-2f18-41d6-ac1c-afae17d90278",
+          "scopeId": "6f68be4c-1acc-4475-8bb9-9be9e0c481c2",
+          "type": "page"
+        },
+        "initialTitle": "Owned debugger target",
+        "navigatedTitle": "Navigated debugger target",
+        "targetsAfterNavigation": [
+          {
+            "availability": "available",
+            "capabilities": {
+              "level": "debug"
+            },
+            "generation": 1,
+            "id": "4e482418-2f18-41d6-ac1c-afae17d90278",
+            "scopeId": "6f68be4c-1acc-4475-8bb9-9be9e0c481c2",
+            "type": "page"
+          }
+        ],
+        "revocation": {
+          "kind": "revoked",
+          "reason": "closed",
+          "targetGeneration": 1,
+          "targetId": "4e482418-2f18-41d6-ac1c-afae17d90278",
+          "sequence": 2
+        },
+        "subscriptionResult": {
+          "done": true
+        },
+        "targetsAfterRevocation": [],
+        "leasesAfterRevocation": [],
+        "staleAction": {
+          "rejected": true,
+          "message": "OperationError: Operation handler failed",
+          "code": "operation-failed",
+          "cause": {
+            "code": "TARGET_NOT_FOUND",
+            "message": "The requested target operation is not available."
+          }
+        },
+        "trace": [
+          {
+            "method": "attach",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Target.setAutoAttach",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.evaluate",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.disable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.evaluate",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.disable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "detach",
+            "status": "rejected"
+          }
+        ],
+        "errors": [],
+        "diagnostics": ["operation-failed", "operation-failed"],
+        "listenersAfterDisposal": {
+          "event": false,
+          "detach": false,
+          "updated": false,
+          "removed": false
+        }
+      },
+      {
+        "scenario": "unsupported",
+        "target": {
+          "availability": "available",
+          "capabilities": {
+            "level": "debug"
+          },
+          "generation": 1,
+          "id": "3f7d13c9-7743-450a-97f1-094e63993832",
+          "scopeId": "c20a2db0-fcad-4b61-911d-7b25396e409f",
+          "type": "page"
+        },
+        "initialTitle": "Owned debugger target",
+        "navigatedTitle": "Navigated debugger target",
+        "targetsAfterNavigation": [
+          {
+            "availability": "available",
+            "capabilities": {
+              "level": "debug"
+            },
+            "generation": 1,
+            "id": "3f7d13c9-7743-450a-97f1-094e63993832",
+            "scopeId": "c20a2db0-fcad-4b61-911d-7b25396e409f",
+            "type": "page"
+          }
+        ],
+        "revocation": {
+          "kind": "revoked",
+          "reason": "policy-invalid",
+          "targetGeneration": 1,
+          "targetId": "3f7d13c9-7743-450a-97f1-094e63993832",
+          "sequence": 2
+        },
+        "subscriptionResult": {
+          "done": true
+        },
+        "targetsAfterRevocation": [],
+        "leasesAfterRevocation": [],
+        "staleAction": {
+          "rejected": true,
+          "message": "OperationError: Operation handler failed",
+          "code": "operation-failed",
+          "cause": {
+            "code": "TARGET_NOT_FOUND",
+            "message": "The requested target operation is not available."
+          }
+        },
+        "trace": [
+          {
+            "method": "attach",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Target.setAutoAttach",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.evaluate",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.disable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.evaluate",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.disable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "Runtime.enable",
+            "status": "fulfilled"
+          },
+          {
+            "method": "detach",
+            "status": "fulfilled"
+          }
+        ],
+        "errors": [],
+        "diagnostics": ["operation-failed", "operation-failed"],
+        "listenersAfterDisposal": {
+          "event": false,
+          "detach": false,
+          "updated": false,
+          "removed": false
+        }
+      }
+    ]
+  }
+}

@@ -8,9 +8,14 @@ import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
 import type { BrowserContext } from '@playwright/test';
 import { assertChromiumReceipt } from './receipt.ts';
+import { assertLifecycleReceipt } from './lifecycle-receipt.ts';
 
-const server = createServer((_request, response) => {
+const server = createServer((request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/html' });
+  if (request.url === '/navigated') {
+    response.end('<!doctype html><title>Navigated debugger target</title>');
+    return;
+  }
   response.end('<!doctype html><title>Owned debugger target</title>');
 });
 const profile = await mkdtemp(join(tmpdir(), 'devkit-debugger-'));
@@ -48,10 +53,25 @@ try {
     JSON.stringify({ browser: browser.browser()?.version(), pageErrors, receipt }, null, 2) + '\n',
   );
   assertChromiumReceipt(receipt);
+  const lifecycleReceipt = await boundedReceipt(
+    control.evaluate(
+      (url) => chrome.runtime.sendMessage<unknown>({ kind: 'lifecycle', targetUrl: url }),
+      targetUrl,
+    ),
+  );
+  await writeFile(
+    'artifacts/chromium-lifecycle.json',
+    JSON.stringify(
+      { browser: browser.browser()?.version(), pageErrors, receipt: lifecycleReceipt },
+      null,
+      2,
+    ) + '\n',
+  );
+  assertLifecycleReceipt(lifecycleReceipt);
   assert.deepEqual(pageErrors, []);
   console.info(
     styleText('green', '🧪 [debugger/chromium]'),
-    'Native command, event and ownership checks passed',
+    'Native command, event, ownership and lifecycle checks passed',
     browser.browser()?.version(),
   );
 } finally {

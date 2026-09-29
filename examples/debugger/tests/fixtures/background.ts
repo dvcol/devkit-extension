@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { checkChromium, checkUnavailable } from './run.js';
+import { checkChromiumLifecycle } from './lifecycle.js';
 
 declare const DEBUGGER_BROWSER: 'chromium' | 'firefox';
-const requestSchema = z.object({ kind: z.literal('run'), targetUrl: z.url() });
+const requestSchema = z.object({ kind: z.enum(['run', 'lifecycle']), targetUrl: z.url() });
 let running = false;
 
 /** This packaged document is test instrumentation, not a contribution UI or public RPC API. */
@@ -16,8 +17,7 @@ function receive(
   const request = requestSchema.safeParse(message);
   if (!request.success || running) return false;
   running = true;
-  const task =
-    DEBUGGER_BROWSER === 'firefox' ? checkUnavailable() : checkChromium(request.data.targetUrl);
+  const task = runRequest(request.data);
   void task
     .then(
       (result) => {
@@ -33,6 +33,12 @@ function receive(
       running = false;
     });
   return true;
+}
+
+function runRequest(request: z.infer<typeof requestSchema>) {
+  if (DEBUGGER_BROWSER === 'firefox') return checkUnavailable();
+  if (request.kind === 'lifecycle') return checkChromiumLifecycle(request.targetUrl);
+  return checkChromium(request.targetUrl);
 }
 
 // oxlint-disable-next-line typescript/strict-void-return -- Chrome requires true to retain the asynchronous sendResponse channel; @types/chrome declares void.
