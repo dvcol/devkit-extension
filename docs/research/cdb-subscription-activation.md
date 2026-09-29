@@ -45,6 +45,8 @@ The disposable source checkout's manifest says 0.2.0. Its broker base is byte-id
 
 The workspace patch translates that source correction into 0.3.0's emitted broker module. The maintained [installed-package regression](../../examples/debugger/tests/subscription.test.ts) fails unpatched and passes patched. All **10 debugger tests**, strict TypeScript 7, Oxlint, Oxfmt and both extension builds pass. The maintained Chromium and Firefox examples pass against the installed patched dependency.
 
+The [first full CI run](https://github.com/dvcol/devkit-extension/actions/runs/36540361357) caught an unused patch in the isolated packed-adapter consumer, which does not install the debugger example or CDB. Its existing example-dependency exclusions now include CDB. The corrected consumer passes packing, strict Bundler/NodeNext declarations, native hosts and browser RPC without disabling pnpm's unused-patch check.
+
 The separate real-browser replay uses the installed patched 0.3.0 through normal public package imports. It receives the formerly lost Fetch event once and fulfills the actual response before closing the subscription, releasing its lease or detaching. Its source, dependency resolution and receipt are retained with the reproduction.
 
 The second browser case closes a subscription after a completed body read. The response remains paused while its command lease owns demand. Releasing that lease triggers a successful native `Fetch.disable`, resumes the original response before detach, and allows another matching request normally. This agrees with native lease ownership; no SDK cancellation mechanism is needed for this case.

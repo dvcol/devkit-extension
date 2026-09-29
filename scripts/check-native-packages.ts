@@ -60,9 +60,9 @@ async function installConsumer(): Promise<void> {
   await writeFile(join(consumer, '.npmrc'), 'registry=https://registry.npmjs.org\n');
   /** Patches are explicit consumer installation policy, never assumed to propagate through tarballs. */
   const workspace = await readFile(join(repository, 'pnpm-workspace.yaml'), 'utf8');
-  /** The packed runtime consumer does not install the extension example's development tools. */
+  /** This consumer does not install the examples' debugger or extension development dependencies. */
   const runtimeWorkspace = workspace.replaceAll(
-    /^  (?:'@wxt-dev\/browser@[^']+'|wxt@[^:]+):.*\n/gmu,
+    /^  (?:'@(?:wxt-dev\/browser|dvcol\/cdb)@[^']+'|wxt@[^:]+):.*\n/gmu,
     '',
   );
   await writeFile(
