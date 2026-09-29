@@ -1,101 +1,79 @@
-# JSON actions and the client-owned router
+# Native renderer and portable action dispatch
 
-Status: owner review required. These are proposals, not implemented APIs. This note concerns [Renderer and surface contract](https://github.com/dvcol/devkit-extension/issues/12). Multi-provider JSON UI is already required; the choice is how to connect the existing renderer to the existing router.
+Status: architectural direction clarified by the owner on 2026-09-29. Keep the native renderer unchanged. Connect its JSON actions to declared portable actions through the existing client routing integration. The earlier choice between adding renderer handlers and special per-button RPC branches is superseded. This is implementation work under [Renderer and surface contract](https://github.com/dvcol/devkit-extension/issues/12), not an unresolved renderer API decision.
 
-## What works now
+## Current implementation and missing wiring
 
-The extension example passes 39 real Chromium scenarios and 32 Firefox scenario groups, including actual popup/options, native DevTools panel and browser sidebar lifetimes. Its page-owned router connects to native Devframe, DevTools and extension providers. The JSON-rendered counter button still invokes its own worker. Separate HTML controls exercise selection, fallback and broadcast.
+The WebExtension page already owns native connections to extension, Devframe and DevTools providers and an instance of the portable client. Its separate HTML controls exercise recipient selection and broadcast. Its JSON counter still calls `probe:increase`, whose example-owned handler invokes only the extension background provider.
+
+```text
+Current JSON control -> native renderer -> probe:increase -> background provider
+Current HTML controls -> portable client router -> selected connected providers
+```
+
+The custom DOM renderer is a separate replaceability example. It does not change the default renderer or supply the missing portable action binding. The native reference renderer already exposes the necessary call boundary through its supplied context.
+
+## Required interaction
 
 ```mermaid
 flowchart LR
-  JSON[Native JSON button] --> Bridge[Native action bridge]
-  Bridge --> Call["context.rpc.call('probe:increase')"]
-  Call --> Worker[Extension worker / counter]
-  HTML[HTML routing controls] --> Router[Existing page-owned client]
-  Router --> Worker
-  Router --> Devframe[Devframe backend]
-  Router --> Devtools[DevTools backend]
+  JSON[Shared JSON view] --> Renderer[Unchanged native renderer]
+  Renderer --> Binding[Bind declared action and input at the client boundary]
+  Binding --> Outgoing[Existing client recipient selection]
+  Outgoing --> Server[Devframe or DevTools provider]
+  Outgoing --> Extension[WebExtension provider]
+  Server --> ServerFilter[Implementation-owned applicability]
+  Extension --> ExtensionFilter[Implementation-owned applicability]
+  ServerFilter --> ServerService[Local capability implementation]
+  ExtensionFilter --> ExtensionService[Local capability implementation]
+  ServerService --> Results[Per-provider outcomes]
+  ExtensionService --> Results
+  Results --> JSON
 ```
 
-The public reference renderer accepts `entry`, `container` and `context`. A view can be an inline native JSON spec or a native shared-state reference. Non-built-in actions call `context.rpc.call(name, params)`. Native built-ins such as `setState` remain local. The public mount exposes no action-handler callback. Replacing the complete renderer or moving all connections into a new orchestration host would be larger changes.
+The client fans a broadcast out to the connected providers admitted by its outgoing selection. Each recipient interprets the schema-defined domain/resource input inside its action or capability implementation. Core, the renderer and transport contain no domain matching logic. If both providers apply, both can act. The existing separate single-recipient invocation API retains its accepted behavior.
 
-Published `1.1.0` was checked on 2026-09-29. Its renderer still mounts with only `entry`, `container` and `context`, and its action bridge still calls native RPC. It adds no public local-handler seam and still lacks the `./renderer` and `./view` exports supplied by draft 411. Its exact Devframe/Hub peers also require a coordinated upgrade. The release is still inside the repository's seven-day age threshold; the tested patched `1.0.0` graph remains installed. [UI metadata](https://registry.npmjs.org/@devframes/json-render-ui/1.1.0), [protocol metadata](https://registry.npmjs.org/@devframes/json-render/1.1.0).
-
-Disposing and remounting against another native context already supports changing the selected view provider. It does not by itself make one JSON action broadcast or follow an ordered fallback across providers.
-
-## A: optional native action handlers, recommended
-
-Add one optional, finite handler map to the native JSON renderer mount. The existing action bridge checks that map first and sends unlisted action names through its existing RPC path. Reuse its current loading/error handling and native built-ins.
+The dispatch itself already exists:
 
 ```ts
-// Proposed extension to the native renderer mount, not an SDK factory.
-await renderer({
-  entry: applicationOwnedView,
-  container,
-  context: nativeContext,
-  handlers: {
-    'example:increase-devservers': () => client.actions.broadcast({
-      action: increaseCounterAction,
-      input: { amount: 1 },
-      selection: [{ realm: 'devserver' }],
-    }),
-  },
+// Existing API. The JSON binding supplies these values from declarations and the view input.
+const outcomes = await client.actions.broadcast({
+  action: setFlag,
+  selection: [{ realm: 'devserver' }, { realm: 'webext' }],
+  input: { domain: 'app.example.test', key: 'feature', value: true },
 });
+
+// Ordinary capability implementation; not a framework-level filter protocol.
+if (!ownedDomains.has(input.domain)) return { status: 'not-applicable' };
+return applyFlag(input);
 ```
 
-```mermaid
-flowchart LR
-  JSON[Native JSON action] --> Bridge[Existing native action bridge]
-  Bridge -->|listed handler| Router[Existing client / selection and dispatch]
-  Router --> Providers[Native backend connections]
-  Bridge -->|unlisted name| RPC[Unchanged native RPC call]
-  State[Native view and shared state] --> JSON
-```
+`setFlag` and its result schema are illustrative application declarations. A schema-defined `not-applicable` value is an ordinary fulfilled result. The SDK does not add an `accepts` hook, resource selector or special skip message. Existing contracts retain exact numeric versions, authenticated native connections and no rerouting/replay after dispatch.
 
-The host grants these handlers to this mount explicitly. The example would attach them only to its packaged application view. This does not grant every remote server-authored view access to the router or extension operations.
+## Implementation boundary
 
-Cost: a small native public API addition and an exact-version patch until released. Existing mounts keep their behavior. A rejected handler uses the renderer's existing error path; an unknown name still reaches native RPC. No SDK dispatcher, new RPC protocol or full-context imitation is needed.
+| Layer | Responsibility |
+| --- | --- |
+| Native renderer | Render the existing JSON model, execute its built-ins and issue action calls through the supplied context |
+| Client integration | Bind known JSON action references to imported portable action declarations and their dispatch policy |
+| Existing portable client | Select recipients, dispatch and collect per-provider results/errors |
+| Provider action/service | Interpret business input, check applicability and operate on its own resources |
+| Native backend | Authentication, RPC, serialization and its state lifecycle |
 
-## B: adapt the existing RPC call member
+Implement a generic binding from the existing declarations, not a hand-written command handler for every button. Its exact helper signature is implementation work, not a new renderer contract. Preserve input validation, action identity/version and per-provider outcomes. Do not send executable handlers through JSON or native RPC.
 
-Keep upstream unchanged. The application gives the renderer a call adapter that handles specific local UI names and forwards all other calls to the actual native client. Shared state remains the actual native host.
+The renderer's supplied call boundary can delegate known portable actions to that binding. Unrelated native calls retain their normal target and arguments. Keep the actual native shared-state instance and optional connection metadata; a static backend must retain its native noninteractive behavior. Native view loading and state subscriptions are not broadcast commands. This requires no fabricated full Devframe context, new transport or native renderer patch.
 
-```ts
-// Conceptual adapter; the typed implementation is not written yet.
-async function rendererCall(name, ...args) {
-  if (name === 'example:increase-devservers') {
-    return client.actions.broadcast({
-      action: increaseCounterAction,
-      input: { amount: 1 },
-      selection: [{ realm: 'devserver' }],
-    });
-  }
-  return nativeRpc.call(name, ...args);
-}
+Each backend keeps its native state. The application can project per-provider command results into its JSON view, but broadcast does not merge independent stores or make one backend's counter represent every backend. Preserve both outgoing recipient selection and provider-owned applicability.
 
-await renderer({
-  entry: applicationOwnedView,
-  container,
-  context: { rpc: { call: rendererCall, sharedState: nativeRpc.sharedState } },
-});
-```
+## Acceptance
 
-```mermaid
-flowchart LR
-  JSON[Native JSON action] --> Bridge[Unchanged native action bridge]
-  Bridge --> Adapter[Application rpc.call adapter]
-  Adapter -->|known local name| Router[Existing client / selected providers]
-  Adapter -->|other names| RPC[Actual native RPC client]
-```
+- Trigger portable dispatch from rendered native JSON controls, rather than relying on the separate HTML controls.
+- Use the same view/action declarations with actual Devframe, DevTools and WebExtension providers.
+- Verify outgoing realm/provider filtering and different provider-local applicability results for the same input.
+- Verify multiple matching providers, partial failures and no replay after disconnect or unmount.
+- Keep native built-ins, ordinary RPC, metadata and shared state intact.
+- Show per-provider outcomes without inventing a second state synchronization layer.
+- Keep the custom renderer example optional and independent.
 
-Cost: no dependency patch, but the supplied `rpc.call` now mixes local UI commands and remote RPC. Local names can shadow real native methods, so the application must reserve a namespace. The adapter must preserve native generic call typing and forward unlisted arguments unchanged. Errors still use the native renderer path. State, connection authentication and backend lifetimes stay native.
-
-## Common requirements
-
-- Same native JSON model and reference renderer; no frontend framework in contribution authoring.
-- Invoke, broadcast, fallback and failure use the existing router. No rerouting after dispatch.
-- A local handler does not bypass native backend authentication or contribution input validation.
-- Native action execution awaits results but does not automatically store them in the JSON view. The example must project command/per-provider outcomes through ordinary native view state, without merging independent provider stores.
-- Live tests must trigger rendered JSON buttons against the actual mixed backends, cover partial failure and unmount, and retain the existing native action path.
-
-Recommendation: A makes this composition explicit, fits other native viewers that have local UI commands, and avoids making an RPC method name mean two things. B is a reasonable choice if avoiding another upstream API and patch is the priority. No new upstream PR has been opened for either option.
+CDB interception configuration is not a prerequisite for this work. The [canonical two-layer routing contract](../../ARCHITECTURE.md#recipient-selection-and-request-applicability) remains authoritative. No native handler API or new upstream PR is required by this direction.
