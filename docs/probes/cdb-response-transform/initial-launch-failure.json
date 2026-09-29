@@ -1,0 +1,7 @@
+{
+  "phase": "sandbox loopback bind",
+  "exitCode": 13,
+  "output": "Detected unsettled top-level await at run.mjs:19; listen callback did not run",
+  "diagnosis": "A separate node:http listen probe returned listen EPERM: operation not permitted 127.0.0.1. Harness now rejects listen errors and retains receipt.",
+  "probePerformed": false
+}

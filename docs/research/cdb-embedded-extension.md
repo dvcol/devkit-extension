@@ -93,7 +93,7 @@ The raw native calls intentionally bypass CDB leases. They do not attach another
 - Prove the portable contribution lifecycle, native context access and explicit Firefox unavailability without a new generic command facade.
 - Exercise navigation, target closure, child sessions, worker termination, permissions, cancellation, conflicting native lifecycle calls and both native DevTools attachment orders through the final composition.
 - Repeat through an authenticated Devframe peer. The embedded client is trusted in-process; this result does not establish remote grants.
-- Resolve configured Fetch demand. Released subscription activation still sends `Domain.enable` without configuration, and CDB reserves `Fetch.enable`/`Fetch.disable`. Do not bypass its owner with a competing raw enable.
+- The follow-on [configured response experiment](./cdb-response-transform.md) proves a fixed host policy through the public `ChromeDebuggerPort`, preserving CDB ownership without a patch. Dynamic contribution configuration, paused-request failure handling and complete Fetch lifecycle remain open.
 - Prove asynchronous cleanup where needed. Subscription close and embedded disposal are synchronous; observing this Runtime disable does not establish a universal drain guarantee.
 
 No repository dependency, public SDK contract, upstream patch or PR is added by this proof. Issue 10 remains open. Existing host ownership supports the next local contribution example; any broader policy choice must be based on the unproved cases above.

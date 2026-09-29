@@ -1,0 +1,311 @@
+{
+  "passed": false,
+  "dependencies": {
+    "@dvcol/cdb": "0.3.0",
+    "@dvcol/cdb-extension": "0.3.0"
+  },
+  "cleanup": {
+    "browserClosed": true,
+    "serverClosed": true,
+    "profileRemoved": true
+  },
+  "browserVersion": "153.0.8010.12",
+  "executable": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "response": {
+    "passed": true,
+    "result": {
+      "target": {
+        "availability": "available",
+        "capabilities": {
+          "level": "debug"
+        },
+        "generation": 1,
+        "id": "fca0d4dc-f87f-42b6-b6b7-59cba53aa168",
+        "scopeId": "a5832628-deab-45a0-a477-85b664d94e0b",
+        "type": "page"
+      },
+      "fetchConfiguration": {
+        "patterns": [
+          {
+            "urlPattern": "http://127.0.0.1:64227/selected*",
+            "requestStage": "Response"
+          }
+        ]
+      },
+      "transformed": {
+        "event": {
+          "method": "Fetch.requestPaused",
+          "parameters": {
+            "frameId": "C546898DF75E4EA07EE35834DF644F8C",
+            "networkId": "50649.3",
+            "request": {
+              "headers": {
+                "Accept": "*/*",
+                "Referer": "http://127.0.0.1:64227/fixture",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+                "sec-ch-ua": "\"Chromium\";v=\"153\", \"Not_A Brand\";v=\"8\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"macOS\""
+              },
+              "initialPriority": "High",
+              "method": "GET",
+              "referrerPolicy": "strict-origin-when-cross-origin",
+              "url": "http://127.0.0.1:64227/selected?phase=active"
+            },
+            "requestId": "interception-job-1.0",
+            "resourceType": "XHR",
+            "responseHeaders": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              },
+              {
+                "name": "Content-Type",
+                "value": "text/plain"
+              },
+              {
+                "name": "Date",
+                "value": "Tue, 29 Sep 2026 07:33:45 GMT"
+              },
+              {
+                "name": "Connection",
+                "value": "keep-alive"
+              },
+              {
+                "name": "Keep-Alive",
+                "value": "timeout=5"
+              },
+              {
+                "name": "Transfer-Encoding",
+                "value": "chunked"
+              }
+            ],
+            "responseStatusCode": 200,
+            "responseStatusText": "OK"
+          },
+          "sequence": 1,
+          "subscriptionId": "49448810-e594-470f-8c45-1b3908c56c69",
+          "targetGeneration": 1,
+          "targetId": "fca0d4dc-f87f-42b6-b6b7-59cba53aa168"
+        },
+        "body": {
+          "operationId": "0834ddff-5b69-4120-9c3b-036664de9b48",
+          "value": {
+            "base64Encoded": true,
+            "body": "c2VydmVyOnNlbGVjdGVk"
+          }
+        }
+      },
+      "initialRequests": {
+        "operationId": "fa98f163-c7fd-4a6c-bfb6-11ca54acac6d",
+        "value": {
+          "result": {
+            "type": "object",
+            "value": [
+              {
+                "body": "server:selected:transformed",
+                "path": "/selected?phase=active",
+                "probe": "fulfilled",
+                "status": 200
+              },
+              {
+                "body": "server:unmatched",
+                "path": "/unmatched?phase=active",
+                "probe": null,
+                "status": 200
+              }
+            ]
+          }
+        }
+      },
+      "fetchDisableCountAfterClose": 0,
+      "afterRelease": {
+        "operationId": "82f950ec-fdef-486d-a8cb-a4a6f4f1f6a1",
+        "value": {
+          "result": {
+            "type": "object",
+            "value": {
+              "body": "server:selected",
+              "probe": null,
+              "status": 200
+            }
+          }
+        }
+      },
+      "overflowed": false,
+      "droppedCount": 0
+    },
+    "trace": [
+      {
+        "method": "attach",
+        "target": {
+          "tabId": 2093143370
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Target.setAutoAttach",
+        "target": {
+          "tabId": 2093143370
+        },
+        "parameters": {
+          "autoAttach": true,
+          "filter": [
+            {
+              "exclude": false,
+              "type": "iframe"
+            },
+            {
+              "exclude": false,
+              "type": "service_worker"
+            },
+            {
+              "exclude": false,
+              "type": "shared_worker"
+            },
+            {
+              "exclude": false,
+              "type": "worker"
+            }
+          ],
+          "flatten": true,
+          "waitForDebuggerOnStart": true
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Fetch.enable",
+        "target": {
+          "tabId": 2093143370
+        },
+        "parameters": {
+          "patterns": [
+            {
+              "urlPattern": "http://127.0.0.1:64227/selected*",
+              "requestStage": "Response"
+            }
+          ]
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Runtime.enable",
+        "target": {
+          "tabId": 2093143370
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Runtime.evaluate",
+        "target": {
+          "tabId": 2093143370
+        },
+        "parameters": {
+          "expression": "Promise.all(['/selected?phase=active', '/unmatched?phase=active'].map(async (path) => {\n        const response = await fetch(path);\n        return { path, status: response.status, body: await response.text(), probe: response.headers.get('X-Probe') };\n      }))",
+          "returnByValue": true,
+          "awaitPromise": true
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Fetch.getResponseBody",
+        "target": {
+          "tabId": 2093143370
+        },
+        "parameters": {
+          "requestId": "interception-job-1.0"
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Fetch.fulfillRequest",
+        "target": {
+          "tabId": 2093143370
+        },
+        "parameters": {
+          "requestId": "interception-job-1.0",
+          "responseCode": 200,
+          "responseHeaders": [
+            {
+              "name": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "name": "X-Probe",
+              "value": "fulfilled"
+            }
+          ],
+          "body": "c2VydmVyOnNlbGVjdGVkOnRyYW5zZm9ybWVk"
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Runtime.disable",
+        "target": {
+          "tabId": 2093143370
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Fetch.disable",
+        "target": {
+          "tabId": 2093143370
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Runtime.enable",
+        "target": {
+          "tabId": 2093143370
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Runtime.evaluate",
+        "target": {
+          "tabId": 2093143370
+        },
+        "parameters": {
+          "expression": "fetch('/selected?phase=after-release').then(async (response) => ({ status: response.status, body: await response.text(), probe: response.headers.get('X-Probe') }))",
+          "returnByValue": true,
+          "awaitPromise": true
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "Runtime.disable",
+        "target": {
+          "tabId": 2093143370
+        },
+        "status": "fulfilled"
+      },
+      {
+        "method": "detach",
+        "target": {
+          "tabId": 2093143370
+        },
+        "status": "fulfilled"
+      }
+    ],
+    "pausedEvents": [
+      {
+        "requestId": "interception-job-1.0",
+        "url": "http://127.0.0.1:64227/selected?phase=active",
+        "responseStatusCode": 200,
+        "source": {
+          "tabId": 2093143370
+        }
+      }
+    ],
+    "afterDetachError": "Debugger is not attached to the tab with id: 2093143370.",
+    "listenerRemoved": true
+  },
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'c2VydmVyOnNlbGVjdGVk'\n- 'server:selected'\n",
+  "serverRequests": [
+    "/fixture",
+    "/favicon.ico",
+    "/selected?phase=active",
+    "/unmatched?phase=active",
+    "/selected?phase=after-release"
+  ]
+}
