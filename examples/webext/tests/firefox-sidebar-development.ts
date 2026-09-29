@@ -9,7 +9,7 @@ type SidebarSnapshot = {
   provider: string;
   caller: string;
   counter: string;
-  buttons: number;
+  buttonLabels: readonly string[];
 };
 
 const counterScript =
@@ -93,7 +93,7 @@ async function checkHtmlReload(
   assert.notEqual(reloaded.caller, previous.caller);
   assert.equal(reloaded.provider, previous.provider);
   assert.equal(reloaded.counter, String(counter));
-  assert.equal(reloaded.buttons, 1);
+  assert.deepEqual(reloaded.buttonLabels, ['Increase counter', 'Increase matching domain']);
   assert.equal(await sidebarCount(driver), 1);
 }
 
@@ -106,10 +106,10 @@ async function snapshot(driver: Driver): Promise<SidebarSnapshot> {
       timeOrigin: sidebar.performance.timeOrigin,
       provider: document.querySelector('#provider').textContent,
       counter: renderer.textContent.match(/Counter:\\s*(\\d+)/)?.[1],
-      buttons: renderer.querySelectorAll('button').length,
+      buttonLabels: Array.from(renderer.querySelectorAll('button'), (button) => button.textContent.trim()),
     };`,
   );
-  assert.equal(state.buttons, 1);
+  assert.deepEqual(state.buttonLabels, ['Increase counter', 'Increase matching domain']);
   return { ...state, caller };
 }
 

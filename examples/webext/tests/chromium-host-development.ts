@@ -140,11 +140,11 @@ async function snapshot(panel: PanelSession) {
 }
 
 async function increase({ options, panel }: DevelopmentHost, counter: number): Promise<void> {
-  assert.equal(
+  assert.deepEqual(
     await panel.evaluate(
-      "document.querySelector('#renderer').shadowRoot.querySelectorAll('button').length",
+      "Array.from(document.querySelector('#renderer').shadowRoot.querySelectorAll('button'), (button) => button.textContent.trim())",
     ),
-    1,
+    ['Increase counter', 'Increase matching domain'],
   );
   await panel.evaluate(
     "document.querySelector('#renderer').shadowRoot.querySelector('button').click()",

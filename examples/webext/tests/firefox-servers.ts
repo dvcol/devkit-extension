@@ -40,9 +40,9 @@ export async function checkFirefoxServers(driver: Driver): Promise<void> {
   await checkBroadcast(driver, devframe, devtools);
   await fill(driver, '#preferred-server', 'example.devframe');
   await driver.findElement(By.css('#fallback-increase')).click();
-  await result(driver, /^3$/u);
-  assert.equal(await readCounter(devframe), 3);
-  assert.equal(await readCounter(devtools), 2);
+  await result(driver, /^4$/u);
+  assert.equal(await readCounter(devframe), 4);
+  assert.equal(await readCounter(devtools), 3);
   await devframe.close();
   await driver.wait(
     until.elementTextContains(driver.findElement(By.css('#providers')), '"status":"unknown"'),
@@ -50,10 +50,9 @@ export async function checkFirefoxServers(driver: Driver): Promise<void> {
   );
   await driver.findElement(By.css('#fallback-increase')).click();
   await result(driver, /^16$/u);
-  await driver.findElement(By.css('#servers-increase')).click();
-  await result(driver, /rejected/u);
-  await result(driver, /fulfilled/u);
-  assert.equal(await readCounter(devtools), 3);
+  await dispatchJson(driver, 'servers', 'shared.example.test');
+  await result(driver, /rejected/u, '#json-result');
+  assert.equal(await readCounter(devtools), 4);
 }
 
 async function checkBroadcast(
@@ -61,16 +60,45 @@ async function checkBroadcast(
   devframe: ServerHost,
   devtools: ServerHost,
 ): Promise<void> {
-  await driver.findElement(By.css('#servers-increase')).click();
-  await result(driver, /fulfilled/u);
+  await dispatchJson(driver, 'servers', 'shared.example.test');
   assert.equal(await readCounter(devframe), 1);
   assert.equal(await readCounter(devtools), 1);
   await counter(driver, 14);
-  await driver.findElement(By.css('#all-increase')).click();
-  await result(driver, /fulfilled/u);
+  await dispatchJson(driver, 'all', 'shared.example.test');
   assert.equal(await readCounter(devframe), 2);
   assert.equal(await readCounter(devtools), 2);
   await counter(driver, 15);
+  await dispatchJson(driver, 'all', 'dev.example.test');
+  await result(driver, /not-applicable/u, '#json-result');
+  assert.equal(await readCounter(devframe), 3);
+  assert.equal(await readCounter(devtools), 3);
+  await counter(driver, 15);
+  await dispatchJson(driver, 'all', 'unknown.example.test');
+  await result(driver, /not-applicable/u, '#json-result');
+  const outcomes = await driver.findElement(By.css('#json-result')).getText();
+  assert.equal(outcomes.match(/not-applicable/gu)?.length, 3);
+  assert.equal(await readCounter(devframe), 3);
+  assert.equal(await readCounter(devtools), 3);
+  await counter(driver, 15);
+  await dispatchJson(driver, 'devframe', 'unknown.example.test');
+  await result(driver, /not-applicable/u, '#json-result');
+  const selected = await driver.findElement(By.css('#json-result')).getText();
+  assert.match(selected, /example\.devframe/u);
+  assert.doesNotMatch(selected, /example\.devtools|example\.extension/u);
+}
+
+async function dispatchJson(driver: Driver, selection: string, domain: string): Promise<void> {
+  await driver.findElement(By.css(`#json-selection option[value="${selection}"]`)).click();
+  const root = await driver.findElement(By.css('#renderer')).getShadowRoot();
+  const input = await root.findElement(By.css('input'));
+  await input.clear();
+  await input.sendKeys(domain);
+  const buttons = await root.findElements(By.css('button'));
+  const matching = buttons[1];
+  assert.ok(matching !== undefined);
+  assert.equal(await matching.getText(), 'Increase matching domain');
+  await matching.click();
+  await result(driver, /fulfilled/u, '#json-result');
 }
 
 async function counter(driver: Driver, value: number): Promise<void> {
@@ -96,9 +124,13 @@ async function fill(driver: Driver, selector: string, value: string): Promise<vo
   await input.sendKeys(value);
 }
 
-async function result(driver: Driver, expected: RegExp): Promise<void> {
+async function result(
+  driver: Driver,
+  expected: RegExp,
+  selector = '#server-result',
+): Promise<void> {
   await driver.wait(
-    until.elementTextMatches(driver.findElement(By.css('#server-result')), expected),
+    until.elementTextMatches(driver.findElement(By.css(selector)), expected),
     10_000,
     `Expected server result to match ${expected}`,
   );

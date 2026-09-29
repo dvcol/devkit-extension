@@ -8,7 +8,7 @@ type PopupSnapshot = {
   provider: string;
   caller: string;
   counter: string;
-  buttons: number;
+  buttonLabels: readonly string[];
 };
 
 /** Observe the actual toolbar popup through native module and HTML updates. */
@@ -34,7 +34,7 @@ export async function checkFirefoxPopupDevelopment(driver: Driver, fixture: stri
     assert.equal(updated.provider, provider);
     assert.notEqual(updated.caller, previous.caller);
     assert.equal(updated.counter, '4');
-    assert.equal(updated.buttons, 1);
+    assert.deepEqual(updated.buttonLabels, ['Increase counter', 'Increase matching domain']);
     await increase(driver, 5);
     assert.equal(
       await popupScript(
@@ -87,7 +87,7 @@ async function checkHtmlReload(driver: Driver, fixture: string): Promise<void> {
   assert.notEqual(reloaded.caller, previous.caller);
   assert.equal(reloaded.provider, previous.provider);
   assert.equal(reloaded.counter, previous.counter);
-  assert.equal(reloaded.buttons, 1);
+  assert.deepEqual(reloaded.buttonLabels, ['Increase counter', 'Increase matching domain']);
   assert.equal(await popupCount(driver), 1);
 }
 
@@ -128,7 +128,7 @@ async function snapshot(driver: Driver): Promise<PopupSnapshot> {
       provider: document.querySelector('#provider').textContent,
       caller: document.querySelector('#result').textContent,
       counter: renderer.textContent.match(/Counter:\\s*(\\d+)/)?.[1],
-      buttons: renderer.querySelectorAll('button').length,
+      buttonLabels: Array.from(renderer.querySelectorAll('button'), (button) => button.textContent.trim()),
     };`,
   );
 }

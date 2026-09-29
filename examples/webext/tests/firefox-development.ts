@@ -113,7 +113,11 @@ async function checkModuleUpdate(): Promise<void> {
   assert.equal(await text('#provider'), provider);
   assert.notEqual(await identity(), previousIdentity);
   const renderer = await driver.findElement(By.id('renderer')).getShadowRoot();
-  assert.equal((await renderer.findElements(By.css('button'))).length, 1);
+  const buttons = await renderer.findElements(By.css('button'));
+  assert.deepEqual(await Promise.all(buttons.map((button) => button.getText())), [
+    'Increase counter',
+    'Increase matching domain',
+  ]);
   await click('#routed');
   await waitText('#result', '2');
   await increase();

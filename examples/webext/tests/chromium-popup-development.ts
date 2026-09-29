@@ -24,7 +24,7 @@ export async function checkChromiumPopupDevelopment(page: Page, fixture: string)
     assert.equal(after.provider, before.provider);
     assert.equal(after.counter, before.counter);
     assert.equal(after.form, 'popup-hmr-form');
-    assert.equal(after.buttons, 1);
+    assert.deepEqual(after.buttonLabels, ['Increase counter', 'Increase matching domain']);
     const caller = await identity(page);
     assert.notEqual(caller, previousCaller);
     await page.evaluate(() => {
@@ -68,7 +68,7 @@ async function checkHtmlReload(page: Page, fixture: string): Promise<void> {
   assert.equal(after.provider, before.provider);
   assert.equal(after.counter, before.counter);
   assert.equal(after.form, '');
-  assert.equal(after.buttons, 1);
+  assert.deepEqual(after.buttonLabels, ['Increase counter', 'Increase matching domain']);
   assert.notEqual(await identity(page), previousCaller);
   await page.evaluate(() => {
     chrome.extension
@@ -111,7 +111,9 @@ function snapshot(page: Page) {
       counter: renderer
         .querySelector('.devframes-json-render-scroll-root')!
         .textContent.match(/Counter:\s*(\d+)/u)?.[1],
-      buttons: renderer.querySelectorAll('button').length,
+      buttonLabels: Array.from(renderer.querySelectorAll('button'), (button) =>
+        button.textContent.trim(),
+      ),
     };
   });
 }
