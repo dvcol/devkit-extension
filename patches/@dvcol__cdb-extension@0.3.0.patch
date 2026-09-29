@@ -1,0 +1,32 @@
+diff --git a/dist/chrome.js b/dist/chrome.js
+index 7013a4f54c6dda9ed114c6b4e8de916318e5000a..ab1ae4b069d5504e87d40460b8a999c5cf73a1dc 100644
+--- a/dist/chrome.js
++++ b/dist/chrome.js
+@@ -89,6 +89,18 @@ function createChromeProvider(options) {
+ 		}).catch(() => {});
+ 		return pending;
+ 	}
++	/** Resets a surviving extension attachment only when restoring an approved target. */
++	async function attachDebugger(target, requiredVersion, restoring) {
++		try {
++			await platform.debugger.attach(target, requiredVersion);
++			return;
++		} catch (error) {
++			if (!restoring || !(error instanceof Error) || error.message !== `Another debugger is already attached to the tab with id: ${target.tabId}.`) throw error;
++		}
++		await platform.debugger.sendCommand(target, "Runtime.getIsolateId");
++		await platform.debugger.detach(target);
++		await platform.debugger.attach(target, requiredVersion);
++	}
+ 	function projection(target) {
+ 		const controlled = [...tabs.values()].find((tab) => tab.target?.id === target.id);
+ 		const metadata = controlled === void 0 ? void 0 : options.targetMetadata?.(controlled.tab);
+@@ -122,7 +134,7 @@ function createChromeProvider(options) {
+ 				...options.isExposureAllowed === void 0 ? {} : { isExposureAllowed: options.isExposureAllowed },
+ 				...options.commandAuthorizationPolicy === void 0 ? {} : { commandAuthorizationPolicy: options.commandAuthorizationPolicy },
+ 				chromeDebugger: {
+-					attach: async (target, version) => platform.debugger.attach(target, version),
++					attach: async (target, version) => attachDebugger(target, version, restoredTarget !== void 0),
+ 					detach: async (target) => platform.debugger.detach(target),
+ 					sendCommand: async (target, method, parameters) => await platform.debugger.sendCommand(target, method, parameters) ?? {}
+ 				},

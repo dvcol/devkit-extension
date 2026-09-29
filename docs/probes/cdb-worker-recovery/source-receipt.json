@@ -1,0 +1,30 @@
+{
+  "package": "@dvcol/cdb-extension",
+  "version": "0.3.0",
+  "baseline": false,
+  "installed": true,
+  "sourceMatchesRelease": true,
+  "verifiedRuntimeSources": [
+    "../src/agent-heartbeat.ts",
+    "../src/agent-recovery.ts",
+    "../src/approval-channel.ts",
+    "../src/bootstrap.ts",
+    "../src/broker-tab-assignment.ts",
+    "../src/child-session-router.ts",
+    "../src/chrome.ts",
+    "../src/notification-theme.ts",
+    "../src/notifications.ts",
+    "../src/page-request.ts",
+    "../src/pairing-store.ts",
+    "../src/presentation.ts",
+    "../src/selected-tab-lifecycle.ts",
+    "../src/selected-tab-publisher.ts",
+    "../src/tab-scope-lifecycle.ts",
+    "../src/tab-scope-manager.ts",
+    "../src/tab-scope.ts",
+    "../src/webmcp.ts"
+  ],
+  "sourceSha256": "878882c22596ac776aa948b5fcac9140cfa57458d02202f573962c8d412e6b6b",
+  "candidateSha256": "ce773928b658378f9a39fcaf389b0337902fecd1dd469799f7795f06f33e8c81",
+  "installedChromeSha256": "8c2c6cbeab1e76cd792594fa0a70a7a1f8fe9900713725b3704ebfc0ea29ca60"
+}

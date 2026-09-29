@@ -1,0 +1,39 @@
+--- a/packages/extension/src/chrome.ts
++++ b/packages/extension/src/chrome.ts
+@@ -4,7 +4,7 @@
+ import type { AgentRecoveryState } from './agent-recovery.js';
+ import type { AgentControlPresentationEvent } from './presentation.js';
+ import type { ProviderConnection } from './provider-connection.js';
+-import type { CommandAuthorizationPolicy, SelectedTab, SelectedTabPublisher } from './selected-tab-publisher.js';
++import type { ChromeDebuggerPort, CommandAuthorizationPolicy, SelectedTab, SelectedTabPublisher } from './selected-tab-publisher.js';
+ import type { ChromeTabScopeLifecyclePort } from './tab-scope-lifecycle.js';
+ import type { TabScopeSelector } from './tab-scope.js';
+ import type { WebMcpOptions } from './webmcp.js';
+@@ -152,6 +152,18 @@
+     }).catch(() => {});
+     return pending;
+   }
++  /** Resets a surviving extension attachment only when restoring an approved target. */
++  async function attachDebugger(target: Parameters<ChromeDebuggerPort['attach']>[0], requiredVersion: string, restoring: boolean): Promise<void> {
++    try {
++      await platform.debugger.attach(target, requiredVersion);
++      return;
++    } catch (error) {
++      if (!restoring || !(error instanceof Error) || error.message !== `Another debugger is already attached to the tab with id: ${target.tabId}.`) throw error;
++    }
++    await platform.debugger.sendCommand(target, 'Runtime.getIsolateId');
++    await platform.debugger.detach(target);
++    await platform.debugger.attach(target, requiredVersion);
++  }
+   function projection(target: PublishedTarget): ProviderTarget {
+     const controlled = [...tabs.values()].find(tab => tab.target?.id === target.id);
+     const metadata = controlled === undefined ? undefined : options.targetMetadata?.(controlled.tab);
+@@ -176,7 +188,7 @@
+         ...(options.isExposureAllowed === undefined ? {} : { isExposureAllowed: options.isExposureAllowed }),
+         ...(options.commandAuthorizationPolicy === undefined ? {} : { commandAuthorizationPolicy: options.commandAuthorizationPolicy }),
+         chromeDebugger: {
+-          attach: async (target, version) => platform.debugger.attach(target, version),
++          attach: async (target, version) => attachDebugger(target, version, restoredTarget !== undefined),
+           detach: async target => platform.debugger.detach(target),
+           sendCommand: async (target, method, parameters) => (await platform.debugger.sendCommand(target, method, parameters)) as JsonObject ?? {},
+         },

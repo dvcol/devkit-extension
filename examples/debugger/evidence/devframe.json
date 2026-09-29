@@ -15,7 +15,8 @@
           "status": "connected",
           "isTrusted": true,
           "isolated": true,
-          "targetTabId": 170444317,
+          "targetTabId": 1976517673,
+          "pairingConfirmations": 0,
           "providerDisposed": false,
           "clientDisposed": false,
           "closed": false,
@@ -35,10 +36,10 @@
       "name": "The actual extension control approves only the owned fixture tab",
       "details": [
         {
-          "requestId": "51397be4-fb4a-4c84-a1c6-e513d4cce71b",
+          "requestId": "a871126c-23f2-4d6a-996f-8c6ada931135",
           "selector": {
             "kind": "explicit-tabs",
-            "tabIds": [170444317]
+            "tabIds": [1976517673]
           },
           "accepted": true,
           "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
@@ -49,11 +50,21 @@
       "name": "Remote title contribution uses its actual caller grants and retains native ownership",
       "details": {
         "title": "Owned remote debugger target",
+        "workerRestart": {
+          "workerStopped": true,
+          "wakeDidNotReconnect": true,
+          "explicitNativeAuthentication": true,
+          "nativePairingRetained": true,
+          "originalScopeRestored": true,
+          "targetGenerationAdvanced": true,
+          "newApprovals": 0,
+          "leases": 0
+        },
         "nativeCallerCount": 2,
         "missingCaller": "rejected",
         "otherPrincipalGrant": "rejected",
         "callerApproval": {
-          "count": 2,
+          "count": 1,
           "principalCount": 2,
           "targetCount": 1
         },
@@ -90,7 +101,7 @@
       "name": "Host broker operation changes the real page through native RPC",
       "details": {
         "result": {
-          "operationId": "db95f5b6-0e8e-4c32-a9cf-044b2a3d14c0",
+          "operationId": "38e2a4fe-0b7f-4f57-8ad0-63ffa9100aba",
           "value": {
             "result": {
               "type": "string",

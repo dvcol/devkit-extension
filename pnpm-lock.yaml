@@ -167,6 +167,7 @@ packageExtensionsChecksum: sha256-TuzqaJS5gcGQV57KKWuyjeQz8HqJFHARvU5dXQvg4oA=
 patchedDependencies:
   '@devframes/json-render-ui@1.0.0': e919d78a74ba3373391bafcef25c3c5e0663de10c18eb36c515757542e8f505e
   '@devframes/json-render@1.0.0': 36d6b16fe2ecb4bdfc5cdbe40c2346808483243609b1cc12ec1359976c8dc2bc
+  '@dvcol/cdb-extension@0.3.0': 827491ad438164cea21984c0032660e5636f6b521223fa43ce4ea5f16baf729f
   '@dvcol/cdb@0.3.0': 4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c
   '@wxt-dev/browser@0.3.0': 819d3a884a0033ec173cc6e8165f070d0922d58f997ea948460108a048ed7220
   crossws@0.4.12: 7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605
@@ -249,7 +250,7 @@ importers:
         version: 0.3.0(@devframes/agentic@1.0.0)(cac@7.0.0)(crossws@0.4.12(patch_hash=7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605)(srvx@1.0.5))(srvx@1.0.5)
       '@dvcol/cdb-extension':
         specifier: 0.3.0
-        version: 0.3.0
+        version: 0.3.0(patch_hash=827491ad438164cea21984c0032660e5636f6b521223fa43ce4ea5f16baf729f)
       cac:
         specifier: 7.0.0
         version: 7.0.0
@@ -3865,7 +3866,7 @@ snapshots:
       '@devframes/json-render-ui': 1.0.0(patch_hash=e919d78a74ba3373391bafcef25c3c5e0663de10c18eb36c515757542e8f505e)(@devframes/hub@1.0.0(@devframes/agentic@1.0.0)(crossws@0.4.12(patch_hash=7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605)(srvx@1.0.5))(devframe@1.0.0))(devframe@1.0.0)
       '@dvcol/cdb': 0.3.0(patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c)
       '@dvcol/cdb-broker': 0.3.0
-      '@dvcol/cdb-extension': 0.3.0
+      '@dvcol/cdb-extension': 0.3.0(patch_hash=827491ad438164cea21984c0032660e5636f6b521223fa43ce4ea5f16baf729f)
       devframe: 1.0.0(patch_hash=6033f5717f6adf7d74420484134aeda0338a3bc38b554ca42d926884ba8d91d0)(@devframes/agentic@1.0.0)(cac@7.0.0)(srvx@1.0.5)
     transitivePeerDependencies:
       - '@devframes/agentic'
@@ -3874,7 +3875,7 @@ snapshots:
       - ocache
       - srvx
 
-  '@dvcol/cdb-extension@0.3.0':
+  '@dvcol/cdb-extension@0.3.0(patch_hash=827491ad438164cea21984c0032660e5636f6b521223fa43ce4ea5f16baf729f)':
     dependencies:
       '@dvcol/cdb': 0.3.0(patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c)
       '@dvcol/cdb-broker': 0.3.0

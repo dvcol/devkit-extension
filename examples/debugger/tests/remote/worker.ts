@@ -31,6 +31,7 @@ let clientDisposed = false;
 let closed = false;
 let initialized = false;
 let requestRunning = false;
+let pairingConfirmations = 0;
 
 function trustedSender(sender: chrome.runtime.MessageSender): boolean {
   return sender.id === chrome.runtime.id && sender.url === controlURL;
@@ -42,6 +43,7 @@ function readState(): RemoteState {
     isTrusted: nativePeer?.isTrusted ?? null,
     isolated: nativePeer?.connection.isolated ?? null,
     targetTabId: targetTabId ?? null,
+    pairingConfirmations,
     providerDisposed,
     clientDisposed,
     closed,
@@ -112,7 +114,10 @@ async function startProvider(client: CdbClient, baseURL: string) {
         },
         pairingKey: baseURL,
         pairingStore: createIndexedDbPairingStore(),
-        confirmPairing: () => true,
+        confirmPairing: () => {
+          pairingConfirmations += 1;
+          return true;
+        },
       }),
     maximumLevel: 'debug',
     isExposureAllowed: (tab) => tab.url === fixtureURL,

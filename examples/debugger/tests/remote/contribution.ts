@@ -8,8 +8,10 @@ import { connectCaller, approveCaller, readTarget, rejectedByNative } from './ca
 import type { CallerFixture, NativeHost } from './caller-driver.ts';
 import { checkCancellation } from './pending.ts';
 import { checkPendingAuthority } from './pending-authority.ts';
+import { checkWorkerRestart } from './restart.ts';
 
 export async function checkRemoteContribution(host: NativeHost, control: Page, targetPage: Page) {
+  const workerRestart = await checkWorkerRestart(control, host);
   await using cleanup = new AsyncDisposableStack();
   const page = await control.context().newPage();
   cleanup.defer(() => page.close());
@@ -17,12 +19,9 @@ export async function checkRemoteContribution(host: NativeHost, control: Page, t
   await connectCaller(page, host.baseURL);
   cleanup.defer(() => page.evaluate(() => window.caller.close()));
   assert.equal(host.sessions.size, 2);
-  const hostTargets = await host.service.broker.invoke(
-    agent,
-    'browser.list_target_authorities',
-    {},
+  const hostTarget = await readTarget(
+    await host.service.broker.invoke(agent, 'browser.list_target_authorities', {}),
   );
-  const hostTarget = await readTarget(hostTargets);
   await assert.rejects(
     host.provider.invoke({ action: readPageTitleAction, input: hostTarget }),
     isMissingCaller,
@@ -42,13 +41,14 @@ export async function checkRemoteContribution(host: NativeHost, control: Page, t
     host,
     page.evaluate((input) => window.caller.readTitle(input), {
       ...target,
-      generation: target.generation + 1,
+      generation: target.generation - 1,
     }),
     'TARGET_GENERATION_STALE',
   );
   const lifetime = await checkContributionLifetime({ host, page, targetPage, target }, control);
   return {
     title,
+    workerRestart,
     nativeCallerCount: 2,
     missingCaller: 'rejected',
     otherPrincipalGrant: 'rejected',

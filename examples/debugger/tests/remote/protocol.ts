@@ -35,6 +35,7 @@ export const remoteStateSchema = z.strictObject({
   isTrusted: z.boolean().nullable(),
   isolated: z.boolean().nullable(),
   targetTabId: z.number().int().nullable(),
+  pairingConfirmations: z.number().int().nonnegative(),
   providerDisposed: z.boolean(),
   clientDisposed: z.boolean(),
   closed: z.boolean(),
