@@ -72,6 +72,7 @@ await writeFile(
         'Panel module HMR preserves document, provider and state; replaces caller; invokes each action once',
         'HTML reload replaces document while retaining provider and state',
         'Native toolbar popup module HMR preserves document, provider and state; replaces caller; one pointer action reaches the peer; popup closes cleanly',
+        'Native toolbar popup HTML reload replaces document and caller, retains provider/state and invokes one pointer JSON action observed by the peer',
         'Native DevTools panel module HMR retains document and HTML reload replaces it; both replace caller, retain provider/state and invoke one JSON action observed by the peer; native close removes the toolbox',
         'Native sidebar module HMR retains document and HTML reload replaces it; both replace caller, retain provider/state and invoke one pointer JSON action observed by the peer; native close removes the view',
         'Background reload closes old extension page; new page receives new incarnation and reset state',

@@ -38,7 +38,7 @@ async function checkDevtools(options: Page, fixture: string): Promise<void> {
       inspectedId: targetInfo.targetId,
       origin: `${protocol}//${host}`,
     });
-    await checkUpdates({ options, panel: panel.panel, fixture, name: 'DevTools', counter: 2 });
+    await checkUpdates({ options, panel: panel.panel, fixture, name: 'DevTools', counter: 3 });
     await screenshot(panel.frontend, 'devtools');
     await closeDevtoolsPanel(control, panel);
     assert.equal(inspected.isClosed(), false);
@@ -56,7 +56,7 @@ async function checkSidebar(options: Page, fixture: string): Promise<void> {
   const host = { options, control, windowId };
   try {
     const sidebar = await openChromiumSidebar(host);
-    await checkUpdates({ options, panel: sidebar.panel, fixture, name: 'Sidebar', counter: 4 });
+    await checkUpdates({ options, panel: sidebar.panel, fixture, name: 'Sidebar', counter: 5 });
     await screenshot(sidebar.panel, 'sidebar');
     await closeChromiumSidebar(host, sidebar);
   } finally {

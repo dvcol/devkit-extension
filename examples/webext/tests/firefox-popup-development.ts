@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { appendFile } from 'node:fs/promises';
+import { appendFile, readFile, writeFile } from 'node:fs/promises';
 import { Context } from 'selenium-webdriver/firefox.js';
 import type { Driver } from 'selenium-webdriver/firefox.js';
 
@@ -11,7 +11,7 @@ type PopupSnapshot = {
   buttons: number;
 };
 
-/** Observe the actual toolbar popup while WXT updates its existing panel module. */
+/** Observe the actual toolbar popup through native module and HTML updates. */
 export async function checkFirefoxPopupDevelopment(driver: Driver, fixture: string): Promise<void> {
   const provider = await driver.executeScript<string>(
     "return document.querySelector('#provider').textContent",
@@ -35,7 +35,7 @@ export async function checkFirefoxPopupDevelopment(driver: Driver, fixture: stri
     assert.notEqual(updated.caller, previous.caller);
     assert.equal(updated.counter, '4');
     assert.equal(updated.buttons, 1);
-    await increase(driver);
+    await increase(driver, 5);
     assert.equal(
       await popupScript(
         driver,
@@ -43,6 +43,8 @@ export async function checkFirefoxPopupDevelopment(driver: Driver, fixture: stri
       ),
       true,
     );
+    await checkHtmlReload(driver, fixture);
+    await increase(driver, 6);
   } finally {
     await driver.setContext(Context.CONTENT);
     await driver.executeScript("browser.extension.getViews({ type: 'popup' })[0]?.close()");
@@ -56,8 +58,37 @@ export async function checkFirefoxPopupDevelopment(driver: Driver, fixture: stri
         counter: document.querySelector('#renderer').shadowRoot.textContent.match(/Counter:\\s*(\\d+)/)?.[1],
       };`,
     ),
-    { provider, status: 'Connected', counter: '5' },
+    { provider, status: 'Connected', counter: '6' },
   );
+}
+
+async function checkHtmlReload(driver: Driver, fixture: string): Promise<void> {
+  const previous = await snapshot(driver);
+  const marker = crypto.randomUUID();
+  const htmlPath = `${fixture}/entrypoints/panel.html`;
+  await writeFile(
+    htmlPath,
+    (await readFile(htmlPath, 'utf8')).replace(
+      '</body>',
+      `<span hidden data-popup-reload="${marker}"></span></body>`,
+    ),
+  );
+  await driver.wait(
+    () =>
+      popupScript<boolean>(
+        driver,
+        `return !!document?.querySelector('[data-popup-reload="${marker}"]')
+          && document.querySelector('#status')?.textContent === 'Connected'`,
+      ),
+    30_000,
+  );
+  const reloaded = await snapshot(driver);
+  assert.notEqual(reloaded.timeOrigin, previous.timeOrigin);
+  assert.notEqual(reloaded.caller, previous.caller);
+  assert.equal(reloaded.provider, previous.provider);
+  assert.equal(reloaded.counter, previous.counter);
+  assert.equal(reloaded.buttons, 1);
+  assert.equal(await popupCount(driver), 1);
 }
 
 async function updateModule(driver: Driver, fixture: string): Promise<void> {
@@ -102,7 +133,7 @@ async function snapshot(driver: Driver): Promise<PopupSnapshot> {
   );
 }
 
-async function increase(driver: Driver): Promise<void> {
+async function increase(driver: Driver, counter: number): Promise<void> {
   const center = await popupScript<{ x: number; y: number }>(
     driver,
     `const button = document.querySelector('#renderer').shadowRoot.querySelector('button');
@@ -126,7 +157,8 @@ async function increase(driver: Driver): Promise<void> {
       driver.executeScript<boolean>(
         `const popup = browser.extension.getViews({ type: 'popup' })[0];
         return [document, popup?.document].every(page =>
-          page?.querySelector('#renderer')?.shadowRoot?.textContent.match(/Counter:\\s*(\\d+)/)?.[1] === '5');`,
+          page?.querySelector('#renderer')?.shadowRoot?.textContent.match(/Counter:\\s*(\\d+)/)?.[1] === arguments[0]);`,
+        String(counter),
       ),
     30_000,
   );

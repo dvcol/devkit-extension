@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
-import { appendFile } from 'node:fs/promises';
+import { appendFile, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
-/** Observe the actual toolbar popup through its native options-page peer during Vite HMR. */
+/** Observe the actual toolbar popup through its native options-page peer during native module and HTML updates. */
 export async function checkChromiumPopupDevelopment(page: Page, fixture: string): Promise<void> {
   await page.evaluate(() => chrome.action.openPopup());
   try {
@@ -41,12 +41,43 @@ export async function checkChromiumPopupDevelopment(page: Page, fixture: string)
     });
     await executions(page, '{"started":1,"completed":1}');
     assert.equal(await popupText(page, '#result'), caller);
+    await checkHtmlReload(page, fixture);
   } finally {
     await page.evaluate(() => chrome.extension.getViews({ type: 'popup' })[0]?.close());
     await expect
       .poll(() => page.evaluate(() => chrome.extension.getViews({ type: 'popup' }).length))
       .toBe(0);
   }
+}
+
+async function checkHtmlReload(page: Page, fixture: string): Promise<void> {
+  const before = await snapshot(page);
+  const previousCaller = await identity(page);
+  const path = join(fixture, 'entrypoints/panel.html');
+  const html = await readFile(path, 'utf8');
+  const heading = 'Popup native HTML reload';
+  const updated = html.replace(/<h1>[^<]+<\/h1>/u, `<h1>${heading}</h1>`);
+  assert.notEqual(updated, html);
+  await writeFile(path, updated);
+  await expect.poll(() => popupText(page, 'h1'), { timeout: 30_000 }).toBe(heading);
+  await expect(page.getByRole('heading', { name: heading })).toBeVisible();
+  await expect.poll(() => popupText(page, '#status')).toBe('Connected');
+  const after = await snapshot(page);
+  assert.notEqual(after.timeOrigin, before.timeOrigin);
+  assert.equal(after.provider, before.provider);
+  assert.equal(after.counter, before.counter);
+  assert.equal(after.form, '');
+  assert.equal(after.buttons, 1);
+  assert.notEqual(await identity(page), previousCaller);
+  await page.evaluate(() => {
+    chrome.extension
+      .getViews({ type: 'popup' })[0]!
+      .document.querySelector('#renderer')!
+      .shadowRoot!.querySelector('button')!
+      .click();
+  });
+  await expect(page.getByText('Counter: 3', { exact: true })).toBeVisible();
+  await expect.poll(async () => (await snapshot(page)).counter).toBe('3');
 }
 
 async function updateModule(page: Page, fixture: string): Promise<void> {
