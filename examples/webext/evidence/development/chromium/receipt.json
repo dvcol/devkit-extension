@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "browser": "153.0.8010.12",
+  "scenarios": [
+    "Native managed startup with shared manifest and real JSON renderer",
+    "Panel HMR retains document, provider and state with new caller and one action effect",
+    "Pending old action completes without overwriting replacement UI",
+    "HTML edit reloads documents and retains provider state",
+    "Background edit replaces provider, resets ephemeral state and does not replay actions",
+    "Native stop closes browser"
+  ],
+  "errors": []
+}

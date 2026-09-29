@@ -1,4 +1,4 @@
-# Server dependency patches
+# Native dependency patches
 
 These exact-version patches let the private server integration retain TypeScript 7's full declaration checks, including `skipLibCheck: false`, exact optional properties and registry augmentation. They reproduce the [executed compatibility investigation](../docs/research/server-type-compatibility.md). The crossws and h3 changes affect declarations only. The Devframe patch also contains the explicitly adopted client connection isolation change described below.
 
@@ -43,3 +43,14 @@ The exact-version patches for `@devframes/json-render@1.0.0` and `@devframes/jso
 `@devframes/json-render-ui/renderer` exposes the existing bundled reference renderer and declares its optional protocol peer. Only the failed-mount cleanup block changes inside that bundle: it disconnects the observer and removes the partial content root before propagating the failure. No renderer implementation, JSON schema or framework is copied into an SDK package.
 
 The installed-package test checks cross-entry duplicate detection, discovery and replacement. The actual patched 1.0 dependency graph passes the 12-scenario Chromium proof, including denied admission and failed-mount cleanup, with zero page errors. This removes the prototype checkout requirement for the runtime APIs; full portable provider/catalog composition and browser surface coverage remain separate work.
+
+## WXT development tooling
+
+The maintained extension development commands use WXT 0.21.4 and its native web-ext 10.7.0 runner. Two exact-version patches promote the independently replayed [declaration and lifecycle fixes](../docs/research/wxt-adoption-gates.md):
+
+- `@wxt-dev/browser@0.3.0` imports HAR types as module types and uses its own `Browser` namespace for browser aliases. This avoids ambient Chrome/HAR collisions while preserving the native declarations.
+- `wxt@0.21.4` generates its i18n declaration from public `Browser.i18n` and retains the runner that actually opened the current browser. Native stop/restart closes that runner even after configuration loading replaces the configured runner.
+
+The example explicitly installs the optional Rollup declaration peer and web-ext runner peer. Without web-ext, WXT falls back to manual browser startup. Neither patch introduces an SDK watcher, browser launcher or state recovery mechanism. Chrome Developer mode uses normal one-time browser setup in a dedicated persistent profile.
+
+Remove the declaration corrections when a released dependency passes the retained strict TS7 matrix and the maintained example with `skipLibCheck: false`. Remove the runner correction when the same native config-restart and final-stop checks pass unpatched in Chromium and Firefox. No upstream WXT PR has been opened. These patches belong to development tooling; production bundles contain no WXT runner or dev server.

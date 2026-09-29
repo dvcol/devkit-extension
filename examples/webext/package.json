@@ -4,13 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "wxt --browser chrome --mv3",
+    "dev:firefox": "wxt --browser firefox --mv3",
     "build": "vite build && vite build --mode firefox",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
+    "typecheck": "wxt prepare && tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src entrypoints tests manifest.ts vite.config.ts wxt.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
-    "test": "vitest run",
+    "test": "vitest run --root .",
     "test:browser": "node tests/browser.ts",
-    "test:firefox": "node tests/firefox.ts"
+    "test:firefox": "node tests/firefox.ts",
+    "test:dev:chromium": "node tests/chromium-development.ts",
+    "test:dev:firefox": "node tests/firefox-development.ts"
   },
   "dependencies": {
     "@devframes/hub": "1.0.0",
@@ -29,6 +33,10 @@
     "@playwright/test": "1.63.0",
     "@types/chrome": "0.3.0",
     "@types/selenium-webdriver": "4.35.7",
-    "selenium-webdriver": "4.49.0"
+    "@wxt-dev/browser": "0.3.0",
+    "rollup": "4.63.4",
+    "selenium-webdriver": "4.49.0",
+    "web-ext": "10.7.0",
+    "wxt": "0.21.4"
   }
 }

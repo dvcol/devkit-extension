@@ -28,7 +28,7 @@ The Chromium test uses a disposable profile and removes it afterward. Its 24 sce
 
 `pnpm --filter @devkit/example-webext test` also builds the extension and rejects Node or browser-external modules in the graph. Both build modes assert the expected native background manifest, permissions and CSP. CI runs these checks through the normal workspace gates, then executes both real-browser tests.
 
-This is the native extension foundation. Automatic discovery, cross-provider rendering, full popup/DevTools/side-panel lifecycle, content/page request bridging, debugger support, full browser conformance and extension HMR remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
+This is the native extension foundation. Automatic discovery, cross-provider rendering, full popup/DevTools/side-panel lifecycle, content/page request bridging, debugger support, full browser conformance and complete extension HMR coverage remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
 
 ## Firefox execution
 
@@ -63,7 +63,37 @@ Standalone WXT checks import this maintained source and exercise the actual refe
 
 A Chromium HTML reload retains background state. Native background reload, with normal Developer mode enabled, closes old extension documents and replaces the provider. A newly opened panel reads reset ephemeral state; interrupted actions are not replayed. The candidate's default fresh Chromium profile did not enable Developer mode effectively. A separate native dedicated-profile test passes after Chrome saves its normal one-time Developer mode setting; see the [setup evidence](../../docs/research/wxt-json-hmr-evidence/RECEIPT.md#native-dedicated-profile-setup).
 
-The WXT dependencies and runner/declaration patches remain in the standalone fixtures. The maintained Vite build commands above do not yet provide extension development HMR. Firefox background replacement, content updates, all extension surfaces and watched production remain open.
+## Native development commands
+
+```sh
+pnpm exec turbo run build --filter=@devkit/example-webext^... --concurrency=1
+pnpm --filter @devkit/example-webext dev
+# Or, in a separate session:
+pnpm --filter @devkit/example-webext dev:firefox
+```
+
+WXT owns the Vite development server, browser process, HMR and native extension reloads. Both commands use Manifest V3 and the same `entrypoints/panel.html`, panel implementation, background implementation and application manifest as the production Vite build. WXT adds its development transport and owns its generated background manifest. Development outputs live under `.output/`; production outputs remain `dist/chromium` and `dist/firefox`.
+
+On the first Chromium launch, open `chrome://extensions` and enable **Developer mode**. Let Chrome save the setting before restarting it. The native runner retains this setup under `.wxt/chromium-profile`, separate from your ordinary browser profile. Disabling Developer mode can cause Chrome to disable the extension on a background reload. No protected preference values or policy controls are written by this example. Browser executable overrides use WXT's native `webExt.binaries` configuration.
+
+| Edit                  | Native behavior                                       | Observed state                                                                           |
+| --------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Panel TypeScript      | Vite module replacement, old panel resources disposed | Same document/provider, retained native state, new connection                            |
+| Panel HTML            | Full page reload                                      | New document, same provider/state                                                        |
+| Background entrypoint | Extension reload; reopen the options page afterward   | New provider, reset ephemeral state, no automatic replay                                 |
+| WXT configuration     | Native browser/server restart                         | A new browser session; retained profile setup is independent of ephemeral provider state |
+
+The maintained live tests use temporary copies of this example and disposable browser profiles. They drive the actual native JSON renderer through module, HTML and background changes in both browsers. The retained [Chromium receipt](./evidence/development/chromium/receipt.json) and [Firefox receipt](./evidence/development/firefox/receipt.json) record passing runs on Chromium 153.0.8010.12 and Firefox 156.0.1. Chromium also checks a pending old command cannot overwrite replacement UI and confirms no page errors. Firefox observes native process shutdown; it does not claim global browser-error capture. Earlier frozen experiments retain the detailed listener/Port-count and config-restart comparisons.
+
+```sh
+pnpm --filter @devkit/example-webext test:dev:chromium
+FIREFOX_BINARY=/path/to/firefox GECKODRIVER_BINARY=/path/to/geckodriver \
+  pnpm --filter @devkit/example-webext test:dev:firefox
+```
+
+The Firefox test attaches to the browser WXT opened. Its isolated automation session needs Firefox's native system-access flag to inspect extension documents. `GECKODRIVER_BINARY` is optional when the driver is discoverable. Receipts and screenshots are written under ignored `artifacts/`; CI runs both development tests alongside the production browser suites. Type checks prepare WXT declarations but retain the repository's strict TypeScript settings, including `skipLibCheck: false`.
+
+The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, toolbar/DevTools/side-panel lifetimes and watched production remain open.
 
 ## Explicit native server connections
 

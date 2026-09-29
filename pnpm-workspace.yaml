@@ -21,6 +21,8 @@ patchedDependencies:
   h3@2.0.1-rc.32: patches/h3@2.0.1-rc.32.patch
   '@devframes/json-render@1.0.0': patches/@devframes__json-render@1.0.0.patch
   '@devframes/json-render-ui@1.0.0': patches/@devframes__json-render-ui@1.0.0.patch
+  '@wxt-dev/browser@0.3.0': patches/@wxt-dev__browser@0.3.0.patch
+  wxt@0.21.4: patches/wxt@0.21.4.patch
 
 packageExtensions:
   devframe@1.0.0:

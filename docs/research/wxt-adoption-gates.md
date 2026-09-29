@@ -1,6 +1,6 @@
 # WXT adoption gates
 
-This follow-up concerns [Live preview and reload contract](https://github.com/dvcol/devkit-extension/issues/13). WXT remains a packaging candidate. The maintained extension still uses Vite directly; this investigation installs no WXT dependency or patch into that workspace.
+This follow-up concerns [Live preview and reload contract](https://github.com/dvcol/devkit-extension/issues/13). The maintained extension now uses WXT for native development and retains its direct Vite production builds. The verified declaration and runner patches are installed through the root pnpm patch policy. Earlier experiments below record the evidence behind that adoption.
 
 ## Strict declarations
 
@@ -12,7 +12,7 @@ The complete WXT-prepared project additionally exposes a stale `I18n.Static` ref
 
 Eight checks now pass: the minimum and complete generated project, each with and without Chrome ambient types, after separate Chrome and Firefox MV3 preparation. Five negative type assertions preserve generated message-key narrowing, native i18n argument types and HAR member types. A frozen installation also passes. Replaying the retained files from a second fresh temporary directory passed the same eight checks, without the original fixture or workspace dependencies. The [receipt](./wxt-declarations-evidence/RECEIPT.md) contains commands, version pins, intermediate failures, the rejected inheritance candidate and final results. [The verifier](./wxt-declarations-evidence/verify.mjs) checks the effective strict compiler settings before running the cases.
 
-The patches are retained inside that standalone experiment, not in the root workspace's patch policy. The maintained extension still needs its real development and production lifecycle checks before WXT adoption. No upstream PR has been opened for these declaration defects.
+The same patches are now installed in the maintained workspace. Its type check prepares WXT declarations while retaining the strict root compiler configuration. No upstream PR has been opened for these declaration defects.
 
 ## Native lifecycle ownership
 
@@ -32,7 +32,7 @@ flowchart TD
   Open -.-> Survives[Original browser survives]
 ```
 
-This supersedes the initial assumption that using the managed runner alone would resolve the gap. A separate disposable patch retains the runner used to open the current browser. Stop and browser restart close that retained runner; a new open captures the current configured runner. The unchanged live test now passes: the old browser disconnects after the edit, the new browser reports manifest `1.0.1`, and a UI action succeeds with a fresh background generation. Final native shutdown closes the new browser. The patch adds no SDK reload engine, retry loop or state-recovery policy. The maintained extension remains unchanged.
+This supersedes the initial assumption that using the managed runner alone would resolve the gap. A separate disposable patch retains the runner used to open the current browser. Stop and browser restart close that retained runner; a new open captures the current configured runner. The unchanged live test now passes: the old browser disconnects after the edit, the new browser reports manifest `1.0.1`, and a UI action succeeds with a fresh background generation. Final native shutdown closes the new browser. The patch adds no SDK reload engine, retry loop or state-recovery policy. The maintained development commands now use this patch.
 
 A separate check of public `restartBrowser()` and `stop()` also passes. The [receipt](./wxt-runner-evidence/RECEIPT.md) includes exact versions, runtime observations and cleanup. The [runtime-only patch](./wxt-runner-evidence/runner-only.patch) adds seven lines and removes four in one native file. The [baseline receipt](./wxt-runner-evidence/baseline/RECEIPT.md) retains the failures, and the failing/passing config-change scripts are byte-identical. The standalone fixture contains the actual combined pnpm patch and frozen lockfile. No new upstream PR has been opened.
 
@@ -44,7 +44,7 @@ The maintained extension panel now owns native Vite HMR disposal. A replacement 
 
 A fresh standalone WXT fixture imports those maintained modules and mounts the real reference renderer in Chromium. The observed document retains its time origin, and both panels retain worker state through a panel-module edit. Both old Ports close, two replacement Ports remain, and the routed button retains exactly one DOM listener. Rendered and routed actions each increment once after the edit. An earlier pending action completes without changing the replacement UI. Native stop closes the browser and the test restores the exact source file. [Reproduction, receipt and limits](./wxt-json-hmr-evidence/RECEIPT.md).
 
-The maintained Vite Chromium/Firefox production builds, strict source checks, two bundle tests, 24 Chromium scenarios and 18 Firefox groups also pass. The standalone development fixture uses the previously retained patches; this implementation adds no WXT root dependency, renderer patch or custom reloader.
+The maintained Vite Chromium/Firefox production builds, strict source checks, two bundle tests, 24 Chromium scenarios and 18 Firefox groups also pass. Those earlier standalone checks preceded maintained command integration. The current example installs the same verified WXT patches and adds no renderer patch or custom reloader.
 
 The same maintained panel now passes Firefox native HMR through WXT's owned browser and native WebDriver attachment. The observed document and provider incarnation stay unchanged, the native connection identity changes, both counters retain state, and routed/rendered clicks each execute once. A pending old action completes without overwriting the replacement UI. Native stop closes Firefox and source restoration is exact. [Frozen Firefox replay and limits](./wxt-firefox-json-hmr-evidence/RECEIPT.md). This verifies effects without claiming exact Firefox listener/Port counts or global browser-error capture.
 
@@ -52,17 +52,17 @@ Native HTML reload also passes in Chromium. Background replacement first failed:
 
 ## Current live coverage
 
-These cells describe observed candidate behavior. They do not enable development commands in the maintained extension.
+The maintained [development commands and tests](../../examples/webext/README.md#native-development-commands) now exercise panel, HTML and background changes with native WXT ownership in both browsers. Config-restart evidence remains in the linked frozen experiments.
 
 | Change                        | Chromium                                                                      | Firefox                                                  | Observed state boundary                                                  |
 | ----------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------ |
 | Panel TypeScript module       | Native Vite HMR passes with the maintained JSON renderer                      | Native Vite HMR passes with the maintained JSON renderer | Same observed document and worker; fresh page-owned connections          |
-| Panel HTML                    | Native page reload passes                                                     | Unverified                                               | New document, same background state                                      |
-| Background implementation     | Native reload passes with Developer mode enabled; default fresh profile fails | Unverified                                               | New provider incarnation and reset ephemeral state; fresh panel required |
+| Panel HTML                    | Native page reload passes                                                     | Native page reload passes                                | New document, same background state                                      |
+| Background implementation     | Native reload passes with Developer mode enabled; default fresh profile fails | Native extension reload passes                           | New provider incarnation and reset ephemeral state; fresh panel required |
 | WXT config / manifest version | Native browser restart passes                                                 | Native browser restart passes                            | Fresh browser/profile and background generation                          |
 | Content / page-world code     | Unverified                                                                    | Unverified                                               | No preservation promise                                                  |
 | Watched production extension  | Unverified                                                                    | Unverified                                               | Separate from development HMR                                            |
 
 ## Remaining adoption evidence
 
-The Chromium and Firefox panel checks establish one native module-replacement path per browser. Repeated rapid updates, content reconnection, Firefox background replacement and the maintained development-command integration still require their own checks. The tested Chromium setup uses a dedicated profile with the normal Developer mode setting saved; it does not promise unattended initialization of a brand-new profile. A manifest version must be read from the running extension after each causal change; a generated manifest file or stale browser report is insufficient. Chromium and Firefox need separate live receipts. Watched production remains a separate workflow from development HMR.
+The Chromium and Firefox panel checks establish one native module-replacement path per browser. Repeated rapid updates, content reconnection and the remaining extension surface lifetimes still require their own checks. The tested Chromium setup uses a dedicated profile with the normal Developer mode setting saved; it does not promise unattended initialization of a brand-new profile. A manifest version must be read from the running extension after each causal change; a generated manifest file or stale browser report is insufficient. Chromium and Firefox need separate live receipts. Watched production remains a separate workflow from development HMR.

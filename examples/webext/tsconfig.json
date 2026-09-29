@@ -6,5 +6,5 @@
     "types": ["node", "chrome", "vite/client"],
     "lib": ["ES2023", "DOM"]
   },
-  "include": ["src", "tests", "vite.config.ts"]
+  "include": ["src", "entrypoints", "tests", "*.ts", ".wxt/wxt.d.ts"]
 }

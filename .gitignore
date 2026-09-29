@@ -9,3 +9,5 @@ coverage/
 .idea/
 .tooling-enforcement-*/
 .devkit-production/
+.wxt/
+.output/
