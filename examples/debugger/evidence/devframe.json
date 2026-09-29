@@ -15,7 +15,7 @@
           "status": "connected",
           "isTrusted": true,
           "isolated": true,
-          "targetTabId": 889709346,
+          "targetTabId": 170444317,
           "providerDisposed": false,
           "clientDisposed": false,
           "closed": false,
@@ -35,10 +35,10 @@
       "name": "The actual extension control approves only the owned fixture tab",
       "details": [
         {
-          "requestId": "dc8080c7-9931-42aa-85d3-0020de3da847",
+          "requestId": "51397be4-fb4a-4c84-a1c6-e513d4cce71b",
           "selector": {
             "kind": "explicit-tabs",
-            "tabIds": [889709346]
+            "tabIds": [170444317]
           },
           "accepted": true,
           "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
@@ -65,6 +65,24 @@
           "lateResult": "cancelled",
           "leases": 0
         },
+        "authorityChanges": {
+          "disconnect": {
+            "nativeCommandWasPending": true,
+            "nativeReleaseError": "ACCESS_DENIED",
+            "leases": 0,
+            "chromeCompletedAfterRejection": true,
+            "otherCallersRetained": true,
+            "grantRetainedBeforeCleanup": true
+          },
+          "revocation": {
+            "nativeCommandWasPending": true,
+            "nativeReleaseError": "CAPABILITY_DENIED",
+            "leases": 0,
+            "chromeCompletedAfterRejection": true,
+            "otherCallersRetained": true,
+            "grantRetainedBeforeCleanup": false
+          }
+        },
         "targetRetainedAfterContributionDisposal": true
       }
     },
@@ -72,7 +90,7 @@
       "name": "Host broker operation changes the real page through native RPC",
       "details": {
         "result": {
-          "operationId": "e43248dd-7405-405c-84ba-696da99c17ef",
+          "operationId": "db95f5b6-0e8e-4c32-a9cf-044b2a3d14c0",
           "value": {
             "result": {
               "type": "string",

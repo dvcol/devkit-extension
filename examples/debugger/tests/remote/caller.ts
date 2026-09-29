@@ -53,6 +53,7 @@ async function connectCaller(baseURL: string, code: string) {
     readTitle: (input: DebuggerTarget) =>
       client.actions.invoke({ action: readPageTitleAction, input }),
     echo: () => peer.scope('fixture').rpc.call('echo', 'ordinary-after-contribution'),
+    disconnect: () => peer.close?.(),
     close: () => lifetime.disposeAsync(),
   };
 }
