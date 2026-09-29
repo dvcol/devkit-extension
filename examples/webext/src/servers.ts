@@ -60,10 +60,12 @@ function createServerAttachments(client: Client) {
 }
 
 export function mountServerControls(client: Client) {
+  const lifetime = new AbortController();
   const attachments = createServerAttachments(client);
   const form = document.querySelector<HTMLFormElement>('#server-form')!;
   const result = document.querySelector<HTMLOutputElement>('#server-result')!;
   const providers = document.querySelector<HTMLOutputElement>('#providers')!;
+  const report = (operation: () => Promise<unknown>) => show(result, operation, lifetime.signal);
   const unsubscribe = client.providers.subscribe((snapshot) => {
     providers.textContent = JSON.stringify(snapshot);
   });
@@ -75,12 +77,12 @@ export function mountServerControls(client: Client) {
       authToken: document.querySelector<HTMLInputElement>('#server-token')!.value,
     };
     document.querySelector<HTMLInputElement>('#server-token')!.value = '';
-    void show(result, () => attachments.attach(configured));
+    void report(() => attachments.attach(configured));
   };
   form.addEventListener('submit', submit);
-  const releaseButtons = mountRoutingButtons(client, result);
+  const releaseButtons = mountRoutingButtons(client, report);
   const releasePages = mountPageConnections((connection) =>
-    show(result, () =>
+    report(() =>
       attachments.attach({
         providerId: document.querySelector<HTMLInputElement>('#server-id')!.value,
         connection,
@@ -88,6 +90,7 @@ export function mountServerControls(client: Client) {
     ),
   );
   return () => {
+    lifetime.abort();
     form.removeEventListener('submit', submit);
     unsubscribe();
     releaseButtons();
@@ -96,12 +99,15 @@ export function mountServerControls(client: Client) {
   };
 }
 
-function mountRoutingButtons(client: Client, result: HTMLOutputElement): () => void {
+function mountRoutingButtons(
+  client: Client,
+  report: (operation: () => Promise<unknown>) => Promise<void>,
+): () => void {
   const servers = document.querySelector<HTMLButtonElement>('#servers-increase')!;
   const all = document.querySelector<HTMLButtonElement>('#all-increase')!;
   const fallback = document.querySelector<HTMLButtonElement>('#fallback-increase')!;
   const serverHandler = () => {
-    void show(result, () =>
+    void report(() =>
       client.actions.broadcast({
         action: increaseCounterAction,
         input: { amount: 1 },
@@ -110,7 +116,7 @@ function mountRoutingButtons(client: Client, result: HTMLOutputElement): () => v
     );
   };
   const allHandler = () => {
-    void show(result, () =>
+    void report(() =>
       client.actions.broadcast({
         action: increaseCounterAction,
         input: { amount: 1 },
@@ -120,7 +126,7 @@ function mountRoutingButtons(client: Client, result: HTMLOutputElement): () => v
   };
   const fallbackHandler = () => {
     const provider = document.querySelector<HTMLInputElement>('#preferred-server')!.value;
-    void show(result, () =>
+    void report(() =>
       client.actions.invoke({
         action: increaseCounterAction,
         input: { amount: 1 },
@@ -138,11 +144,17 @@ function mountRoutingButtons(client: Client, result: HTMLOutputElement): () => v
   };
 }
 
-async function show(result: HTMLOutputElement, operation: () => Promise<unknown>): Promise<void> {
+async function show(
+  result: HTMLOutputElement,
+  operation: () => Promise<unknown>,
+  signal: AbortSignal,
+): Promise<void> {
   result.textContent = 'Pending';
   try {
-    result.textContent = JSON.stringify(await operation());
+    const value = await operation();
+    if (!signal.aborted) result.textContent = JSON.stringify(value);
   } catch (error) {
-    result.textContent = error instanceof Error ? error.message : String(error);
+    if (!signal.aborted)
+      result.textContent = error instanceof Error ? error.message : String(error);
   }
 }

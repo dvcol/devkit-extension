@@ -36,7 +36,7 @@ Descriptive variable and generic names, no IIFEs, JSDoc placement, no multiline 
 
 The old Vue UI, its CSS and its Stylelint rules were removed. Future renderer and host examples must state any required CSS semantics, accessibility and browser constraints with their own relevant checks. Oxfmt's CSS support only checks formatting.
 
-The MV3 example's `background.ts` has one inline `unicorn/prefer-top-level-await` exception. It observes asynchronous provider startup failures while registering browser event listeners synchronously. Other source checks remain enabled, and its real Chromium test verifies startup and connection behavior.
+The MV3 example calls `startExampleBackground()` synchronously from its native entrypoint. That function registers browser event listeners immediately and observes asynchronous provider startup failures. The imported module has no startup side effects, and no `prefer-top-level-await` exception is needed.
 
 The selected-page example has one inline `typescript/no-unsafe-type-assertion` exception at the browser read of `DevframeConnection`. Devframe exports that type but no runtime validator. The example checks the same envelope as its upstream external viewer, preserves native metadata for the native client, and keeps backend authentication separate. This exception does not claim complete metadata validation. Real Chromium checks cover absence, malformed envelopes, browser permission rejection and native authentication; the SDK adds no duplicate native metadata schema.
 

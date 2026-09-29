@@ -7,6 +7,7 @@ import { createRpcProviderConnection } from '@devkit/devframe/client';
 import type { RpcProviderConnection } from '@devkit/devframe/client';
 import { counterCapability, increaseCounterAction, providerId, realm } from './contracts';
 
+const listeners = new AbortController();
 const { port, client, events, rpc, sharedState } = createExampleConnection(close);
 const container = document.querySelector<HTMLElement>('#renderer')!;
 const status = document.querySelector<HTMLElement>('#status')!;
@@ -31,8 +32,16 @@ function close(): void {
   port.disconnect();
   status.textContent = 'Disconnected';
 }
-window.addEventListener('pagehide', close, { once: true });
-document.querySelector('#disconnect')!.addEventListener('click', close);
+function dispose(): void {
+  listeners.abort();
+  close();
+}
+window.addEventListener('pagehide', dispose, { once: true, signal: listeners.signal });
+document
+  .querySelector('#disconnect')!
+  .addEventListener('click', close, { signal: listeners.signal });
+import.meta.hot?.dispose(dispose);
+import.meta.hot?.accept();
 
 const nativeContext = { rpc: { call: rpc.$call, sharedState } };
 try {
@@ -47,6 +56,10 @@ try {
     container,
     context: nativeContext,
   });
+  if (closed) {
+    mounted.dispose?.();
+    throw new Error('The native connection closed during renderer startup');
+  }
   providerConnection = await createRpcProviderConnection({
     rpc: { call: rpc.$call, client, events },
     providerId,
@@ -66,82 +79,66 @@ try {
   status.textContent = 'Connected';
 } catch (error) {
   close();
-  result.textContent = error instanceof Error ? error.message : String(error);
+  if (!listeners.signal.aborted)
+    result.textContent = error instanceof Error ? error.message : String(error);
 }
 
 async function run(operation: () => Promise<unknown>): Promise<void> {
   result.textContent = 'Pending';
   try {
-    result.textContent = JSON.stringify(await operation());
+    const value = await operation();
+    if (!listeners.signal.aborted) result.textContent = JSON.stringify(value);
   } catch (error) {
-    result.textContent = error instanceof Error ? error.message : String(error);
+    if (!listeners.signal.aborted)
+      result.textContent = error instanceof Error ? error.message : String(error);
   }
 }
-document.querySelector('#identity')!.addEventListener('click', () => {
-  void run(() => rpc.$call('probe:identity'));
-});
-document.querySelector('#wait')!.addEventListener('click', () => {
-  void run(() => rpc.$call('probe:wait'));
-});
-document.querySelector('#release')!.addEventListener('click', () => {
-  void run(() => rpc.$call('probe:release'));
-});
-document.querySelector('#executions')!.addEventListener('click', () => {
-  void run(() => rpc.$call('devframe:rpc:server-state:get', 'probe:executions'));
-});
-document.querySelector('#write')!.addEventListener('click', () => {
-  void run(async () => {
-    const state = await sharedState.get<DevframeJsonRenderSpec>(
-      'devframe:json-render:global:counter',
-    );
-    state.mutate((draft) => {
-      draft.state = { value: 10 };
-    });
-    return 'Native write';
-  });
-});
-document.querySelector('#rich')!.addEventListener('click', () => {
-  void run(async () => {
-    const value = await rpc.$call('probe:echo', new Map([['counter', 42n]]));
-    return value instanceof Map && value.get('counter') === 42n;
-  });
-});
-document.querySelector('#unsupported')!.addEventListener('click', () => {
-  void run(() => rpc.$call('probe:echo', { callback: () => {} }));
-});
-
-document.querySelector('#remote-close')!.addEventListener('click', () => {
-  void run(() => rpc.$call('probe:disconnect'));
-});
-
-document.querySelector('#routed')!.addEventListener('click', () => {
-  void run(() =>
-    routedClient.actions.invoke({
-      action: increaseCounterAction,
-      input: { amount: 1 },
-      routing: { realm: realm.id, provider: providerId },
-    }),
+function onClick(selector: string, operation: () => Promise<unknown>): void {
+  document.querySelector(selector)!.addEventListener(
+    'click',
+    () => {
+      void run(operation);
+    },
+    { signal: listeners.signal },
   );
-});
-document.querySelector('#capability')!.addEventListener('click', () => {
-  void run(async () => {
-    const resolution = await routedClient.capabilities.resolve({ capability: counterCapability });
-    if (resolution.status !== 'available') throw new Error(`Counter is ${resolution.reason}`);
-    return resolution.binding.api.read({});
-  });
-});
-document.querySelector('#broadcast')!.addEventListener('click', () => {
-  void run(() =>
-    routedClient.actions.broadcast({
-      action: increaseCounterAction,
-      input: { amount: 1 },
-      selection: [{ realm: realm.id }],
-    }),
+}
+onClick('#identity', () => rpc.$call('probe:identity'));
+onClick('#wait', () => rpc.$call('probe:wait'));
+onClick('#release', () => rpc.$call('probe:release'));
+onClick('#executions', () => rpc.$call('devframe:rpc:server-state:get', 'probe:executions'));
+onClick('#write', async () => {
+  const state = await sharedState.get<DevframeJsonRenderSpec>(
+    'devframe:json-render:global:counter',
   );
+  state.mutate((draft) => {
+    draft.state = { value: 10 };
+  });
+  return 'Native write';
 });
-document.querySelector('#disable-service')!.addEventListener('click', () => {
-  void run(() => rpc.$call('probe:disable-service'));
+onClick('#rich', async () => {
+  const value = await rpc.$call('probe:echo', new Map([['counter', 42n]]));
+  return value instanceof Map && value.get('counter') === 42n;
 });
-document.querySelector('#enable-service')!.addEventListener('click', () => {
-  void run(() => rpc.$call('probe:enable-service'));
+onClick('#unsupported', () => rpc.$call('probe:echo', { callback: () => {} }));
+onClick('#remote-close', () => rpc.$call('probe:disconnect'));
+onClick('#routed', () =>
+  routedClient.actions.invoke({
+    action: increaseCounterAction,
+    input: { amount: 1 },
+    routing: { realm: realm.id, provider: providerId },
+  }),
+);
+onClick('#capability', async () => {
+  const resolution = await routedClient.capabilities.resolve({ capability: counterCapability });
+  if (resolution.status !== 'available') throw new Error(`Counter is ${resolution.reason}`);
+  return resolution.binding.api.read({});
 });
+onClick('#broadcast', () =>
+  routedClient.actions.broadcast({
+    action: increaseCounterAction,
+    input: { amount: 1 },
+    selection: [{ realm: realm.id }],
+  }),
+);
+onClick('#disable-service', () => rpc.$call('probe:disable-service'));
+onClick('#enable-service', () => rpc.$call('probe:enable-service'));

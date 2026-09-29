@@ -1,0 +1,131 @@
+{
+  "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts",
+  "sourceSha256": "26614a4d2ca1b06da70832deb4b85f9e7923ec2e3733a47532e782e9a0325a20",
+  "events": [],
+  "errors": [],
+  "console": [
+    {
+      "type": "debug",
+      "text": "[wxt] Connecting to dev server @ ws://127.0.0.1:63024"
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connected to dev server"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connecting to dev server @ ws://127.0.0.1:63024"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connected to dev server"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connecting to dev server @ ws://127.0.0.1:63024"
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connected to dev server"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] hot updated: /@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] hot updated: /@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts"
+    }
+  ],
+  "passed": true,
+  "browser": "153.0.8010.12",
+  "before": {
+    "clickListeners": 1,
+    "manifest": "1.0.0",
+    "timeOrigin": 1790651228934.1,
+    "identity": {
+      "id": 0,
+      "url": "chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html"
+    },
+    "generation": "84f306e5-c8b7-47a0-8b9a-c7873572a7a6",
+    "ports": [
+      {
+        "connected": 1790651229262,
+        "disconnected": null
+      },
+      {
+        "connected": 1790651229320,
+        "disconnected": null
+      }
+    ]
+  },
+  "editAt": 1790651229475,
+  "after": {
+    "clickListeners": 1,
+    "timeOrigin": 1790651228934.1,
+    "identity": {
+      "id": 2,
+      "url": "chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html"
+    },
+    "generation": "84f306e5-c8b7-47a0-8b9a-c7873572a7a6",
+    "ports": [
+      {
+        "connected": 1790651229262,
+        "disconnected": 1790651229593
+      },
+      {
+        "connected": 1790651229320,
+        "disconnected": 1790651229594
+      },
+      {
+        "connected": 1790651229599,
+        "disconnected": null
+      },
+      {
+        "connected": 1790651229602,
+        "disconnected": null
+      }
+    ]
+  },
+  "finalPorts": [
+    {
+      "connected": 1790651229262,
+      "disconnected": 1790651229593
+    },
+    {
+      "connected": 1790651229320,
+      "disconnected": 1790651229594
+    },
+    {
+      "connected": 1790651229599,
+      "disconnected": null
+    },
+    {
+      "connected": 1790651229602,
+      "disconnected": null
+    }
+  ],
+  "nativeStopDisconnectedBrowser": true,
+  "restored": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

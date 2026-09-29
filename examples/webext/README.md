@@ -53,7 +53,13 @@ The example declares `script-src 'self'` and limits `connect-src` to itself and 
 
 Each page composes raw `createRpcClient`, its collector and native event emitter. Port closure calls `$close()` and emits the native disconnected status, so the shared adapter clears its catalog and local waits. The page then disposes its router, catalog subscription, state mirrors and renderer. Reopening the page creates a fresh connection to the same live provider, with no action replay.
 
-The worker registers `runtime.onConnect` synchronously. One narrowly scoped `prefer-top-level-await` lint exception permits reporting asynchronous provider startup failures without delaying worker event registration. Initialization failures are also visible to native RPC callers. Disabling the counter service invalidates both catalogs; the routed action rejects until the owner re-enables the service.
+The native entrypoint calls `startExampleBackground()` synchronously. Importing its implementation does not start a worker, which lets packaging tools inspect entrypoints safely. Startup reports asynchronous provider failures while registering `runtime.onConnect` immediately. Initialization failures are also visible to native RPC callers. Disabling the counter service invalidates both catalogs; the routed action rejects until the owner re-enables the service.
+
+## Panel module replacement
+
+The panel accepts native Vite HMR and disposes its old Port, renderer, router, subscriptions and DOM listeners before replacement. Abort signals prevent delayed commands or connection attempts from overwriting the replacement controls. They do not cancel remote side effects. Manual disconnect still displays pending-call errors.
+
+A [standalone WXT development check](../../docs/research/wxt-json-hmr-evidence/RECEIPT.md) imports this maintained source and exercises the actual reference renderer in Chromium. It verifies the same document and background survive, the two old Ports close, exactly one routed-button listener remains, native state is retained, and post-update actions work without duplication. The WXT dependencies and runner/declaration patches remain in that standalone fixture. The maintained Vite build commands above do not yet provide extension development HMR, and Firefox renderer HMR, background/content replacement and watched production remain open.
 
 ## Explicit native server connections
 

@@ -36,6 +36,14 @@ This supersedes the initial assumption that using the managed runner alone would
 
 A separate check of public `restartBrowser()` and `stop()` also passes. The [receipt](./wxt-runner-evidence/RECEIPT.md) includes exact versions, runtime observations and cleanup. The [runtime-only patch](./wxt-runner-evidence/runner-only.patch) adds seven lines and removes four in one native file. The [baseline receipt](./wxt-runner-evidence/baseline/RECEIPT.md) retains the failures, and the failing/passing config-change scripts are byte-identical. The standalone fixture contains the actual combined pnpm patch and frozen lockfile. No new upstream PR has been opened.
 
+## Maintained JSON panel module replacement
+
+The maintained extension panel now owns native Vite HMR disposal. A replacement aborts its old DOM listeners, closes the Port and releases the native renderer, router and subscriptions. Disposed controls ignore delayed results. Manual disconnect still reports pending-call errors; remote work is not cancelled or replayed. The background implementation now starts synchronously through an explicit entrypoint, so packaging-time imports do not execute extension code.
+
+A fresh standalone WXT fixture imports those maintained modules and mounts the real reference renderer in Chromium. Both documents retain their time origin and the worker's state through a panel-module edit. Both old Ports close, two replacement Ports remain, and the routed button retains exactly one DOM listener. Rendered and routed actions each increment once after the edit. An earlier pending action completes without changing the replacement UI. Native stop closes the browser and the test restores the exact source file. [Reproduction, receipt and limits](./wxt-json-hmr-evidence/RECEIPT.md).
+
+The maintained Vite Chromium/Firefox production builds, strict source checks, two bundle tests, 24 Chromium scenarios and 18 Firefox groups also pass. The standalone development fixture uses the previously retained patches; this implementation adds no WXT root dependency, renderer patch or custom reloader.
+
 ## Remaining adoption evidence
 
-The declaration corrections do not prove maintained-renderer HMR, post-update action execution, duplicate-listener cleanup, content reconnection or worker replacement. A manifest version must be read from the running extension after each causal change; a generated manifest file or stale browser report is insufficient. Chromium and Firefox need separate live receipts. Watched production remains a separate workflow from development HMR.
+The Chromium panel check establishes one native module-replacement path. Firefox renderer HMR, repeated rapid updates, content reconnection and background replacement still require their own checks. A manifest version must be read from the running extension after each causal change; a generated manifest file or stale browser report is insufficient. Chromium and Firefox need separate live receipts. Watched production remains a separate workflow from development HMR.

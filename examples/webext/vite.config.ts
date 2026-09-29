@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
       target: 'esnext',
       minify: false,
       rolldownOptions: {
-        input: { panel: 'panel.html', background: 'src/background.ts' },
+        input: { panel: 'panel.html', background: 'src/background-entry.ts' },
         output: { entryFileNames: '[name].js' },
       },
     },

@@ -36,40 +36,52 @@ export function mountPageConnections(
   const refresh = document.querySelector<HTMLButtonElement>('#refresh-pages')!;
   const attach = document.querySelector<HTMLButtonElement>('#connect-page')!;
   const result = document.querySelector<HTMLOutputElement>('#page-result')!;
-  let disposed = false;
+  const lifetime = new AbortController();
   const refreshHandler = () => {
-    void report(result, async () => {
-      const tabs = await chrome.tabs.query({ url: 'http://127.0.0.1/*' });
-      if (disposed) return;
-      pages.replaceChildren();
-      for (const tab of tabs) {
-        if (tab.id !== undefined) pages.add(new Option(tab.url ?? String(tab.id), String(tab.id)));
-      }
-      result.textContent = `${pages.length} local pages`;
-    });
+    void report(
+      result,
+      async () => {
+        const tabs = await chrome.tabs.query({ url: 'http://127.0.0.1/*' });
+        if (lifetime.signal.aborted) return;
+        pages.replaceChildren();
+        for (const tab of tabs) {
+          if (tab.id !== undefined)
+            pages.add(new Option(tab.url ?? String(tab.id), String(tab.id)));
+        }
+        result.textContent = `${pages.length} local pages`;
+      },
+      lifetime.signal,
+    );
   };
   const attachHandler = () => {
-    void report(result, async () => {
-      if (!pages.value) throw new Error('Select a local page first');
-      const connection = await readPageConnection(Number(pages.value));
-      if (disposed) return;
-      await connect(connection);
-    });
+    void report(
+      result,
+      async () => {
+        if (!pages.value) throw new Error('Select a local page first');
+        const connection = await readPageConnection(Number(pages.value));
+        if (lifetime.signal.aborted) return;
+        await connect(connection);
+      },
+      lifetime.signal,
+    );
   };
-  refresh.addEventListener('click', refreshHandler);
-  attach.addEventListener('click', attachHandler);
+  refresh.addEventListener('click', refreshHandler, { signal: lifetime.signal });
+  attach.addEventListener('click', attachHandler, { signal: lifetime.signal });
   return () => {
-    disposed = true;
-    refresh.removeEventListener('click', refreshHandler);
-    attach.removeEventListener('click', attachHandler);
+    lifetime.abort();
   };
 }
 
-async function report(result: HTMLOutputElement, operation: () => Promise<void>): Promise<void> {
+async function report(
+  result: HTMLOutputElement,
+  operation: () => Promise<void>,
+  signal: AbortSignal,
+): Promise<void> {
   result.textContent = '';
   try {
     await operation();
   } catch (error) {
-    result.textContent = error instanceof Error ? error.message : String(error);
+    if (!signal.aborted)
+      result.textContent = error instanceof Error ? error.message : String(error);
   }
 }

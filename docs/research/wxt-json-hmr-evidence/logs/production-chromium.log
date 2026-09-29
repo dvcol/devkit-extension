@@ -1,0 +1,52 @@
+$ node tests/browser.ts
+🧪 [webext] error WebSocket connection to 'ws://127.0.0.1:62602/__devkit-remote/__ws?devframe_auth_token=REDACTED' failed: Error during WebSocket handshake: Unexpected response code: 403
+🧪 [webext] error [devkit/devframe/client] Error: Native connection is disconnected
+    at chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:493:97
+    at Object.emit (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/assets/contracts-BEfco_MN.js:684:18)
+    at setStatus (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:2375:10)
+    at Object.onDisconnected (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:2432:28)
+    at onDisconnected (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:2957:14)
+    at WebSocket.<anonymous> (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:2856:3)
+🧪 [webext] error [devkit/devframe/client] Error: Native connection is disconnected
+    at chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:493:97
+    at Object.emit (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/assets/contracts-BEfco_MN.js:684:18)
+    at setStatus (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:2375:10)
+    at Object.onDisconnected (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:2432:28)
+    at onDisconnected (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:2957:14)
+    at WebSocket.<anonymous> (chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/panel.js:2856:3)
+🧪 [webext] debug [vite] connecting...
+🧪 [webext] debug [vite] connected.
+🧪 [webext] debug [vite] connecting...
+🧪 [webext] debug [vite] connected.
+🧪 [webext] debug [vite] connecting...
+🧪 [webext] debug [vite] connected.
+✅ [webext] {
+  browser: '153.0.8010.12',
+  checks: [
+    'two real Ports',
+    'native renderer action',
+    'caller identity',
+    'native state write',
+    'Map/BigInt round trip',
+    'function rejection',
+    'pending call rejects on disconnect',
+    'renderer unmount',
+    'backend completion without replay',
+    'reconnect with retained worker state',
+    'denied sender and failed-mount cleanup',
+    'worker-initiated disconnect',
+    'shared portable action and capability contracts',
+    'explicit realm/provider routing and broadcast',
+    'catalog disable/enable updates on both clients',
+    'provider incarnation retained across UI reconnect',
+    'independent routed client survives peer disconnect',
+    'native origin allowlist and rejected credentials',
+    'simultaneous isolated Devframe, DevTools and extension providers',
+    'realm broadcast and explicit provider preference',
+    'fallback after native server disconnect and partial broadcast failure',
+    'selected document hands off its natively published connection',
+    'absent, malformed and closed selected documents reject without attaching',
+    'native scripting permission rejection and independent adopted connection lifetime'
+  ],
+  pageErrors: []
+}
