@@ -1,0 +1,19 @@
+{
+  "passed": false,
+  "cleanup": {
+    "browserClosed": true,
+    "serverClosed": true,
+    "profileRemoved": true
+  },
+  "browserVersion": "153.0.8010.12",
+  "executable": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "response": {
+    "passed": false,
+    "error": {
+      "message": "The requested target operation is not available.",
+      "code": "CAPABILITY_DENIED",
+      "stack": "Error: The requested target operation is not available.\n    at Object.acquireLease (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3103:11)\n    at chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3967:57\n    at chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3893:55\n    at invoke (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3893:68)\n    at Object.acquireLease (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3967:37)\n    at Object.acquireLease (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:56:21)\n    at runProbe (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:4989:37)"
+    }
+  },
+  "error": "AssertionError [ERR_ASSERTION]: {\"passed\":false,\"error\":{\"message\":\"The requested target operation is not available.\",\"code\":\"CAPABILITY_DENIED\",\"stack\":\"Error: The requested target operation is not available.\\n    at Object.acquireLease (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3103:11)\\n    at chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3967:57\\n    at chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3893:55\\n    at invoke (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3893:68)\\n    at Object.acquireLease (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:3967:37)\\n    at Object.acquireLease (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:56:21)\\n    at runProbe (chrome-extension://cellihcdljbljncphaplnppjdjnohfid/background.js:4989:37)\"}}\n\nfalse !== true\n"
+}

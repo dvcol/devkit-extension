@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "cleanup": {
+    "browserClosed": true,
+    "serverClosed": true,
+    "profileRemoved": true
+  },
+  "error": "TypeError: Cannot read properties of undefined (reading 'launchPersistentContext')"
+}

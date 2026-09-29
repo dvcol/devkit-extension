@@ -1,0 +1,14 @@
+{
+  "cdb": {
+    "version": "0.3.0",
+    "integrity": "sha512-f7p+3YSHaI/2Ic1VavsJExUbWbPhdB/2oAVYYNDR4Cp6rWapSziR4gxFDbqKjDU6WNMgMkcs96WyXM/UlqZYyw=="
+  },
+  "cdb-extension": {
+    "version": "0.3.0",
+    "integrity": "sha512-VYA3WAauBDNLzHrmXNccvifj6sNozRU/KYQtafLM84YGNgbFQonABXO5LE2U737MamtP2OlgnAre53qf9W3ntA=="
+  },
+  "cdb-broker": {
+    "version": "0.3.0",
+    "integrity": "sha512-KNGMJGyxuaxhzpy/9x/NMsiIcmrRxEkawgVQd/xJ42kxgo4ojm+Wkeqqwr3epdqXvh8QuWOzD84ageWBLSRAYw=="
+  }
+}

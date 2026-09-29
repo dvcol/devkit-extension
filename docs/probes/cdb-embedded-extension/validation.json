@@ -1,0 +1,12 @@
+{
+  "syntax": "passed for background.mjs/build.mjs/run.mjs",
+  "browserBundle": "passed; Node builtins forbidden, output imports empty",
+  "browserRun": "passed; see receipt.json",
+  "lint": {
+    "status": "failed",
+    "exitCode": 1,
+    "log": "lint.log",
+    "scope": "untyped scratch scripts using maintained type-aware configuration"
+  },
+  "typecheck": "not established; no scratch TypeScript project; not maintained source"
+}

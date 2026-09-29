@@ -1,0 +1,147 @@
+{
+  "passed": true,
+  "cleanup": {
+    "browserClosed": true,
+    "serverClosed": true,
+    "profileRemoved": true
+  },
+  "browserVersion": "153.0.8010.12",
+  "executable": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "response": {
+    "passed": true,
+    "result": {
+      "target": {
+        "availability": "available",
+        "capabilities": {
+          "level": "debug",
+          "allow": [
+            "Runtime.evaluate",
+            "Runtime.consoleAPICalled"
+          ]
+        },
+        "generation": 1,
+        "id": "e76d4a8c-4393-494e-bc9e-0d2ddcd0c05f",
+        "scopeId": "d02833f4-204b-4126-b249-2ca246e21d6b",
+        "type": "page"
+      },
+      "leaseMode": "exclusive-control",
+      "command": {
+        "operationId": "9a05cc3f-6a9b-47a1-bf3c-9f98928c83f5",
+        "value": {
+          "result": {
+            "description": "42",
+            "type": "number",
+            "value": 42
+          }
+        }
+      },
+      "event": {
+        "done": false,
+        "value": {
+          "method": "Runtime.consoleAPICalled",
+          "parameters": {
+            "args": [
+              {
+                "type": "string",
+                "value": "cdb-owned-fixture-event"
+              }
+            ],
+            "executionContextId": 3,
+            "stackTrace": {
+              "callFrames": [
+                {
+                  "columnNumber": 8,
+                  "functionName": "",
+                  "lineNumber": 0,
+                  "scriptId": "4",
+                  "url": ""
+                }
+              ]
+            },
+            "timestamp": 1790665621324.164,
+            "type": "log"
+          },
+          "sequence": 1,
+          "subscriptionId": "7c8daec6-15bd-4c12-a540-715c6f3f89d7",
+          "targetGeneration": 1,
+          "targetId": "e76d4a8c-4393-494e-bc9e-0d2ddcd0c05f"
+        }
+      },
+      "nativeWhileSubscribed": {
+        "result": {
+          "description": "54",
+          "type": "number",
+          "value": 54
+        }
+      },
+      "nativeAfterClientDisposal": {
+        "result": {
+          "description": "63",
+          "type": "number",
+          "value": 63
+        }
+      },
+      "disposedClientError": "The embedded bridge is disposed.",
+      "trace": [
+        {
+          "method": "attach",
+          "target": {
+            "tabId": 1269123313
+          }
+        },
+        {
+          "method": "Target.setAutoAttach",
+          "target": {
+            "tabId": 1269123313
+          },
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.enable",
+          "target": {
+            "tabId": 1269123313
+          },
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.evaluate",
+          "target": {
+            "tabId": 1269123313
+          },
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.evaluate",
+          "target": {
+            "tabId": 1269123313
+          },
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.disable",
+          "target": {
+            "tabId": 1269123313
+          },
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.evaluate",
+          "target": {
+            "tabId": 1269123313
+          },
+          "status": "fulfilled"
+        },
+        {
+          "method": "detach",
+          "target": {
+            "tabId": 1269123313
+          }
+        }
+      ],
+      "nativeAfterDetachError": "Debugger is not attached to the tab with id: 1269123313.",
+      "disposedBrokerError": "The target broker is disposed.",
+      "targetHasAnyDebugger": true,
+      "listenerRemoved": true
+    }
+  }
+}

@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { createRequire } from 'node:module';
+import { resolve } from 'node:path';
+import { styleText } from 'node:util';
+const dependencyLoader = createRequire('/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/package.json');
+const { chromium } = dependencyLoader('@playwright/test');
+const profile = await mkdtemp('/private/tmp/devkit-cdb-profile-');
+const server = createServer((request, response) => { response.writeHead(200, { 'Content-Type': 'text/html' }); response.end('<!doctype html><title>Owned CDB target</title><p>Debugger fixture</p>'); });
+await new Promise((resolveListening) => server.listen(0, '127.0.0.1', resolveListening));
+const targetUrl = `http://127.0.0.1:${server.address().port}/fixture`;
+let browser;
+const receipt = { passed: false, cleanup: {} };
+try {
+  browser = await chromium.launchPersistentContext(profile, { channel: 'chromium', headless: true, args: [`--disable-extensions-except=${resolve('extension')}`, `--load-extension=${resolve('extension')}`] });
+  receipt.browserVersion = browser.browser().version();
+  receipt.executable = chromium.executablePath();
+  const targetPage = await browser.newPage();
+  await targetPage.goto(targetUrl);
+  const worker = browser.serviceWorkers()[0] ?? await browser.waitForEvent('serviceworker', { timeout: 10_000 });
+  const controlPage = await browser.newPage();
+  await controlPage.goto(`chrome-extension://${new URL(worker.url()).hostname}/control.html`);
+  const response = await controlPage.evaluate((url) => chrome.runtime.sendMessage({ kind: 'run', targetUrl: url }), targetUrl);
+  receipt.response = response;
+  assert.equal(response.passed, true, JSON.stringify(response));
+  const { result } = response;
+  assert.equal(result.command.value.result.value, 42);
+  assert.equal(result.event.value.method, 'Runtime.consoleAPICalled');
+  assert.equal(result.event.value.parameters.args[0].value, 'cdb-owned-fixture-event');
+  assert.equal(result.nativeWhileSubscribed.result.value, 54);
+  assert.equal(result.nativeAfterClientDisposal.result.value, 63);
+  assert.equal(result.disposedClientError, 'The embedded bridge is disposed.');
+  assert.equal(result.trace.filter((entry) => entry.method === 'attach').length, 1);
+  assert.equal(result.trace.filter((entry) => entry.method === 'detach').length, 1);
+  assert.equal(result.trace.filter((entry) => entry.method === 'Runtime.enable').length, 1);
+  assert.equal(result.trace.filter((entry) => entry.method === 'Runtime.disable').length, 1);
+  assert.equal(result.trace.find((entry) => entry.method === 'Runtime.disable').status, 'fulfilled');
+  assert.match(result.nativeAfterDetachError, /not attached/u);
+  assert.equal(result.disposedBrokerError, 'The target broker is disposed.');
+  assert.equal(result.listenerRemoved, true);
+  receipt.passed = true;
+} catch (error) { receipt.error = String(error); process.exitCode = 1; }
+finally {
+  await browser?.close(); receipt.cleanup.browserClosed = true;
+  await new Promise((resolveClosed, rejectClosed) => server.close((error) => { if (error) rejectClosed(error); else resolveClosed(); })); receipt.cleanup.serverClosed = true;
+  await rm(profile, { recursive: true, force: true }); receipt.cleanup.profileRemoved = true;
+  await writeFile('receipt.json', JSON.stringify(receipt, null, 2) + '\n');
+}
+console.info(styleText(receipt.passed ? 'green' : 'red', '🧪 [cdb-probe]'), JSON.stringify(receipt));
