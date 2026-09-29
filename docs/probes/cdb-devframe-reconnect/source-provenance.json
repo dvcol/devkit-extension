@@ -1,0 +1,30 @@
+[
+  {
+    "source": "src/service.ts",
+    "sourceMap": "index.mjs.map",
+    "embeddedName": "../src/service.ts",
+    "sha256": "b04915ab6333bc513a5627aef9c24c95e629fb487c70102cbb276f3714cf1c83",
+    "byteIdenticalLocalSource": "/Users/dinh-van.colomban/Workspace/private/chrome-debugger-bridge/packages/devframe/src/service.ts"
+  },
+  {
+    "source": "src/client.ts",
+    "sourceMap": "client.mjs.map",
+    "embeddedName": "../src/client.ts",
+    "sha256": "cab56bbeeb0ca3a8a530b1cdf906009509535f732c597d4a3d3c0ca72173e640",
+    "byteIdenticalLocalSource": "/Users/dinh-van.colomban/Workspace/private/chrome-debugger-bridge/packages/devframe/src/client.ts"
+  },
+  {
+    "source": "src/connection.ts",
+    "sourceMap": "connection.mjs.map",
+    "embeddedName": "../src/connection.ts",
+    "sha256": "4bac41412ada59f4913a0b05013a1032ab35c7b19c28d6c12d690ce2abd7fb4f",
+    "byteIdenticalLocalSource": "/Users/dinh-van.colomban/Workspace/private/chrome-debugger-bridge/packages/devframe/src/connection.ts"
+  },
+  {
+    "source": "src/wire.ts",
+    "sourceMap": "wire-ntPw73UZ.mjs.map",
+    "embeddedName": "../src/wire.ts",
+    "sha256": "e1fb4792e4322549c7f06110a848953c899b27b2c90b7cbfca0677a31ac83e5a",
+    "byteIdenticalLocalSource": "/Users/dinh-van.colomban/Workspace/private/chrome-debugger-bridge/packages/devframe/src/wire.ts"
+  }
+]

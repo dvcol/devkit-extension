@@ -1,0 +1,120 @@
+{
+  "bugs": {
+    "url": "https://github.com/dvcol/chrome-debugger-bridge/issues"
+  },
+  "dist": {
+    "shasum": "dca909d02f83ecb75d32b73ce7f95c1ed0b742af",
+    "tarball": "https://registry.npmjs.org/@dvcol/cdb-devframe/-/cdb-devframe-0.3.0.tgz",
+    "fileCount": 31,
+    "integrity": "sha512-yUbqt4fUcIisomKjxktJLnvSIi8DHwThl+uJrg7WFzX4H24EMBu8M7JC34WlhjXvJm6wbM8lKWVcoAihRVdW4g==",
+    "signatures": [
+      {
+        "sig": "MEUCIQCJv8f6IYZcRUR4YqzCilu2HVNzBj6gZcYZzOuV5mLmygIgbHDbpepJAnROh1gIRrQfQtTpuulPOMNnnRGd46zk8Ow=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEUCIHmOT7cUZ1A6/SsAL/SYPWZo2wSJyzro9EN0VT+g9dGCAiEA7EC5js6BzZ1PQZXVWXq9pS/acuTWEBdRJvZmU9CaJEA=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/@dvcol%2fcdb-devframe@0.3.0",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 195130
+  },
+  "name": "@dvcol/cdb-devframe",
+  "type": "module",
+  "author": "dvcol",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./panel": {
+      "types": "./dist/panel.d.mts",
+      "import": "./dist/panel.mjs"
+    },
+    "./client": {
+      "types": "./dist/client.d.mts",
+      "import": "./dist/client.mjs"
+    },
+    "./connection": {
+      "types": "./dist/connection.d.mts",
+      "import": "./dist/connection.mjs"
+    },
+    "./page-script": {
+      "types": "./dist/page-script.d.mts",
+      "import": "./dist/page-script.mjs"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "pack": "pnpm pack --out artifacts/package.tgz",
+    "test": "vitest run",
+    "build": "tsdown && vite build",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "check:package": "publint"
+  },
+  "_npmUser": {
+    "name": "GitHub Actions",
+    "email": "npm-oidc-no-reply@github.com",
+    "trustedPublisher": {
+      "id": "github",
+      "oidcConfigId": "oidc:c75fd980-03c1-40b4-8e54-262a74cf65b8"
+    }
+  },
+  "homepage": "https://github.com/dvcol/chrome-debugger-bridge#readme",
+  "keywords": [
+    "chrome",
+    "chrome-debugger",
+    "cdp",
+    "browser-automation",
+    "mcp",
+    "agent"
+  ],
+  "repository": {
+    "url": "git+https://github.com/dvcol/chrome-debugger-bridge.git",
+    "type": "git",
+    "directory": "packages/devframe"
+  },
+  "description": "CDB services, provider transport, and browser-control panels for Devframe hosts.",
+  "directories": {},
+  "maintainers": [
+    {
+      "name": "dvcol",
+      "email": "dinh.van.colomban@gmail.com"
+    }
+  ],
+  "sideEffects": false,
+  "_nodeVersion": "24.20.0",
+  "dependencies": {
+    "devframe": "1.0.0",
+    "@dvcol/cdb": "^0.3.0",
+    "@devframes/hub": "1.0.0",
+    "@dvcol/cdb-broker": "^0.3.0",
+    "@dvcol/cdb-extension": "^0.3.0",
+    "@devframes/json-render": "1.0.0",
+    "@devframes/json-render-ui": "1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "_hasShrinkwrap": false,
+  "devDependencies": {
+    "vite": "8.3.0",
+    "tsdown": "0.22.14",
+    "vitest": "4.1.10"
+  },
+  "_npmOperationalInternal": {
+    "tmp": "tmp/cdb-devframe_0.3.0_1789637270304_0.7025071715887841",
+    "host": "s3://npm-registry-packages-npm-production"
+  },
+  "_id": "@dvcol/cdb-devframe@0.3.0",
+  "version": "0.3.0"
+}

@@ -1,0 +1,80 @@
+{
+  "name": "@dvcol/cdb-devframe",
+  "type": "module",
+  "version": "0.3.0",
+  "description": "CDB services, provider transport, and browser-control panels for Devframe hosts.",
+  "author": "dvcol",
+  "license": "MIT",
+  "homepage": "https://github.com/dvcol/chrome-debugger-bridge#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dvcol/chrome-debugger-bridge.git",
+    "directory": "packages/devframe"
+  },
+  "bugs": {
+    "url": "https://github.com/dvcol/chrome-debugger-bridge/issues"
+  },
+  "keywords": [
+    "chrome",
+    "chrome-debugger",
+    "cdp",
+    "browser-automation",
+    "mcp",
+    "agent"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./client": {
+      "types": "./dist/client.d.mts",
+      "import": "./dist/client.mjs"
+    },
+    "./connection": {
+      "types": "./dist/connection.d.mts",
+      "import": "./dist/connection.mjs"
+    },
+    "./panel": {
+      "types": "./dist/panel.d.mts",
+      "import": "./dist/panel.mjs"
+    },
+    "./page-script": {
+      "types": "./dist/page-script.d.mts",
+      "import": "./dist/page-script.mjs"
+    }
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "dependencies": {
+    "@devframes/hub": "1.0.0",
+    "@devframes/json-render": "1.0.0",
+    "@devframes/json-render-ui": "1.0.0",
+    "@dvcol/cdb": "^0.3.0",
+    "@dvcol/cdb-broker": "^0.3.0",
+    "@dvcol/cdb-extension": "^0.3.0",
+    "devframe": "1.0.0"
+  },
+  "devDependencies": {
+    "tsdown": "0.22.14",
+    "vite": "8.3.0",
+    "vitest": "4.1.10"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown && vite build",
+    "check:package": "publint",
+    "pack": "pnpm pack --out artifacts/package.tgz",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit --project tsconfig.json"
+  }
+}
