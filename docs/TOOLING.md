@@ -38,6 +38,8 @@ The old Vue UI, its CSS and its Stylelint rules were removed. Future renderer an
 
 The MV3 example's `background.ts` has one inline `unicorn/prefer-top-level-await` exception. It observes asynchronous provider startup failures while registering browser event listeners synchronously. Other source checks remain enabled, and its real Chromium test verifies startup and connection behavior.
 
+The selected-page example has one inline `typescript/no-unsafe-type-assertion` exception at the browser read of `DevframeConnection`. Devframe exports that type but no runtime validator. The example checks the same envelope as its upstream external viewer, preserves native metadata for the native client, and keeps backend authentication separate. This exception does not claim complete metadata validation. Real Chromium checks cover absence, malformed envelopes, browser permission rejection and native authentication; the SDK adds no duplicate native metadata schema.
+
 ## Preserved research evidence
 
 `docs/probes/**` and `docs/contracts/**` are preserved research artifacts, not maintained workspace packages. Their exact executed files have their own recorded validation and are excluded from the new lint and formatting gates. `docs/planning/**` retains historical review formatting. Canonical architecture and glossary documents, new maintained documentation, packages and examples use Oxfmt.

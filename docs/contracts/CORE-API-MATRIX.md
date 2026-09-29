@@ -164,3 +164,12 @@ The maintained extension example now passes 21 real Chromium scenarios. One exte
 Realm-only broadcast excludes the extension; all-realm broadcast updates each provider once. Explicit preference invokes Devframe. After its native host shuts down, a new call follows the configured fallback to the extension, while broadcast retains a rejected result alongside DevTools' successful result. The peer extension page observes native state updates and survives independent client disconnect. [Commands, screenshot and receipt](../../examples/webext/README.md#explicit-native-server-connections).
 
 Explicit application configuration is implemented. Selected-document handoff, cross-provider rendering, full surface lifecycle, page/content-script authority and Firefox conformance remain open. No automatic tab monitoring, credential persistence, operation replay or new discovery policy was added.
+
+
+## Selected-document handoff, 2026-09-29
+
+The extension example adds a one-shot read of the native `DEVFRAME_CONNECTION_KEY` in a selected loopback tab's top-level MAIN world. It adopts the published descriptor through the existing native client with `isolated: true`, then attaches the existing provider adapter. The configured SDK provider ID remains explicit. Browser `scripting` permission and the existing loopback host permission govern the read; native backend origin admission and authentication govern the new connection.
+
+The real publisher fixture calls native `setupDevframeConnection`; it does not fabricate a connection object. The 24-scenario Chromium suite now verifies successful adoption and routed invocation, missing/malformed envelopes, closed tabs, denied scripting access and continued backend ownership after the source tab closes. All browser pages contribute to the zero-page-error receipt. [Reproduction and limits](../../examples/webext/README.md#selected-page-handoff).
+
+This example-local handoff needs no new SDK contract, metadata schema, generic approval callback, page RPC bridge, watcher or storage policy. It checks the native envelope, not complete metadata validity or page trust. Automatic monitoring, actual DevTools/popup/side-panel lifecycle, cross-provider rendering, Firefox conformance and privileged page request handling remain separate work.

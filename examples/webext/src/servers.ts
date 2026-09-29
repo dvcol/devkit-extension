@@ -2,20 +2,19 @@ import type { Client, ProviderAttachment } from '@devkit/client';
 import { createDevframeProviderConnection } from '@devkit/server/client';
 import type { DevframeProviderConnection } from '@devkit/server/client';
 import { connectDevframe } from 'devframe/client';
+import type { SetupDevframeConnectionOptions } from 'devframe/client';
 import { increaseCounterAction } from './contracts';
+import { mountPageConnections } from './pages';
 
-interface ConfiguredServer {
-  readonly baseURL: string;
+interface ConfiguredServer extends SetupDevframeConnectionOptions {
   readonly providerId: string;
-  readonly authToken: string;
 }
 
 /** The server must allow this extension's origin through its native allowedOrigins option. */
-function connectServer(configured: ConfiguredServer) {
+function connectServer(options: SetupDevframeConnectionOptions) {
   return connectDevframe({
-    baseURL: configured.baseURL,
-    authToken: configured.authToken,
-    connection: { isolated: true },
+    ...options,
+    connection: { ...options.connection, isolated: true },
     simpleAuth: false,
     otpParam: false,
     webmcp: false,
@@ -26,8 +25,8 @@ function connectServer(configured: ConfiguredServer) {
 function createServerAttachments(client: Client) {
   const cleanup = new Set<() => void>();
   let disposed = false;
-  async function attach(configured: ConfiguredServer): Promise<string> {
-    const rpc = await connectServer(configured);
+  async function attach({ providerId, ...options }: ConfiguredServer): Promise<string> {
+    const rpc = await connectServer(options);
     let connection: DevframeProviderConnection | undefined;
     let attachment: ProviderAttachment | undefined;
     const dispose = () => {
@@ -41,11 +40,11 @@ function createServerAttachments(client: Client) {
       if (disposed) throw new Error('The page connection is closed');
       connection = await createDevframeProviderConnection({
         rpc,
-        providerId: configured.providerId,
+        providerId,
       });
       if (disposed) throw new Error('The page connection is closed');
       attachment = client.providers.attach({ connection });
-      return `Connected ${configured.providerId}`;
+      return `Connected ${providerId}`;
     } catch (error) {
       dispose();
       throw error;
@@ -80,10 +79,19 @@ export function mountServerControls(client: Client) {
   };
   form.addEventListener('submit', submit);
   const releaseButtons = mountRoutingButtons(client, result);
+  const releasePages = mountPageConnections((connection) =>
+    show(result, () =>
+      attachments.attach({
+        providerId: document.querySelector<HTMLInputElement>('#server-id')!.value,
+        connection,
+      }),
+    ),
+  );
   return () => {
     form.removeEventListener('submit', submit);
     unsubscribe();
     releaseButtons();
+    releasePages();
     attachments.dispose();
   };
 }

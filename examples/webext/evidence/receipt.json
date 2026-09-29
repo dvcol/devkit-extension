@@ -21,7 +21,10 @@
     "native origin allowlist and rejected credentials",
     "simultaneous isolated Devframe, DevTools and extension providers",
     "realm broadcast and explicit provider preference",
-    "fallback after native server disconnect and partial broadcast failure"
+    "fallback after native server disconnect and partial broadcast failure",
+    "selected document hands off its natively published connection",
+    "absent, malformed and closed selected documents reject without attaching",
+    "native scripting permission rejection and independent adopted connection lifetime"
   ],
   "pageErrors": []
 }

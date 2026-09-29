@@ -5,6 +5,7 @@ import { join, resolve } from 'node:path';
 import { styleText } from 'node:util';
 import { chromium, expect } from '@playwright/test';
 import { checkConfiguredServers } from './configured-servers.ts';
+import { checkSelectedPage } from './selected-page.ts';
 
 const extensionPath = resolve('dist');
 const profile = await mkdtemp(join(tmpdir(), 'native-port-chromium-'));
@@ -14,6 +15,7 @@ const browser = await chromium.launchPersistentContext(profile, {
   args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
 });
 const errors: string[] = [];
+browser.on('weberror', (error) => errors.push(error.error().message));
 browser.on('console', (message) => {
   const sanitized = message
     .text()
@@ -26,7 +28,6 @@ try {
   const first = await browser.newPage();
   const second = await browser.newPage();
   for (const page of [first, second]) {
-    page.on('pageerror', (error) => errors.push(error.message));
     await page.goto(`chrome-extension://${extensionId}/panel.html`);
     await expect(page.locator('#status')).toHaveText('Connected');
     await expect(page.getByText('Counter: 0', { exact: true })).toBeVisible();
@@ -88,8 +89,8 @@ try {
   await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
   await expect(first.locator('#result')).toHaveText('14');
   await checkConfiguredServers(first, second);
+  await checkSelectedPage(first);
   const denied = await browser.newPage();
-  denied.on('pageerror', (error) => errors.push(error.message));
   await denied.goto(`chrome-extension://${extensionId}/denied.html`);
   await expect(denied.locator('#status')).toHaveText('Disconnected');
   await expect(denied.locator('#result')).toContainText('closed');
@@ -128,6 +129,9 @@ try {
       'simultaneous isolated Devframe, DevTools and extension providers',
       'realm broadcast and explicit provider preference',
       'fallback after native server disconnect and partial broadcast failure',
+      'selected document hands off its natively published connection',
+      'absent, malformed and closed selected documents reject without attaching',
+      'native scripting permission rejection and independent adopted connection lifetime',
     ],
     pageErrors: errors,
   };

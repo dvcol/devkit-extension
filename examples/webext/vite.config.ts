@@ -18,6 +18,7 @@ export default defineConfig({
             action: { default_popup: 'panel.html' },
             options_ui: { page: 'panel.html', open_in_tab: true },
             host_permissions: ['http://127.0.0.1/*'],
+            permissions: ['scripting'],
           }),
         });
       },
