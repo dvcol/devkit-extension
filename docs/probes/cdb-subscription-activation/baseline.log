@@ -1,0 +1,89 @@
+
+ RUN  v4.1.10 /private/tmp/cdb-subscription-candidate.mmsc0rg7/repo/packages/core
+
+ ❯ |unit-node:core| test/subscription-activation.test.ts (8 tests | 7 failed) 12ms
+   × buffers an event received while domain activation is pending 8ms
+   × does not resurrect a subscription closed by overflow during activation 1ms
+   × does not resurrect a subscription closed by lease-release during activation 0ms
+   × does not resurrect a subscription closed by lease-expiry during activation 0ms
+   × does not resurrect a subscription closed by target-revocation during activation 0ms
+   × does not resurrect a subscription closed by broker-disposal during activation 0ms
+   × cleans up the original executor when its target is replaced during activation 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit-node:core| test/subscription-activation.test.ts > buffers an event received while domain activation is pending
+AssertionError: expected { done: true, value: undefined } to match object { done: false, value: { …(1) } }
+
+- Expected
++ Received
+
+  {
+-   "done": false,
+-   "value": {
+-     "parameters": {
+-       "requestId": "during-enable",
+-     },
+-   },
++   "done": true,
++   "value": undefined,
+  }
+
+ ❯ test/subscription-activation.test.ts:54:24
+     52|     const event = subscription[Symbol.asyncIterator]().next();
+     53|     subscription.close();
+     54|     await expect(event).resolves.toMatchObject({ done: false, value: {…
+       |                        ^
+     55|     expect(setSubscriptionDemand).toHaveBeenNthCalledWith(1, 'Fetch.re…
+     56|     expect(setSubscriptionDemand).toHaveBeenNthCalledWith(2, 'Fetch.re…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |unit-node:core| test/subscription-activation.test.ts > does not resurrect a subscription closed by overflow during activation
+ FAIL  |unit-node:core| test/subscription-activation.test.ts > does not resurrect a subscription closed by lease-release during activation
+ FAIL  |unit-node:core| test/subscription-activation.test.ts > does not resurrect a subscription closed by lease-expiry during activation
+ FAIL  |unit-node:core| test/subscription-activation.test.ts > does not resurrect a subscription closed by target-revocation during activation
+ FAIL  |unit-node:core| test/subscription-activation.test.ts > does not resurrect a subscription closed by broker-disposal during activation
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ test/subscription-activation.test.ts:109:23
+    107|       void event.then(() => { settled = true; });
+    108|       await vi.advanceTimersByTimeAsync(0);
+    109|       expect(settled).toBe(true);
+       |                       ^
+    110|       await expect(event).resolves.toEqual({ done: true, value: undefi…
+    111|       subscription.close();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |unit-node:core| test/subscription-activation.test.ts > cleans up the original executor when its target is replaced during activation
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ test/subscription-activation.test.ts:141:21
+    139|     void event.then(() => { settled = true; });
+    140|     await vi.advanceTimersByTimeAsync(0);
+    141|     expect(settled).toBe(true);
+       |                     ^
+    142|     await expect(event).resolves.toEqual({ done: true, value: undefine…
+    143|     subscription.close();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 1 passed (8)
+   Start at  16:50:04
+   Duration  181ms (transform 48ms, setup 0ms, import 60ms, tests 12ms, environment 0ms)
+

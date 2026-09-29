@@ -1,0 +1,161 @@
+--- /dev/null
++++ b/packages/core/test/subscription-activation.test.ts
+@@ -0,0 +1,158 @@
++import type { CdpSubscriptionRequest, PublishedTarget } from '../src/protocol.js';
++
++import { expect, it, vi } from 'vitest';
++
++import { createTargetBroker } from '../src/broker.js';
++
++const target = {
++  availability: 'available',
++  capabilities: { level: 'debug' },
++  generation: 1,
++  id: '60000000-0000-4000-8000-000000000001',
++  scopeId: '40000000-0000-4000-8000-000000000001',
++  type: 'page',
++} satisfies PublishedTarget;
++
++function createPendingSubscription() {
++  const activation = Promise.withResolvers<void>();
++  const broker = createTargetBroker();
++  const setSubscriptionDemand = vi.fn(async (_methodPrefix: string, active: boolean) => {
++    if (active) await activation.promise;
++  });
++  broker.publishTarget(target);
++  broker.registerTargetExecutor(target, {
++    execute: async () => ({}),
++    setSubscriptionDemand,
++  });
++  const lease = broker.acquireLease({
++    durationMilliseconds: 1_000,
++    mode: 'exclusive-control',
++    requestedMethods: ['Fetch.requestPaused'],
++    targetGeneration: target.generation,
++    targetId: target.id,
++  });
++  const request: CdpSubscriptionRequest = {
++    buffer: { capacity: 1, overflowStrategy: 'disconnect' },
++    leaseId: lease.id,
++    match: { method: 'Fetch.requestPaused' },
++    targetGeneration: target.generation,
++    targetId: target.id,
++  };
++  return { activation, broker, request, setSubscriptionDemand };
++}
++
++it('buffers an event received while domain activation is pending', async () => {
++  expect.assertions(3);
++  const { activation, broker, request, setSubscriptionDemand } = createPendingSubscription();
++  try {
++    const subscribing = broker.subscribe(request);
++    broker.publishEvent(target, 'Fetch.requestPaused', { requestId: 'during-enable' });
++    activation.resolve();
++    const subscription = await subscribing;
++    const event = subscription[Symbol.asyncIterator]().next();
++    subscription.close();
++    await expect(event).resolves.toMatchObject({ done: false, value: { parameters: { requestId: 'during-enable' } } });
++    expect(setSubscriptionDemand).toHaveBeenNthCalledWith(1, 'Fetch.requestPaused', true);
++    expect(setSubscriptionDemand).toHaveBeenNthCalledWith(2, 'Fetch.requestPaused', false);
++  } finally {
++    broker.dispose();
++  }
++});
++
++it('rolls back rejected activation so the same lease can subscribe again', async () => {
++  expect.assertions(4);
++  const { activation, broker, request, setSubscriptionDemand } = createPendingSubscription();
++  try {
++    const subscribing = broker.subscribe(request);
++    const rejected = expect(subscribing).rejects.toMatchObject({ code: 'CDP_COMMAND_FAILED' });
++    activation.reject(new Error('Activation failed'));
++    await rejected;
++    expect(setSubscriptionDemand).toHaveBeenCalledExactlyOnceWith('Fetch.requestPaused', true);
++    setSubscriptionDemand.mockResolvedValue();
++    const subscription = await broker.subscribe(request);
++    broker.publishEvent(target, 'Fetch.requestPaused', { requestId: 'after-retry' });
++    const event = subscription[Symbol.asyncIterator]().next();
++    subscription.close();
++    await expect(event).resolves.toMatchObject({ done: false, value: { parameters: { requestId: 'after-retry' } } });
++    expect(setSubscriptionDemand.mock.calls).toEqual([
++      ['Fetch.requestPaused', true],
++      ['Fetch.requestPaused', true],
++      ['Fetch.requestPaused', false],
++    ]);
++  } finally {
++    broker.dispose();
++  }
++});
++
++it.each(['overflow', 'lease-release', 'lease-expiry', 'target-revocation', 'broker-disposal'] as const)(
++  'does not resurrect a subscription closed by %s during activation',
++  async (invalidation) => {
++    expect.assertions(4);
++    vi.useFakeTimers();
++    const { activation, broker, request, setSubscriptionDemand } = createPendingSubscription();
++    try {
++      const subscribing = broker.subscribe(request);
++      if (invalidation === 'overflow') {
++        broker.publishEvent(target, 'Fetch.requestPaused', { requestId: 'first' });
++        broker.publishEvent(target, 'Fetch.requestPaused', { requestId: 'second' });
++      } else if (invalidation === 'lease-release') broker.releaseLease(request);
++      else if (invalidation === 'lease-expiry') await vi.advanceTimersByTimeAsync(1_000);
++      else if (invalidation === 'target-revocation') broker.revokeTarget(target.id, target.generation);
++      else broker.dispose();
++      expect(setSubscriptionDemand).toHaveBeenCalledExactlyOnceWith('Fetch.requestPaused', true);
++      activation.resolve();
++      const subscription = await subscribing;
++      const event = subscription[Symbol.asyncIterator]().next();
++      let settled = false;
++      void event.then(() => {
++        settled = true;
++      });
++      await vi.advanceTimersByTimeAsync(0);
++      expect(settled).toBe(true);
++      await expect(event).resolves.toEqual({ done: true, value: undefined });
++      subscription.close();
++      broker.dispose();
++      expect(setSubscriptionDemand.mock.calls).toEqual([
++        ['Fetch.requestPaused', true],
++        ['Fetch.requestPaused', false],
++      ]);
++    } finally {
++      broker.dispose();
++      vi.useRealTimers();
++    }
++  },
++);
++
++it('cleans up the original executor when its target is replaced during activation', async () => {
++  expect.assertions(4);
++  vi.useFakeTimers();
++  const { activation, broker, request, setSubscriptionDemand } = createPendingSubscription();
++  const replacementDemand = vi.fn(async () => {});
++  try {
++    const subscribing = broker.subscribe(request);
++    broker.revokeTarget(target.id, target.generation);
++    const replacement = { ...target, generation: 2 };
++    broker.publishTarget(replacement);
++    broker.registerTargetExecutor(replacement, { execute: async () => ({}), setSubscriptionDemand: replacementDemand });
++    activation.resolve();
++    const subscription = await subscribing;
++    const event = subscription[Symbol.asyncIterator]().next();
++    let settled = false;
++    void event.then(() => {
++      settled = true;
++    });
++    await vi.advanceTimersByTimeAsync(0);
++    expect(settled).toBe(true);
++    await expect(event).resolves.toEqual({ done: true, value: undefined });
++    subscription.close();
++    broker.dispose();
++    expect(setSubscriptionDemand.mock.calls).toEqual([
++      ['Fetch.requestPaused', true],
++      ['Fetch.requestPaused', false],
++    ]);
++    expect(replacementDemand).not.toHaveBeenCalled();
++  } finally {
++    broker.dispose();
++    vi.useRealTimers();
++  }
++});

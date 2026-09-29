@@ -2,6 +2,8 @@
 
 A fixed host-owned response filter works through the released CDB 0.3.0 public APIs without an upstream patch. The real Chromium experiment for [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10) reads and replaces one response body while CDB remains the attachment and domain owner. Dynamic transform contributions remain part of [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
 
+The original proof below waits for subscription setup before making requests. A follow-on [activation investigation](./cdb-subscription-activation.md) reproduced event loss during setup and led to an exact-version CDB patch. That lifecycle correction is separate from configuring a fixed response filter, which still uses the existing native port API.
+
 ## Native composition
 
 `createSelectedTabPublisher` accepts a `ChromeDebuggerPort`. The host supplies native parameters when CDB calls `Fetch.enable`; every other command passes through. The client still uses CDB's lease, subscription and command APIs. It never sends a competing raw `Fetch.enable` or `Fetch.disable`.
@@ -63,9 +65,9 @@ The released declarations expose `ChromeDebuggerPort`, `SelectedTabPublisherOpti
 Further acceptance work is required before offering a general response-transform feature:
 
 - Multiple contributions changing or combining patterns, and competing handlers for one paused request.
-- Cancellation and target changes while a response is paused or its body is being read.
+- Cancellation and target changes while a response is paused or its body is being read. The follow-on activation investigation proves that closing the subscription and releasing its lease resumes the original root-session response after a completed body read; in-flight reads and other demand remain unproved.
 - Queue overload. Native Fetch subscriptions cap their buffers at 16; losing a pause event can lose the request identifier needed to resume it.
-- Subscription startup. Native domain activation precedes broker subscription registration, leaving a potential race before the subscriber exists. The fixture waits for setup before creating requests.
+- Subscription startup. The original fixture waits for setup before creating requests. The follow-on investigation reproduces this race and verifies the local patch against the actual installed 0.3.0 package.
 - Child sessions, redirects, authentication challenges, non-ASCII or binary bodies, compression, streaming, worker termination and permission changes.
 - An explicit policy for failed asynchronous native disable if a consumer requires confirmed cleanup.
 

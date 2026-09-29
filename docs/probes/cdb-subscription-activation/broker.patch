@@ -1,0 +1,47 @@
+--- a/packages/core/src/broker.ts
++++ b/packages/core/src/broker.ts
+@@ -775,14 +775,12 @@
+     target: PublishedTarget,
+     demand: string,
+     sessionId?: string,
++    executor = executorsByTargetKey.get(getTargetKey(target.id, target.generation)),
+   ): void {
+     const demandKey = getDomainDemandKey(target, demand, sessionId);
+     const count = domainDemandCountsByKey.get(demandKey) ?? 0;
+     if (count <= 1) {
+       domainDemandCountsByKey.delete(demandKey);
+-      const executor = executorsByTargetKey.get(
+-        getTargetKey(target.id, target.generation),
+-      );
+       const setup
+         = sessionId === undefined
+           ? executor?.setSubscriptionDemand?.(demand, false)
+@@ -2079,8 +2077,6 @@
+           },
+         }),
+       };
+-      await incrementDomainDemand(target, demand, request.sessionId);
+-      demandActive = true;
+       subscriptions.set(id, {
+         authorizedMethods,
+         close,
+@@ -2140,6 +2136,19 @@
+         sequence: 1,
+       });
+       subscriptionConnectionIdsById.set(id, authority.connectionId);
++      const executor = executorsByTargetKey.get(getTargetKey(target.id, target.generation));
++      try {
++        await incrementDomainDemand(target, demand, request.sessionId);
++      } catch (error) {
++        close();
++        throw error;
++      }
++      if (closed) {
++        /** Revocation may remove the executor before its activation completes. */
++        decrementDomainDemand(target, demand, request.sessionId, executor);
++        return subscription;
++      }
++      demandActive = true;
+       return subscription;
+     },
+     unregisterAutomationProvider(authority = localAgentAuthority) {

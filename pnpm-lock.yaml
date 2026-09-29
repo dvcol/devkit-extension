@@ -167,6 +167,7 @@ packageExtensionsChecksum: sha256-TuzqaJS5gcGQV57KKWuyjeQz8HqJFHARvU5dXQvg4oA=
 patchedDependencies:
   '@devframes/json-render-ui@1.0.0': e919d78a74ba3373391bafcef25c3c5e0663de10c18eb36c515757542e8f505e
   '@devframes/json-render@1.0.0': 36d6b16fe2ecb4bdfc5cdbe40c2346808483243609b1cc12ec1359976c8dc2bc
+  '@dvcol/cdb@0.3.0': 4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c
   '@wxt-dev/browser@0.3.0': 819d3a884a0033ec173cc6e8165f070d0922d58f997ea948460108a048ed7220
   crossws@0.4.12: 7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605
   devframe@1.0.0: 6033f5717f6adf7d74420484134aeda0338a3bc38b554ca42d926884ba8d91d0
@@ -236,7 +237,7 @@ importers:
         version: link:../../packages/runtime
       '@dvcol/cdb':
         specifier: 0.3.0
-        version: 0.3.0
+        version: 0.3.0(patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c)
       '@dvcol/cdb-extension':
         specifier: 0.3.0
         version: 0.3.0
@@ -3831,23 +3832,23 @@ snapshots:
 
   '@dvcol/cdb-broker@0.3.0':
     dependencies:
-      '@dvcol/cdb': 0.3.0
+      '@dvcol/cdb': 0.3.0(patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c)
       '@dvcol/cdb-mcp': 0.3.0
 
   '@dvcol/cdb-extension@0.3.0':
     dependencies:
-      '@dvcol/cdb': 0.3.0
+      '@dvcol/cdb': 0.3.0(patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c)
       '@dvcol/cdb-broker': 0.3.0
 
   '@dvcol/cdb-mcp@0.3.0':
     dependencies:
-      '@dvcol/cdb': 0.3.0
+      '@dvcol/cdb': 0.3.0(patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c)
       '@modelcontextprotocol/node': 2.0.0(@modelcontextprotocol/server@2.0.0)(hono@4.11.4)
       '@modelcontextprotocol/server': 2.0.0
       hono: 4.11.4
       zod: 4.4.3
 
-  '@dvcol/cdb@0.3.0':
+  '@dvcol/cdb@0.3.0(patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c)':
     dependencies:
       '@standard-schema/spec': 1.1.0
       zod: 4.4.3

@@ -1,0 +1,47 @@
+diff --git a/dist/broker-oVY5ja-T.js b/dist/broker-oVY5ja-T.js
+index dec5358f50a39a3b12d502ec1822913782544570..191b61b50755e938ff31c693a09dc782bf4c650e 100644
+--- a/dist/broker-oVY5ja-T.js
++++ b/dist/broker-oVY5ja-T.js
+@@ -429,12 +429,11 @@ function createTargetBroker(options = {}) {
+ 			throw targetExecutorError(error) ?? new TargetBrokerError("CDP_COMMAND_FAILED", { ...error instanceof Error ? { message: error.message } : {} });
+ 		});
+ 	}
+-	function decrementDomainDemand(target, demand, sessionId) {
++	function decrementDomainDemand(target, demand, sessionId, executor = executorsByTargetKey.get(getTargetKey(target.id, target.generation))) {
+ 		const demandKey = getDomainDemandKey(target, demand, sessionId);
+ 		const count = domainDemandCountsByKey.get(demandKey) ?? 0;
+ 		if (count <= 1) {
+ 			domainDemandCountsByKey.delete(demandKey);
+-			const executor = executorsByTargetKey.get(getTargetKey(target.id, target.generation));
+ 			(sessionId === void 0 ? executor?.setSubscriptionDemand?.(demand, false) : executor?.setSubscriptionDemand?.(demand, false, sessionId))?.catch(() => {});
+ 		} else domainDemandCountsByKey.set(demandKey, count - 1);
+ 	}
+@@ -1260,8 +1259,6 @@ function createTargetBroker(options = {}) {
+ 					});
+ 				} })
+ 			};
+-			await incrementDomainDemand(target, demand, request.sessionId);
+-			demandActive = true;
+ 			subscriptions.set(id, {
+ 				authorizedMethods,
+ 				close,
+@@ -1306,6 +1303,19 @@ function createTargetBroker(options = {}) {
+ 				sequence: 1
+ 			});
+ 			subscriptionConnectionIdsById.set(id, authority.connectionId);
++			const executor = executorsByTargetKey.get(getTargetKey(target.id, target.generation));
++			try {
++				await incrementDomainDemand(target, demand, request.sessionId);
++			} catch (error) {
++				close();
++				throw error;
++			}
++			if (closed) {
++				/** Revocation may remove the executor before its activation completes. */
++				decrementDomainDemand(target, demand, request.sessionId, executor);
++				return subscription;
++			}
++			demandActive = true;
+ 			return subscription;
+ 		},
+ 		unregisterAutomationProvider(authority = localAgentAuthority) {

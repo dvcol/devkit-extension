@@ -1,0 +1,15 @@
+{
+  "extends": "./repo/packages/core/tsconfig.json",
+  "include": [
+    "./repo/packages/core/src/**/*.ts",
+    "./repo/packages/core/test/subscription-activation.test.ts"
+  ],
+  "compilerOptions": {
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "./repo/node_modules/@types"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-09-29T07:59:24.428Z",
+  "nodeVersion": "v26.9.0",
+  "coreVersion": "0.3.0",
+  "extensionVersion": "0.3.0",
+  "coreRoot": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@dvcol+cdb@0.3.0_patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c/node_modules/@dvcol/cdb",
+  "extensionRoot": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@dvcol+cdb-extension@0.3.0/node_modules/@dvcol/cdb-extension",
+  "publicEntries": {
+    "@dvcol/cdb/embedded": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@dvcol+cdb@0.3.0_patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c/node_modules/@dvcol/cdb/dist/embedded.js",
+    "@dvcol/cdb-extension": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@dvcol+cdb-extension@0.3.0/node_modules/@dvcol/cdb-extension/dist/index.js"
+  },
+  "patchPath": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/patches/@dvcol__cdb@0.3.0.patch",
+  "patchSha256": "4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c",
+  "brokerPath": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/node_modules/.pnpm/@dvcol+cdb@0.3.0_patch_hash=4c884d928efbd1c3c72f51e95e01cd51abef4285ddc314a94f0d624b08638c5c/node_modules/@dvcol/cdb/dist/broker-oVY5ja-T.js",
+  "brokerSha256": "c66269d4ce2e37cfe00fae70d7249d9bcaaa9b88e466b5dfb421a631b16badd0",
+  "eventSinkPrecedesActivation": true,
+  "aliases": []
+}

@@ -6,6 +6,8 @@ This section records the original research run. It does not establish a referenc
 
 The follow-on [maintained debugger example](../../examples/debugger/README.md) promotes this composition into strict TypeScript with a portable page-title service/action and native Chromium/Firefox checks. The frozen probe below remains evidence for its original run. Neither example completes the broader debugger contract.
 
+The maintained example now applies the [CDB subscription activation patch](./cdb-subscription-activation.md). The historical proof below used unpatched releases.
+
 ## Exact native boundary
 
 The public registry versions remain `@dvcol/cdb@0.3.0`, `@dvcol/cdb-extension@0.3.0` and `@dvcol/cdb-broker@0.3.0`, published September 17 and outside the workspace's seven-day release-age gate. The probe consumed those released tarballs, not a working checkout. [Artifact integrities](../probes/cdb-embedded-extension/versions.json) match the original audit. Primary records: [core](https://registry.npmjs.org/@dvcol%2fcdb/0.3.0), [extension](https://registry.npmjs.org/@dvcol%2fcdb-extension/0.3.0), [broker](https://registry.npmjs.org/@dvcol%2fcdb-broker/0.3.0).
@@ -89,8 +91,7 @@ The raw native calls intentionally bypass CDB leases. They do not attach another
 
 ## Remaining implementation gates
 
-- Promote the composition into a maintained TypeScript contribution/example under the existing strict tooling. The scratch scripts pass syntax, browser bundling and execution; applying type-aware lint without a probe TS project fails and is recorded in [validation](../probes/cdb-embedded-extension/validation.json). Frozen research is not a tooling exemption for production code.
-- Prove the portable contribution lifecycle, native context access and explicit Firefox unavailability without a new generic command facade.
+- The maintained example now covers the portable contribution lifecycle, native context access and explicit Firefox unavailability under strict TypeScript and Oxlint. The original scratch scripts remain frozen research; their earlier type-aware lint limitation is recorded in [validation](../probes/cdb-embedded-extension/validation.json).
 - Exercise navigation, target closure, child sessions, worker termination, permissions, cancellation, conflicting native lifecycle calls and both native DevTools attachment orders through the final composition.
 - Repeat through an authenticated Devframe peer. The embedded client is trusted in-process; this result does not establish remote grants.
 - The follow-on [configured response experiment](./cdb-response-transform.md) proves a fixed host policy through the public `ChromeDebuggerPort`, preserving CDB ownership without a patch. Dynamic contribution configuration, paused-request failure handling and complete Fetch lifecycle remain open.

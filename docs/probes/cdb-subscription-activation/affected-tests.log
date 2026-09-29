@@ -1,0 +1,9 @@
+
+ RUN  v4.1.10 /private/tmp/cdb-subscription-candidate.mmsc0rg7/repo/packages/core
+
+
+ Test Files  3 passed (3)
+      Tests  80 passed (80)
+   Start at  16:51:50
+   Duration  451ms (transform 315ms, setup 0ms, import 457ms, tests 155ms, environment 0ms)
+
