@@ -59,7 +59,7 @@ Disabling a service aborts its operation signal and forwards cancellation to `br
 
 Chromium uses an MV3 service worker with required `debugger` and `tabs` permissions. Firefox receives a separate MV3 manifest without `debugger`; `createDebuggerHost('firefox', ...)` returns `{ status: 'unavailable', reason: 'unsupported-browser' }` before accessing Chrome debugger APIs. The portable action remains installed, its requirement waits, capability resolution is unavailable, and invocation rejects with the runtime's `unavailable-capability` result.
 
-This package does not claim Firefox CDP parity, native DevTools coexistence, Fetch interception configuration, process recovery, HMR, or integration into a renderer. Those remain separate contract and host work.
+This package does not claim Firefox CDP parity, native DevTools coexistence, dynamic Fetch configuration, process recovery, HMR, or integration into a renderer. Those remain separate contract and host work.
 
 ## Run and verify
 
@@ -89,6 +89,26 @@ The Chromium command also runs three live lifecycle scenarios, retained in `evid
 Supported HTTP navigation retains CDB's target ID and authority generation in this recipe. That generation does not promise document identity; document-bound contributions must use the native document/session mechanisms appropriate to their resource. Tab closure can be observed through `onRemoved` or `onDetach`; the test accepts their corresponding native revocation reasons without imposing an event order. A detach attempted after the tab has closed can reject, which the native publisher already handles.
 
 Explicit teardown uses `publisher.revoke()`. An initial test called raw `chrome.debugger.detach()` and waited for an `onDetach` notification, but the notification did not arrive. Chrome documents that event for browser-terminated debugging sessions. Raw consumers must respect the publisher's attachment ownership; this example does not add a watcher to repair a bypassed owner. [Chrome debugger events](https://developer.chrome.com/docs/extensions/reference/api/debugger#event-onDetach).
+
+## Fixed response interception
+
+The same `test:browser` command also runs the [response recipe](./src/response.ts) against an owned HTTP fixture and writes `artifacts/chromium-response.json`. CI already runs this command. The [retained receipt](./evidence/chromium-response.json) records the verified Chromium run.
+
+The host passes a native `ChromeDebuggerPort` to `createDebuggerHost`. `responseDebugger(urlPattern)` supplies a fixed response-stage pattern when CDB calls `Fetch.enable`; all other commands pass through the existing port. CDB remains the only attachment and domain owner. A lease and `Fetch.requestPaused` subscription feed one response to `transformNextResponse`, which reads its body and fulfills the bounded text fixture with an appended suffix.
+
+```ts
+const host = createDebuggerHost(
+  'chromium',
+  console.error,
+  responseDebugger('https://example.test/api/*'),
+);
+```
+
+The live check receives `server:selected:transformed` and the fixture response header for the matching request. A concurrent unmatched request keeps `server:unmatched`. Closing the subscription does not disable Fetch because commands retain lease-owned domain demand. Releasing the lease eventually disables Fetch; the test observes actual native completion before verifying that a later matching request receives its original body. Final teardown leaves no lease, detaches once and rejects an extension command after detach. No queued event was dropped in this bounded scenario.
+
+Lease release does not acknowledge native domain-disable completion. The test observes fulfilled Fetch and Runtime disables at the actual port before detach. Its first run exposed an overly early detach racing `Runtime.disable`; the final fixture waits for those observed completions. This observation helper exists only in the tests and does not add an SDK cleanup barrier or recovery mechanism.
+
+This is a fixed host policy and one root-session ASCII text response at status 200. It defines no portable transform contract, dynamic pattern merging, overlapping-handler order or general paused-request failure policy. Binary/compressed/streamed bodies, child sessions, overload and cancellation during a body read remain separate acceptance work. Firefox continues to assert debugger unavailability; no Firefox response-transform parity is implied. The existing subscription activation patch remains installed; no additional patch is needed for this recipe.
 
 ## Authenticated native Devframe composition
 

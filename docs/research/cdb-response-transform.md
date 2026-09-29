@@ -4,6 +4,12 @@ A fixed host-owned response filter works through the released CDB 0.3.0 public A
 
 The original proof below waits for subscription setup before making requests. A follow-on [activation investigation](./cdb-subscription-activation.md) reproduced event loss during setup and led to an exact-version CDB patch. That lifecycle correction is separate from configuring a fixed response filter, which still uses the existing native port API.
 
+## Maintained example
+
+The fixed policy is now implemented in [the debugger example](../../examples/debugger/README.md#fixed-response-interception) and runs through its existing Chromium command in CI. Its typed recipe uses the public native port, client, lease and subscription types. The retained [maintained receipt](../../examples/debugger/evidence/chromium-response.json) proves matching-body replacement, unaffected concurrent traffic, no interception after native disable, zero remaining leases and final detach. The original archive below remains unchanged.
+
+The maintained runner observes actual completion of both Fetch and Runtime disable before detaching. An initial run detached while `Runtime.disable` was pending and observed its native rejection. Waiting for the native completions corrects the fixture sequencing without changing CDB or claiming that public lease release acknowledges cleanup. No new package patch, protocol or portable transform declaration is introduced.
+
 ## Native composition
 
 `createSelectedTabPublisher` accepts a `ChromeDebuggerPort`. The host supplies native parameters when CDB calls `Fetch.enable`; every other command passes through. The client still uses CDB's lease, subscription and command APIs. It never sends a competing raw `Fetch.enable` or `Fetch.disable`.

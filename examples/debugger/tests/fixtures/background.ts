@@ -1,9 +1,13 @@
 import { z } from 'zod';
 import { checkChromium, checkUnavailable } from './run.js';
 import { checkChromiumLifecycle } from './lifecycle.js';
+import { checkResponseTransform } from './response.js';
 
 declare const DEBUGGER_BROWSER: 'chromium' | 'firefox';
-const requestSchema = z.object({ kind: z.enum(['run', 'lifecycle']), targetUrl: z.url() });
+const requestSchema = z.object({
+  kind: z.enum(['run', 'lifecycle', 'response']),
+  targetUrl: z.url(),
+});
 let running = false;
 
 /** This packaged document is test instrumentation, not a contribution UI or public RPC API. */
@@ -37,6 +41,7 @@ function receive(
 
 function runRequest(request: z.infer<typeof requestSchema>) {
   if (DEBUGGER_BROWSER === 'firefox') return checkUnavailable();
+  if (request.kind === 'response') return checkResponseTransform(request.targetUrl);
   if (request.kind === 'lifecycle') return checkChromiumLifecycle(request.targetUrl);
   return checkChromium(request.targetUrl);
 }

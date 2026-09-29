@@ -7,10 +7,19 @@ import { styleText } from 'node:util';
 import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
 import type { BrowserContext } from '@playwright/test';
-import { assertChromiumReceipt } from './receipt.ts';
+import { assertChromiumReceipt, assertResponseReceipt } from './receipt.ts';
 import { assertLifecycleReceipt } from './lifecycle-receipt.ts';
 
 const server = createServer((request, response) => {
+  response.setHeader('Cache-Control', 'no-store');
+  if (
+    request.url?.startsWith('/selected') === true ||
+    request.url?.startsWith('/unmatched') === true
+  ) {
+    response.writeHead(200, { 'Content-Type': 'text/plain' });
+    response.end(request.url.startsWith('/selected') ? 'server:selected' : 'server:unmatched');
+    return;
+  }
   response.writeHead(200, { 'Content-Type': 'text/html' });
   if (request.url === '/navigated') {
     response.end('<!doctype html><title>Navigated debugger target</title>');
@@ -68,6 +77,21 @@ try {
     ) + '\n',
   );
   assertLifecycleReceipt(lifecycleReceipt);
+  const responseReceipt = await boundedReceipt(
+    control.evaluate(
+      (url) => chrome.runtime.sendMessage<unknown>({ kind: 'response', targetUrl: url }),
+      targetUrl,
+    ),
+  );
+  assertResponseReceipt(responseReceipt, targetUrl);
+  await writeFile(
+    'artifacts/chromium-response.json',
+    JSON.stringify(
+      { browser: browser.browser()?.version(), pageErrors, receipt: responseReceipt },
+      null,
+      2,
+    ) + '\n',
+  );
   assert.deepEqual(pageErrors, []);
   console.info(
     styleText('green', '🧪 [debugger/chromium]'),

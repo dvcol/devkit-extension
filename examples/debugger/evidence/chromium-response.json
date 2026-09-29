@@ -1,0 +1,171 @@
+{
+  "browser": "153.0.8010.12",
+  "pageErrors": [],
+  "receipt": {
+    "passed": true,
+    "result": {
+      "transformed": {
+        "response": {
+          "original": "server:selected",
+          "url": "http://127.0.0.1:53725/selected?phase=active",
+          "status": 200
+        },
+        "requests": {
+          "result": {
+            "type": "object",
+            "value": [
+              {
+                "body": "server:selected:transformed",
+                "path": "/selected?phase=active",
+                "probe": "fulfilled",
+                "status": 200
+              },
+              {
+                "body": "server:unmatched",
+                "path": "/unmatched?phase=active",
+                "probe": null,
+                "status": 200
+              }
+            ]
+          }
+        },
+        "disableCountAfterSubscriptionClose": 0,
+        "overflowed": false,
+        "droppedCount": 0
+      },
+      "afterRelease": {
+        "result": {
+          "type": "object",
+          "value": {
+            "body": "server:selected",
+            "probe": null,
+            "status": 200
+          }
+        }
+      },
+      "remainingLeases": 0,
+      "afterDetach": "Error: Debugger is not attached to the tab with id: 50058057.",
+      "trace": [
+        {
+          "method": "attach",
+          "status": "fulfilled"
+        },
+        {
+          "method": "Target.setAutoAttach",
+          "status": "fulfilled",
+          "parameters": {
+            "autoAttach": true,
+            "filter": [
+              {
+                "exclude": false,
+                "type": "iframe"
+              },
+              {
+                "exclude": false,
+                "type": "service_worker"
+              },
+              {
+                "exclude": false,
+                "type": "shared_worker"
+              },
+              {
+                "exclude": false,
+                "type": "worker"
+              }
+            ],
+            "flatten": true,
+            "waitForDebuggerOnStart": true
+          }
+        },
+        {
+          "method": "Fetch.enable",
+          "status": "fulfilled",
+          "parameters": {
+            "patterns": [
+              {
+                "urlPattern": "http://127.0.0.1:53725/selected*",
+                "requestStage": "Response"
+              }
+            ]
+          }
+        },
+        {
+          "method": "Runtime.enable",
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.evaluate",
+          "status": "fulfilled",
+          "parameters": {
+            "expression": "Promise.all(['/selected?phase=active', '/unmatched?phase=active'].map(async (path) => {\n          const response = await fetch(path);\n          return { path, status: response.status, body: await response.text(), probe: response.headers.get('X-Probe') };\n        }))",
+            "returnByValue": true,
+            "awaitPromise": true
+          }
+        },
+        {
+          "method": "Fetch.getResponseBody",
+          "status": "fulfilled",
+          "parameters": {
+            "requestId": "interception-job-1.0"
+          }
+        },
+        {
+          "method": "Fetch.fulfillRequest",
+          "status": "fulfilled",
+          "parameters": {
+            "requestId": "interception-job-1.0",
+            "responseCode": 200,
+            "responseHeaders": [
+              {
+                "name": "Content-Type",
+                "value": "text/plain; charset=utf-8"
+              },
+              {
+                "name": "X-Probe",
+                "value": "fulfilled"
+              }
+            ],
+            "body": "c2VydmVyOnNlbGVjdGVkOnRyYW5zZm9ybWVk"
+          }
+        },
+        {
+          "method": "Runtime.disable",
+          "status": "fulfilled"
+        },
+        {
+          "method": "Fetch.disable",
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.enable",
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.evaluate",
+          "status": "fulfilled",
+          "parameters": {
+            "expression": "fetch('/selected?phase=after-release').then(async (response) => ({ status: response.status, body: await response.text(), probe: response.headers.get('X-Probe') }))",
+            "returnByValue": true,
+            "awaitPromise": true
+          }
+        },
+        {
+          "method": "Runtime.disable",
+          "status": "fulfilled"
+        },
+        {
+          "method": "detach",
+          "status": "fulfilled"
+        },
+        {
+          "method": "Runtime.evaluate",
+          "status": "rejected",
+          "parameters": {
+            "expression": "1"
+          }
+        }
+      ],
+      "errors": []
+    }
+  }
+}

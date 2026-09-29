@@ -80,3 +80,71 @@ export function assertFirefoxReceipt(receipt: unknown): void {
   assert.equal(response.result.plugin.contributions.length, 1);
   assert.match(response.result.actionError, /unavailable/iu);
 }
+
+const receivedResponse = z.object({
+  status: z.number(),
+  body: z.string(),
+  probe: z.string().nullable(),
+});
+const responseReceipt = z.object({
+  passed: z.literal(true),
+  result: z.object({
+    transformed: z.object({
+      response: z.object({ original: z.string(), url: z.url(), status: z.number() }),
+      requests: z.object({
+        result: z.object({ value: z.array(receivedResponse.extend({ path: z.string() })) }),
+      }),
+      disableCountAfterSubscriptionClose: z.number(),
+      overflowed: z.boolean(),
+      droppedCount: z.number(),
+    }),
+    afterRelease: z.object({ result: z.object({ value: receivedResponse }) }),
+    remainingLeases: z.number(),
+    afterDetach: z.string(),
+    trace: z.array(
+      z.object({ method: z.string(), status: z.string(), parameters: z.unknown().optional() }),
+    ),
+    errors: z.array(z.string()),
+  }),
+});
+
+export function assertResponseReceipt(value: unknown, targetUrl: string): void {
+  const { result } = responseReceipt.parse(value);
+  assert.deepEqual(result.transformed.response, {
+    original: 'server:selected',
+    url: `${new URL(targetUrl).origin}/selected?phase=active`,
+    status: 200,
+  });
+  assert.deepEqual(result.transformed.requests.result.value, [
+    {
+      path: '/selected?phase=active',
+      status: 200,
+      body: 'server:selected:transformed',
+      probe: 'fulfilled',
+    },
+    { path: '/unmatched?phase=active', status: 200, body: 'server:unmatched', probe: null },
+  ]);
+  assert.equal(result.transformed.disableCountAfterSubscriptionClose, 0);
+  assert.equal(result.transformed.overflowed, false);
+  assert.equal(result.transformed.droppedCount, 0);
+  assert.deepEqual(result.afterRelease.result.value, {
+    status: 200,
+    body: 'server:selected',
+    probe: null,
+  });
+  assert.equal(result.remainingLeases, 0);
+  assert.match(result.afterDetach, /not attached/u);
+  assert.deepEqual(result.errors, []);
+  for (const method of ['attach', 'detach', 'Fetch.enable', 'Fetch.disable']) {
+    const commands = result.trace.filter((entry) => entry.method === method);
+    assert.equal(commands.length, 1);
+    assert.equal(commands[0]?.status, 'fulfilled');
+  }
+  assert.deepEqual(result.trace.find((entry) => entry.method === 'Fetch.enable')?.parameters, {
+    patterns: [{ urlPattern: `${new URL(targetUrl).origin}/selected*`, requestStage: 'Response' }],
+  });
+  assert.deepEqual(
+    result.trace.filter((entry) => entry.status === 'rejected').map((entry) => entry.method),
+    ['Runtime.evaluate'],
+  );
+}

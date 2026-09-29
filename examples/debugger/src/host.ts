@@ -1,5 +1,6 @@
 import { createEmbeddedChromeDebuggerBridge } from '@dvcol/cdb/embedded';
 import { createSelectedTabLifecycle, createSelectedTabPublisher } from '@dvcol/cdb-extension';
+import type { ChromeDebuggerPort } from '@dvcol/cdb-extension';
 import { nativeDebugger } from './chrome.js';
 import { nativeLifecycle } from './lifecycle.js';
 
@@ -7,6 +8,7 @@ import { nativeLifecycle } from './lifecycle.js';
 export function createDebuggerHost(
   browser: 'chromium' | 'firefox',
   onError: (error: unknown) => void,
+  chromeDebugger: ChromeDebuggerPort = nativeDebugger,
 ) {
   if (browser === 'firefox')
     return { status: 'unavailable', reason: 'unsupported-browser' } as const;
@@ -14,7 +16,7 @@ export function createDebuggerHost(
   const publisher = createSelectedTabPublisher({
     scopeId: crypto.randomUUID(),
     capabilities: { level: 'debug' },
-    chromeDebugger: nativeDebugger,
+    chromeDebugger,
     publishTarget: bridge.broker.publishTarget,
     updateTarget: bridge.broker.updateTarget,
     revokeTarget: (target, reason) => {
