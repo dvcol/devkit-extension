@@ -1,0 +1,96 @@
+{
+  "browserVersion": "153.0.8010.12",
+  "checks": [
+    {
+      "name": "Native authentication rejects missing/invalid credentials and accepts the native code",
+      "details": {
+        "unauthenticatedRejected": true,
+        "unauthenticatedReason": "native-unauthorized",
+        "trustedBeforeCode": false,
+        "invalidCodeAccepted": false,
+        "validCodeAccepted": true,
+        "currentTrusted": true,
+        "echo": "authenticated-before-provider",
+        "state": {
+          "status": "connected",
+          "isTrusted": true,
+          "isolated": true,
+          "targetTabId": 973055143,
+          "providerDisposed": false,
+          "clientDisposed": false,
+          "closed": false,
+          "approvals": [],
+          "errors": []
+        }
+      }
+    },
+    {
+      "name": "Native pairing grants no target access automatically",
+      "details": {
+        "providers": 1,
+        "grants": 0
+      }
+    },
+    {
+      "name": "The actual extension control approves only the owned fixture tab",
+      "details": [
+        {
+          "requestId": "eb1733a7-33c3-41e6-8274-788d081d6add",
+          "selector": {
+            "kind": "explicit-tabs",
+            "tabIds": [973055143]
+          },
+          "accepted": true,
+          "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
+        }
+      ]
+    },
+    {
+      "name": "Host broker operation changes the real page through native RPC",
+      "details": {
+        "result": {
+          "operationId": "07069890-0ee2-4d57-a12f-36d1ff3d879e",
+          "value": {
+            "result": {
+              "type": "string",
+              "value": "changed-through-authenticated-native-cdb"
+            }
+          }
+        },
+        "ownership": {
+          "ownsAttachment": true,
+          "error": null
+        }
+      }
+    },
+    {
+      "name": "Ordinary authenticated RPC shares the peer during browser control",
+      "details": {
+        "echo": "ordinary-during-debugging"
+      }
+    },
+    {
+      "name": "Provider disposal releases this extension attachment and retains the peer",
+      "details": {
+        "ownership": {
+          "ownsAttachment": false,
+          "error": "native-not-attached"
+        }
+      }
+    },
+    {
+      "name": "Disposing CDB leaves ordinary native RPC usable",
+      "details": {
+        "echo": "ordinary-after-cdb-client-disposal"
+      }
+    },
+    {
+      "name": "Native peer disconnect leaves no scope or lease",
+      "details": {
+        "scopes": 0,
+        "leases": 0
+      }
+    }
+  ],
+  "pageErrors": []
+}

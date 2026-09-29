@@ -4,19 +4,23 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build && vite build --mode firefox",
+    "build": "vite build && vite build --mode firefox && vite build --mode devframe",
     "test": "vitest run --root .",
     "test:browser": "node tests/browser.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
-    "test:firefox": "node tests/firefox.ts"
+    "test:firefox": "node tests/firefox.ts",
+    "test:devframe": "node tests/devframe.ts"
   },
   "dependencies": {
     "@devkit/core": "workspace:*",
     "@devkit/runtime": "workspace:*",
     "@dvcol/cdb": "0.3.0",
+    "@dvcol/cdb-devframe": "0.3.0",
     "@dvcol/cdb-extension": "0.3.0",
+    "cac": "7.0.0",
+    "devframe": "1.0.0",
     "zod": "4.6.5"
   },
   "devDependencies": {

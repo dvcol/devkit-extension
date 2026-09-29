@@ -47,11 +47,12 @@ The private [`examples/debugger`](../../examples/debugger/README.md) composes na
 | Contribution disposal versus host disposal | Chromium browser test | Contribution cleanup retains the host target; client-only disposal retains native access; final host teardown detaches; stale native calls reject |
 | Native failure, malformed reply, revoked target and cancellation | Vitest tests at the Chrome boundary | Release operation-owned leases, reject explicitly, avoid replay and preserve independent host ownership |
 | Firefox availability | Actual Firefox temporary add-on | No Chromium debugger permission/API; no installed debugger service; dependency remains waiting and invocation rejects as unavailable |
-| Browser import graph | Vite build | Public package imports only, with no Node builtins or external runtime imports in either extension bundle |
+| Authenticated native CDB composition | `test:devframe` against actual Chromium and native Devframe host | Missing/invalid credentials reject, native code and pairing work, explicit tab approval precedes actual browser execution, ordinary RPC survives CDB disposal, peer disconnect removes scopes/leases |
+| Browser import graph | Vite build | Public package imports only, with no Node builtins, MCP implementation or external runtime imports in any of the three extension bundles |
 
 The maintained Chromium lifecycle receipt also covers supported navigation with the same native target reference, publisher revocation, actual tab closure and unsupported-page revocation. Each path checks pending subscription completion, lease removal, stale-action failure with the native cause, no automatic reattachment/replay and removal of all lifecycle listeners.
 
-These cases do not establish remote peer authorization, configured Fetch demand, child-session behavior, permission transitions, worker termination, every navigation race or native DevTools attachment order. Those remain obligations of [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10).
+The separate native Devframe receipt establishes direct authenticated provider composition under explicit fixture-only approval. It does not implement the portable title action on the remote broker or settle product pairing policy. Same-peer reconnection, remote agent clients, configured Fetch demand, child-session behavior, permission transitions, worker termination, every navigation race and native DevTools attachment order remain obligations of [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10).
 
 ## Local implementation evidence
 

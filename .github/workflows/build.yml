@@ -23,6 +23,8 @@ jobs:
         run: pnpm --filter @devkit/example-webext test:browser
       - name: Run the Chromium debugger contribution browser test
         run: pnpm --filter @devkit/example-debugger test:browser
+      - name: Run authenticated native CDB browser integration
+        run: pnpm --filter @devkit/example-debugger test:devframe
       - name: Install Firefox for the extension example
         id: firefox
         uses: browser-actions/setup-firefox@v1

@@ -1,6 +1,6 @@
 # Native CDB over an existing Devframe peer
 
-The released CDB 0.3.0 APIs already supply an extension-to-server composition. A new SDK debugger transport or authentication layer is unnecessary. This investigation advances [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10); it does not establish authenticated browser execution yet.
+The released CDB 0.3.0 APIs already supply an extension-to-server composition. A new SDK debugger transport or authentication layer is unnecessary. This investigation advances [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10). The follow-on [maintained native browser check](../../examples/debugger/README.md#authenticated-native-devframe-composition) now proves this direct composition with authentication enabled.
 
 ## Public composition
 
@@ -56,10 +56,10 @@ The connection handle disposes its previous CDB client on disconnect. That remov
 
 This is a registration-boundary proof, not socket reconnection, browser or authentication evidence. It does not justify forced registration or a new SDK cache. No reconnect patch or new upstream PR was created. The fresh-peer and direct-client controls have different lifetimes; they do not establish the higher-level handle's same-peer guarantee.
 
-## Next acceptance proof
+## Maintained authenticated acceptance
 
-Start one native Devframe host with `createCdbService()` and default authentication enabled. Admit only the owned extension origin, forward native peer callbacks, and expose one ordinary echo method. Connect the extension through existing isolated native connection setup and complete native trust.
+The maintained `pnpm --filter @devkit/example-debugger test:devframe` command starts one native host with `createCdbService()` and default authentication enabled. It admits the owned extension origin, forwards native peer callbacks, and exposes an ordinary echo method. The actual Chromium extension uses isolated native connection setup. Missing credentials and an invalid code fail; the actual temporary native code establishes trust, confirmed from the server RPC session.
 
-Compose `createCdbClient(peer)` with `createChromeProvider`, native installation identity and pairing storage. An extension-owned control page explicitly approves only the owned fixture target. Drive a public broker operation as an explicit host-owned agent principal. Check a real browser result, revocation/cancellation and ordinary RPC before and after CDB teardown. No renderer or MCP host is needed to establish this path.
+`createCdbClient(peer)` composes directly with `createChromeProvider`, native installation identity and pairing storage. Pairing alone creates no target grant. An extension-owned control page explicitly approves the fixture tab, and the host-owned agent's native `browser.evaluate` changes its actual DOM. Provider disposal relinquishes this extension's debugger attachment. Ordinary authenticated RPC survives CDB client disposal, and actual peer disconnect leaves no scopes or leases. The eight-step receipt reports zero observed browser errors. [Typed source, command and receipt](../../examples/debugger/README.md#authenticated-native-devframe-composition).
 
-The existing CDB browser test disables native authentication, so it cannot supply this missing evidence. The first provider proof follows CDB's existing direct-client example and does not need the defective connection handle. Same-peer recovery, persistent credential policy, remote agent clients, MV3 restart and renderer integration retain separate acceptance obligations.
+This follows CDB's existing direct-client example and does not need the defective connection handle. No new dependency patch is needed. The example adds exact `@dvcol/cdb-devframe@0.3.0` to its manifest and passes strict TypeScript with `skipLibCheck: false`; browser-only imports are checked during the Vite build. Same-peer recovery, the remote portable title contract, cancellation/revocation during remote execution, persistent credential policy, remote agent clients, MV3 restart and renderer integration retain separate acceptance obligations. Automatic confirmation of the single fixture broker is not a product credential policy.
