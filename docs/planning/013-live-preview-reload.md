@@ -36,3 +36,11 @@ The upstream cleanup proposal remains [Vite draft 23574](https://github.com/vite
 [Vite draft commit 60b99b3](https://github.com/vitejs/vite/commit/60b99b30b4a3488c2da360ee1b05b2e517e9b848) extracts `closeUnusedReplacementServer()` beside `restartServer()` so its failure path has no nested try/catch. The helper closes the abandoned candidate and retains both errors if cleanup also rejects; the caller rethrows the original restart error after successful cleanup. This corrects a native Vite resource leak and introduces no SDK-specific behavior or API.
 
 All 26 lifecycle-hook tests, affected-package build/type checks, changed-file lint and formatting pass. The PR remains a draft. Vite stays unpatched in this workspace.
+
+## Maintained extension development
+
+The [extension example](../../examples/webext/README.md#native-development-commands) delegates development to WXT and Vite with the existing exact-version compatibility patches. Both maintained browser suites exercise real module HMR, HTML reload, background reload, configuration restart and native shutdown in disposable profiles. Background reload resets the example's ephemeral state; configuration restart replaces the actual browser. Neither path restores state or replays work through an SDK controller.
+
+Actual toolbar popup module replacement is verified in both browsers as well. The same native document/provider survives, a new Port caller replaces the old one, current native state is retained and one JSON action produces one update. Chromium additionally verifies retained local form input and that an old pending action completes without overwriting the replacement UI. The receipts and native automation boundaries are recorded in the example.
+
+This closes the popup module-HMR evidence gap only. Popup-specific HTML/background/config transitions, DevTools/sidebar development transitions, content/page updates, rapid edits and watched-production extension behavior remain open. Cross-provider JSON action routing still needs the separate [renderer seam decision](./012-json-routing-seam.md).

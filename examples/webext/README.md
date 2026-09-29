@@ -142,12 +142,14 @@ On the first Chromium launch, open `chrome://extensions` and enable **Developer 
 
 | Edit                  | Native behavior                                       | Observed state                                                                          |
 | --------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Panel TypeScript      | Vite module replacement, old panel resources disposed | Same document/provider, retained native state, new connection                           |
+| Panel TypeScript      | Vite module replacement, old panel resources disposed | Same document/provider, retained native state, new connection; actual popup also tested |
 | Panel HTML            | Full page reload                                      | New document, same provider/state                                                       |
 | Background entrypoint | Extension reload; reopen the options page afterward   | New provider, reset ephemeral state, no automatic replay                                |
 | WXT configuration     | Native browser/server restart                         | Old browser exits; manifest changes take effect; new provider and reset ephemeral state |
 
 The maintained live tests use temporary copies of this example and disposable browser profiles. They drive the actual native JSON renderer through module, HTML, background and configuration changes in both browsers. The configuration check edits the application version from `0.0.1` to `0.0.2`, proves the old browser exits, then verifies the replacement manifest, new provider, reset counter and working action. Final native shutdown must also close the replacement browser. The retained [Chromium receipt](./evidence/development/chromium/receipt.json) and [Firefox receipt](./evidence/development/firefox/receipt.json) record passing runs on Chromium 153.0.8010.12 and Firefox 156.0.1. Chromium also checks a pending old command cannot overwrite replacement UI and confirms no page errors. Firefox observes native process shutdown; it does not claim global browser-error capture. Chromium verifies its native Developer mode setting survives restart. The test reads the platform's actual preference store and never writes protected values. Earlier frozen experiments retain the detailed listener/Port-count and upstream-runner comparisons.
+
+Actual toolbar popups also receive module HMR in both browsers. The native `action.openPopup()` and `extension.getViews({ type: 'popup' })` APIs identify the real popup. A source edit retains its document and provider, replaces its Port caller, and leaves one working JSON action with current native state. Chromium additionally checks local form retention and completion of pre-update work without overwriting the replacement result. Closing removes the popup from native view enumeration. These checks add no application hooks, reload manager or dependency patch.
 
 ```sh
 pnpm --filter @devkit/example-webext test:dev:chromium
@@ -159,7 +161,7 @@ The Firefox test attaches to the browser WXT opened. Its isolated automation ses
 
 On Linux CI only, the Chromium development test passes `--no-sandbox`, matching Playwright's existing test-launch default. The Ubuntu runner rejects the downloaded Chromium sandbox before CDP startup. This flag applies only to the disposable automated browser; the normal WXT development commands keep Chromium's default sandbox behavior. Native launch crashes print the owned browser's stderr before exiting.
 
-The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, popup/DevTools/sidebar development transitions and watched production remain open.
+The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, popup-specific HTML/background/config transitions, DevTools/sidebar development transitions and watched production remain open.
 
 ## Explicit native server connections
 

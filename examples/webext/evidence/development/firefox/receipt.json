@@ -6,6 +6,7 @@
   "scenarios": [
     "Panel module HMR preserves document, provider and state; replaces caller; invokes each action once",
     "HTML reload replaces document while retaining provider and state",
+    "Native toolbar popup module HMR preserves document, provider and state; replaces caller; one pointer action reaches the peer; popup closes cleanly",
     "Background reload closes old extension page; new page receives new incarnation and reset state",
     "Config restart closes old Firefox; replacement runs manifest 0.0.2 with a new provider and working actions"
   ]
