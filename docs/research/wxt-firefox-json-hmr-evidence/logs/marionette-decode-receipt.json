@@ -1,0 +1,16 @@
+{
+  "runId": "99c0533f-6db7-445d-959b-e1e1ad61872e",
+  "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts",
+  "sourceSha256": "26614a4d2ca1b06da70832deb4b85f9e7923ec2e3733a47532e782e9a0325a20",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+  "marker": "93b254f4-3090-4f09-a32f-f0ef31309f58",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "events": [],
+  "passed": false,
+  "marionettePort": 65329,
+  "developmentPort": 65330
+}

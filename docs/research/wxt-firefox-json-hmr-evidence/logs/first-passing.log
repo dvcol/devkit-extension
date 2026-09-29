@@ -1,0 +1,104 @@
+✔ Started dev server @ http://127.0.0.1:49458 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Built extension in 83 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.09 kB
+  ├─ .output/firefox-mv3-dev/panel.html                2.53 kB
+  ├─ .output/firefox-mv3-dev/background.js             1.44 MB
+  └─ .output/firefox-mv3-dev/chunks/panel-nVl2m1C-.js  8.25 kB
+Σ Total size: 1.45 MB                                
+✔ Opened browser in 894 ms
+ℹ Press o + enter to reopen the browser
+Native WXT started; attaching observer
+1790652095729	geckodriver	INFO	Listening on 127.0.0.1:49469
+Observer attached; native extension UUID found
+Opening panel 1
+Initial panel 1 connected and rendered
+Opening panel 2
+Initial panel 2 connected and rendered
+Recorded initial provider and connection identity
+About to append owned HMR marker
+Both panels replaced their module; recorded new identity
+1790652099681	webdriver::server	INFO	Shutting down
+1790652099681	geckodriver::marionette	ERROR	Failed to close browser connection: unknown error
+{
+  "runId": "66a996c5-9b4e-455d-8047-b0eb9b854c9f",
+  "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts",
+  "sourceSha256": "26614a4d2ca1b06da70832deb4b85f9e7923ec2e3733a47532e782e9a0325a20",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+  "marker": "bea8d32b-836b-4898-9805-2969ea2885c2",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "events": [
+    {
+      "event": "started",
+      "at": 1790652094740
+    },
+    {
+      "event": "closed",
+      "at": 1790652099579
+    }
+  ],
+  "passed": true,
+  "marionettePort": 49457,
+  "developmentPort": 49458,
+  "step": "Both panels replaced their module; recorded new identity",
+  "browserVersion": "156.0.1",
+  "geckodriverVersion": "0.37.1",
+  "browserProcess": 62277,
+  "nativeIdentity": {
+    "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-profile5TQtuG",
+    "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+    "nativeUuid": "22e7d0a7-a4b7-403a-bbda-fbcd6ea18b40"
+  },
+  "before": {
+    "timeOrigin": 1790652096160,
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "d301554c-cbfe-4e90-bf8c-3e9fc549eb63",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "identity": {
+      "id": 0,
+      "url": "moz-extension://22e7d0a7-a4b7-403a-bbda-fbcd6ea18b40/panel.html"
+    }
+  },
+  "editAt": 1790652097492,
+  "after": {
+    "timeOrigin": 1790652096160,
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "d301554c-cbfe-4e90-bf8c-3e9fc549eb63",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "identity": {
+      "id": 2,
+      "url": "moz-extension://22e7d0a7-a4b7-403a-bbda-fbcd6ea18b40/panel.html"
+    }
+  },
+  "executions": {
+    "started": 1,
+    "completed": 1
+  },
+  "oldUiResultAfterCompletion": "2",
+  "errors": [],
+  "nativeStopClosedBrowser": true,
+  "restored": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

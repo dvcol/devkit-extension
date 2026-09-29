@@ -1,0 +1,96 @@
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profilePolicy": "native fresh temporary profile per browser launch",
+  "runId": "5b8a1e38-a9d0-4b19-9feb-cf2c12eb9cf3",
+  "chromiumPort": 50013,
+  "developmentPort": 50014,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790652253047
+    },
+    {
+      "event": "closed",
+      "at": 1790652267055
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "background count initializer source edit from 0 to 100",
+  "browserVersion": "153.0.8010.12",
+  "initialDebugEndpoint": "ws://127.0.0.1:50013/devtools/browser/ec46bcd0-7d99-4cb8-9f51-6b1ebb6e2115",
+  "before": {
+    "extensionId": "ngijllhfifmnhmbaegflfpolbibljgof",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "bc4dd745-62e8-4f4b-9cbc-95ad1efe238d",
+      "count": 1,
+      "generation": "31b634f6-ebe1-40c8-970d-b48f058a959a",
+      "version": "1.0.0"
+    }
+  },
+  "extensionsBefore": {
+    "extensions": [
+      {
+        "id": "ngijllhfifmnhmbaegflfpolbibljgof",
+        "name": "Managed lifecycle proof",
+        "version": "1.0.0",
+        "path": "/private/tmp/devkit-wxt-background-only-s9e79sg4/.output/chrome-mv3-dev",
+        "enabled": true
+      }
+    ]
+  },
+  "developerModeBefore": {
+    "checked": false,
+    "role": "button",
+    "aria": "false"
+  },
+  "manifestBefore": "{\n  \"manifest_version\": 3,\n  \"name\": \"Managed lifecycle proof\",\n  \"version\": \"1.0.0\",\n  \"commands\": {\n    \"wxt:reload-extension\": {\n      \"description\": \"Reload the extension during development\",\n      \"suggested_key\": {\n        \"default\": \"Alt+R\"\n      }\n    }\n  },\n  \"background\": {\n    \"type\": \"module\",\n    \"service_worker\": \"background.js\"\n  },\n  \"action\": {\n    \"default_title\": \"Managed reload proof\",\n    \"default_popup\": \"popup.html\"\n  },\n  \"host_permissions\": [\n    \"http://localhost/*\"\n  ],\n  \"content_security_policy\": {\n    \"extension_pages\": \"script-src 'self' 'wasm-unsafe-eval' http://localhost:50014; object-src 'self';\",\n    \"sandbox\": \"script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:50014; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';\"\n  },\n  \"permissions\": [\n    \"tabs\",\n    \"scripting\"\n  ]\n}",
+  "changeAt": 1790652254311,
+  "manifestAfter": "{\n  \"manifest_version\": 3,\n  \"name\": \"Managed lifecycle proof\",\n  \"version\": \"1.0.0\",\n  \"commands\": {\n    \"wxt:reload-extension\": {\n      \"description\": \"Reload the extension during development\",\n      \"suggested_key\": {\n        \"default\": \"Alt+R\"\n      }\n    }\n  },\n  \"background\": {\n    \"type\": \"module\",\n    \"service_worker\": \"background.js\"\n  },\n  \"action\": {\n    \"default_title\": \"Managed reload proof\",\n    \"default_popup\": \"popup.html\"\n  },\n  \"host_permissions\": [\n    \"http://localhost/*\"\n  ],\n  \"content_security_policy\": {\n    \"extension_pages\": \"script-src 'self' 'wasm-unsafe-eval' http://localhost:50014; object-src 'self';\",\n    \"sandbox\": \"script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:50014; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';\"\n  },\n  \"permissions\": [\n    \"tabs\",\n    \"scripting\"\n  ]\n}",
+  "extensionsAfter": {
+    "extensions": [
+      {
+        "id": "ngijllhfifmnhmbaegflfpolbibljgof",
+        "name": "Managed lifecycle proof",
+        "version": "1.0.0",
+        "path": "/private/tmp/devkit-wxt-background-only-s9e79sg4/.output/chrome-mv3-dev",
+        "enabled": false
+      }
+    ]
+  },
+  "developerModeAfter": {
+    "checked": false,
+    "role": "button",
+    "aria": "false"
+  },
+  "managerText": "",
+  "navigationFailures": [
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n"
+  ],
+  "error": "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\", waiting until \"load\"\u001b[22m\n\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate",
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+✔ Started dev server @ http://127.0.0.1:50445 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Built extension in 94 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             863 B  
+  ├─ .output/chrome-mv3-dev/panel.html                2.53 kB
+  ├─ .output/chrome-mv3-dev/background.js             1.44 MB
+  └─ .output/chrome-mv3-dev/chunks/panel-C7Au9iwV.js  8.25 kB
+Σ Total size: 1.45 MB                               
+✔ Opened browser in 774 ms
+ℹ Press o + enter to reopen the browser
+debug [vite] connecting...
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:50445
+debug [vite] connected.
+debug [wxt] Connected to dev server
+debug [vite] connecting...
+debug [vite] connected.
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:50445
+debug [wxt] Connected to dev server
+debug [vite] hot updated: /@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts
+debug [vite] hot updated: /@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts
+ℹ Changed: entrypoints/panel.html
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Reloaded: panel
+debug [vite] connecting...
+debug [vite] connecting...
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:50445
+debug [vite] connected.
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:50445
+debug [wxt] Connected to dev server
+debug [vite] connected.
+debug [wxt] Connected to dev server
+ℹ Changed: entrypoints/background.ts
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Reloaded extension
+debug [vite] connecting...
+debug [vite] connected.
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:50445
+debug [wxt] Connected to dev server
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:50445
+debug [wxt] Connected to dev server
+{
+  "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts",
+  "sourceSha256": "26614a4d2ca1b06da70832deb4b85f9e7923ec2e3733a47532e782e9a0325a20",
+  "events": [],
+  "errors": [],
+  "passed": true,
+  "browser": "153.0.8010.12",
+  "developerModeBefore": false,
+  "developerModeAfter": true,
+  "before": {
+    "clickListeners": 1,
+    "manifest": "1.0.0",
+    "timeOrigin": 1790652393874.5,
+    "identity": {
+      "id": 0,
+      "url": "chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html"
+    },
+    "generation": "e392616e-418e-4c1e-9b74-d2712dcf986d",
+    "ports": [
+      {
+        "connected": 1790652394025,
+        "disconnected": null
+      },
+      {
+        "connected": 1790652394083,
+        "disconnected": null
+      }
+    ]
+  },
+  "editAt": 1790652394198,
+  "after": {
+    "clickListeners": 1,
+    "timeOrigin": 1790652393874.5,
+    "identity": {
+      "id": 2,
+      "url": "chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html"
+    },
+    "generation": "e392616e-418e-4c1e-9b74-d2712dcf986d",
+    "ports": [
+      {
+        "connected": 1790652394025,
+        "disconnected": 1790652394316
+      },
+      {
+        "connected": 1790652394083,
+        "disconnected": 1790652394316
+      },
+      {
+        "connected": 1790652394320,
+        "disconnected": null
+      },
+      {
+        "connected": 1790652394323,
+        "disconnected": null
+      }
+    ]
+  },
+  "finalPorts": [
+    {
+      "connected": 1790652394025,
+      "disconnected": 1790652394316
+    },
+    {
+      "connected": 1790652394083,
+      "disconnected": 1790652394316
+    },
+    {
+      "connected": 1790652394320,
+      "disconnected": null
+    },
+    {
+      "connected": 1790652394323,
+      "disconnected": null
+    }
+  ],
+  "htmlReload": {
+    "beforeTimeOrigin": 1790652393874.5,
+    "afterTimeOrigin": 1790652395416.5,
+    "backgroundGeneration": "e392616e-418e-4c1e-9b74-d2712dcf986d",
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "9e96c053-9b8f-433c-b382-5cf1129bddfe",
+      "realm": {
+        "id": "webext"
+      }
+    }
+  },
+  "oldWorkerClose": "closed",
+  "oldPages": [
+    {
+      "closed": true,
+      "status": null
+    },
+    {
+      "closed": true,
+      "status": null
+    }
+  ],
+  "navigationErrors": [],
+  "backgroundReload": {
+    "version": "after",
+    "manifest": "1.0.0",
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "00a93de0-9033-4b8b-9a3f-dd85fbd07fd0",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "browserConnected": true,
+    "oldFirstClosed": true,
+    "oldSecondClosed": true
+  },
+  "nativeStopDisconnectedBrowser": true,
+  "restored": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

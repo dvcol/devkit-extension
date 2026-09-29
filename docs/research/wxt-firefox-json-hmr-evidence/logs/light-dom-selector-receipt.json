@@ -1,0 +1,57 @@
+{
+  "runId": "1a1c75af-5095-4c43-b212-04fb7410f885",
+  "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts",
+  "sourceSha256": "26614a4d2ca1b06da70832deb4b85f9e7923ec2e3733a47532e782e9a0325a20",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+  "marker": "c08252fe-b5b9-4e9d-9042-a50fab56da38",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "events": [
+    {
+      "event": "started",
+      "at": 1790651883511
+    },
+    {
+      "event": "closed",
+      "at": 1790651915679
+    }
+  ],
+  "passed": false,
+  "marionettePort": 65022,
+  "developmentPort": 65023,
+  "browserVersion": "156.0.1",
+  "geckodriverVersion": "0.37.1",
+  "browserProcess": 60939,
+  "nativeIdentity": {
+    "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-profileOy4v1H",
+    "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+    "nativeUuid": "cb689bc4-d791-493c-ab66-d8615c8d6c5a"
+  },
+  "error": "Error: Timed out waiting for rendered counter 0",
+  "navigationDiagnostics": [
+    {
+      "status": "fulfilled",
+      "value": "moz-extension://cb689bc4-d791-493c-ab66-d8615c8d6c5a/panel.html"
+    },
+    {
+      "status": "fulfilled",
+      "value": "<html lang=\"en\"><head>\n    <script type=\"module\" src=\"http://127.0.0.1:65023/@vite/client\"></script>\n<script src=\"http://127.0.0.1:65023/@id/virtual:wxt-html-plugins\" type=\"module\"></script>\n    <meta charset=\"UTF-8\">\n    <title>Native Port proof</title>  <script type=\"module\" crossorigin=\"\" src=\"/chunks/panel-hMtI-c57.js\"></script>\n</head>\n  <body>\n    <h1>Native Port proof</h1>\n    <p id=\"status\">Connected</p>\n    <main id=\"renderer\"></main>\n    <p>Provider: <output id=\"provider\">{\"id\":\"example.extension\",\"incarnation\":\"613d4f34-f88f-4381-aca4-f4b429366730\",\"realm\":{\"id\":\"webext\"}}</output></p>\n    <p>Counter service: <output id=\"catalog\">active</output></p>\n    <button id=\"routed\">Routed increase</button><button id=\"capability\">Read capability</button>\n    <button id=\"broadcast\">Broadcast increase</button>\n    <button id=\"disable-service\">Disable service</button><button id=\"enable-service\">Enable service</button>\n    <button id=\"identity\">Caller identity</button><button id=\"write\">Native write</button>\n    <button id=\"rich\">Rich value</button><button id=\"unsupported\">Unsupported value</button>\n    <button id=\"wait\">Start pending action</button><button id=\"release\">Release pending action</button>\n    <button id=\"executions\">Execution counts</button><button id=\"disconnect\">Disconnect</button>\n    <button id=\"remote-close\">Worker disconnect</button><output id=\"result\"></output>\n    <h2>Configured dev servers</h2>\n    <form id=\"server-form\">\n      <label>Base URL <input id=\"server-url\" name=\"baseURL\" type=\"url\" required=\"\"></label>\n      <label>Provider ID <input id=\"server-id\" name=\"providerId\" required=\"\"></label>\n      <label>Native auth token\n        <input id=\"server-token\" name=\"authToken\" type=\"password\" required=\"\" autocomplete=\"off\"></label>\n      <button type=\"submit\">Connect server</button>\n    </form>\n    <p>\n      <button id=\"refresh-pages\">Refresh local pages</button>\n      <label>Local page\n        <select id=\"local-pages\"></select></label>\n      <button id=\"connect-page\">Connect selected page</button>\n      <output id=\"page-result\"></output>\n    </p>\n    <p><output id=\"providers\">[{\"provider\":{\"id\":\"example.extension\",\"incarnation\":\"613d4f34-f88f-4381-aca4-f4b429366730\",\"realm\":{\"id\":\"webext\"}},\"status\":\"open\"}]</output></p>\n    <button id=\"servers-increase\">Increase dev servers</button>\n    <button id=\"all-increase\">Increase all realms</button>\n    <label>Preferred server <input id=\"preferred-server\"></label>\n    <button id=\"fallback-increase\">Increase with extension fallback</button>\n    <output id=\"server-result\"></output>\n    <script type=\"module\" src=\"http://127.0.0.1:65023/@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts\"></script>\n  \n\n</body></html>"
+    }
+  ],
+  "nativeStopClosedBrowser": true,
+  "restored": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

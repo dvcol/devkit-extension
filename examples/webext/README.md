@@ -59,7 +59,11 @@ The native entrypoint calls `startExampleBackground()` synchronously. Importing 
 
 The panel accepts native Vite HMR and disposes its old Port, renderer, router, subscriptions and DOM listeners before replacement. Abort signals prevent delayed commands or connection attempts from overwriting the replacement controls. They do not cancel remote side effects. Manual disconnect still displays pending-call errors.
 
-A [standalone WXT development check](../../docs/research/wxt-json-hmr-evidence/RECEIPT.md) imports this maintained source and exercises the actual reference renderer in Chromium. It verifies the same document and background survive, the two old Ports close, exactly one routed-button listener remains, native state is retained, and post-update actions work without duplication. The WXT dependencies and runner/declaration patches remain in that standalone fixture. The maintained Vite build commands above do not yet provide extension development HMR, and Firefox renderer HMR, background/content replacement and watched production remain open.
+Standalone WXT checks import this maintained source and exercise the actual reference renderer in [Chromium](../../docs/research/wxt-json-hmr-evidence/RECEIPT.md) and [Firefox](../../docs/research/wxt-firefox-json-hmr-evidence/RECEIPT.md). The observed document and provider survive, native state is retained, and post-update actions work without duplication. Chromium additionally verifies both old Ports close and exactly one routed-button listener remains. Both checks verify that a pending old action cannot overwrite the replacement UI.
+
+A Chromium HTML reload retains background state. Native background reload, with normal Developer mode enabled, closes old extension documents and replaces the provider. A newly opened panel reads reset ephemeral state; interrupted actions are not replayed. The candidate's default fresh Chromium profile did not enable Developer mode effectively, so unattended startup still needs investigation.
+
+The WXT dependencies and runner/declaration patches remain in the standalone fixtures. The maintained Vite build commands above do not yet provide extension development HMR. Firefox background replacement, content updates, all extension surfaces and watched production remain open.
 
 ## Explicit native server connections
 

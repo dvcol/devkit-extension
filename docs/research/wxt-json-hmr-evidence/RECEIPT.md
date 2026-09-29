@@ -43,4 +43,24 @@ The fixture retains the previously proven declaration corrections and native run
 
 ## Limits
 
-This proves the maintained single-provider native JSON panel's Chromium module replacement. It does not establish Firefox renderer HMR, toolbar-popup/DevTools/sidebar lifecycle, background/content replacement, watched production, repeated rapid updates or every asynchronous mount failure. Cross-provider JSON action composition still awaits its separate owner decision. No upstream PR was opened, no root WXT dependency was installed, and no custom reloader was introduced.
+This proves the maintained single-provider native JSON panel's Chromium module replacement. The separate Firefox check and Chromium background follow-up below extend that evidence. Toolbar-popup/DevTools/sidebar lifecycle, content replacement, watched production, repeated rapid updates and every asynchronous mount failure remain unproved. Cross-provider JSON action composition still awaits its separate owner decision. No upstream PR was opened, no root WXT dependency was installed, and no custom reloader was introduced.
+
+## Follow-up: native HTML and background reload
+
+`check-native-reloads.mjs` uses the same fixture dependencies and maintained modules, then edits the generated HTML heading. WXT's native HTML reload updates both documents, changes the observed time origin and retains the same live background identity and counter value.
+
+The first background-entrypoint run failed. Native reload closed the old worker and both extension pages, then the same extension URL returned `ERR_BLOCKED_BY_CLIENT` across 21 attempts in ten seconds. `reload-default-receipt.json` and `logs/reload-default.log` retain that failed observation with `passed: false`; `reload-default-script.mjs` is its exact script.
+
+A minimal generic background fixture isolated the cause from the maintained SDK. Its actual Chrome Developer mode switch was off. Public CDP listed the extension as enabled before native reload and disabled afterward; the generated manifest was byte-identical. Enabling the normal Developer mode toggle in that disposable profile made the same native reload path keep the extension enabled and execute the changed background initializer. This uses the ordinary unpacked-development setting, without disabling a browser security feature or adding runtime code. The comparison, exact scripts and Chromium 153 source references are retained under `chromium-developer-mode/`. Its source diagnosis was written before the live comparison and labels that earlier finding as a hypothesis.
+
+The maintained follow-up then passed with Developer mode enabled. Panel HMR and HTML reload retain background state. Changing the background entrypoint closes both old pages and the old worker; opening a fresh panel connects to a different provider incarnation. Ephemeral counter/execution state starts at zero, the old pending action is not replayed, and a rendered action executes against the new worker. The browser process survives. No SDK reconnect loop, worker supervisor or background-state restoration was added. `reload-receipt.json`, `logs/reload.log` and `native-reloads.png` contain the successful run. Native stop closes the browser and source restoration is exact.
+
+Replay from the same standalone fixture:
+
+```sh
+PROOF_ENABLE_DEVELOPER_MODE=1 DEVKIT_REPOSITORY=/absolute/path/to/devkit-extension pnpm exec node check-native-reloads.mjs
+```
+
+The environment option tells the test to enable Developer mode through the owned browser's normal extension-management UI. It is not a maintained extension option. Without it, the fresh-profile failure remains reproducible in the measured environment. web-ext already writes a Developer mode preference, so why that preference is ineffective on first launch still needs a native-runner investigation before promising unattended fresh-profile startup.
+
+To reproduce the generic comparison, install this parent fixture's frozen dependencies, change into `chromium-developer-mode/`, then run `pnpm exec node check-background-only.mjs` with and without `PROOF_ENABLE_DEVELOPER_MODE=1`. Preserve each resulting receipt before the next run. This minimal test does not import or edit the maintained repository.

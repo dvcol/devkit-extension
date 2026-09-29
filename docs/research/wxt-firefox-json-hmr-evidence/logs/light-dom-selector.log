@@ -1,0 +1,23 @@
+✔ Started dev server @ http://127.0.0.1:65023 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Built extension in 90 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.09 kB
+  ├─ .output/firefox-mv3-dev/panel.html                2.53 kB
+  ├─ .output/firefox-mv3-dev/background.js             1.44 MB
+  └─ .output/firefox-mv3-dev/chunks/panel-hMtI-c57.js  8.25 kB
+Σ Total size: 1.45 MB                                
+✔ Opened browser in 1.055 s
+ℹ Press o + enter to reopen the browser
+1790651884675	geckodriver	INFO	Listening on 127.0.0.1:65039
+1790651915781	webdriver::server	INFO	Shutting down
+1790651915781	geckodriver::marionette	ERROR	Failed to close browser connection: unknown error
+file:///private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/check-firefox-json-hmr.mjs:51
+  throw new Error(`Timed out waiting for ${description}`);
+        ^
+
+Error: Timed out waiting for rendered counter 0
+    at waitFor (file:///private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/check-firefox-json-hmr.mjs:51:9)
+    at async expectCounter (file:///private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/check-firefox-json-hmr.mjs:104:3)
+    at async file:///private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/check-firefox-json-hmr.mjs:163:5
+
+Node.js v26.9.0

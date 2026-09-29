@@ -1,0 +1,82 @@
+{
+  "runId": "d0ed3750-9d17-46a8-9a9f-3d581526cc2c",
+  "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts",
+  "sourceSha256": "26614a4d2ca1b06da70832deb4b85f9e7923ec2e3733a47532e782e9a0325a20",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+  "marker": "807b55e0-dd57-461b-ae7e-2f9dd3638f55",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "events": [
+    {
+      "event": "started",
+      "at": 1790652209097
+    },
+    {
+      "event": "closed",
+      "at": 1790652214008
+    }
+  ],
+  "passed": true,
+  "marionettePort": 49865,
+  "developmentPort": 49866,
+  "step": "Both panels replaced their module; recorded new identity",
+  "browserVersion": "156.0.1",
+  "geckodriverVersion": "0.37.1",
+  "browserProcess": 63211,
+  "nativeIdentity": {
+    "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-profiletxqNDU",
+    "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+    "nativeUuid": "f17f3d5a-1f77-4f84-943e-930966c3629d"
+  },
+  "before": {
+    "timeOrigin": 1790652210533,
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "77140e7e-6a24-456e-b3a3-2e4b4eadc16d",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "identity": {
+      "id": 0,
+      "url": "moz-extension://f17f3d5a-1f77-4f84-943e-930966c3629d/panel.html"
+    }
+  },
+  "editAt": 1790652211822,
+  "after": {
+    "timeOrigin": 1790652210533,
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "77140e7e-6a24-456e-b3a3-2e4b4eadc16d",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "identity": {
+      "id": 2,
+      "url": "moz-extension://f17f3d5a-1f77-4f84-943e-930966c3629d/panel.html"
+    }
+  },
+  "executions": {
+    "started": 1,
+    "completed": 1
+  },
+  "oldUiResultAfterCompletion": "2",
+  "errors": [],
+  "nativeStopClosedBrowser": true,
+  "restored": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+/private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/entrypoints/background.ts:2:40: error import(no-absolute-path): Do not import modules using an absolute path help: Replace the absolute path with a relative path or a module alias.

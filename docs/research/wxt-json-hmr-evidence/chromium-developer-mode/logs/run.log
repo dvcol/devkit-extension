@@ -1,0 +1,98 @@
+✔ Started dev server @ http://localhost:50239 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 57 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             23.26 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-CXDQ0VQg.js  8.34 kB 
+Σ Total size: 32.94 kB                              
+✔ Opened browser in 545 ms
+ℹ Press o + enter to reopen the browser
+ℹ Changed: entrypoints/background.ts
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Reloaded extension
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profilePolicy": "native fresh temporary profile per browser launch",
+  "runId": "be1da450-a449-4a3c-8660-23484df2b69c",
+  "chromiumPort": 50238,
+  "developmentPort": 50239,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790652321722
+    },
+    {
+      "event": "closed",
+      "at": 1790652326083
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "background count initializer source edit from 0 to 100",
+  "browserVersion": "153.0.8010.12",
+  "initialDebugEndpoint": "ws://127.0.0.1:50238/devtools/browser/d1ea561f-51d2-44e5-bea1-27d698157360",
+  "before": {
+    "extensionId": "ngijllhfifmnhmbaegflfpolbibljgof",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "1cef9502-3f05-4461-b5c6-9ac32376ba85",
+      "count": 1,
+      "generation": "808d329f-09c7-46e4-b506-e0dd37b759a4",
+      "version": "1.0.0"
+    }
+  },
+  "extensionsBefore": {
+    "extensions": [
+      {
+        "id": "ngijllhfifmnhmbaegflfpolbibljgof",
+        "name": "Managed lifecycle proof",
+        "version": "1.0.0",
+        "path": "/private/tmp/devkit-wxt-background-only-s9e79sg4/.output/chrome-mv3-dev",
+        "enabled": true
+      }
+    ]
+  },
+  "developerModeBefore": {
+    "checked": false,
+    "disabled": false,
+    "role": "button",
+    "aria": "false"
+  },
+  "developerModeAfterClick": {
+    "checked": true,
+    "disabled": false
+  },
+  "manifestBefore": "{\n  \"manifest_version\": 3,\n  \"name\": \"Managed lifecycle proof\",\n  \"version\": \"1.0.0\",\n  \"commands\": {\n    \"wxt:reload-extension\": {\n      \"description\": \"Reload the extension during development\",\n      \"suggested_key\": {\n        \"default\": \"Alt+R\"\n      }\n    }\n  },\n  \"background\": {\n    \"type\": \"module\",\n    \"service_worker\": \"background.js\"\n  },\n  \"action\": {\n    \"default_title\": \"Managed reload proof\",\n    \"default_popup\": \"popup.html\"\n  },\n  \"host_permissions\": [\n    \"http://localhost/*\"\n  ],\n  \"content_security_policy\": {\n    \"extension_pages\": \"script-src 'self' 'wasm-unsafe-eval' http://localhost:50239; object-src 'self';\",\n    \"sandbox\": \"script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:50239; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';\"\n  },\n  \"permissions\": [\n    \"tabs\",\n    \"scripting\"\n  ]\n}",
+  "changeAt": 1790652322815,
+  "manifestAfter": "{\n  \"manifest_version\": 3,\n  \"name\": \"Managed lifecycle proof\",\n  \"version\": \"1.0.0\",\n  \"commands\": {\n    \"wxt:reload-extension\": {\n      \"description\": \"Reload the extension during development\",\n      \"suggested_key\": {\n        \"default\": \"Alt+R\"\n      }\n    }\n  },\n  \"background\": {\n    \"type\": \"module\",\n    \"service_worker\": \"background.js\"\n  },\n  \"action\": {\n    \"default_title\": \"Managed reload proof\",\n    \"default_popup\": \"popup.html\"\n  },\n  \"host_permissions\": [\n    \"http://localhost/*\"\n  ],\n  \"content_security_policy\": {\n    \"extension_pages\": \"script-src 'self' 'wasm-unsafe-eval' http://localhost:50239; object-src 'self';\",\n    \"sandbox\": \"script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:50239; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';\"\n  },\n  \"permissions\": [\n    \"tabs\",\n    \"scripting\"\n  ]\n}",
+  "extensionsAfter": {
+    "extensions": [
+      {
+        "id": "ngijllhfifmnhmbaegflfpolbibljgof",
+        "name": "Managed lifecycle proof",
+        "version": "1.0.0",
+        "path": "/private/tmp/devkit-wxt-background-only-s9e79sg4/.output/chrome-mv3-dev",
+        "enabled": true
+      }
+    ]
+  },
+  "developerModeAfter": {
+    "checked": true,
+    "disabled": false,
+    "role": "button",
+    "aria": "true"
+  },
+  "managerText": "",
+  "navigationFailures": [],
+  "after": {
+    "requestId": "7bc621a3-91e3-42ad-bc39-8b1610e896b2",
+    "count": 101,
+    "generation": "139aa2b8-6ec0-4d27-9e58-402f8ed32aad",
+    "version": "1.0.0"
+  },
+  "passed": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

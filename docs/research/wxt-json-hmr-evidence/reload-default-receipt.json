@@ -1,0 +1,210 @@
+{
+  "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts",
+  "sourceSha256": "26614a4d2ca1b06da70832deb4b85f9e7923ec2e3733a47532e782e9a0325a20",
+  "events": [],
+  "errors": [],
+  "console": [
+    {
+      "type": "debug",
+      "text": "[wxt] Connecting to dev server @ ws://127.0.0.1:64746"
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connected to dev server"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connecting to dev server @ ws://127.0.0.1:64746"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connected to dev server"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connecting to dev server @ ws://127.0.0.1:64746"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connected to dev server"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] hot updated: /@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] hot updated: /@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connecting to dev server @ ws://127.0.0.1:64746"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connecting to dev server @ ws://127.0.0.1:64746"
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connected to dev server"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "debug",
+      "text": "[wxt] Connected to dev server"
+    }
+  ],
+  "passed": false,
+  "browser": "153.0.8010.12",
+  "before": {
+    "clickListeners": 1,
+    "manifest": "1.0.0",
+    "timeOrigin": 1790651790028,
+    "identity": {
+      "id": 0,
+      "url": "chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html"
+    },
+    "generation": "78b57ff9-8720-43df-8850-ae0a3e0c6810",
+    "ports": [
+      {
+        "connected": 1790651790186,
+        "disconnected": null
+      },
+      {
+        "connected": 1790651790243,
+        "disconnected": null
+      }
+    ]
+  },
+  "editAt": 1790651790400,
+  "after": {
+    "clickListeners": 1,
+    "timeOrigin": 1790651790028,
+    "identity": {
+      "id": 2,
+      "url": "chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html"
+    },
+    "generation": "78b57ff9-8720-43df-8850-ae0a3e0c6810",
+    "ports": [
+      {
+        "connected": 1790651790186,
+        "disconnected": 1790651790518
+      },
+      {
+        "connected": 1790651790243,
+        "disconnected": 1790651790519
+      },
+      {
+        "connected": 1790651790524,
+        "disconnected": null
+      },
+      {
+        "connected": 1790651790527,
+        "disconnected": null
+      }
+    ]
+  },
+  "finalPorts": [
+    {
+      "connected": 1790651790186,
+      "disconnected": 1790651790518
+    },
+    {
+      "connected": 1790651790243,
+      "disconnected": 1790651790519
+    },
+    {
+      "connected": 1790651790524,
+      "disconnected": null
+    },
+    {
+      "connected": 1790651790527,
+      "disconnected": null
+    }
+  ],
+  "htmlReload": {
+    "beforeTimeOrigin": 1790651790028,
+    "afterTimeOrigin": 1790651791621.7,
+    "backgroundGeneration": "78b57ff9-8720-43df-8850-ae0a3e0c6810",
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "fb8c79cd-3c0d-4e07-ba3d-d1a02a495257",
+      "realm": {
+        "id": "webext"
+      }
+    }
+  },
+  "oldWorkerClose": "closed",
+  "oldPages": [
+    {
+      "closed": true,
+      "status": null
+    },
+    {
+      "closed": true,
+      "status": null
+    }
+  ],
+  "navigationErrors": [
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n",
+    "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n"
+  ],
+  "error": "Error: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\nCall log:\n\u001b[2m  - navigating to \"chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\", waiting until \"load\"\u001b[22m\n\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate",
+  "nativeStopDisconnectedBrowser": true,
+  "restored": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

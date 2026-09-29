@@ -1,0 +1,45 @@
+✓ Lockfile passes supply-chain policies (verified 44m ago)
+Lockfile is up to date, resolution step is skipped
+Already up to date
+Done in 430ms using pnpm v12.5.1
+✔ Started dev server @ http://localhost:50014 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 68 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             23.26 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-BHId_JC-.js  8.34 kB 
+Σ Total size: 32.94 kB                              
+✔ Opened browser in 776 ms
+ℹ Press o + enter to reopen the browser
+ℹ Changed: entrypoints/background.ts
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Reloaded extension
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+ExpectError: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html
+Call log:
+[2m  - navigating to "chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html", waiting until "load"[22m
+
+
+Call Log:
+- Timeout 10000ms exceeded while waiting on the predicate
+    at captureRawStack (/private/tmp/devkit-wxt-runner-ownership-eMCzWl/node_modules/.pnpm/playwright-core@1.63.0/node_modules/playwright-core/lib/coreBundle.js:8588:17)
+    at callMatcherAsStep (/private/tmp/devkit-wxt-runner-ownership-eMCzWl/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/matchers/expect.js:13310:57)
+    at Object.toPass (/private/tmp/devkit-wxt-runner-ownership-eMCzWl/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/matchers/expect.js:13302:23)
+    at /private/tmp/devkit-wxt-background-only-s9e79sg4/check-background-only.mjs:121:6 {
+  matcherResult: {
+    message: 'page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html\n' +
+      'Call log:\n' +
+      '\x1B[2m  - navigating to "chrome-extension://ngijllhfifmnhmbaegflfpolbibljgof/popup.html", waiting until "load"\x1B[22m\n' +
+      '\n' +
+      '\n' +
+      'Call Log:\n' +
+      '- Timeout 10000ms exceeded while waiting on the predicate',
+    pass: false,
+    name: 'toPass'
+  }
+}
+
+Node.js v26.9.0

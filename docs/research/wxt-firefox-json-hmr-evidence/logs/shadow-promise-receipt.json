@@ -1,0 +1,44 @@
+{
+  "runId": "1f7a668f-9380-4373-8498-5bcfb37cd019",
+  "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts",
+  "sourceSha256": "26614a4d2ca1b06da70832deb4b85f9e7923ec2e3733a47532e782e9a0325a20",
+  "firefoxBinary": "/Applications/Firefox.app/Contents/MacOS/firefox",
+  "geckodriverBinary": "/Users/dinh-van.colomban/.cache/selenium/geckodriver/mac-arm64/0.37.1/geckodriver",
+  "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+  "marker": "6c02b4c6-1c92-40b4-af58-8f315edadd68",
+  "profilePolicy": "WXT/web-ext native fresh temporary profile",
+  "driverMode": "geckodriver --connect-existing, WebDriver Classic",
+  "browserOwner": "WXT native web-ext runner",
+  "events": [
+    {
+      "event": "started",
+      "at": 1790652046027
+    }
+  ],
+  "passed": false,
+  "marionettePort": 49237,
+  "developmentPort": 49238,
+  "step": "Recorded initial provider and connection identity",
+  "browserVersion": "156.0.1",
+  "geckodriverVersion": "0.37.1",
+  "browserProcess": 61930,
+  "nativeIdentity": {
+    "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-profileq08PjU",
+    "extensionId": "managed-wxt-firefox-json-hmr@example.invalid",
+    "nativeUuid": "f382f710-3d52-477a-b7ec-6e5bd4016fc3"
+  },
+  "before": {
+    "timeOrigin": 1790652047524,
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "5797c7ba-94f2-4dac-9dad-53f4eb831c21",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "identity": {
+      "id": 0,
+      "url": "moz-extension://f382f710-3d52-477a-b7ec-6e5bd4016fc3/panel.html"
+    }
+  }
+}

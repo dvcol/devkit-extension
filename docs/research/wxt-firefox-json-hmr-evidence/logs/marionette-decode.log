@@ -1,0 +1,27 @@
+✔ Started dev server @ http://127.0.0.1:65330 (listening on 127.0.0.1)
+ℹ Pre-rendering firefox-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Built extension in 84 ms
+  ├─ .output/firefox-mv3-dev/manifest.json             1.09 kB
+  ├─ .output/firefox-mv3-dev/panel.html                2.53 kB
+  ├─ .output/firefox-mv3-dev/background.js             1.44 MB
+  └─ .output/firefox-mv3-dev/chunks/panel-CictbbWW.js  8.25 kB
+Σ Total size: 1.45 MB                                
+✔ Opened browser in 998 ms
+ℹ Press o + enter to reopen the browser
+1790651965239	geckodriver	INFO	Listening on 127.0.0.1:65340
+1790651966273	geckodriver::marionette	ERROR	Failed to close browser connection: unknown error
+1790651966285	webdriver::server	INFO	Shutting down
+/private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/node_modules/.pnpm/selenium-webdriver@4.49.0/node_modules/selenium-webdriver/lib/error.js:523
+    let err = new ctor(data.message)
+              ^
+
+WebDriverError: Failed to decode response from marionette
+    at Object.throwDecodedError (/private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/node_modules/.pnpm/selenium-webdriver@4.49.0/node_modules/selenium-webdriver/lib/error.js:523:15)
+    at parseHttpResponse (/private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/node_modules/.pnpm/selenium-webdriver@4.49.0/node_modules/selenium-webdriver/lib/http.js:527:13)
+    at Executor.execute (/private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/node_modules/.pnpm/selenium-webdriver@4.49.0/node_modules/selenium-webdriver/lib/http.js:459:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Driver.execute (/private/tmp/devkit-wxt-firefox-json-hmr-4azlFV/node_modules/.pnpm/selenium-webdriver@4.49.0/node_modules/selenium-webdriver/lib/webdriver.js:755:17) {
+  remoteStacktrace: ''
+}
+
+Node.js v26.9.0

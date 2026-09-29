@@ -1,0 +1,63 @@
+✔ Started dev server @ http://127.0.0.1:64746 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Built extension in 85 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             863 B  
+  ├─ .output/chrome-mv3-dev/panel.html                2.53 kB
+  ├─ .output/chrome-mv3-dev/background.js             1.44 MB
+  └─ .output/chrome-mv3-dev/chunks/panel-XuYTxq6Y.js  8.25 kB
+Σ Total size: 1.45 MB                               
+✔ Opened browser in 530 ms
+ℹ Press o + enter to reopen the browser
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:64746
+debug [wxt] Connected to dev server
+debug [vite] connecting...
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:64746
+debug [vite] connected.
+debug [wxt] Connected to dev server
+debug [vite] connecting...
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:64746
+debug [vite] connected.
+debug [wxt] Connected to dev server
+debug [vite] hot updated: /@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts
+debug [vite] hot updated: /@fs/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/src/panel.ts
+ℹ Changed: entrypoints/panel.html
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Reloaded: panel
+debug [vite] connecting...
+debug [vite] connecting...
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:64746
+debug [vite] connected.
+debug [wxt] Connecting to dev server @ ws://127.0.0.1:64746
+debug [wxt] Connected to dev server
+debug [vite] connected.
+debug [wxt] Connected to dev server
+ℹ Changed: entrypoints/background.ts
+[?25l⠋ Preparing...[K⠋ [1/1] background, panel[K[K[?25h[K[?25h✔ Reloaded extension
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+ExpectError: page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html
+Call log:
+[2m  - navigating to "chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html", waiting until "load"[22m
+
+
+Call Log:
+- Timeout 10000ms exceeded while waiting on the predicate
+    at captureRawStack (/private/tmp/devkit-wxt-json-hmr-replay-r0ktbas2/node_modules/.pnpm/playwright-core@1.63.0/node_modules/playwright-core/lib/coreBundle.js:8588:17)
+    at callMatcherAsStep (/private/tmp/devkit-wxt-json-hmr-replay-r0ktbas2/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/matchers/expect.js:13310:57)
+    at Object.toPass (/private/tmp/devkit-wxt-json-hmr-replay-r0ktbas2/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/matchers/expect.js:13302:23)
+    at /private/tmp/devkit-wxt-json-hmr-replay-r0ktbas2/check-native-reloads.mjs:181:6 {
+  matcherResult: {
+    message: 'page.goto: net::ERR_BLOCKED_BY_CLIENT at chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html\n' +
+      'Call log:\n' +
+      '\x1B[2m  - navigating to "chrome-extension://khbkjnkfdabdnpnnabjeijkdlfglelea/panel.html", waiting until "load"\x1B[22m\n' +
+      '\n' +
+      '\n' +
+      'Call Log:\n' +
+      '- Timeout 10000ms exceeded while waiting on the predicate',
+    pass: false,
+    name: 'toPass'
+  }
+}
+
+Node.js v26.9.0
