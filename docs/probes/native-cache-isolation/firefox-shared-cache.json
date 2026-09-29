@@ -1,0 +1,65 @@
+{
+  "observations": [
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://dc0267e3-a87c-4f19-91c6-ebe3e1074e29/panel.html\"}",
+      "iteration": 0,
+      "manifest": "0.0.1",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4dd012ac-ef00-43de-955a-002360ce474f\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://df16aed1-6416-42ad-90e8-d922d645458a/panel.html\"}",
+      "iteration": 1,
+      "manifest": "0.0.2",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"095a59a0-9caf-4e36-8816-d2d690ffe547\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://ec956ce0-e52b-46bf-a21c-3ecb9ecf1d0a/panel.html\"}",
+      "iteration": 2,
+      "manifest": "0.0.3",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"689fce7f-12f7-48bc-8d54-f0dad3f67b7d\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://11e70a19-f814-474d-a841-bd3123af6501/panel.html\"}",
+      "iteration": 3,
+      "manifest": "0.0.4",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"0a0e7ea6-155c-4577-90c5-744e5ce400a0\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://8ad70d9c-1c43-407d-8403-8f007b24c78b/panel.html\"}",
+      "iteration": 4,
+      "manifest": "0.0.5",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4a281c0c-0eb3-440d-9faf-38cb147e70c1\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://bdae4b6b-45f7-4b01-830b-2dcb35a4f0e2/panel.html\"}",
+      "iteration": 5,
+      "manifest": "0.0.6",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"fe89920b-4997-4ad3-b86c-f6527276856c\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://7428c6ea-8c13-4560-a2fe-584a30b582bc/panel.html\"}",
+      "iteration": 6,
+      "manifest": "0.0.7",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"9a6be0d7-b06b-4620-a1e5-8faf6135f44f\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://2afcde14-7ce5-4027-a1d4-c753dc3198dd/panel.html\"}",
+      "iteration": 7,
+      "manifest": "0.0.8",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c30b916b-b202-4483-95b0-e02c580a6034\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://d074ece5-6bff-4737-8015-18acc9de373c/panel.html\"}",
+      "iteration": 8,
+      "manifest": "0.0.9",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"5347e1f3-f647-4912-8806-b96a4ffdee0a\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    {
+      "caller": "{\"id\":0,\"url\":\"moz-extension://1ddb8dbc-b3e7-4b02-9a5c-27ec9b601707/panel.html\"}",
+      "iteration": 9,
+      "manifest": "0.0.10",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"feb088ea-49b0-4b87-ae9f-8b68f02b6614\",\"realm\":{\"id\":\"webext\"}}"
+    }
+  ],
+  "failures": []
+}

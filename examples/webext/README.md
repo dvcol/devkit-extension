@@ -136,7 +136,7 @@ pnpm --filter @devkit/example-webext dev
 pnpm --filter @devkit/example-webext dev:firefox
 ```
 
-WXT owns the Vite development server, browser process, HMR and native extension reloads. Both commands use Manifest V3 and the same `entrypoints/panel.html`, panel implementation, background implementation and application manifest as the production Vite build. Application manifest metadata lives in the watched `wxt.config.ts`; the production build imports the same factory. WXT does not classify an imported manifest helper as a configuration change, so keeping those values in the actual configuration lets native version/permission edits trigger a restart. WXT adds its development transport and owns its generated background manifest. Development outputs live under `.output/`; production outputs remain `dist/chromium` and `dist/firefox`.
+WXT owns the Vite development server, browser process, HMR and native extension reloads. Each browser uses its own native Vite dependency cache under `.wxt/vite/<browser>`. This also keeps disposable fixture roots independent even though they share installed dependencies. A shared cache reproduced a 504 for the optimized renderer module during concurrent development; [diagnosis and evidence](../../docs/research/native-development-cache.md). Both commands use Manifest V3 and the same `entrypoints/panel.html`, panel implementation, background implementation and application manifest as the production Vite build. Application manifest metadata lives in the watched `wxt.config.ts`; the production build imports the same factory. WXT does not classify an imported manifest helper as a configuration change, so keeping those values in the actual configuration lets native version/permission edits trigger a restart. WXT adds its development transport and owns its generated background manifest. Development outputs live under `.output/`; production outputs remain `dist/chromium` and `dist/firefox`.
 
 On the first Chromium launch, open `chrome://extensions` and enable **Developer mode**. Let Chrome save the setting before restarting it. The native runner retains this setup under `.wxt/chromium-profile`, separate from your ordinary browser profile. Disabling Developer mode can cause Chrome to disable the extension on a background reload. No protected preference values or policy controls are written by this example. Browser executable overrides use WXT's native `webExt.binaries` configuration.
 
@@ -160,12 +160,15 @@ Actual DevTools panels and browser sidebars now exercise both module HMR and HTM
 WXT originally reloaded every HTML entry in the rebuilt group, including unchanged `devtools.html`. That removed Firefox's Devkit tab after a `panel.html` edit. The [small WXT correction](../../docs/research/wxt-html-reload.md) compares emitted HTML and reloads changed pages through the existing native method. A real-build regression also checks shared transform output and missing snapshots. This does not handle direct changes to the DevTools registration page, whose native lifetime can require reopening the toolbox.
 
 ```sh
+# Run both installed browsers concurrently:
+pnpm --filter @devkit/example-webext test:dev
+# Or run one browser:
 pnpm --filter @devkit/example-webext test:dev:chromium
 FIREFOX_BINARY=/path/to/firefox GECKODRIVER_BINARY=/path/to/geckodriver \
   pnpm --filter @devkit/example-webext test:dev:firefox
 ```
 
-The Firefox test attaches to the browser WXT opened. Its isolated automation session needs Firefox's native system-access flag to inspect extension documents. It retains WebDriver's default page-load behavior; disabling that behavior leaves native sidebar clicks without the expected navigation binding. `GECKODRIVER_BINARY` is optional when the driver is discoverable. Receipts and screenshots are written under ignored `artifacts/`; CI runs both development tests alongside the production browser suites. Type checks prepare WXT declarations but retain the repository's strict TypeScript settings, including `skipLibCheck: false`.
+The Firefox test attaches to the browser WXT opened. Its isolated automation session needs Firefox's native system-access flag to inspect extension documents. It retains WebDriver's default page-load behavior; disabling that behavior leaves native sidebar clicks without the expected navigation binding. `GECKODRIVER_BINARY` is optional when the driver is discoverable. Receipts and screenshots are written under ignored `artifacts/`; CI runs both development tests concurrently after the production browser suites. Type checks prepare WXT declarations but retain the repository's strict TypeScript settings, including `skipLibCheck: false`.
 
 On Linux CI only, the Chromium development test passes `--no-sandbox`, matching Playwright's existing test-launch default. The Ubuntu runner rejects the downloaded Chromium sandbox before CDP startup. This flag applies only to the disposable automated browser; the normal WXT development commands keep Chromium's default sandbox behavior. Native launch crashes print the owned browser's stderr before exiting.
 

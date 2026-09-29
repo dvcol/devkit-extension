@@ -21,8 +21,6 @@ jobs:
         run: pnpm --filter @devkit/example-webext exec playwright install --with-deps chromium
       - name: Run the Chromium extension browser test
         run: pnpm --filter @devkit/example-webext test:browser
-      - name: Run native Chromium development transitions
-        run: pnpm --filter @devkit/example-webext test:dev:chromium
       - name: Install Firefox for the extension example
         id: firefox
         uses: browser-actions/setup-firefox@v1
@@ -34,9 +32,9 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-webext test:firefox
-      - name: Run native Firefox development transitions
+      - name: Run concurrent native Chromium and Firefox development transitions
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
-        run: pnpm --filter @devkit/example-webext test:dev:firefox
+        run: pnpm --filter @devkit/example-webext test:dev

@@ -9,6 +9,10 @@ export default defineConfig({
   imports: false,
   manifestVersion: 3,
   manifest: ({ browser }) => createManifest(browser === 'firefox'),
+  vite: ({ browser }) => ({
+    /** Concurrent browser servers must not overwrite each other's optimized modules. */
+    cacheDir: resolve(import.meta.dirname, '.wxt', 'vite', browser),
+  }),
   hooks: {
     /** web-ext requires a persistent profile directory to exist before opening Chrome. */
     'server:created': async () => {
