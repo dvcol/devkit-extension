@@ -10,7 +10,7 @@ import {
   updateDevelopmentVersion,
 } from './development-fixture.ts';
 import { attachFirefox } from './firefox-development-observer.ts';
-import { checkFirefoxScriptTiming } from './firefox-script-timing.ts';
+import { checkFirefoxScriptReload } from './firefox-script-reload.ts';
 import { checkFirefoxDevelopmentHosts } from './firefox-development-hosts.ts';
 
 const fixture = await createDevelopmentFixture();
@@ -42,7 +42,6 @@ try {
   await driver.switchTo().newWindow('tab');
   await driver.get(`${observer.origin}/panel.html`);
   await connected(0);
-  await checkFirefoxScriptTiming(driver, artifactDirectory);
   await increase();
   await counter(1);
   await checkModuleUpdate();
@@ -50,6 +49,7 @@ try {
   await checkFirefoxDevelopmentHosts(driver, fixture);
   await checkBackgroundReload(observer.origin);
   manifestVersion = await checkConfigurationRestart(marionettePort);
+  await checkFirefoxScriptReload(driver, fixture);
   await writeFile(`${artifactDirectory}/panel.png`, await driver.takeScreenshot(), 'base64');
 } finally {
   const cleanup = [
@@ -71,6 +71,7 @@ await writeFile(
       manifestVersion,
       nativeStopClosedBrowser: true,
       scenarios: [
+        'Packaged MAIN script edit reloads extension, removes temporary registration, preserves the old document, and needs explicit registration before fresh navigation',
         'Panel module HMR preserves document, provider and state; replaces caller; invokes each action once',
         'HTML reload replaces document while retaining provider and state',
         'Native toolbar popup module HMR preserves document, provider and state; replaces caller; one pointer action reaches the peer; popup closes cleanly',

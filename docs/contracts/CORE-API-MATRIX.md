@@ -215,3 +215,10 @@ This is direct native composition under issue 11. No portable script declaration
 The maintained Vite example now applies a normal `transformIndexHtml` plugin in development and build. Real Chromium checks the first inline page-script snapshot with actual Devframe and DevTools hosts in development and build/preview. Both recorded ready states are `loading`; preview serves the built bytes unchanged and runs no HTML transform hook. [Runnable recipe, receipt and limits](../../examples/vite-hosts/README.md#native-html-bootstrap-timing).
 
 This is application-owned native HTML injection, with no new SDK contract, runtime HTTP pipeline or dependency patch. It does not cover arbitrary response streams, CSP, runtime contribution enable/disable or Firefox execution of this server fixture.
+
+
+## Native packaged-script reload
+
+The maintained WebExtension development suites now edit the imported MAIN-world script through WXT's real watcher. Chromium and Firefox both reload the extension, close the old extension page, replace the provider and remove its temporary registration. The existing page keeps its time origin and old effects. Fresh navigation receives nothing until explicit native re-registration, after which the next document executes the updated script. [Receipt, commands and limitations](../../examples/webext/README.md#packaged-script-changes-during-development).
+
+This is a native reload regression under issue 14, not automatic recovery or in-place script HMR. ISOLATED-world reload behavior, persistent registrations, mutation rollback and the portable script contribution contract remain open.

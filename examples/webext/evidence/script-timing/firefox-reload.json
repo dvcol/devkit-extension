@@ -1,0 +1,43 @@
+{
+  "browser": "156.0.1",
+  "before": {
+    "firstScript": {
+      "injectedGlobal": "loading",
+      "injectedReadyState": "loading",
+      "pageReadyState": "loading"
+    },
+    "injectedGlobal": "loading",
+    "revision": null,
+    "timeOrigin": 1790677831459
+  },
+  "oldDocument": {
+    "firstScript": {
+      "injectedGlobal": "loading",
+      "injectedReadyState": "loading",
+      "pageReadyState": "loading"
+    },
+    "injectedGlobal": "loading",
+    "revision": null,
+    "timeOrigin": 1790677831459
+  },
+  "unregistered": {
+    "firstScript": {
+      "injectedGlobal": null,
+      "injectedReadyState": null,
+      "pageReadyState": "loading"
+    },
+    "injectedGlobal": null,
+    "revision": null,
+    "timeOrigin": 1790677831832
+  },
+  "registered": {
+    "firstScript": {
+      "injectedGlobal": "loading",
+      "injectedReadyState": "loading",
+      "pageReadyState": "loading"
+    },
+    "injectedGlobal": "loading",
+    "revision": "updated",
+    "timeOrigin": 1790677831881
+  }
+}

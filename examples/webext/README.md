@@ -172,7 +172,7 @@ The Firefox test attaches to the browser WXT opened. Its isolated automation ses
 
 On Linux CI only, the Chromium development test passes `--no-sandbox`, matching Playwright's existing test-launch default. The Ubuntu runner rejects the downloaded Chromium sandbox before CDP startup. This flag applies only to the disposable automated browser; the normal WXT development commands keep Chromium's default sandbox behavior. Native launch crashes print the owned browser's stderr before exiting.
 
-The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, popup/DevTools/sidebar background/config transitions and watched production remain open.
+The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). The packaged MAIN script reload case below is now checked separately. Further content/page updates, repeated rapid changes, popup/DevTools/sidebar background/config transitions and watched production remain open.
 
 ## Explicit native server connections
 
@@ -253,6 +253,28 @@ pnpm --filter @devkit/example-webext test:firefox
 pnpm --filter @devkit/example-webext test:dev
 ```
 
-This proves top-level loopback documents registered before navigation. It does not establish child-frame/CSP coverage, persistence across browser restarts, mutation rollback, already-open document timing or replacement of the injected script during development. Native Vite HTML transformation and the generic script contribution contract remain separate work under [#11](https://github.com/dvcol/devkit-extension/issues/11).
+This proves top-level loopback documents registered before navigation. It does not establish child-frame/CSP coverage, persistence across browser restarts, mutation rollback, already-open document timing or ISOLATED-world script replacement during development. Native Vite HTML transformation and the generic script contribution contract remain separate work under [#11](https://github.com/dvcol/devkit-extension/issues/11).
 
 Native references: [Chrome content script timing](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts), [registered-script fields](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/RegisteredContentScript), and [Mozilla's API compatibility data](https://raw.githubusercontent.com/mdn/browser-compat-data/main/webextensions/api/scripting.json). The latter records programmatic `world` support from Firefox 128; the actual Firefox run above confirms the maintained version.
+
+## Packaged script changes during development
+
+WXT treats a changed unlisted script as an extension reload. The maintained Chromium and Firefox development suites edit the temporary fixture's imported `src/script-timing.ts`, leaving the repository source untouched. The tests use normal file watching and native extension reload; no mock reload event, page reinjection or registration recovery is added.
+
+Both actual browsers establish this sequence for MAIN-world scripts with `persistAcrossSessions: false`:
+
+| Step                                | Native result                                                                                       |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Initial registration and navigation | The script runs before the first page script.                                                       |
+| Edit the imported packaged source   | WXT rebuilds it and reloads the extension; the old extension page closes and the provider changes.  |
+| Observe the already-open page       | Its time origin, first-script snapshot and old global remain unchanged; the new revision is absent. |
+| Read registrations after reload     | The owned registration is absent.                                                                   |
+| Navigate before registering again   | The new document receives no injected marker.                                                       |
+| Explicitly register, then navigate  | The next document receives the updated revision before its first page script.                       |
+| Unregister and close                | The owned registration, page, native browser and fixture server are cleaned up.                     |
+
+The before/after snapshots are retained in [Chromium's receipt](./evidence/script-timing/chromium-reload.json) and [Firefox's receipt](./evidence/script-timing/firefox-reload.json). Run the existing `test:dev:chromium`, `test:dev:firefox` or combined `test:dev` command. Both tests still execute their ordinary UI HMR, HTML/background reload and configuration restart checks.
+
+Chromium's CDP observer receives browser exit asynchronously. After native WXT shutdown, the test uses Playwright's bounded assertion to observe disconnection; it does not assume the observer's cached flag has already changed when `stop()` resolves.
+
+This proves native reload behavior for the selected MAIN case. It does not promise mutation rollback, in-place script replacement, automatic registration restoration, browser-restart persistence or ISOLATED-world reload semantics. A contribution that needs future injections after an extension restart must register again through its normal startup lifetime. Existing document effects remain application-owned.

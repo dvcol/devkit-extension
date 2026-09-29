@@ -57,14 +57,15 @@ try {
   await checkHtmlReplacement(first, second);
   const replacement = await checkBackgroundReplacement(first, second, origin);
   const configured = await checkConfigurationRestart(replacement, origin, observerPort);
-  await checkChromiumHostDevelopment(configured, root);
+  const finalPage = await checkChromiumHostDevelopment(configured, root);
   assert.deepEqual(errors, []);
-  await configured.screenshot({
+  await finalPage.screenshot({
     path: `${artifactDirectory}/panel.png`,
     fullPage: true,
   });
+  /** Native process exit reaches the independent CDP observer asynchronously. */
   await server.stop();
-  assert.equal(browser.isConnected(), false, 'Native WXT stop must close its browser');
+  await expect.poll(() => browser?.isConnected(), { timeout: 30_000 }).toBe(false);
 } finally {
   const cleanup = [
     ...(await Promise.allSettled([server?.stop()])),
@@ -84,6 +85,7 @@ await writeFile(
       passed: true,
       browser: browser.version(),
       scenarios: [
+        'Packaged MAIN script edit reloads extension, removes temporary registration, preserves the old document, and needs explicit registration before fresh navigation',
         'Native managed startup with shared manifest and real JSON renderer',
         'Panel HMR retains document, provider and state with new caller and one action effect',
         'Pending old action completes without overwriting replacement UI',
