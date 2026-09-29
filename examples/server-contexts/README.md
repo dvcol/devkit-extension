@@ -89,6 +89,8 @@ The page owns its native client; page/HMR disposal releases state listeners, the
 
 ## Scope
 
+The exported `createRemoteHost` also accepts a configured `providerId` and the native hub `allowedOrigins` option. The [extension example](../webext/README.md#explicit-native-server-connections) uses these to connect real Devframe and DevTools hosts simultaneously from one extension page. Defaults remain `example.remote` and native loopback-origin admission. Provider replacement retains the configured ID and changes its incarnation.
+
 The local demos exercise in-process routing; `demo:remote` checks low-level native RPC on both hosts; `demo:browser` uses the shared routed client over an actual native browser connection. Catalog synchronization is implemented for explicit exposure. Automatic endpoint discovery, browser capability authority, the JSON renderer, extension execution and complete browser HMR/conformance remain separate work. The DevTools example uses a real kit backend without presenting the DevTools UI.
 
 `tests/state.test.ts` adds six real-socket tests across both native hosts for peer observation, separate host values, unsubscribe, explicit fresh-client recovery, native client writes and provider replacement with surviving state/observers. A separate fresh host starts from the initial value. Native lifetime and write policy are accepted defaults; contributions/hosts own state keys, resource scope, validation, persistence and conflicts. [State scope and recovery](https://github.com/dvcol/devkit-extension/issues/8) tracks the remaining host integration proof.

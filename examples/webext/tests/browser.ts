@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { styleText } from 'node:util';
 import { chromium, expect } from '@playwright/test';
+import { checkConfiguredServers } from './configured-servers.ts';
 
 const extensionPath = resolve('dist');
 const profile = await mkdtemp(join(tmpdir(), 'native-port-chromium-'));
@@ -14,7 +15,10 @@ const browser = await chromium.launchPersistentContext(profile, {
 });
 const errors: string[] = [];
 browser.on('console', (message) => {
-  console.info(styleText('cyan', '🧪 [webext]'), message.type(), message.text());
+  const sanitized = message
+    .text()
+    .replaceAll(/devframe_auth_token=[^'&\s]+/gu, 'devframe_auth_token=REDACTED');
+  console.info(styleText('cyan', '🧪 [webext]'), message.type(), sanitized);
 });
 try {
   const worker = browser.serviceWorkers()[0] ?? (await browser.waitForEvent('serviceworker'));
@@ -83,6 +87,7 @@ try {
   for (const page of [first, second]) await expect(page.locator('#catalog')).toHaveText('active');
   await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
   await expect(first.locator('#result')).toHaveText('14');
+  await checkConfiguredServers(first, second);
   const denied = await browser.newPage();
   denied.on('pageerror', (error) => errors.push(error.message));
   await denied.goto(`chrome-extension://${extensionId}/denied.html`);
@@ -95,7 +100,7 @@ try {
   await expect(second.locator('#result')).toContainText('closed');
   await expect(first.locator('#status')).toHaveText('Connected');
   await first.getByRole('button', { name: 'Read capability', exact: true }).click();
-  await expect(first.locator('#result')).toHaveText('14');
+  await expect(first.locator('#result')).toHaveText('16');
   assert.deepEqual(errors, []);
   await mkdir('artifacts', { recursive: true });
   await first.screenshot({ path: 'artifacts/native-port-proof.png', fullPage: true });
@@ -119,6 +124,10 @@ try {
       'catalog disable/enable updates on both clients',
       'provider incarnation retained across UI reconnect',
       'independent routed client survives peer disconnect',
+      'native origin allowlist and rejected credentials',
+      'simultaneous isolated Devframe, DevTools and extension providers',
+      'realm broadcast and explicit provider preference',
+      'fallback after native server disconnect and partial broadcast failure',
     ],
     pageErrors: errors,
   };

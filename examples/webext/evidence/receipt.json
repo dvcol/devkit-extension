@@ -17,7 +17,11 @@
     "explicit realm/provider routing and broadcast",
     "catalog disable/enable updates on both clients",
     "provider incarnation retained across UI reconnect",
-    "independent routed client survives peer disconnect"
+    "independent routed client survives peer disconnect",
+    "native origin allowlist and rejected credentials",
+    "simultaneous isolated Devframe, DevTools and extension providers",
+    "realm broadcast and explicit provider preference",
+    "fallback after native server disconnect and partial broadcast failure"
   ],
   "pageErrors": []
 }

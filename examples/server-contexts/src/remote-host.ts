@@ -12,10 +12,14 @@ import { createInteractiveAuth } from 'devframe/recipes/interactive-auth';
 import { registerRemoteProbes } from './remote-probes.js';
 import { createRemoteContext, remoteComposition } from './remote-context.js';
 
+interface RemoteHostOptions extends Pick<InitHubOptions, 'renderers' | 'allowedOrigins'> {
+  readonly providerId?: string;
+}
+
 /** Example-owned HTTP/RPC lifetime; contribution disposal does not remove host RPC definitions. */
 export async function createRemoteHost(
   mode: 'devframe' | 'devtools',
-  options: Pick<InitHubOptions, 'renderers'> = {},
+  options: RemoteHostOptions = {},
 ) {
   const directory = await mkdtemp(join(tmpdir(), 'devkit-remote-example-'));
   await using cleanup = new AsyncDisposableStack();
@@ -26,6 +30,7 @@ export async function createRemoteHost(
   const hub = initHub({
     context: nativeContext,
     renderers: options.renderers ?? [],
+    allowedOrigins: options.allowedOrigins ?? [],
     base: '/__devkit-remote/',
     auth: createInteractiveAuth(nativeContext, { clientAuthTokens: [token], banner() {} }),
     register: false,
@@ -37,7 +42,8 @@ export async function createRemoteHost(
   cleanup.defer(() => hub.close());
   cleanup.defer(hub.attach(server));
   await hub.ready;
-  const provider = await createProvider(remoteComposition);
+  const composition = createRemoteComposition(options.providerId);
+  const provider = await createProvider(composition);
   cleanup.defer(() => provider.dispose());
   const probes = registerRemoteProbes(nativeContext);
   let currentProvider = provider;
@@ -53,13 +59,17 @@ export async function createRemoteHost(
     origin,
     async replace() {
       await currentProvider.dispose();
-      const successor = await createProvider(remoteComposition);
+      const successor = await createProvider(composition);
       lifetime.defer(() => successor.dispose());
       currentProvider = successor;
       return successor;
     },
     close: () => lifetime.disposeAsync(),
   };
+}
+
+function createRemoteComposition(providerId = remoteComposition.providerId) {
+  return { ...remoteComposition, providerId };
 }
 
 async function listen(server: Server): Promise<string> {

@@ -19,10 +19,12 @@
     "@devkit/core": "workspace:*",
     "@devkit/devframe": "workspace:*",
     "@devkit/example-contribution": "workspace:*",
+    "@devkit/server": "workspace:*",
     "@devkit/webext": "workspace:*",
     "devframe": "1.0.0"
   },
   "devDependencies": {
+    "@devkit/example-server-contexts": "workspace:*",
     "@playwright/test": "1.63.0",
     "@types/chrome": "0.3.0"
   }

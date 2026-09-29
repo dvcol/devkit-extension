@@ -1,4 +1,5 @@
 import { createExampleConnection } from './connection';
+import { mountServerControls } from './servers';
 import type { DevframeJsonRenderSpec } from '@devframes/json-render';
 import renderer from '@devframes/json-render-ui/renderer';
 import { createClient } from '@devkit/client';
@@ -13,6 +14,7 @@ const result = document.querySelector<HTMLElement>('#result')!;
 let mounted: { dispose?: () => void } | undefined;
 let closed = false;
 const routedClient = createClient();
+const disposeServers = mountServerControls(routedClient);
 let providerConnection: RpcProviderConnection | undefined;
 let unsubscribeCatalog: (() => void) | undefined;
 function close(): void {
@@ -21,6 +23,7 @@ function close(): void {
   rpc.$close();
   events.emit('connection:status', 'disconnected', 'connected');
   unsubscribeCatalog?.();
+  disposeServers();
   routedClient.dispose();
   providerConnection?.dispose();
   for (const key of sharedState.keys()) sharedState.delete(key);

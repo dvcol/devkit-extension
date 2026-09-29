@@ -17,6 +17,7 @@ export default defineConfig({
             background: { service_worker: 'background.js', type: 'module' },
             action: { default_popup: 'panel.html' },
             options_ui: { page: 'panel.html', open_in_tab: true },
+            host_permissions: ['http://127.0.0.1/*'],
           }),
         });
       },
