@@ -58,7 +58,7 @@ Sources: [Oxlint configuration](https://oxc.rs/docs/guide/usage/linter/config.ht
 
 ## Packed consumer proof
 
-After building `@devkit/core`, `@devkit/runtime` and `@devkit/example-contribution`, run `pnpm artifacts:test`. This checks only those packages and their packed consumer scenarios. CI runs it immediately after the workspace build. For a focused check, use `node scripts/check-packages.ts` for the core/runtime consumer or `node scripts/check-example-package.ts` for the contribution example.
+CI runs `pnpm artifacts:test` immediately after the workspace build. For a focused check, use `node scripts/check-packages.ts` for the core/runtime consumer, `node scripts/check-example-package.ts` for the contribution example, or `pnpm artifacts:native` for the native adapters. Build the affected dependency graph first. The native check requires `pnpm exec turbo run build --filter=@devkit/server... --filter=@devkit/webext... --concurrency=1`.
 
 The script creates real tarballs with `pnpm pack`, installs them into a temporary directory outside the workspace, and removes that directory afterward. The unpublished core version is resolved through an explicit tarball override. Standard Schema remains the exact public dependency declared by the packages. Installation prefers cached dependencies, can fetch a missing public tarball, and disables lifecycle scripts.
 
@@ -67,6 +67,10 @@ The installed manifests must contain the expected package names, exact Standard 
 A Vite browser build of the same consumer rejects external imports and any resolved module outside the consumer and the two installed `dist` directories. The core source map must refer only to its own portable source files, detecting inlined third-party code. The bundled consumer is then executed. This proves artifact resolution, declarations and this runtime scenario; it does not establish unimplemented host adapters, browser extension behavior or renderer conformance.
 
 The example check installs three tarballs with explicit overrides for their unpublished workspace dependencies. Both strict compiler configurations infer the example's action input and result, then execute its real action, capability and subscription disposal. A separate browser consumer imports only the example's shared contracts. Its resolved graph permits those contract chunks, core and Zod, rejects provider/runtime/Node/framework imports, and checks the example chunks' source origins. The bundled contract consumer executes valid and invalid schema cases. This verifies package separation without claiming real browser-host execution.
+
+The native check packs core, runtime, client, devframe, server and webext. Its isolated installation explicitly copies the repository's exact-version patches and package extensions. Neither tarballs nor peer declarations carry that policy automatically. This is evidence for an explicitly patched consumer; unpatched publication compatibility remains unverified.
+
+Both Bundler and NodeNext consumers compile with strict TypeScript 7 and `skipLibCheck: false`, preserving numeric action inference and mandatory route realms. They execute native RPC over a real MessageChannel through the packed Port adapter, then invoke and broadcast through the packed client/provider adapters. They also initialize the genuine Devframe hub and DevTools kit contexts and exercise dynamic plugin installation, invocation and disposal through the packed server factories. The Vite browser build rejects Node imports, external dependencies and modules outside the isolated consumer; all six SDK packages must resolve to installed `dist` entries. Executing that bundle proves package composition under Node's MessageChannel, not browser extension behavior. The maintained Chromium and Firefox examples supply the separate live-browser evidence.
 
 ## Server dependency declarations
 

@@ -45,6 +45,7 @@ The raw composition supplies existing native members. `events` is Devframe's `Rp
 - Native collector tests cover schema validation, retained definitions, replacement and raw-client typing.
 - The server suite runs both native hosts, authenticated sockets, native cache/authorization checks, lifecycle failures and a client mixing an authenticated WebSocket backend with a JSON Port backend under the same logical provider ID in different realms.
 - WebExtension MessageChannel tests cover both JSON and structured-clone delivery, two providers, independent clients, ambiguity, selection, broadcast, catalog changes, expected-realm rejection and replacement.
-- The maintained Chromium example verifies actual runtime Ports and the native renderer. Its browser build rejects Node imports.
+- The maintained Chromium and Firefox example verifies actual runtime Ports, the native renderer, mixed native backends and selected-page connections. Its browser builds reject Node imports.
+- `pnpm artifacts:native` checks installed tarballs under strict Bundler and NodeNext resolution, executes both server factories and Port RPC composition, and bundles the browser consumer without workspace source imports.
 
-Endpoint discovery, cross-provider renderer composition, full browser surfaces and Firefox browser conformance remain separate work. The workspace still uses pinned upstream patches documented in [the patch inventory](../../patches/README.md); those patches do not propagate automatically to published consumers.
+Cross-provider renderer composition, full browser surfaces and the complete conformance inventory remain separate work. The workspace and isolated native consumer explicitly install the pinned upstream patches documented in [the patch inventory](../../patches/README.md); those patches do not propagate automatically to published consumers.
