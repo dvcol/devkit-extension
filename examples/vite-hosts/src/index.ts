@@ -8,6 +8,7 @@ import type { Plugin, PreviewServer, ViteDevServer } from 'vite';
 import { ProviderLifetime } from './lifetime.js';
 
 export { counterPreviewPlugin } from './preview.js';
+export { htmlBootstrapPlugin } from './html-bootstrap.js';
 export { productionPreviewPlugin } from './production-preview.js';
 export { watchProduction } from './production-watch.js';
 export { readProductionStatus } from './production-output.js';

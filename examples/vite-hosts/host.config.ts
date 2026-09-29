@@ -1,6 +1,10 @@
 import { fileURLToPath } from 'node:url';
 
-import { counterHostPlugins, counterPreviewPlugin } from '@devkit/example-vite-hosts';
+import {
+  counterHostPlugins,
+  counterPreviewPlugin,
+  htmlBootstrapPlugin,
+} from '@devkit/example-vite-hosts';
 import { defineConfig } from 'vite';
 import type { Plugin } from 'vite';
 
@@ -12,7 +16,7 @@ export default defineConfig(async ({ command, mode, isPreview }) => {
   else if (command === 'serve') plugins = await counterHostPlugins(mode);
   return {
     root: fileURLToPath(new URL('./site', import.meta.url)),
-    plugins,
+    plugins: [...plugins, htmlBootstrapPlugin()],
     server: { host: '127.0.0.1' },
     preview: { host: '127.0.0.1' },
   };

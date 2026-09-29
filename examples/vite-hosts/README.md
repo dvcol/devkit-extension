@@ -133,3 +133,39 @@ The exact combined command was also run on macOS: watcher and preview started co
 This maintained example covers a single HTML application with relative asset URLs on local HTTP/1. It retains generated directories until they are removed after stopping both scripts. The exclusive publisher lock is intentionally not stolen from another process; after an uncatchable termination such as SIGKILL, stop any remaining publisher before deleting the stale lock. Crash consistency, Windows filesystem behavior, multiple output layouts and generation pruning are not established by this example.
 
 Automatic browser refresh/HMR, a renderer-mounted failure view, remote portable SDK calls and state restoration after backend replacement remain separate implementation work. The current browser document does not update itself merely because a new generation is available.
+
+## Native HTML bootstrap timing
+
+[htmlBootstrapPlugin](./src/html-bootstrap.ts) uses Vite's public `transformIndexHtml` hook to prepend a classic inline script to the example's root HTML. The plugin is present during development and build. It changes neither the backend lifecycle nor Vite's watcher, and adds no HTTP response-transform pipeline.
+
+The [site's first page script](./site/index.html) immediately freezes the bootstrap marker and its own `document.readyState`. Its visible output shows both values. Run either normal `demo:*` command, or build the site and run either `preview:*` command above.
+
+```mermaid
+flowchart LR
+  Source[Application HTML] --> Dev[Vite dev HTML hook]
+  Dev --> Browser[Browser parses bootstrap before page script]
+  Source --> Build[Vite build HTML hook]
+  Build --> Files[Built HTML]
+  Files --> Preview[Vite preview serves existing bytes]
+  Preview --> Browser
+```
+
+The [real browser test](./tests/browser.ts) uses the maintained host configuration and actual native backends. It confirms the active provider identity in each mode before opening the page. Preview also serves exactly the built HTML and never invokes the test's HTML transform hook. The [recorded Chromium 153.0.8010.12 receipt](./evidence/html-timing.json) passed with zero observed page errors.
+
+| Native host | Vite mode       | Bootstrap at first page script | Page readyState | Preview transform calls |
+| ----------- | --------------- | ------------------------------ | --------------- | ----------------------- |
+| Devframe    | Development     | `loading`                      | `loading`       | Not applicable          |
+| DevTools    | Development     | `loading`                      | `loading`       | Not applicable          |
+| Devframe    | Build / preview | `loading`                      | `loading`       | 0                       |
+| DevTools    | Build / preview | `loading`                      | `loading`       | 0                       |
+
+```sh
+pnpm exec turbo run build --filter=@devkit/example-vite-hosts --concurrency=1
+pnpm --filter @devkit/example-vite-hosts test:browser
+```
+
+CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh results go to ignored `artifacts/html-timing.json`. The existing 24 host lifecycle tests remain separate from browser execution timing.
+
+This example uses a classic script because module scripts defer. `head-prepend` controls HTML placement; Vite hook `order` controls transformation processing, not browser scheduling. Preview does not reapply HTML hooks. The owned site has no CSP; applications with CSP must allow the script through their own policy, such as Vite's native `html.cspNonce`. This is not evidence of arbitrary HTTP response rewriting or execution on deployed pages. Firefox execution of this Vite fixture, CSP cases, runtime contribution enable/disable and the portable script declaration remain outside this slice.
+
+References: [Vite HTML hook](https://vite.dev/guide/api-plugin#transformindexhtml), [Vite CSP support](https://vite.dev/guide/features#content-security-policy-csp), [native script execution](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script).

@@ -1,0 +1,44 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "host": "devframe",
+      "mode": "development",
+      "providerId": "example.devframe-vite",
+      "snapshot": {
+        "bootstrapReadyState": "loading",
+        "pageReadyState": "loading"
+      }
+    },
+    {
+      "host": "devframe",
+      "mode": "build-preview",
+      "providerId": "example.devframe-preview",
+      "snapshot": {
+        "bootstrapReadyState": "loading",
+        "pageReadyState": "loading"
+      },
+      "previewTransforms": 0
+    },
+    {
+      "host": "devtools",
+      "mode": "development",
+      "providerId": "example.devtools-vite",
+      "snapshot": {
+        "bootstrapReadyState": "loading",
+        "pageReadyState": "loading"
+      }
+    },
+    {
+      "host": "devtools",
+      "mode": "build-preview",
+      "providerId": "example.devtools-preview",
+      "snapshot": {
+        "bootstrapReadyState": "loading",
+        "pageReadyState": "loading"
+      },
+      "previewTransforms": 0
+    }
+  ],
+  "pageErrors": []
+}

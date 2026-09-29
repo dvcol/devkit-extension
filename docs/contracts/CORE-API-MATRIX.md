@@ -208,3 +208,10 @@ Firefox WebDriver Classic asserts rendered DOM and backend outcomes but does not
 The maintained WebExtension example packages one synchronous script through production Vite and WXT's unlisted-script entry. Its existing production and development suites verify actual `document_start` registration in MAIN and ISOLATED on Chromium 153.0.8010.12 and Firefox 156.0.1. A first-inline-script snapshot distinguishes global visibility from shared DOM listener execution. Both worlds execute before that snapshot; unmatched URLs and fresh navigation after unregistering have neither marker. [Recipe, exact receipts and limitations](../../examples/webext/README.md#packaged-document-start-scripts).
 
 This is direct native composition under issue 11. No portable script declaration, page bridge, dynamic transform configuration or upstream patch is added. Child frames, CSP, script replacement, persistent registrations, already-open documents and the shared server script contract remain open.
+
+
+## Native Vite HTML timing
+
+The maintained Vite example now applies a normal `transformIndexHtml` plugin in development and build. Real Chromium checks the first inline page-script snapshot with actual Devframe and DevTools hosts in development and build/preview. Both recorded ready states are `loading`; preview serves the built bytes unchanged and runs no HTML transform hook. [Runnable recipe, receipt and limits](../../examples/vite-hosts/README.md#native-html-bootstrap-timing).
+
+This is application-owned native HTML injection, with no new SDK contract, runtime HTTP pipeline or dependency patch. It does not cover arbitrary response streams, CSP, runtime contribution enable/disable or Firefox execution of this server fixture.

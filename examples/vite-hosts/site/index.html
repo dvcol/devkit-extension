@@ -1,11 +1,28 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      document.documentElement.dataset.firstScript = JSON.stringify({
+        bootstrapReadyState: Reflect.get(globalThis, 'exampleHtmlBootstrap') ?? null,
+        pageReadyState: document.readyState,
+      });
+      document.addEventListener(
+        'DOMContentLoaded',
+        () => {
+          document.querySelector('#script-timing').textContent =
+            document.documentElement.dataset.firstScript;
+        },
+        { once: true },
+      );
+    </script>
     <meta charset="UTF-8" />
     <title>Devkit native Vite hosts</title>
   </head>
   <body>
     <h1>Devkit native Vite hosts</h1>
     <p>The shared counter runs in the selected native host. The terminal demo exercises its API.</p>
+    <p>
+      First page-script observation: <output id="script-timing">Waiting for the document</output>
+    </p>
   </body>
 </html>

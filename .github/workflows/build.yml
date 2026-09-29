@@ -21,6 +21,8 @@ jobs:
         run: pnpm --filter @devkit/example-webext exec playwright install --with-deps chromium
       - name: Run the Chromium extension browser test
         run: pnpm --filter @devkit/example-webext test:browser
+      - name: Run native Vite HTML timing in development and preview
+        run: pnpm --filter @devkit/example-vite-hosts test:browser
       - name: Run the Chromium debugger contribution browser test
         run: pnpm --filter @devkit/example-debugger test:browser
       - name: Run authenticated native CDB browser integration
