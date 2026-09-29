@@ -82,7 +82,7 @@ async function openPanel({
       ),
     )
     .toBe(true);
-  await selectExtensionTab(frontend);
+  await selectPanel(frontend, true);
   let panelTargetId: string | undefined;
   await expect
     .poll(async () => {
@@ -100,7 +100,7 @@ async function openPanel({
   return { targetId, panelTargetId, frontend, panel };
 }
 
-async function selectExtensionTab(frontend: DevtoolsSession): Promise<void> {
+async function selectPanel(frontend: DevtoolsSession, extension: boolean): Promise<void> {
   /** Native next-panel shortcut also reaches tabs hidden in the overflow menu. */
   const modifiers = process.platform === 'darwin' ? 4 : 2;
   const modifierKey = process.platform === 'darwin' ? 'Meta' : 'Control';
@@ -110,7 +110,7 @@ async function selectExtensionTab(frontend: DevtoolsSession): Promise<void> {
     if (
       (await frontend.evaluate(`function elements(root) { const found = [...root.querySelectorAll('*')]; for (const element of [...found]) if (element.shadowRoot) found.push(...elements(element.shadowRoot)); return found; }
 elements(document).some(element => element.getAttribute('role') === 'tab' && element.getAttribute('aria-selected') === 'true' && element.textContent === 'Devkit')`)) ===
-      true
+      extension
     )
       return;
     await frontend.send('Input.dispatchKeyEvent', {
@@ -143,7 +143,7 @@ elements(document).some(element => element.getAttribute('role') === 'tab' && ele
     });
     await setTimeout(100);
   }
-  throw new Error('Native DevTools did not select the Devkit tab');
+  throw new Error(`Native DevTools did not ${extension ? 'show' : 'hide'} the Devkit tab`);
 }
 
 async function checkLivePanel({
@@ -163,19 +163,10 @@ async function checkLivePanel({
   const timeOrigin = await panel.panel.evaluate('performance.timeOrigin');
   await increase(panel.panel);
   await expect(options.getByText('Counter: 19', { exact: true })).toBeVisible();
-  await panel.frontend.evaluate(
-    "elements(document).find(element => element.getAttribute('role') === 'tab' && element.textContent === 'Network').dispatchEvent(new MouseEvent('mousedown', { bubbles: true, button: 0 }))",
-  );
-  await expect
-    .poll(() =>
-      panel.frontend.evaluate(
-        "elements(document).some(element => element.getAttribute('role') === 'tab' && element.getAttribute('aria-selected') === 'true' && element.textContent === 'Network')",
-      ),
-    )
-    .toBe(true);
+  await selectPanel(panel.frontend, false);
   await options.locator('#routed').click();
   await expect(options.getByText('Counter: 20', { exact: true })).toBeVisible();
-  await selectExtensionTab(panel.frontend);
+  await selectPanel(panel.frontend, true);
   assert.equal(await panel.panel.evaluate('performance.timeOrigin'), timeOrigin);
   assert.equal(await identity(panel.panel), caller);
   await counter(panel.panel, 20);
