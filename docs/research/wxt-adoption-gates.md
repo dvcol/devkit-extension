@@ -16,20 +16,25 @@ The patches are retained inside that standalone experiment, not in the root work
 
 ## Native lifecycle ownership
 
-The original browser experiment set `webExt.disabled: true` and launched the browser separately. In WXT 0.21.4, a configuration edit restarts the development server. The ordinary runner closes and relaunches its browser during this restart; the manual runner leaves the externally owned browser alone. Its old background development WebSocket does not reconnect after server shutdown. This difference prevents the original external-runner result from proving that normal WXT manifest adoption is broken.
+The original browser experiment set `webExt.disabled: true` and launched the browser separately. Its manual runner does not own that browser, so those observations alone cannot establish ordinary WXT restart behavior. The follow-up now exercises WXT's managed runner directly.
+
+Both managed attempts confirmed the actual initial manifest `1.0.0` and a UI-triggered background action. Editing `wxt.config.ts` caused a native restart and rebuilt manifest `1.0.1`. With an explicitly reused profile, the new browser failed to load the extension. With default fresh profiles, a second browser opened but the original browser remained connected for the full 30-second observation window. Neither attempt established the post-restart live manifest or action.
+
+The installed WXT 0.21.4 source and [upstream source at a747b9c](https://github.com/wxt-dev/wxt/blob/a747b9c7ecd635c633ade13314552abfdb345bba/packages/wxt/src/core/create-server.ts) contain an ownership defect confirmed by the same failing/passing live test. The file reloader resolves a new configuration before requesting restart. Configuration resolution creates a new runner, while server shutdown reads the runner from the new configuration. That new closure has no reference to the browser opened by the original runner.
 
 ```mermaid
 flowchart TD
-  Edit[Config or manifest edit] --> Restart[Native WXT server restart]
-  Restart --> Managed[WXT-managed runner]
-  Managed --> Close[Close owned browser]
-  Close --> Rebuild[Rebuild and restart server]
-  Rebuild --> Open[Launch browser with new extension]
-  Restart --> Manual[Manual runner]
-  Manual --> External[External owner must manage its browser]
+  Open[Original runner opens browser] --> Edit[Config edit]
+  Edit --> Config[Reload config creates a new runner]
+  Config --> Stop[Server stop reads the new runner]
+  Stop --> Empty[New runner has no browser to close]
+  Empty --> Restart[Server starts another browser]
+  Open -.-> Survives[Original browser survives]
 ```
 
-Use WXT's ordinary runner for the next live check. Do not add a second reload engine to compensate for an externally launched browser's lifetime. Extension pages use Vite HMR; content scripts, backgrounds and configuration changes retain WXT's own reload or restart behavior.
+This supersedes the initial assumption that using the managed runner alone would resolve the gap. A separate disposable patch retains the runner used to open the current browser. Stop and browser restart close that retained runner; a new open captures the current configured runner. The unchanged live test now passes: the old browser disconnects after the edit, the new browser reports manifest `1.0.1`, and a UI action succeeds with a fresh background generation. Final native shutdown closes the new browser. The patch adds no SDK reload engine, retry loop or state-recovery policy. The maintained extension remains unchanged.
+
+A separate check of public `restartBrowser()` and `stop()` also passes. The [receipt](./wxt-runner-evidence/RECEIPT.md) includes exact versions, runtime observations and cleanup. The [runtime-only patch](./wxt-runner-evidence/runner-only.patch) adds seven lines and removes four in one native file. The [baseline receipt](./wxt-runner-evidence/baseline/RECEIPT.md) retains the failures, and the failing/passing config-change scripts are byte-identical. The standalone fixture contains the actual combined pnpm patch and frozen lockfile. No new upstream PR has been opened.
 
 ## Remaining adoption evidence
 

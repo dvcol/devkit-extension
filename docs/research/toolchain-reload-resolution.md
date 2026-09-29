@@ -1,6 +1,6 @@
 ## Resolution
 
-**2026-09-29 follow-up:** the [WXT adoption investigation](./wxt-adoption-gates.md) now passes the strict declaration gate in an isolated fixture with two narrow patches and an explicit optional peer. It also identifies why the original externally launched browser cannot establish WXT's normal managed restart behavior. The original evidence below remains historical; maintained-renderer HMR, browser reload transitions and watched production still require their own live proof before adoption.
+**2026-09-29 follow-up:** the [WXT adoption investigation](./wxt-adoption-gates.md) now passes the strict declaration gate in an isolated fixture with two narrow patches and an explicit optional peer. A separate real Chromium regression now identifies and corrects native runner ownership during config restart in an isolated patch; the same test fails without that correction. The original evidence below remains historical; maintained-renderer HMR, browser reload transitions and watched production still require their own live proof before adoption.
 
 Recommend TypeScript 7.0.2, Vite 8.3.0/Oxc, Oxlint 1.85.0 with oxlint-tsgolint 7.0.2002, pnpm 12.5.1 and Turbo 2.11.2 as the checked portable-package pipeline. Recommend WXT 0.21.4 as the extension-packaging candidate, conditional on the declaration and reload gates below. The custom Vite candidate is a working fallback. This research does not approve a blanket `skipLibCheck` setting or mark the later SDK implemented.
 

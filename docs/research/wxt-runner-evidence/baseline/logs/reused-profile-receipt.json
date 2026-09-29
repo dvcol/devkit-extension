@@ -1,0 +1,28 @@
+{
+  "outcome": "incomplete",
+  "recordedBy": "post-run audit of logs/runtime.log and executed assertions",
+  "initialManifestVersion": "1.0.0",
+  "initialAction": "UI increment asserted count 1 through native runtime.sendMessage before source mutation",
+  "sourceChange": "wxt.config.ts manifest.version changed from 1.0.0 to 1.0.1",
+  "rebuiltManifestVersion": "1.0.1",
+  "observedNativeTransitions": [
+    "initial start",
+    "config change detected",
+    "native server restart",
+    "second build complete"
+  ],
+  "failure": "CDP connection closed before response to Extensions.loadUnpacked",
+  "postRestartRuntimeManifest": "unverified",
+  "postRestartAction": "unverified",
+  "nativeRunner": "WXT 0.21.4 with web-ext 10.7.0",
+  "chromiumVersion": "153.0.8010.12",
+  "observationDriver": "@playwright/test 1.63.0",
+  "profilePolicy": "explicit owned profile, keepProfileChanges:true",
+  "debuggingPort": "WXT chromiumPort is ignored by web-ext 10.7.0; public chromiumArgs supplied --remote-debugging-port while native runner retained --remote-debugging-pipe",
+  "cleanup": "test process exited; post-exit ps inspection found no fixture-owned browser or process",
+  "limitations": [
+    "No fresh-profile restart comparison",
+    "No retry or custom reload engine",
+    "No maintained renderer HMR claim"
+  ]
+}

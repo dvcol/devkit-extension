@@ -1,0 +1,7 @@
+../../..                                 | Progress: resolved 0, reused 1, downloaded 0, added 0
+✓ Lockfile passes supply-chain policies (verified 10m ago)
+[WARN] 2 deprecated subdependencies found: eslint@9.39.4, whatwg-encoding@3.1.1
+Packages: +1 -1
++-
+Progress: resolved 1, reused 410, downloaded 0, added 1, done
+Done in 408ms using pnpm v12.5.1

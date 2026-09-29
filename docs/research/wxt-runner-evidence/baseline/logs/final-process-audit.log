@@ -1,0 +1,2 @@
+47516 /bin/zsh -lc ps -ax -o pid=,command= | rg -- 'remote-debugging-port=(57616|57063)|devkit-wxt-managed-chromium-DnfUU2' > logs/final-process-audit.log; result=$?; cat logs/final-process-audit.log; exit "$result"
+47525 rg -- remote-debugging-port=(57616|57063)|devkit-wxt-managed-chromium-DnfUU2

@@ -1,0 +1,39 @@
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profile": "/private/tmp/devkit-wxt-managed-chromium-DnfUU2/profile",
+  "chromiumPort": 56958,
+  "developmentPort": 56959,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790649101701
+    },
+    {
+      "event": "closed",
+      "at": 1790649102902
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "wxt.config.ts manifest.version source edit from 1.0.0 to 1.0.1",
+  "browserVersion": "153.0.8010.12",
+  "initialDebugEndpoint": "ws://127.0.0.1:56958/devtools/browser/8d6a6358-98ac-4289-bf09-ec628edb0602",
+  "before": {
+    "extensionId": "ohbhafpnhogfmoefbnhmimikknkhglpo",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "cc2343b5-90cb-42f9-9ca4-3c0be9883bcd",
+      "count": 1,
+      "generation": "1d4cfb68-b021-4707-a7b7-d38a0c63b797",
+      "version": "1.0.0"
+    }
+  },
+  "error": "TypeError: browser.waitForEvent is not a function",
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

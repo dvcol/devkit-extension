@@ -1,0 +1,18 @@
+✔ Started dev server @ http://localhost:56959 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 58 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             22.95 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-g_RKr6aQ.js  8.25 kB 
+Σ Total size: 32.54 kB                              
+✔ Opened browser in 621 ms
+ℹ Press o + enter to reopen the browser
+file:///private/tmp/devkit-wxt-managed-chromium-DnfUU2/check-managed-restart.mjs:98
+  const disconnected = browser.waitForEvent('disconnected', { timeout: 30_000 });
+                               ^
+
+TypeError: browser.waitForEvent is not a function
+    at file:///private/tmp/devkit-wxt-managed-chromium-DnfUU2/check-managed-restart.mjs:98:32
+
+Node.js v26.9.0

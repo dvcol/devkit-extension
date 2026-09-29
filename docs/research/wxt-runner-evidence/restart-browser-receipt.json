@@ -1,0 +1,51 @@
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profilePolicy": "native fresh temporary profile per browser launch",
+  "runId": "7088650f-ee6d-4a83-8366-24c0471ad3c5",
+  "chromiumPort": 58634,
+  "developmentPort": 58635,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790649696389
+    },
+    {
+      "event": "closed",
+      "at": 1790649698025
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "public server.restartBrowser() followed by public server.stop()",
+  "browserVersion": "153.0.8010.12",
+  "initialDebugEndpoint": "ws://127.0.0.1:58634/devtools/browser/d1e2a33a-50f9-42f7-a8ba-712818565750",
+  "before": {
+    "extensionId": "celcfiadgnnkhnabfphdpdcnolgljejk",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "d6ec8e32-8970-4a40-ac55-4d42df861b5d",
+      "count": 1,
+      "generation": "5d9de21f-2f8c-454b-a548-d2f30f845922",
+      "version": "1.0.0"
+    }
+  },
+  "restartAt": 1790649697303,
+  "initialBrowserClosed": true,
+  "nextDebugEndpoint": "ws://127.0.0.1:58634/devtools/browser/8bea3c5c-1ac7-4c48-8747-37a18533260b",
+  "after": {
+    "extensionId": "celcfiadgnnkhnabfphdpdcnolgljejk",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "2b946727-ab7a-4abd-9fd1-2e9c63501f50",
+      "count": 1,
+      "generation": "a9e4e4ea-ce0b-418f-aaff-67a7e1bcb68d",
+      "version": "1.0.0"
+    }
+  },
+  "finalStopClosedBrowser": true,
+  "passed": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

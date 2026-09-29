@@ -1,0 +1,32 @@
+✔ Started dev server @ http://localhost:57064 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 64 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             22.95 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-U8Vli-JY.js  8.25 kB 
+Σ Total size: 32.54 kB                              
+✔ Opened browser in 606 ms
+ℹ Press o + enter to reopen the browser
+ℹ Config changed, restarting server...
+✔ Started dev server @ http://localhost:57064 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 32 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             22.95 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-U8Vli-JY.js  8.25 kB 
+Σ Total size: 32.54 kB                              
+file:///private/tmp/devkit-wxt-managed-chromium-DnfUU2/node_modules/.pnpm/web-ext@10.7.0_jiti@2.7.0_supports-color@7.2.0/node_modules/web-ext/lib/extension-runners/chromium.js:152
+      reject(new Error(`CDP connection closed before response to ${method}`));
+             ^
+
+Error: CDP connection closed before response to Extensions.loadUnpacked
+    at ChromeDevtoolsProtocolClient._processNextMessage (file:///private/tmp/devkit-wxt-managed-chromium-DnfUU2/node_modules/.pnpm/web-ext@10.7.0_jiti@2.7.0_supports-color@7.2.0/node_modules/web-ext/lib/extension-runners/chromium.js:152:14)
+    at ChromeDevtoolsProtocolClient._finalizeDisconnect (file:///private/tmp/devkit-wxt-managed-chromium-DnfUU2/node_modules/.pnpm/web-ext@10.7.0_jiti@2.7.0_supports-color@7.2.0/node_modules/web-ext/lib/extension-runners/chromium.js:161:87)
+    at Socket.<anonymous> (file:///private/tmp/devkit-wxt-managed-chromium-DnfUU2/node_modules/.pnpm/web-ext@10.7.0_jiti@2.7.0_supports-color@7.2.0/node_modules/web-ext/lib/extension-runners/chromium.js:75:114)
+    at Socket.emit (node:events:526:24)
+    at Socket.emit (node:domain:473:12)
+    at Pipe.<anonymous> (node:net:362:12)
+
+Node.js v26.9.0

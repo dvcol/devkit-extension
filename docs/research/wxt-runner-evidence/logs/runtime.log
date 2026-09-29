@@ -1,0 +1,79 @@
+✔ Started dev server @ http://localhost:58308 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 68 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             22.95 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-CxlKkJ5s.js  8.25 kB 
+Σ Total size: 32.54 kB                              
+✔ Opened browser in 662 ms
+ℹ Press o + enter to reopen the browser
+ℹ Config changed, restarting server...
+✔ Started dev server @ http://localhost:58308 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 31 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             22.95 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-CxlKkJ5s.js  8.25 kB 
+Σ Total size: 32.54 kB                              
+✔ Opened browser in 477 ms
+ℹ Press o + enter to reopen the browser
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profilePolicy": "native fresh temporary profile per browser launch",
+  "runId": "f89b88ea-e4c5-4f30-9c28-216a3e564db6",
+  "chromiumPort": 58307,
+  "developmentPort": 58308,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790649578192
+    },
+    {
+      "event": "closed",
+      "at": 1790649579249
+    },
+    {
+      "event": "started",
+      "at": 1790649579256
+    },
+    {
+      "event": "closed",
+      "at": 1790649580032
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "wxt.config.ts manifest.version source edit from 1.0.0 to 1.0.1",
+  "browserVersion": "153.0.8010.12",
+  "initialDebugEndpoint": "ws://127.0.0.1:58307/devtools/browser/f55189af-34a7-4a56-919e-46698cf3e453",
+  "before": {
+    "extensionId": "celcfiadgnnkhnabfphdpdcnolgljejk",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "ebd91492-9108-4e5a-b052-3e654a6585e0",
+      "count": 1,
+      "generation": "481d74f1-9bfe-4a9b-856b-b6c1afe28486",
+      "version": "1.0.0"
+    }
+  },
+  "changeAt": 1790649579172,
+  "initialBrowserDisconnectedAt": 1790649579248,
+  "nextDebugEndpoint": "ws://127.0.0.1:58307/devtools/browser/a0b996b8-1c28-4d01-9629-bee1951f56ae",
+  "after": {
+    "extensionId": "celcfiadgnnkhnabfphdpdcnolgljejk",
+    "manifestVersion": "1.0.1",
+    "action": {
+      "requestId": "4953d134-bb62-4475-ae18-98360932305b",
+      "count": 1,
+      "generation": "11a46d48-a54a-4a6e-a985-7de7ac673d03",
+      "version": "1.0.1"
+    }
+  },
+  "passed": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

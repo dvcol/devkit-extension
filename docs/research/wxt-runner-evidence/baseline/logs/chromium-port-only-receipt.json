@@ -1,0 +1,24 @@
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profile": "/private/tmp/devkit-wxt-managed-chromium-DnfUU2/profile",
+  "chromiumPort": 56330,
+  "developmentPort": 56331,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790648989452
+    },
+    {
+      "event": "closed",
+      "at": 1790649021886
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "wxt.config.ts manifest.version source edit from 1.0.0 to 1.0.1",
+  "error": "Error: browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:56330\nCall log:\n\u001b[2m  - <ws preparing> retrieving websocket url from http://127.0.0.1:56330\u001b[22m\n",
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

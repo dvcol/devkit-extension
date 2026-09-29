@@ -1,0 +1,50 @@
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profilePolicy": "native fresh temporary profile per browser launch",
+  "runId": "88ca58c0-9d45-4e89-b849-0e0a3f1d54ef",
+  "chromiumPort": 57616,
+  "developmentPort": 57617,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790649333481
+    },
+    {
+      "event": "closed",
+      "at": 1790649334447
+    },
+    {
+      "event": "started",
+      "at": 1790649334454
+    },
+    {
+      "event": "closed",
+      "at": 1790649364371
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "wxt.config.ts manifest.version source edit from 1.0.0 to 1.0.1",
+  "browserVersion": "153.0.8010.12",
+  "initialDebugEndpoint": "ws://127.0.0.1:57616/devtools/browser/e28cadeb-4ab6-4ccf-a635-17023ffcd3aa",
+  "before": {
+    "extensionId": "ohbhafpnhogfmoefbnhmimikknkhglpo",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "ace5602e-8ca7-4126-984b-a3d6761f17a7",
+      "count": 1,
+      "generation": "af0cc58b-50aa-4605-afb4-df2056a70794",
+      "version": "1.0.0"
+    }
+  },
+  "changeAt": 1790649334421,
+  "error": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: false\nReceived: true\n\nCall Log:\n- Timeout 30000ms exceeded while waiting on the predicate",
+  "initialBrowserDisconnectedAt": 1790649364376,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    },
+    {
+      "status": "fulfilled"
+    }
+  ]
+}

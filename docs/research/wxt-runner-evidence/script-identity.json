@@ -1,0 +1,6 @@
+{
+  "unchanged": true,
+  "sha256": "01797fbe2fc34f6b3d6caa9ca3c58b87a3264e4f81b688a1584c5db1aa53284a",
+  "original": "/private/tmp/devkit-wxt-managed-chromium-DnfUU2/check-managed-restart.mjs",
+  "patched": "/private/tmp/devkit-wxt-runner-ownership-eMCzWl/check-managed-restart.mjs"
+}

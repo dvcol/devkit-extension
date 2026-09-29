@@ -1,0 +1,21 @@
+✓ Lockfile passes supply-chain policies (verified 10m ago)
+Lockfile is up to date, resolution step is skipped
+Packages are cloned from the content-addressable store to the virtual store.
+  Content-addressable store is at: /Users/dinh-van.colomban/Library/pnpm/store/v11
+  Virtual store is at:             node_modules/.pnpm
+Packages: +425
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 425, reused 425, downloaded 0, added 425, done
+
+devDependencies:
++ @playwright/test 1.63.0
++ @types/chrome 0.3.0
++ @types/node 26.6.1
++ @wxt-dev/browser 0.3.0
++ rollup 4.63.4
++ typescript 7.0.2
++ vite 8.3.0
++ web-ext 10.7.0
++ wxt 0.21.4
+
+Done in 703ms using pnpm v12.5.1

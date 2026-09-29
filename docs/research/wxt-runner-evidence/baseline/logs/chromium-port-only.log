@@ -1,0 +1,27 @@
+✔ Started dev server @ http://localhost:56331 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 86 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             22.95 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-CtblKbY_.js  8.25 kB 
+Σ Total size: 32.54 kB                              
+✔ Opened browser in 2.235 s
+ℹ Press o + enter to reopen the browser
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:56330
+Call log:
+[2m  - <ws preparing> retrieving websocket url from http://127.0.0.1:56330[22m
+
+    at connectBrowser (/private/tmp/devkit-wxt-managed-chromium-DnfUU2/check-managed-restart.mjs:26:29)
+    at async file:///private/tmp/devkit-wxt-managed-chromium-DnfUU2/check-managed-restart.mjs:94:13 {
+  log: [
+    '  - <ws preparing> retrieving websocket url from http://127.0.0.1:56330'
+  ],
+  name: 'Error'
+}
+
+Node.js v26.9.0

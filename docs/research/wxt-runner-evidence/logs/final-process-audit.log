@@ -1,0 +1,2 @@
+48903 /bin/zsh -lc ps -ax -o pid=,command= | rg -- 'remote-debugging-port=(58307|58634)|devkit-wxt-runner-ownership-eMCzWl' > logs/final-process-audit.log; result=$?; cat logs/final-process-audit.log; exit "$result"
+48914 rg -- remote-debugging-port=(58307|58634)|devkit-wxt-runner-ownership-eMCzWl
