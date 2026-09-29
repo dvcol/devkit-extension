@@ -1,3 +1,4 @@
+import { Script } from 'node:vm';
 import { build } from 'vite';
 import { expect, it } from 'vitest';
 
@@ -32,8 +33,8 @@ it.each([
 ])(
   'bundles native RPC and rendering for $browser',
   async ({ mode, background, browserSettings }) => {
-    expect.assertions(4);
-    const { modules, imports, files, manifest } = await inspectBundle(mode);
+    expect.assertions(7);
+    const { modules, imports, files, manifest, timingScript } = await inspectBundle(mode);
     expect(modules.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
     expect(imports.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
     expect(files).toEqual(
@@ -43,8 +44,12 @@ it.each([
         'panel.html',
         'devtools.html',
         'manifest.json',
+        'script-timing.js',
       ]),
     );
+    expect(timingScript).not.toBe('');
+    expect(() => new Script(timingScript)).not.toThrow();
+    expect(timingScript).not.toMatch(/import\s*\(/u);
     expect(manifest).toEqual({
       manifest_version: 3,
       name: 'Devkit native Port example',
@@ -69,6 +74,7 @@ async function inspectBundle(mode: string) {
   const imports: string[] = [];
   const files: string[] = [];
   let manifest: unknown;
+  let timingScript = '';
   await build({
     configFile: './vite.config.ts',
     mode,
@@ -81,6 +87,8 @@ async function inspectBundle(mode: string) {
           modules.push(...this.getModuleIds());
           files.push(...Object.keys(bundle));
           for (const output of Object.values(bundle)) {
+            if (output.type === 'chunk' && output.fileName === 'script-timing.js')
+              timingScript = output.code;
             if (output.type === 'chunk') imports.push(...output.imports, ...output.dynamicImports);
             if (output.type !== 'asset' || output.fileName !== 'manifest.json') continue;
             const source = output.source;
@@ -92,5 +100,5 @@ async function inspectBundle(mode: string) {
     ],
     build: { write: false },
   });
-  return { modules, imports, files, manifest };
+  return { modules, imports, files, manifest, timingScript };
 }

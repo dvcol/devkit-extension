@@ -26,6 +26,8 @@ pnpm --filter @devkit/example-contribution... run build
 pnpm --filter @devkit/example-contribution run demo
 ```
 
+The [packaged script example](./examples/webext/README.md#packaged-document-start-scripts) verifies native `document_start` behavior in MAIN and ISOLATED worlds on Chromium and Firefox, through both production Vite and WXT development builds. It uses native browser registration; the generic script contribution contract remains under design.
+
 The [core proof matrix](./docs/contracts/CORE-API-MATRIX.md) records local evidence and the remaining host obligations. A passing local lifecycle example does not complete the Devframe, DevTools, Chromium or Firefox integrations.
 
 The [headless server examples](./examples/server-contexts/README.md) reuse those same contracts in genuine Devframe hub and DevTools kit contexts through [`@devkit/server`](./packages/server/README.md). Both execute actions against native shared state, disable and re-enable their service, and dispose owned commands while retaining host state. They use built public package exports and open no network listener.

@@ -38,6 +38,7 @@ export default defineConfig(({ mode }) => {
           panel: resolve(import.meta.dirname, 'entrypoints/panel.html'),
           devtools: resolve(import.meta.dirname, 'entrypoints/devtools.html'),
           background: resolve(import.meta.dirname, 'src/background-entry.ts'),
+          'script-timing': resolve(import.meta.dirname, 'src/script-timing-entry.ts'),
         },
         output: { entryFileNames: '[name].js' },
       },

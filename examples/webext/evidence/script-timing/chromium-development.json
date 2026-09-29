@@ -1,0 +1,29 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "world": "MAIN",
+      "snapshot": {
+        "injectedGlobal": "loading",
+        "injectedReadyState": "loading",
+        "pageReadyState": "loading"
+      }
+    },
+    {
+      "world": "ISOLATED",
+      "snapshot": {
+        "injectedGlobal": null,
+        "injectedReadyState": "loading",
+        "pageReadyState": "loading"
+      }
+    },
+    {
+      "world": "unregistered",
+      "snapshot": {
+        "injectedGlobal": null,
+        "injectedReadyState": null,
+        "pageReadyState": "loading"
+      }
+    }
+  ]
+}

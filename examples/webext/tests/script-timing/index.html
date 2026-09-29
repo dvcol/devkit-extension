@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      document.dispatchEvent(new Event('example-script-timing'));
+      document.documentElement.setAttribute(
+        'data-first-script',
+        JSON.stringify({
+          injectedGlobal: Reflect.get(globalThis, 'exampleScriptTiming') ?? null,
+          injectedReadyState: document.documentElement.getAttribute('data-injected-state'),
+          pageReadyState: document.readyState,
+        }),
+      );
+    </script>
+    <meta charset="UTF-8" />
+    <title>Packaged script timing</title>
+  </head>
+  <body>
+    First page-script snapshot
+  </body>
+</html>

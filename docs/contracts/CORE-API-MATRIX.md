@@ -201,3 +201,10 @@ The same source now builds a Chromium service-worker manifest and a Firefox modu
 The [Firefox example and receipt](../../examples/webext/README.md#firefox-execution) record 18 real scenario groups against Firefox 156.0.1/geckodriver 0.37.1: two actual Ports, native JSON actions/state, rich values, rejected functions, pending-call disconnect/reconnect without replay, caller identity, portable action/capability/catalog lifecycle, sender rejection, native origin/auth checks, mixed Devframe/DevTools/extension selection/broadcast/fallback, and selected-document handoff with malformed/closed/permission-denied cases. CI runs both browser suites. Chromium retains its 24-scenario test.
 
 Firefox WebDriver Classic asserts rendered DOM and backend outcomes but does not capture all uncaught page errors here. Its receipt states that limit. This satisfies the tested FF foundation/routing cells, not complete Firefox conformance. Toolbar popup/DevTools/sidebar lifecycle, background suspension/restart, page-request authority, debugger availability, transforms, cross-provider JSON controls and extension HMR remain open.
+
+
+## Packaged script timing through native browser registration
+
+The maintained WebExtension example packages one synchronous script through production Vite and WXT's unlisted-script entry. Its existing production and development suites verify actual `document_start` registration in MAIN and ISOLATED on Chromium 153.0.8010.12 and Firefox 156.0.1. A first-inline-script snapshot distinguishes global visibility from shared DOM listener execution. Both worlds execute before that snapshot; unmatched URLs and fresh navigation after unregistering have neither marker. [Recipe, exact receipts and limitations](../../examples/webext/README.md#packaged-document-start-scripts).
+
+This is direct native composition under issue 11. No portable script declaration, page bridge, dynamic transform configuration or upstream patch is added. Child frames, CSP, script replacement, persistent registrations, already-open documents and the shared server script contract remain open.

@@ -211,3 +211,48 @@ The browser supplies the selected tab/frame. The example checks only the native 
 `tests/selected-page.ts` serves a real Vite publisher whose native `setupDevframeConnection` fetches and publishes the descriptor. The extension adopts it and invokes the shared action. The test also verifies absent/malformed descriptors, a closed selection, and browser permission rejection for a tampered selection targeting `about:blank`. The publisher is not a fabricated Playwright connection object. Page errors from every browser page are collected.
 
 This is a one-time handoff. Closing or navigating the source page does not retarget an already adopted backend connection; the extension page owns its disposal. The selected source gets no extension capabilities or RPC channel. No tab watcher, page-to-extension request protocol, persistent endpoint registry or credential store is added. Native `devtools.inspectedWindow.eval` remains the appropriate read API for an actual DevTools integration, whose surface lifecycle is still untested here.
+
+## Packaged document-start scripts
+
+The [script recipe](./src/script-timing.ts) is synchronous, browser-only code. Production Vite and WXT's native `defineUnlistedScript` entry both package it as `script-timing.js`. Application code registers that file through native `scripting.registerContentScripts` before navigating. No SDK script factory, page RPC bridge or injected extension authority is involved.
+
+```ts
+await chrome.scripting.registerContentScripts([
+  {
+    id: 'example-script-timing',
+    js: ['script-timing.js'],
+    matches: ['http://127.0.0.1/index.html'],
+    runAt: 'document_start',
+    world: 'MAIN', // Use 'ISOLATED' for extension-owned globals.
+    allFrames: false,
+    persistAcrossSessions: false,
+  },
+]);
+// Registration affects matching future documents.
+await chrome.scripting.unregisterContentScripts({ ids: ['example-script-timing'] });
+```
+
+The existing `scripting` and loopback host permissions cover this recipe. MAIN shares page globals and page trust; ISOLATED has separate globals while sharing the document. Unregistering affects future injection; it does not undo code that already ran.
+
+The [first inline page script](./tests/script-timing/index.html) dispatches a plain synchronous event and records its observations immediately. The packaged listener writes its injection-time `readyState` to the shared DOM. This checks actual early execution in both worlds without timers, late-injection fallbacks or assuming that `documentElement` exists at injection time.
+
+| Registration                   | Page sees bootstrap global | Already-installed listener reports | First page script state |
+| ------------------------------ | -------------------------- | ---------------------------------- | ----------------------- |
+| MAIN                           | `loading`                  | `loading`                          | `loading`               |
+| ISOLATED                       | absent                     | `loading`                          | `loading`               |
+| Removed, then fresh navigation | absent                     | absent                             | `loading`               |
+
+The browser tests also read back the exact native registration, check an unmatched URL in each world, and confirm removal of the owned registration. Production bundle tests parse the artifact as a classic script and reject module dependencies. The same browser scenarios run in the native WXT development suites without changing WXT lifecycle behavior.
+
+Recorded results: [Chromium production](./evidence/script-timing/chromium-production.json), [Firefox production](./evidence/script-timing/firefox-production.json), [Chromium development](./evidence/script-timing/chromium-development.json), [Firefox development](./evidence/script-timing/firefox-development.json). Chromium 153.0.8010.12 and Firefox 156.0.1 passed all four combinations. Fresh runs write `script-timing.json` in each command's existing artifact directory.
+
+```sh
+pnpm exec turbo run build --filter=@devkit/example-webext --concurrency=1
+pnpm --filter @devkit/example-webext test:browser
+pnpm --filter @devkit/example-webext test:firefox
+pnpm --filter @devkit/example-webext test:dev
+```
+
+This proves top-level loopback documents registered before navigation. It does not establish child-frame/CSP coverage, persistence across browser restarts, mutation rollback, already-open document timing or replacement of the injected script during development. Native Vite HTML transformation and the generic script contribution contract remain separate work under [#11](https://github.com/dvcol/devkit-extension/issues/11).
+
+Native references: [Chrome content script timing](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts), [registered-script fields](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/RegisteredContentScript), and [Mozilla's API compatibility data](https://raw.githubusercontent.com/mdn/browser-compat-data/main/webextensions/api/scripting.json). The latter records programmatic `world` support from Firefox 128; the actual Firefox run above confirms the maintained version.

@@ -10,6 +10,7 @@ import {
   updateDevelopmentVersion,
 } from './development-fixture.ts';
 import { attachFirefox } from './firefox-development-observer.ts';
+import { checkFirefoxScriptTiming } from './firefox-script-timing.ts';
 import { checkFirefoxDevelopmentHosts } from './firefox-development-hosts.ts';
 
 const fixture = await createDevelopmentFixture();
@@ -41,6 +42,7 @@ try {
   await driver.switchTo().newWindow('tab');
   await driver.get(`${observer.origin}/panel.html`);
   await connected(0);
+  await checkFirefoxScriptTiming(driver, artifactDirectory);
   await increase();
   await counter(1);
   await checkModuleUpdate();
