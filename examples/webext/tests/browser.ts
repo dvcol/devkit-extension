@@ -6,6 +6,7 @@ import { styleText } from 'node:util';
 import { chromium, expect } from '@playwright/test';
 import { checkConfiguredServers } from './configured-servers.ts';
 import { checkSelectedPage } from './selected-page.ts';
+import { nativeSurfaceScript } from './native-surfaces.ts';
 
 const extensionPath = resolve('dist/chromium');
 const profile = await mkdtemp(join(tmpdir(), 'native-port-chromium-'));
@@ -25,10 +26,15 @@ browser.on('console', (message) => {
 try {
   const worker = browser.serviceWorkers()[0] ?? (await browser.waitForEvent('serviceworker'));
   const extensionId = new URL(worker.url()).host;
-  const first = await browser.newPage();
+  await worker.evaluate(() => chrome.runtime.openOptionsPage());
+  await expect
+    .poll(() => browser.pages().some((page) => page.url().endsWith('/panel.html')))
+    .toBe(true);
+  const first = browser.pages().find((page) => page.url().endsWith('/panel.html'));
+  assert.ok(first);
   const second = await browser.newPage();
+  await second.goto(`chrome-extension://${extensionId}/panel.html`);
   for (const page of [first, second]) {
-    await page.goto(`chrome-extension://${extensionId}/panel.html`);
     await expect(page.locator('#status')).toHaveText('Connected');
     await expect(page.getByText('Counter: 0', { exact: true })).toBeVisible();
     await expect(page.locator('#catalog')).toHaveText('active');
@@ -102,6 +108,9 @@ try {
   await expect(first.locator('#status')).toHaveText('Connected');
   await first.getByRole('button', { name: 'Read capability', exact: true }).click();
   await expect(first.locator('#result')).toHaveText('16');
+  const surfaceChecks = await first.evaluate<string[]>(
+    `"use strict";\n${nativeSurfaceScript}\ncheckNativeSurfaces()`,
+  );
   assert.deepEqual(errors, []);
   await mkdir('artifacts', { recursive: true });
   await first.screenshot({ path: 'artifacts/native-port-proof.png', fullPage: true });
@@ -132,6 +141,7 @@ try {
       'selected document hands off its natively published connection',
       'absent, malformed and closed selected documents reject without attaching',
       'native scripting permission rejection and independent adopted connection lifetime',
+      ...surfaceChecks,
     ],
     pageErrors: errors,
   };

@@ -9,7 +9,7 @@ pnpm --filter @devkit/example-webext test:browser
 pnpm --filter @devkit/example-webext test:firefox
 ```
 
-Load `examples/webext/dist/chromium` unpacked in Chromium, or load `examples/webext/dist/firefox/manifest.json` as a temporary add-on from Firefox’s `about:debugging`. Open the extension's options page twice. The manifest also points its popup to that page; the automated test opens full pages and does not claim toolbar-popup lifecycle coverage. Its only host permission is `http://127.0.0.1/*`, for local backends and selected local pages. The `scripting` permission reads a native descriptor from a selected page.
+Load `examples/webext/dist/chromium` unpacked in Chromium, or load `examples/webext/dist/firefox/manifest.json` as a temporary add-on from Firefox’s `about:debugging`. Open the extension's options page or its toolbar popup. Both mount the same native JSON view and use independent connections to the background provider. Its only host permission is `http://127.0.0.1/*`, for local backends and selected local pages. The `scripting` permission reads a native descriptor from a selected page.
 
 ```mermaid
 flowchart LR
@@ -22,13 +22,13 @@ flowchart LR
 
 The worker admits only its own extension ID, expected channel name and exact packaged page URL. Its native RPC metadata retains each actual sender. The channel uses Devframe's records serializer. Native state accepts normal native writes, and view publication retains one context object for its index and duplicate detection. Each page owns its RPC close, state mirrors and renderer disposal. Disconnect does not cancel remote side effects or replay an action.
 
-The Chromium test uses a disposable profile and removes it afterward. Its 24 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
+The Chromium test uses a disposable profile and removes it afterward. Its 30 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
 
 ![Native renderer using the installed workspace dependencies](./evidence/native-port-proof.png)
 
 `pnpm --filter @devkit/example-webext test` also builds the extension and rejects Node or browser-external modules in the graph. Both build modes assert the expected native background manifest, permissions and CSP. CI runs these checks through the normal workspace gates, then executes both real-browser tests.
 
-This is the native extension foundation. Automatic discovery, cross-provider rendering, full popup/DevTools/side-panel lifecycle, content/page request bridging, debugger support, full browser conformance and complete extension HMR coverage remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
+This is the native extension foundation. Automatic discovery, cross-provider rendering, DevTools/side-panel lifecycle, content/page request bridging, debugger support, full browser conformance and complete extension HMR coverage remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
 
 ## Firefox execution
 
@@ -41,11 +41,36 @@ FIREFOX_BINARY=/Applications/Firefox.app/Contents/MacOS/firefox \
 
 The driver owns a temporary profile, assigns this add-on a test-only origin UUID and removes the session on exit. Its `--allow-system-access` option permits automation of `moz-extension` documents; it is never applied to a normal browsing profile. WebDriver Classic provides working extension-page navigation. Firefox BiDi currently omits extension-page lifecycle events, causing Puppeteer navigation to time out, as tracked in [Puppeteer #14314](https://github.com/puppeteer/puppeteer/issues/14314).
 
-The [Firefox receipt](./evidence/firefox/receipt.json) records 18 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Neither suite automates browser-toolbar popup, DevTools or side-panel lifecycle.
+The [Firefox receipt](./evidence/firefox/receipt.json) records 24 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Both suites open actual options pages and toolbar popups through native APIs. DevTools and side-panel lifecycle remain untested.
 
 ![Firefox native renderer and mixed-provider state](./evidence/firefox/native-port-proof.png)
 
 The example declares `script-src 'self'` and limits `connect-src` to itself and loopback HTTP/WebSocket endpoints. This explicit CSP omits Firefox's default `upgrade-insecure-requests`, which otherwise upgrades the local `ws:` endpoint to `wss:` and prevents connection. [Mozilla documents this native behavior](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_Security_Policy#upgrade_insecure_network_requests_in_manifest_v3). Packaged code, host permissions, native origin admission and native RPC authentication remain enforced. No SDK transport or Devframe patch is added for Firefox.
+
+## Options and popup lifecycle
+
+The manifest points both native hosts at the same packaged `panel.html`. Shared CSS gives the popup a usable minimum width, wraps provider details and leaves vertical scrolling to the browser. The application keeps the existing renderer, Port connection and page teardown; there is no separate popup runtime.
+
+```mermaid
+flowchart LR
+  Options[Options page / local form and connection] --> Provider[Background provider / native shared state]
+  Popup[Toolbar popup / local form and connection] --> Provider
+  Popup --> Close[Native close / document and connection end]
+  Reopen[Reopened popup / new connection] --> Provider
+```
+
+| Interaction                 | Observed behavior in Chromium and Firefox                                                            |
+| --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Native options opening      | Opens the configured page; repeated opening reuses an existing page                                  |
+| Popup opening               | Native popup registry contains one real view; the JSON renderer shows current background state       |
+| Rendered popup action       | Counter increases once and the options page receives the same state                                  |
+| Service disable/enable      | Both catalogs update; the popup's routed action rejects while unavailable                            |
+| Pending action during close | Popup view disappears; the surviving options page can release the already dispatched action          |
+| Popup reopening             | New caller, empty local form/result, same provider incarnation and current counter; no action replay |
+
+The shared browser scenario in `tests/native-surfaces.ts` runs through both maintained production suites. It uses native `runtime.openOptionsPage`, `action.openPopup` and `extension.getViews({ type: 'popup' })`. From the surviving options document, it inspects and clicks the actual popup DOM, including its native JSON renderer. It never substitutes an ordinary tab for a popup or adds application test hooks. Firefox invalidates closed-window references, so closure is observed through the native view registry.
+
+The retained screenshots show the surviving options page after the popup checks, not a recreated popup. Popup sizing is asserted on the actual window, including absence of horizontal overflow. This proves packaged popup/options behavior. It does not claim popup-specific HMR, background suspension, DevTools/sidebar support or cross-provider JSON action dispatch. Those remain separate work.
 
 ## Provider and connection ownership
 
@@ -95,7 +120,7 @@ The Firefox test attaches to the browser WXT opened. Its isolated automation ses
 
 On Linux CI only, the Chromium development test passes `--no-sandbox`, matching Playwright's existing test-launch default. The Ubuntu runner rejects the downloaded Chromium sandbox before CDP startup. This flag applies only to the disposable automated browser; the normal WXT development commands keep Chromium's default sandbox behavior. Native launch crashes print the owned browser's stderr before exiting.
 
-The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, toolbar/DevTools/side-panel lifetimes and watched production remain open.
+The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, popup development transitions, DevTools/side-panel lifetimes and watched production remain open.
 
 ## Explicit native server connections
 

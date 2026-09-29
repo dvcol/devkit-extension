@@ -20,7 +20,13 @@
     "explicit provider preference, disconnect fallback and partial broadcast failure",
     "selected document publishes a real native connection and retains backend ownership after closing",
     "absent, malformed and closed selected documents reject without attaching",
-    "native scripting permission rejects a tampered about:blank selection"
+    "native scripting permission rejects a tampered about:blank selection",
+    "native options opening reuses the existing page",
+    "real native popup has a usable width and renders the shared JSON view",
+    "popup action updates the surviving options page exactly once",
+    "catalog disable/enable reaches both native surfaces",
+    "popup close destroys its window and pending action completes without replay",
+    "reopened popup has a new caller, reset local form and retained native provider state"
   ],
   "limitations": ["No global page-error capture through WebDriver Classic"]
 }

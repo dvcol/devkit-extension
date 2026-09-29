@@ -6,6 +6,7 @@ import { By, until } from 'selenium-webdriver';
 import { Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
 import { checkFirefoxServers } from './firefox-servers.ts';
 import { checkFirefoxSelectedPage } from './firefox-selected-page.ts';
+import { nativeSurfaceScript } from './native-surfaces.ts';
 
 const extensionUuid = crypto.randomUUID();
 const options = new Options()
@@ -22,7 +23,14 @@ const origin = `moz-extension://${extensionUuid}`;
 
 try {
   await driver.installAddon(resolve('dist/firefox'), true);
-  await driver.get(`${origin}/panel.html`);
+  await driver.get(`${origin}/denied.html`);
+  const launcher = await driver.getWindowHandle();
+  await driver.executeScript('return chrome.runtime.openOptionsPage()');
+  await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2, 10_000);
+  const optionsPage = (await driver.getAllWindowHandles()).find((handle) => handle !== launcher);
+  assert.ok(optionsPage !== undefined);
+  await driver.close();
+  await driver.switchTo().window(optionsPage);
   const first = await driver.getWindowHandle();
   await connected(0);
   const provider = await text('#provider');
@@ -56,7 +64,14 @@ try {
   await waitText('#status', 'Connected');
   await click('#capability');
   await waitText('#result', '16');
-  await saveEvidence();
+  await driver.manage().setTimeouts({ script: 60_000 });
+  const surfaceResult = await driver.executeAsyncScript<{ checks?: string[]; error?: string }>(
+    `const done = arguments[arguments.length - 1]; ${nativeSurfaceScript}
+checkNativeSurfaces().then(checks => done({ checks }), error => done({ error: error.stack ?? String(error) }));`,
+  );
+  assert.equal(surfaceResult.error, undefined);
+  assert.ok(surfaceResult.checks !== undefined);
+  await saveEvidence(surfaceResult.checks);
 } catch (error) {
   const result = await text('#server-result').catch(() => 'Extension page unavailable');
   console.error(styleText('red', '❌ [webext/firefox]'), result);
@@ -188,7 +203,7 @@ async function contains(selector: string, expected: string): Promise<void> {
   );
 }
 
-async function saveEvidence(): Promise<void> {
+async function saveEvidence(surfaceChecks: string[]): Promise<void> {
   const receipt = {
     browser: (await driver.getCapabilities()).getBrowserVersion(),
     driver: 'Firefox WebDriver Classic',
@@ -212,6 +227,7 @@ async function saveEvidence(): Promise<void> {
       'selected document publishes a real native connection and retains backend ownership after closing',
       'absent, malformed and closed selected documents reject without attaching',
       'native scripting permission rejects a tampered about:blank selection',
+      ...surfaceChecks,
     ],
     limitations: ['No global page-error capture through WebDriver Classic'],
   };

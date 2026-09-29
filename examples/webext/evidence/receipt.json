@@ -24,7 +24,13 @@
     "fallback after native server disconnect and partial broadcast failure",
     "selected document hands off its natively published connection",
     "absent, malformed and closed selected documents reject without attaching",
-    "native scripting permission rejection and independent adopted connection lifetime"
+    "native scripting permission rejection and independent adopted connection lifetime",
+    "native options opening reuses the existing page",
+    "real native popup has a usable width and renders the shared JSON view",
+    "popup action updates the surviving options page exactly once",
+    "catalog disable/enable reaches both native surfaces",
+    "popup close destroys its window and pending action completes without replay",
+    "reopened popup has a new caller, reset local form and retained native provider state"
   ],
   "pageErrors": []
 }
