@@ -59,8 +59,9 @@ async function checkHtmlReload(page: Page, fixture: string): Promise<void> {
   const updated = html.replace(/<h1>[^<]+<\/h1>/u, `<h1>${heading}</h1>`);
   assert.notEqual(updated, html);
   await writeFile(path, updated);
+  /** The observing options page reloads too; its locator survives replacement of that context. */
+  await expect(page.getByRole('heading', { name: heading })).toBeVisible({ timeout: 30_000 });
   await expect.poll(() => popupText(page, 'h1'), { timeout: 30_000 }).toBe(heading);
-  await expect(page.getByRole('heading', { name: heading })).toBeVisible();
   await expect.poll(() => popupText(page, '#status')).toBe('Connected');
   const after = await snapshot(page);
   assert.notEqual(after.timeOrigin, before.timeOrigin);
