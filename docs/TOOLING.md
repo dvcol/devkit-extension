@@ -38,6 +38,8 @@ The old Vue UI, its CSS and its Stylelint rules were removed. Future renderer an
 
 The MV3 example calls `startExampleBackground()` synchronously from its native entrypoint. That function registers browser event listeners immediately and observes asynchronous provider startup failures. The imported module has no startup side effects, and no `prefer-top-level-await` exception is needed.
 
+The debugger example's test controller has one inline `typescript/strict-void-return` exception when registering its `runtime.onMessage` listener. Chrome requires returning `true` to retain the asynchronous reply channel, while the pinned `@types/chrome` declaration expects `void`. The exception covers only that native listener registration; both real browser tests verify its reply behavior.
+
 The selected-page example has one inline `typescript/no-unsafe-type-assertion` exception at the browser read of `DevframeConnection`. Devframe exports that type but no runtime validator. The example checks the same envelope as its upstream external viewer, preserves native metadata for the native client, and keeps backend authentication separate. This exception does not claim complete metadata validation. Real Chromium checks cover absence, malformed envelopes, browser permission rejection and native authentication; the SDK adds no duplicate native metadata schema.
 
 ## Preserved research evidence

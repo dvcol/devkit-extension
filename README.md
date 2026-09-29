@@ -54,6 +54,15 @@ The maintained [`@devkit/webext`](./packages/webext/README.md) package binds an 
 
 Watched production publication also retains the last complete build and reports failed rebuilds. Run the independent `build:watch` and `preview` scripts or their combined `dev:production` command in that example. Automatic endpoint discovery, browser capability authority, cross-provider renderer integration, WebExtension hosts and complete browser HMR remain outstanding. The example README states the tested lifecycle boundaries and the accepted unpatched Vite cleanup gap.
 
+The [debugger example](./examples/debugger/README.md) composes CDB's released embedded bridge, selected-tab publisher and native lifecycle helper with a portable page-title capability and action. The Chromium host owns the attachment; disposing its contributions releases their work while preserving the host. Firefox exposes the unavailable capability through the same contribution runtime. This private, UI-free example uses trusted in-process CDB access. Remote authorization, configured Fetch interception and the complete debugger lifecycle remain open.
+
+```sh
+pnpm exec turbo run build --filter=@devkit/example-debugger... --concurrency=1
+pnpm --filter @devkit/example-debugger test
+pnpm --filter @devkit/example-debugger test:browser
+pnpm --filter @devkit/example-debugger test:firefox
+```
+
 Oxlint checks correctness, suspicious and pedantic rules as errors, plus explicit TypeScript, imports, promises and test rules. Type-aware linting is enabled. Warnings fail checks. Oxfmt controls formatting, and `format:check` fails on drift. See [tooling conventions](./docs/TOOLING.md) for the enforced rules, documented exceptions and review obligations.
 
 ```sh

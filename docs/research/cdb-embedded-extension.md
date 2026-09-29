@@ -2,7 +2,9 @@
 
 The first real extension proof for [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10) runs the released CDB client, broker and selected-tab publisher entirely inside an MV3 background worker. It executes an actual browser command and observes an actual protocol event. The only HTTP server serves a disposable target document; there is no debugger daemon or network broker.
 
-This is executed research. It does not yet provide a maintained typed contribution, reference UI or complete debugger adapter.
+This section records the original research run. It does not establish a reference UI or complete debugger adapter.
+
+The follow-on [maintained debugger example](../../examples/debugger/README.md) promotes this composition into strict TypeScript with a portable page-title service/action and native Chromium/Firefox checks. The frozen probe below remains evidence for its original run. Neither example completes the broader debugger contract.
 
 ## Exact native boundary
 

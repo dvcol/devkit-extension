@@ -226,6 +226,37 @@ importers:
         specifier: 4.6.5
         version: 4.6.5
 
+  examples/debugger:
+    dependencies:
+      '@devkit/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@devkit/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
+      '@dvcol/cdb':
+        specifier: 0.3.0
+        version: 0.3.0
+      '@dvcol/cdb-extension':
+        specifier: 0.3.0
+        version: 0.3.0
+      zod:
+        specifier: 4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@playwright/test':
+        specifier: 1.63.0
+        version: 1.63.0
+      '@types/chrome':
+        specifier: 0.3.0
+        version: 0.3.0
+      '@types/selenium-webdriver':
+        specifier: 4.35.7
+        version: 4.35.7
+      selenium-webdriver:
+        specifier: 4.49.0
+        version: 4.49.0
+
   examples/json-render:
     dependencies:
       '@devframes/hub':
@@ -731,6 +762,20 @@ packages:
     engines: {node: '>= 0.10.4'}
     hasBin: true
 
+  '@dvcol/cdb-broker@0.3.0':
+    resolution: {integrity: sha512-KNGMJGyxuaxhzpy/9x/NMsiIcmrRxEkawgVQd/xJ42kxgo4ojm+Wkeqqwr3epdqXvh8QuWOzD84ageWBLSRAYw==}
+    engines: {node: '>=24.0.0'}
+
+  '@dvcol/cdb-extension@0.3.0':
+    resolution: {integrity: sha512-VYA3WAauBDNLzHrmXNccvifj6sNozRU/KYQtafLM84YGNgbFQonABXO5LE2U737MamtP2OlgnAre53qf9W3ntA==}
+
+  '@dvcol/cdb-mcp@0.3.0':
+    resolution: {integrity: sha512-WGepVyOUqr1trJRhlIZlbAmFjY3BO6FTdnR1RM7GfzAdGsa/1bd99zuSY/gZ4nYdtbeTEIkywYJQHmQdvpndEg==}
+    engines: {node: '>=24.0.0'}
+
+  '@dvcol/cdb@0.3.0':
+    resolution: {integrity: sha512-f7p+3YSHaI/2Ic1VavsJExUbWbPhdB/2oAVYYNDR4Cp6rWapSziR4gxFDbqKjDU6WNMgMkcs96WyXM/UlqZYyw==}
+
   '@eslint-community/eslint-utils@4.10.1':
     resolution: {integrity: sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -776,6 +821,12 @@ packages:
   '@fregante/relaxed-json@2.0.0':
     resolution: {integrity: sha512-PyUXQWB42s4jBli435TDiYuVsadwRHnMc27YaLouINktvTWsL3FcKrRMGawTayFk46X+n5bE23RjUTWQwrukWw==}
     engines: {node: '>= 0.10.0'}
+
+  '@hono/node-server@1.19.17':
+    resolution: {integrity: sha512-dSneS5qhiauZWGDCeK4o695Xd9nUNjviSZCMQrj10eetr8Uln1ucn6bbphOM6UynAMMtNIzZNSpL9vnASJwrPQ==}
+    engines: {node: '>=18.14.1'}
+    peerDependencies:
+      hono: ^4
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -828,6 +879,16 @@ packages:
   '@modelcontextprotocol/core@2.0.0':
     resolution: {integrity: sha512-pJCEwGG7Lfr/+PQp9ZTwKXNeO5wzbfKL7H3MYpCorM4oFBoQrdjnBgEoqG+RjhsvS1FKrDbKux+M1HhlnGWqcA==}
     engines: {node: '>=20'}
+
+  '@modelcontextprotocol/node@2.0.0':
+    resolution: {integrity: sha512-Y4hAC2XdGDUdDOCbLDOCA4+aL3NUldjsOWlDL/YwpAxrPhRm1xHd7lZ+mLacvZ9t3PaH28wgNoaLQGrIk1P2pg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@modelcontextprotocol/server': ^2.0.0
+      hono: ^4.11.4
+    peerDependenciesMeta:
+      hono:
+        optional: true
 
   '@modelcontextprotocol/server@2.0.0':
     resolution: {integrity: sha512-YhHWdHfpFMQfd0prsEnxKeS3Qz3ytIGmsS0sth4KDjnacIT7hxk6hXHkJ9KysxlkvTM+WZAtQbbcUhdoP4Hvtw==}
@@ -2302,6 +2363,10 @@ packages:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
 
+  hono@4.11.4:
+    resolution: {integrity: sha512-U7tt8JsyrxSRKspfhtLET79pU8K+tInj5QZXs1jSugO1Vq5dFj3kmZsRldo29mTBfcjDRVRXrEZ6LS63Cog9ZA==}
+    engines: {node: '>=16.9.0'}
+
   hookable@6.1.2:
     resolution: {integrity: sha512-+abwxtiEA52GCVIsQqut3S/uKTbUwYIp4Pe/vv+6py5XiXBCqMZHg6pA6Y5qhgLSEys0/cYuPbO0z1QFj5ZCmg==}
 
@@ -3495,6 +3560,9 @@ packages:
   zip-dir@2.0.0:
     resolution: {integrity: sha512-uhlsJZWz26FLYXOD6WVuq+fIcZ3aBPGo/cFdiLlv3KNwpa52IF3ISV8fLhQLiqVu5No3VhlqlgthN6gehil1Dg==}
 
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
   zod@4.6.5:
     resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
 
@@ -3761,6 +3829,29 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@dvcol/cdb-broker@0.3.0':
+    dependencies:
+      '@dvcol/cdb': 0.3.0
+      '@dvcol/cdb-mcp': 0.3.0
+
+  '@dvcol/cdb-extension@0.3.0':
+    dependencies:
+      '@dvcol/cdb': 0.3.0
+      '@dvcol/cdb-broker': 0.3.0
+
+  '@dvcol/cdb-mcp@0.3.0':
+    dependencies:
+      '@dvcol/cdb': 0.3.0
+      '@modelcontextprotocol/node': 2.0.0(@modelcontextprotocol/server@2.0.0)(hono@4.11.4)
+      '@modelcontextprotocol/server': 2.0.0
+      hono: 4.11.4
+      zod: 4.4.3
+
+  '@dvcol/cdb@0.3.0':
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+      zod: 4.4.3
+
   '@eslint-community/eslint-utils@4.10.1(eslint@9.39.4(jiti@2.6.1)(supports-color@7.2.0))':
     dependencies:
       eslint: 9.39.4(jiti@2.6.1)(supports-color@7.2.0)
@@ -3810,6 +3901,10 @@ snapshots:
   '@fluent/syntax@0.19.0': {}
 
   '@fregante/relaxed-json@2.0.0': {}
+
+  '@hono/node-server@1.19.17(hono@4.11.4)':
+    dependencies:
+      hono: 4.11.4
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -3865,6 +3960,13 @@ snapshots:
   '@modelcontextprotocol/core@2.0.0':
     dependencies:
       zod: 4.6.5
+
+  '@modelcontextprotocol/node@2.0.0(@modelcontextprotocol/server@2.0.0)(hono@4.11.4)':
+    dependencies:
+      '@hono/node-server': 1.19.17(hono@4.11.4)
+      '@modelcontextprotocol/server': 2.0.0
+    optionalDependencies:
+      hono: 4.11.4
 
   '@modelcontextprotocol/server@2.0.0':
     dependencies:
@@ -5006,6 +5108,8 @@ snapshots:
       crossws: 0.4.12(patch_hash=7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605)(srvx@1.0.5)
 
   has-flag@4.0.0: {}
+
+  hono@4.11.4: {}
 
   hookable@6.1.2: {}
 
@@ -6187,5 +6291,7 @@ snapshots:
     dependencies:
       async: 3.2.6
       jszip: 3.10.2
+
+  zod@4.4.3: {}
 
   zod@4.6.5: {}

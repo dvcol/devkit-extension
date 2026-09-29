@@ -1,0 +1,32 @@
+{
+  "browser": "156.0.1",
+  "receipt": {
+    "passed": true,
+    "result": {
+      "actionError": "OperationError: Action example.debugger.read-page-title@1 is unavailable",
+      "capability": "unavailable",
+      "host": {
+        "reason": "unsupported-browser",
+        "status": "unavailable"
+      },
+      "installedServices": 0,
+      "nativeDebuggerAvailable": false,
+      "plugin": {
+        "contributions": [
+          {
+            "diagnostics": [],
+            "enabled": true,
+            "generation": 0,
+            "id": "example.debugger.read-title",
+            "kind": "action",
+            "reason": "dependency-unavailable",
+            "status": "waiting"
+          }
+        ],
+        "diagnostics": [],
+        "id": "example.debugger.actions",
+        "status": "inactive"
+      }
+    }
+  }
+}

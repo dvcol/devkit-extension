@@ -36,6 +36,21 @@ Host codes: **DF** standalone Devframe, **DT** Vite DevTools, **CH** Chromium ex
 
 View, script, transform, state, debugger and native adapter-specific helpers/hooks receive additional rows from their domain tickets before implementation admission. The matrix cannot count a declaration-only type check or browser mock as a successful real-host runtime cell.
 
+## Debugger example obligations
+
+The private [`examples/debugger`](../../examples/debugger/README.md) composes native CDB APIs with existing portable contracts. It adds no debugger package or universal target API. Its Chromium and Firefox commands run separately from the unit tests in CI.
+
+| Boundary | Maintained fixture | Required observations |
+| --- | --- | --- |
+| `pageTitleCapability`, `readPageTitleAction`, `defineNativeContext` | Typed service and local provider | Native CDB target ID/generation stay in this capability's input; contract validation and dependency availability use the existing runtime |
+| Native embedded bridge, selected-tab publisher and lifecycle | Chromium extension worker | Execute the action through an actual lease and debugger attachment; forward actual protocol events using CDB's lifecycle helper |
+| Contribution disposal versus host disposal | Chromium browser test | Contribution cleanup retains the host target; client-only disposal retains native access; final host teardown detaches; stale native calls reject |
+| Native failure, malformed reply, revoked target and cancellation | Vitest tests at the Chrome boundary | Release operation-owned leases, reject explicitly, avoid replay and preserve independent host ownership |
+| Firefox availability | Actual Firefox temporary add-on | No Chromium debugger permission/API; no installed debugger service; dependency remains waiting and invocation rejects as unavailable |
+| Browser import graph | Vite build | Public package imports only, with no Node builtins or external runtime imports in either extension bundle |
+
+These cases do not establish remote peer authorization, configured Fetch demand, child-session behavior, permission transitions, worker termination, every navigation race or native DevTools attachment order. Those remain obligations of [Debugger and CDB contract](https://github.com/dvcol/devkit-extension/issues/10).
+
 ## Local implementation evidence
 
 The maintained `packages/core` source implements the reviewed contract exports. Its 12 runtime functions are tested in `packages/core/tests/definitions.test.ts`, `invalid-definitions.test.ts`, `snapshots.test.ts` and `errors.test.ts`; the negative compile fixtures live in `packages/core/tests/core.type-test.ts`. Consult actual package files for the current test inventory. These are local contract checks, not four-host conformance.
