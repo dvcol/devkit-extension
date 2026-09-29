@@ -15,7 +15,7 @@
           "status": "connected",
           "isTrusted": true,
           "isolated": true,
-          "targetTabId": 1030853826,
+          "targetTabId": 889709346,
           "providerDisposed": false,
           "clientDisposed": false,
           "closed": false,
@@ -35,10 +35,10 @@
       "name": "The actual extension control approves only the owned fixture tab",
       "details": [
         {
-          "requestId": "a4a46521-b691-4424-aa9b-0bc30f1b8a7d",
+          "requestId": "dc8080c7-9931-42aa-85d3-0020de3da847",
           "selector": {
             "kind": "explicit-tabs",
-            "tabIds": [1030853826]
+            "tabIds": [889709346]
           },
           "accepted": true,
           "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
@@ -59,6 +59,12 @@
         },
         "generationMismatch": "rejected",
         "leases": 0,
+        "cancellation": {
+          "nativeCommandWasPending": true,
+          "disableWaited": true,
+          "lateResult": "cancelled",
+          "leases": 0
+        },
         "targetRetainedAfterContributionDisposal": true
       }
     },
@@ -66,7 +72,7 @@
       "name": "Host broker operation changes the real page through native RPC",
       "details": {
         "result": {
-          "operationId": "97dfe750-ff55-4393-b7ce-5468eae334a9",
+          "operationId": "e43248dd-7405-405c-84ba-696da99c17ef",
           "value": {
             "result": {
               "type": "string",

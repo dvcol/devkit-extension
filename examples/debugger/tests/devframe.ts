@@ -55,7 +55,7 @@ async function run() {
   record('The actual extension control approves only the owned fixture tab', approved.approvals);
   record(
     'Remote title contribution uses its actual caller grants and retains native ownership',
-    await checkRemoteContribution(host, control),
+    await checkRemoteContribution(host, control, target),
   );
   await checkBrowserOperation(control, host, { page: target, reference: approved.targetRef });
   await checkDisposal(control, host);

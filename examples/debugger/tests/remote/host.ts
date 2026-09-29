@@ -1,6 +1,6 @@
 import { mkdtemp, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
-import type { Server } from 'node:http';
+import type { Server, ServerResponse } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { CdbDevframeService } from '@dvcol/cdb-devframe';
@@ -19,7 +19,7 @@ export async function createNativeHost() {
   const fixture = createDefinition();
   const peers = createPeerLifecycle(fixture.requireService);
   let native: DevframeInstance | undefined;
-  const server = createPageServer(() => native);
+  const { server, titleReads } = createPageServer(() => native);
   cleanup.defer(() => closeServer(server));
   const origin = await listen(server);
   cleanup.defer(async () => {
@@ -44,6 +44,7 @@ export async function createNativeHost() {
   return {
     baseURL: `${origin}/__cdb/`,
     fixtureUrl: `${origin}/owned-target`,
+    titleReads,
     allowedOrigins,
     service,
     provider: fixture.requireProvider(),
@@ -83,7 +84,15 @@ function createPeerLifecycle(service: () => CdbDevframeService) {
 }
 
 function createPageServer(getNative: () => DevframeInstance | undefined) {
-  return createServer((request, response) => {
+  const held = new Set<ServerResponse>();
+  const server = createServer((request, response) => {
+    if (request.url === '/hold-title') {
+      held.add(response);
+      response.once('close', () => {
+        held.delete(response);
+      });
+      return;
+    }
     const native = getNative();
     if (native === undefined) {
       response.writeHead(503);
@@ -97,6 +106,16 @@ function createPageServer(getNative: () => DevframeInstance | undefined) {
       );
     });
   });
+  return {
+    server,
+    titleReads: {
+      pending: () => held.size,
+      release() {
+        for (const response of held) response.end('released');
+        held.clear();
+      },
+    },
+  };
 }
 
 async function listen(server: Server): Promise<string> {

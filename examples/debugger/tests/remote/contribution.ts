@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 import { publishedTargetSchema } from '@dvcol/cdb';
 import { getTempAuthCode } from 'devframe/node/auth';
 import { readPageTitleAction } from '../../src/contracts.ts';
+import type { DebuggerTarget } from '../../src/contracts.ts';
 import type { createNativeHost } from './host.ts';
 import { agent } from './authentication.ts';
 import { poll, send } from './driver.ts';
@@ -11,7 +12,7 @@ import { approveResponseSchema } from './protocol.ts';
 
 type NativeHost = Awaited<ReturnType<typeof createNativeHost>>;
 
-export async function checkRemoteContribution(host: NativeHost, control: Page) {
+export async function checkRemoteContribution(host: NativeHost, control: Page, targetPage: Page) {
   await using cleanup = new AsyncDisposableStack();
   const page = await control.context().newPage();
   cleanup.defer(() => page.close());
@@ -48,8 +49,7 @@ export async function checkRemoteContribution(host: NativeHost, control: Page) {
     }),
     'TARGET_GENERATION_STALE',
   );
-  assert.equal(host.service.broker.snapshot().leases.length, 0);
-  await checkContributionLifetime(host, page, target);
+  const cancellation = await checkContributionLifetime({ host, page, targetPage, target });
   return {
     title,
     nativeCallerCount: 2,
@@ -58,6 +58,7 @@ export async function checkRemoteContribution(host: NativeHost, control: Page) {
     callerApproval: approval,
     generationMismatch: 'rejected',
     leases: 0,
+    cancellation,
     targetRetainedAfterContributionDisposal: true,
   };
 }
@@ -105,11 +106,16 @@ async function approveCaller(host: NativeHost, control: Page, page: Page) {
   return { count: response.approvals.length, principalCount, targetCount };
 }
 
-async function checkContributionLifetime(
-  host: NativeHost,
-  page: Page,
-  target: { id: string; generation: number },
-) {
+interface CallerFixture {
+  readonly host: NativeHost;
+  readonly page: Page;
+  readonly targetPage: Page;
+  readonly target: DebuggerTarget;
+}
+
+async function checkContributionLifetime(fixture: CallerFixture) {
+  const { host, page, target } = fixture;
+  const cancellation = await checkCancellation(fixture);
   const grants = host.service.broker.snapshot().grants;
   const installation = host.provider.startup.services[0];
   assert.ok(installation);
@@ -130,6 +136,7 @@ async function checkContributionLifetime(
     value: 'ordinary-after-contribution',
     trusted: true,
   });
+  return cancellation;
 }
 
 async function readTarget(value: unknown) {
@@ -143,6 +150,7 @@ async function readTarget(value: unknown) {
 async function rejectedByNative(host: NativeHost, invocation: Promise<unknown>, code: string) {
   const previous = host.diagnostics.length;
   await assert.rejects(invocation);
+  assert.equal(host.service.broker.snapshot().leases.length, 0);
   const diagnostics = host.diagnostics.slice(previous);
   assert.ok(diagnostics.length > 0);
   assert.ok(diagnostics.every(({ diagnostic }) => diagnostic.code === 'operation-failed'));
@@ -160,4 +168,78 @@ function isMissingCaller(error: unknown): boolean {
   assert.ok(error.cause instanceof Error);
   assert.equal(error.cause.message, 'A current Devframe RPC caller is required');
   return true;
+}
+
+/** Hold an actual synchronous page read on the fixture server; no native command is mocked. */
+async function holdTitleRead(targetPage: Page): Promise<void> {
+  await targetPage.evaluate(() => {
+    const title = document.title;
+    Object.defineProperty(document, 'title', {
+      configurable: true,
+      get() {
+        const request = new XMLHttpRequest();
+        request.open('GET', '/hold-title', false);
+        request.send();
+        document.documentElement.dataset.titleReadFinished = 'true';
+        return title;
+      },
+    });
+  });
+}
+
+async function checkCancellation(fixture: CallerFixture) {
+  const { host, targetPage } = fixture;
+  await using cleanup = new AsyncDisposableStack();
+  await holdTitleRead(targetPage);
+  cleanup.defer(async () => {
+    await targetPage.evaluate(() => {
+      Reflect.deleteProperty(document, 'title');
+    });
+  });
+  cleanup.defer(() => {
+    host.titleReads.release();
+  });
+  return await cancelPendingTitle(fixture);
+}
+
+async function cancelPendingTitle({ host, page, targetPage, target }: CallerFixture) {
+  const installation = host.provider.startup.services[0];
+  assert.ok(installation);
+  const status = { invocationSettled: false, disableSettled: false };
+  const invocation = page
+    .evaluate((input) => window.caller.readTitle(input), target)
+    .then(
+      () => {
+        status.invocationSettled = true;
+        return 'fulfilled';
+      },
+      () => {
+        status.invocationSettled = true;
+        return 'rejected';
+      },
+    );
+  await poll(host.titleReads.pending, (count) => count === 1, 'actual pending Chrome title read');
+  assert.equal(host.service.broker.snapshot().leases.length, 1);
+  const previous = host.diagnostics.length;
+  const stopped = installation.disable().then((snapshot) => {
+    status.disableSettled = true;
+    return snapshot;
+  });
+  await poll(
+    () => installation.snapshot(),
+    (snapshot) => snapshot.contributions.some((entry) => entry.status === 'stopping'),
+    'contribution stopping while Chrome is pending',
+  );
+  assert.deepEqual(status, { invocationSettled: false, disableSettled: false });
+  assert.equal(host.service.broker.snapshot().leases.length, 1);
+  host.titleReads.release();
+  assert.equal(await invocation, 'rejected');
+  assert.equal((await stopped).status, 'inactive');
+  assert.equal(host.service.broker.snapshot().leases.length, 0);
+  const diagnostics = host.diagnostics.slice(previous);
+  assert.ok(diagnostics.length > 0);
+  assert.ok(diagnostics.every(({ diagnostic }) => diagnostic.code === 'cancelled'));
+  assert.equal(await targetPage.locator('html').getAttribute('data-title-read-finished'), 'true');
+  await installation.enable();
+  return { nativeCommandWasPending: true, disableWaited: true, lateResult: 'cancelled', leases: 0 };
 }
