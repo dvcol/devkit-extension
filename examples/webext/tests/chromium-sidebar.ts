@@ -1,12 +1,15 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { expect } from '@playwright/test';
-import type { CDPSession, Page } from '@playwright/test';
-import { attachTargetSession } from './target-session.ts';
+import type { Page } from '@playwright/test';
+import {
+  openChromiumSidebar,
+  closeChromiumSidebar,
+  sidebarContexts,
+} from './chromium-sidebar-host.ts';
+import type { ChromiumSidebarHost, ChromiumSidebar } from './chromium-sidebar-host.ts';
 
-type SidebarSession = Awaited<ReturnType<typeof attachTargetSession>>;
-type Sidebar = Awaited<ReturnType<typeof openSidebar>>;
-type Host = { options: Page; control: CDPSession; windowId: number };
+type SidebarSession = ChromiumSidebar['panel'];
 
 /** Verify the native global side panel, including its user-gesture gate and document ownership. */
 export async function checkChromiumSidebar(options: Page): Promise<string[]> {
@@ -17,13 +20,13 @@ export async function checkChromiumSidebar(options: Page): Promise<string[]> {
   try {
     await rejectWithoutGesture(host);
     const provider = await options.locator('#provider').innerText();
-    const first = await openSidebar(host);
+    const first = await openChromiumSidebar(host);
     const caller = await checkLiveSidebar(host, first.panel, provider);
-    await closeSidebar(host, first);
+    await closeChromiumSidebar(host, first);
     await options.locator('#release').click();
     await options.locator('#executions').click();
     await expect(options.locator('#result')).toHaveText('{"started":4,"completed":4}');
-    const replacement = await openSidebar(host);
+    const replacement = await openChromiumSidebar(host);
     assert.notEqual(replacement.documentId, first.documentId);
     await checkReplacement(host, replacement.panel, provider, caller);
     const screenshot = await replacement.panel.send('Page.captureScreenshot');
@@ -34,7 +37,7 @@ export async function checkChromiumSidebar(options: Page): Promise<string[]> {
         typeof screenshot.data === 'string',
     );
     await writeFile('artifacts/native-sidebar.png', screenshot.data, 'base64');
-    await closeSidebar(host, replacement);
+    await closeChromiumSidebar(host, replacement);
   } finally {
     await control.detach();
   }
@@ -47,7 +50,7 @@ export async function checkChromiumSidebar(options: Page): Promise<string[]> {
   ];
 }
 
-async function rejectWithoutGesture({ control, windowId }: Host): Promise<void> {
+async function rejectWithoutGesture({ control, windowId }: ChromiumSidebarHost): Promise<void> {
   /** CDP must not refresh activation while observing its native expiry. */
   await expect
     .poll(
@@ -72,42 +75,11 @@ async function rejectWithoutGesture({ control, windowId }: Host): Promise<void> 
   assert.match(String(response.result.value), /user gesture/u);
 }
 
-async function openSidebar({ options, control, windowId }: Host) {
-  const existing = new Set(
-    (await control.send('Target.getTargets')).targetInfos.map((target) => target.targetId),
-  );
-  /** Playwright supplies a user gesture to this native API call. */
-  await options.evaluate((value) => chrome.sidePanel.open({ windowId: value }), windowId);
-  await expect.poll(async () => (await contexts(options)).length).toBe(1);
-  const context = (await contexts(options))[0]!;
-  assert.equal(context.documentUrl, options.url());
-  assert.ok(context.documentId !== undefined);
-  let targetId: string | undefined;
-  await expect
-    .poll(async () => {
-      targetId = (await control.send('Target.getTargets')).targetInfos.find(
-        (target) =>
-          !existing.has(target.targetId) &&
-          target.type === 'page' &&
-          target.url === context.documentUrl,
-      )?.targetId;
-      return targetId;
-    })
-    .toBeDefined();
-  assert.ok(targetId !== undefined);
-  const panel = await attachTargetSession(control, targetId);
-  await expect
-    .poll(() => panel.evaluate("document.querySelector('#status')?.textContent"))
-    .toBe('Connected');
-  await expect
-    .poll(() =>
-      panel.evaluate('innerWidth > 0 && document.documentElement.scrollWidth <= innerWidth'),
-    )
-    .toBe(true);
-  return { targetId, documentId: context.documentId, panel };
-}
-
-async function checkLiveSidebar(host: Host, panel: SidebarSession, provider: string) {
+async function checkLiveSidebar(
+  host: ChromiumSidebarHost,
+  panel: SidebarSession,
+  provider: string,
+) {
   const { options } = host;
   assert.equal(await panel.evaluate("document.querySelector('#provider').textContent"), provider);
   const caller = await identity(panel);
@@ -140,7 +112,7 @@ async function checkLiveSidebar(host: Host, panel: SidebarSession, provider: str
 }
 
 async function checkReplacement(
-  { options, windowId }: Host,
+  { options, windowId }: ChromiumSidebarHost,
   panel: SidebarSession,
   provider: string,
   caller: string,
@@ -151,29 +123,12 @@ async function checkReplacement(
   await counter(panel, 23);
   const timeOrigin = await panel.evaluate('performance.timeOrigin');
   await options.evaluate((value) => chrome.sidePanel.open({ windowId: value }), windowId);
-  assert.equal((await contexts(options)).length, 1);
+  assert.equal((await sidebarContexts(options)).length, 1);
   assert.equal(await panel.evaluate('performance.timeOrigin'), timeOrigin);
   await increase(panel);
   await expect(options.getByText('Counter: 24', { exact: true })).toBeVisible();
   await options.locator('#executions').click();
   await expect(options.locator('#result')).toHaveText('{"started":4,"completed":4}');
-}
-
-async function closeSidebar({ options, windowId, control }: Host, sidebar: Sidebar) {
-  await options.evaluate((value) => chrome.sidePanel.close({ windowId: value }), windowId);
-  await expect.poll(async () => (await contexts(options)).length).toBe(0);
-  await expect
-    .poll(async () =>
-      (await control.send('Target.getTargets')).targetInfos.some(
-        (target) => target.targetId === sidebar.targetId,
-      ),
-    )
-    .toBe(false);
-  sidebar.panel.dispose();
-}
-
-function contexts(options: Page) {
-  return options.evaluate(() => chrome.runtime.getContexts({ contextTypes: ['SIDE_PANEL'] }));
 }
 
 async function identity(panel: SidebarSession): Promise<string> {

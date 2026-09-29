@@ -102,7 +102,7 @@ async function checkTabSwitch(driver: Driver, caller: string, timeOrigin: unknow
   }
 }
 
-async function openSidebar(driver: Driver): Promise<void> {
+export async function openSidebar(driver: Driver): Promise<void> {
   await driver.setContext(Context.CHROME);
   const modifier = process.platform === 'darwin' ? Key.COMMAND : Key.CONTROL;
   await driver.actions().keyDown(modifier).sendKeys('b').keyUp(modifier).perform();
@@ -127,7 +127,7 @@ async function openSidebar(driver: Driver): Promise<void> {
   );
 }
 
-async function closeSidebar(driver: Driver): Promise<void> {
+export async function closeSidebar(driver: Driver): Promise<void> {
   await driver.setContext(Context.CHROME);
   await driver.findElement(By.id('sidebar-close')).click();
   await driver.setContext(Context.CONTENT);
@@ -139,14 +139,14 @@ function sidebarCount(driver: Driver): Promise<number> {
 }
 
 /** The public extension API exposes the actual sidebar document to its options-page peer. */
-function sidebarScript<Value = unknown>(driver: Driver, script: string): Promise<Value> {
+export function sidebarScript<Value = unknown>(driver: Driver, script: string): Promise<Value> {
   return driver.executeScript<Value>(
     `const sidebar = browser.extension.getViews({ type: 'sidebar' })[0];
     const document = sidebar?.document; ${script}`,
   );
 }
 
-async function identity(driver: Driver): Promise<string> {
+export async function identity(driver: Driver): Promise<string> {
   await sidebarScript(driver, "document.querySelector('#identity').click(); return true;");
   await driver.wait(
     async () =>
@@ -163,7 +163,7 @@ async function identity(driver: Driver): Promise<string> {
   return caller;
 }
 
-async function increase(driver: Driver, value: number): Promise<void> {
+export async function increase(driver: Driver, value: number): Promise<void> {
   const center = await sidebarScript<{ x: number; y: number }>(
     driver,
     `const button = document.querySelector('#renderer').shadowRoot.querySelector('button');

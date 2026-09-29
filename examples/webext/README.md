@@ -86,7 +86,7 @@ Chromium automation uses public CDP target APIs because Playwright omits the Dev
 
 Firefox automation uses the existing isolated WebDriver system context and native F12/DevTools controls. Public frame switching and BiDi omit the remote XUL panel browser. One test-only helper therefore calls the pinned Firefox version's existing private `MarionetteCommands` actor to inspect that actual document. It waits for the final extension document, since querying the temporary blank document races its destruction. This is a browser-test maintenance dependency, not an SDK or application API. No testing endpoint is shipped with the extension.
 
-These checks cover the built host and its native document lifetime. They do not add inspected-page backend discovery, debugger authority, navigation policy, or DevTools-specific HMR guarantees. The panel currently uses the same background provider and explicit connection controls as options and popup.
+These production checks cover the built host and its native document lifetime. The maintained development tests below also cover panel module and HTML updates. Inspected-page backend discovery, debugger authority and navigation policy remain separate work. The panel uses the same background provider and explicit connection controls as options and popup.
 
 ## Browser sidebars
 
@@ -109,7 +109,7 @@ Chromium's driver identifies the real `SIDE_PANEL` runtime context and uses the 
 
 In Firefox 156.0.1, the full browser-window screenshot omits the unhovered, semi-transparent button while a document screenshot paints the same unchanged state correctly. This was reproduced with both headless and normal Firefox. The sidebar evidence captures the button after native pointer activation, with its normal hover styling. The renderer's opacity styles remain unchanged.
 
-These checks cover the default sidebar in one normal browser window. Tab-specific Chromium configuration, multiple/private windows, worker suspension and sidebar development transitions remain open. Sidebar mounting adds no inspected-page authority or target-routing policy.
+These checks cover the default sidebar in one normal browser window. The development tests below also cover its module and HTML updates. Tab-specific Chromium configuration, multiple/private windows, worker suspension and sidebar-specific background/configuration transitions remain open. Sidebar mounting adds no inspected-page authority or target-routing policy.
 
 ## Provider and connection ownership
 
@@ -140,16 +140,24 @@ WXT owns the Vite development server, browser process, HMR and native extension 
 
 On the first Chromium launch, open `chrome://extensions` and enable **Developer mode**. Let Chrome save the setting before restarting it. The native runner retains this setup under `.wxt/chromium-profile`, separate from your ordinary browser profile. Disabling Developer mode can cause Chrome to disable the extension on a background reload. No protected preference values or policy controls are written by this example. Browser executable overrides use WXT's native `webExt.binaries` configuration.
 
-| Edit                  | Native behavior                                       | Observed state                                                                          |
-| --------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Panel TypeScript      | Vite module replacement, old panel resources disposed | Same document/provider, retained native state, new connection; actual popup also tested |
-| Panel HTML            | Full page reload                                      | New document, same provider/state                                                       |
-| Background entrypoint | Extension reload; reopen the options page afterward   | New provider, reset ephemeral state, no automatic replay                                |
-| WXT configuration     | Native browser/server restart                         | Old browser exits; manifest changes take effect; new provider and reset ephemeral state |
+| Edit                  | Native behavior                                       | Observed state                                                                                     |
+| --------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Panel TypeScript      | Vite module replacement, old panel resources disposed | Same document/provider and native state, new connection in tabs, popup, DevTools and sidebar       |
+| Panel HTML            | Full page reload                                      | New document, same provider/state in tabs, DevTools and sidebar; popup-specific check remains open |
+| Background entrypoint | Extension reload; reopen the options page afterward   | New provider, reset ephemeral state, no automatic replay                                           |
+| WXT configuration     | Native browser/server restart                         | Old browser exits; manifest changes take effect; new provider and reset ephemeral state            |
 
 The maintained live tests use temporary copies of this example and disposable browser profiles. They drive the actual native JSON renderer through module, HTML, background and configuration changes in both browsers. The configuration check edits the application version from `0.0.1` to `0.0.2`, proves the old browser exits, then verifies the replacement manifest, new provider, reset counter and working action. Final native shutdown must also close the replacement browser. The retained [Chromium receipt](./evidence/development/chromium/receipt.json) and [Firefox receipt](./evidence/development/firefox/receipt.json) record passing runs on Chromium 153.0.8010.12 and Firefox 156.0.1. Chromium also checks a pending old command cannot overwrite replacement UI and confirms no page errors. Firefox observes native process shutdown; it does not claim global browser-error capture. Chromium verifies its native Developer mode setting survives restart. The test reads the platform's actual preference store and never writes protected values. Earlier frozen experiments retain the detailed listener/Port-count and upstream-runner comparisons.
 
 Actual toolbar popups also receive module HMR in both browsers. The native `action.openPopup()` and `extension.getViews({ type: 'popup' })` APIs identify the real popup. A source edit retains its document and provider, replaces its Port caller, and leaves one working JSON action with current native state. Chromium additionally checks local form retention and completion of pre-update work without overwriting the replacement result. Closing removes the popup from native view enumeration. These checks add no application hooks, reload manager or dependency patch.
+
+Actual DevTools panels and browser sidebars now exercise both module HMR and HTML reload in both browsers. Module updates retain the document/provider/state with a fresh caller. HTML updates replace the document/caller while retaining provider/state. Each update leaves one renderer button whose action reaches the options peer once. Chromium also checks that local form input survives HMR and resets on HTML reload. Native host close removes the panel or sidebar afterward.
+
+![Chromium DevTools after native HTML reload](./evidence/development/chromium/devtools.png)
+
+![Chromium sidebar after native HTML reload](./evidence/development/chromium/sidebar.png)
+
+WXT originally reloaded every HTML entry in the rebuilt group, including unchanged `devtools.html`. That removed Firefox's Devkit tab after a `panel.html` edit. The [small WXT correction](../../docs/research/wxt-html-reload.md) compares emitted HTML and reloads changed pages through the existing native method. A real-build regression also checks shared transform output and missing snapshots. This does not handle direct changes to the DevTools registration page, whose native lifetime can require reopening the toolbox.
 
 ```sh
 pnpm --filter @devkit/example-webext test:dev:chromium
@@ -157,11 +165,11 @@ FIREFOX_BINARY=/path/to/firefox GECKODRIVER_BINARY=/path/to/geckodriver \
   pnpm --filter @devkit/example-webext test:dev:firefox
 ```
 
-The Firefox test attaches to the browser WXT opened. Its isolated automation session needs Firefox's native system-access flag to inspect extension documents. `GECKODRIVER_BINARY` is optional when the driver is discoverable. Receipts and screenshots are written under ignored `artifacts/`; CI runs both development tests alongside the production browser suites. Type checks prepare WXT declarations but retain the repository's strict TypeScript settings, including `skipLibCheck: false`.
+The Firefox test attaches to the browser WXT opened. Its isolated automation session needs Firefox's native system-access flag to inspect extension documents. It retains WebDriver's default page-load behavior; disabling that behavior leaves native sidebar clicks without the expected navigation binding. `GECKODRIVER_BINARY` is optional when the driver is discoverable. Receipts and screenshots are written under ignored `artifacts/`; CI runs both development tests alongside the production browser suites. Type checks prepare WXT declarations but retain the repository's strict TypeScript settings, including `skipLibCheck: false`.
 
 On Linux CI only, the Chromium development test passes `--no-sandbox`, matching Playwright's existing test-launch default. The Ubuntu runner rejects the downloaded Chromium sandbox before CDP startup. This flag applies only to the disposable automated browser; the normal WXT development commands keep Chromium's default sandbox behavior. Native launch crashes print the owned browser's stderr before exiting.
 
-The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, popup-specific HTML/background/config transitions, DevTools/sidebar development transitions and watched production remain open.
+The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, popup-specific HTML reload, popup/DevTools/sidebar background/config transitions and watched production remain open.
 
 ## Explicit native server connections
 

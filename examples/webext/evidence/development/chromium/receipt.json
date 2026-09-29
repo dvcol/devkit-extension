@@ -10,6 +10,8 @@
     "Config edit closes the original browser and adopts manifest 0.0.2 in a new provider",
     "Actual popup HMR retains document, form and state with a fresh caller and one JSON action effect",
     "Pre-HMR popup work completes once without overwriting the replacement result",
+    "Actual DevTools panel module HMR retains document and state; HTML reload replaces document; each JSON action reaches options once",
+    "Actual browser sidebar module HMR retains document and state; HTML reload replaces document; each JSON action reaches options once",
     "Native stop closes browser"
   ],
   "errors": []

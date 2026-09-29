@@ -8,7 +8,7 @@ import { chromium, expect } from '@playwright/test';
 import type { Browser, BrowserContext, Page } from '@playwright/test';
 import { createServer } from 'wxt';
 import type { WxtDevServer } from 'wxt';
-import { checkChromiumPopupDevelopment } from './chromium-popup-development.ts';
+import { checkChromiumHostDevelopment } from './chromium-host-development.ts';
 import {
   availablePort,
   createDevelopmentFixture,
@@ -57,7 +57,7 @@ try {
   await checkHtmlReplacement(first, second);
   const replacement = await checkBackgroundReplacement(first, second, origin);
   const configured = await checkConfigurationRestart(replacement, origin, observerPort);
-  await checkChromiumPopupDevelopment(configured, root);
+  await checkChromiumHostDevelopment(configured, root);
   assert.deepEqual(errors, []);
   await configured.screenshot({
     path: `${artifactDirectory}/panel.png`,
@@ -92,6 +92,8 @@ await writeFile(
         'Config edit closes the original browser and adopts manifest 0.0.2 in a new provider',
         'Actual popup HMR retains document, form and state with a fresh caller and one JSON action effect',
         'Pre-HMR popup work completes once without overwriting the replacement result',
+        'Actual DevTools panel module HMR retains document and state; HTML reload replaces document; each JSON action reaches options once',
+        'Actual browser sidebar module HMR retains document and state; HTML reload replaces document; each JSON action reaches options once',
         'Native stop closes browser',
       ],
       errors,

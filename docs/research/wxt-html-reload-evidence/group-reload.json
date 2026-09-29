@@ -1,0 +1,26 @@
+{
+  "devtoolsBefore": {
+    "caller": "{\"id\":1,\"url\":\"moz-extension://2ae8def7-fb0b-4baf-9e84-2bd3a427ca3b/panel.html\"}",
+    "counter": "0",
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c484531d-c5a4-459f-8985-89fddfa8e30c\",\"realm\":{\"id\":\"webext\"}}",
+    "status": "Connected",
+    "timeOrigin": 1790663033239
+  },
+  "devtoolsModule": {
+    "caller": "{\"id\":3,\"url\":\"moz-extension://2ae8def7-fb0b-4baf-9e84-2bd3a427ca3b/panel.html\"}",
+    "counter": "0",
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c484531d-c5a4-459f-8985-89fddfa8e30c\",\"realm\":{\"id\":\"webext\"}}",
+    "status": "Connected",
+    "timeOrigin": 1790663033239
+  },
+  "devtoolsTabReturned": false,
+  "devtoolsTabWait": "TimeoutError: Wait timed out after 30065ms",
+  "devtoolsStructure": {
+    "tab": null,
+    "toolbox": true,
+    "url": null
+  },
+  "devtoolsHtmlError": "JavascriptError: TypeError: can't access property \"contentDocument\", toolbox.querySelector(...) is null",
+  "passed": true,
+  "cleaned": true
+}

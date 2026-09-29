@@ -1,0 +1,31 @@
+{
+  "devtoolsBefore": {
+    "caller": "{\"id\":1,\"url\":\"moz-extension://02a391f2-6165-4210-aeab-55c0a4bb3f6e/panel.html\"}",
+    "counter": "0",
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"0b583492-5ebb-4a77-8826-2c53a1697f43\",\"realm\":{\"id\":\"webext\"}}",
+    "status": "Connected",
+    "timeOrigin": 1790663130420
+  },
+  "devtoolsModule": {
+    "caller": "{\"id\":3,\"url\":\"moz-extension://02a391f2-6165-4210-aeab-55c0a4bb3f6e/panel.html\"}",
+    "counter": "0",
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"0b583492-5ebb-4a77-8826-2c53a1697f43\",\"realm\":{\"id\":\"webext\"}}",
+    "status": "Connected",
+    "timeOrigin": 1790663130420
+  },
+  "panelOnlyReload": true,
+  "devtoolsStructure": {
+    "tab": "<button xmlns=\"http://www.w3.org/1999/xhtml\" class=\"devtools-tab selected  \" id=\"toolbox-tab-webext-devtools-panel-devkit-native-port_example_invalid-159-0\" data-id=\"webext-devtools-panel-devkit-native-port_example_invalid-159-0\" data-extension-id=\"devkit-native-port@example.invalid\" title=\"DevTools Panel added by &quot;Devkit native Port example&quot; add-on.\" type=\"button\" aria-pressed=\"true\" tabindex=\"0\"><span class=\"devtools-tab-line\"></span><img alt=\"\" src=\"chrome://mozapps/skin/extensions/extensionGeneric.svg\" /><span class=\"devtools-tab-label\">Devkit</span></button>",
+    "toolbox": true,
+    "url": "moz-extension://02a391f2-6165-4210-aeab-55c0a4bb3f6e/panel.html"
+  },
+  "devtoolsHtml": {
+    "caller": "{\"id\":4,\"url\":\"moz-extension://02a391f2-6165-4210-aeab-55c0a4bb3f6e/panel.html\"}",
+    "counter": "0",
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"0b583492-5ebb-4a77-8826-2c53a1697f43\",\"realm\":{\"id\":\"webext\"}}",
+    "status": "Connected",
+    "timeOrigin": 1790663130845
+  },
+  "passed": true,
+  "cleaned": true
+}

@@ -10,7 +10,7 @@ import {
   updateDevelopmentVersion,
 } from './development-fixture.ts';
 import { attachFirefox } from './firefox-development-observer.ts';
-import { checkFirefoxPopupDevelopment } from './firefox-popup-development.ts';
+import { checkFirefoxDevelopmentHosts } from './firefox-development-hosts.ts';
 
 const fixture = await createDevelopmentFixture();
 const artifactDirectory = 'artifacts/firefox-development';
@@ -45,7 +45,7 @@ try {
   await counter(1);
   await checkModuleUpdate();
   await checkHtmlReload();
-  await checkFirefoxPopupDevelopment(driver, fixture);
+  await checkFirefoxDevelopmentHosts(driver, fixture);
   await checkBackgroundReload(observer.origin);
   manifestVersion = await checkConfigurationRestart(marionettePort);
   await writeFile(`${artifactDirectory}/panel.png`, await driver.takeScreenshot(), 'base64');
@@ -72,6 +72,8 @@ await writeFile(
         'Panel module HMR preserves document, provider and state; replaces caller; invokes each action once',
         'HTML reload replaces document while retaining provider and state',
         'Native toolbar popup module HMR preserves document, provider and state; replaces caller; one pointer action reaches the peer; popup closes cleanly',
+        'Native DevTools panel module HMR retains document and HTML reload replaces it; both replace caller, retain provider/state and invoke one JSON action observed by the peer; native close removes the toolbox',
+        'Native sidebar module HMR retains document and HTML reload replaces it; both replace caller, retain provider/state and invoke one pointer JSON action observed by the peer; native close removes the view',
         'Background reload closes old extension page; new page receives new incarnation and reset state',
         'Config restart closes old Firefox; replacement runs manifest 0.0.2 with a new provider and working actions',
       ],
@@ -82,7 +84,7 @@ await writeFile(
 );
 console.info(
   styleText('green', '✅ [webext/firefox-development]'),
-  'Native panel and popup HMR, HTML/background reload, configuration restart and cleanup passed',
+  'Native panel, popup, DevTools and sidebar HMR, HTML/background reload, configuration restart and cleanup passed',
 );
 
 async function checkModuleUpdate(): Promise<void> {

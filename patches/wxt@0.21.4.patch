@@ -65,3 +65,63 @@ index 3df453898ee218ddbd0aa520edb52189dbce151d..890a7feb3a373ededd8769cf31a46395
  {{ overrides }}
    }
  }
+diff --git a/dist/core/utils/create-file-reloader.mjs b/dist/core/utils/create-file-reloader.mjs
+index e286f58ca3b1f4c37751ba5fe86d55d8e0b2f9a9..9a0d13041da7f3aee5b53dfc63df2ad451cd00dc 100644
+--- a/dist/core/utils/create-file-reloader.mjs
++++ b/dist/core/utils/create-file-reloader.mjs
+@@ -10,7 +10,8 @@ import { getContentScriptCssFiles, getContentScriptsCssMap } from "./manifest.mj
+ import { rebuild } from "./building/rebuild.mjs";
+ import "./building/index.mjs";
+ import { isBabelSyntaxError, logBabelSyntaxError } from "./syntax-errors.mjs";
+-import { relative } from "node:path";
++import { readFile } from "node:fs/promises";
++import { join, relative } from "node:path";
+ import { styleText } from "node:util";
+ import { withLock } from "superlock";
+ //#region src/core/utils/create-file-reloader.ts
+@@ -54,13 +55,14 @@ function createFileReloader(server) {
+ 			wxt.logger.info(`Changed: ${changedFilesToLog.map((file) => styleText("dim", relative(wxt.config.root, file))).join(", ")}`);
+ 			const rebuildGroups = changes.type === "no-change" ? newEntrypointGroups : mergeEntrypointGroups(getLatestRebuildGroups(changes.rebuildGroups, allEntrypointGroups), newEntrypointGroups);
+ 			try {
++				const previousHtml = changes.type === "html-reload" ? await readHtmlPages(rebuildGroups) : void 0;
+ 				const { output: newOutput } = await rebuild(allEntrypoints, rebuildGroups, changes.type === "no-change" ? server.currentOutput : changes.cachedOutput);
+ 				server.currentOutput = newOutput;
+ 				if (hasNewEntrypoints || changes.type === "extension-reload") {
+ 					server.reloadExtension();
+ 					wxt.logger.success(`Reloaded extension`);
+ 				} else if (changes.type === "html-reload") {
+-					const { reloadedNames } = reloadHtmlPages(rebuildGroups, server);
++					const { reloadedNames } = await reloadHtmlPages(rebuildGroups, server, previousHtml);
+ 					wxt.logger.success(`Reloaded: ${getFilenameList(reloadedNames)}`);
+ 				} else if (changes.type === "content-script-reload") {
+ 					reloadContentScripts(changes.changedSteps, server);
+@@ -143,14 +145,27 @@ function reloadContentScripts(steps, server) {
+ 	});
+ 	else server.reloadExtension();
+ }
+-function reloadHtmlPages(groups, server) {
+-	const htmlEntries = groups.flat().filter(isHtmlEntrypoint);
++async function reloadHtmlPages(groups, server, previousHtml) {
++	const currentHtml = await readHtmlPages(groups);
++	const htmlEntries = groups.flat().filter(isHtmlEntrypoint).filter((entry) => {
++		const path = getEntrypointBundlePath(entry, wxt.config.outDir, ".html");
++		const before = previousHtml?.get(path);
++		const after = currentHtml.get(path);
++		return before === void 0 || after === void 0 || !before.equals(after);
++	});
+ 	htmlEntries.forEach((entry) => {
+ 		const path = getEntrypointBundlePath(entry, wxt.config.outDir, ".html");
+ 		server.reloadPage(path);
+ 	});
+ 	return { reloadedNames: htmlEntries.map((entry) => entry.name) };
+ }
++/** Missing snapshots preserve the existing conservative page reload behavior. */
++async function readHtmlPages(groups) {
++	return new Map(await Promise.all(groups.flat().filter(isHtmlEntrypoint).map(async (entry) => {
++		const path = getEntrypointBundlePath(entry, wxt.config.outDir, ".html");
++		return [path, await readFile(join(wxt.config.outDir, path)).catch(() => void 0)];
++	})));
++}
+ function getFilenameList(names) {
+ 	return names.map((name) => styleText("cyan", name)).join(styleText("dim", ", "));
+ }

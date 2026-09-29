@@ -1,11 +1,15 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
-import { setTimeout } from 'node:timers/promises';
 import { expect } from '@playwright/test';
-import type { CDPSession, Page } from '@playwright/test';
-import { attachTargetSession } from './target-session.ts';
+import type { Page } from '@playwright/test';
+import {
+  openDevtoolsPanel,
+  selectDevtoolsPanel,
+  closeDevtoolsPanel,
+} from './chromium-devtools-host.ts';
+import type { DevtoolsPanel } from './chromium-devtools-host.ts';
 
-type DevtoolsSession = Awaited<ReturnType<typeof attachTargetSession>>;
+type DevtoolsSession = DevtoolsPanel['panel'];
 
 /** Open the genuine frontend, select its native extension tab, then close and reopen it. */
 export async function checkChromiumDevtools(options: Page): Promise<string[]> {
@@ -19,18 +23,18 @@ export async function checkChromiumDevtools(options: Page): Promise<string[]> {
   const { targetInfo } = await pageSession.send('Target.getTargetInfo');
   const control = await browser.browser()!.newBrowserCDPSession();
   try {
-    const first = await openPanel({
+    const first = await openDevtoolsPanel({
       control,
       inspectedId: targetInfo.targetId,
       origin,
     });
     const caller = await checkLivePanel({ panel: first, options, provider });
-    await closePanel(control, first);
+    await closeDevtoolsPanel(control, first);
     assert.equal(inspected.isClosed(), false);
     await options.locator('#release').click();
     await options.locator('#executions').click();
     await expect(options.locator('#result')).toHaveText('{"started":3,"completed":3}');
-    const replacement = await openPanel({
+    const replacement = await openDevtoolsPanel({
       control,
       inspectedId: targetInfo.targetId,
       origin,
@@ -44,7 +48,7 @@ export async function checkChromiumDevtools(options: Page): Promise<string[]> {
         typeof screenshot.data === 'string',
     );
     await writeFile('artifacts/native-devtools.png', screenshot.data, 'base64');
-    await closePanel(control, replacement);
+    await closeDevtoolsPanel(control, replacement);
   } finally {
     await pageSession.detach();
     await control.detach();
@@ -58,100 +62,12 @@ export async function checkChromiumDevtools(options: Page): Promise<string[]> {
   ];
 }
 
-type OpenPanel = Awaited<ReturnType<typeof openPanel>>;
-
-async function openPanel({
-  control,
-  inspectedId,
-  origin,
-}: {
-  control: CDPSession;
-  inspectedId: string;
-  origin: string;
-}) {
-  const { targetId } = await control.send('Target.openDevTools', {
-    targetId: inspectedId,
-    panelId: 'network',
-  });
-  const frontend = await attachTargetSession(control, targetId);
-  await frontend.send('Page.bringToFront');
-  await expect
-    .poll(async () =>
-      (await control.send('Target.getTargets')).targetInfos.some(
-        (target) => target.url === `${origin}/devtools.html`,
-      ),
-    )
-    .toBe(true);
-  await selectPanel(frontend, true);
-  let panelTargetId: string | undefined;
-  await expect
-    .poll(async () => {
-      panelTargetId = (await control.send('Target.getTargets')).targetInfos.find(
-        (target) => target.type === 'iframe' && target.url === `${origin}/panel.html`,
-      )?.targetId;
-      return panelTargetId;
-    })
-    .toBeDefined();
-  assert.ok(panelTargetId !== undefined);
-  const panel = await attachTargetSession(control, panelTargetId);
-  await expect
-    .poll(() => panel.evaluate("document.querySelector('#status')?.textContent"))
-    .toBe('Connected');
-  return { targetId, panelTargetId, frontend, panel };
-}
-
-async function selectPanel(frontend: DevtoolsSession, extension: boolean): Promise<void> {
-  /** Native next-panel shortcut also reaches tabs hidden in the overflow menu. */
-  const modifiers = process.platform === 'darwin' ? 4 : 2;
-  const modifierKey = process.platform === 'darwin' ? 'Meta' : 'Control';
-  const modifierCode = process.platform === 'darwin' ? 'MetaLeft' : 'ControlLeft';
-  const modifierKeyCode = process.platform === 'darwin' ? 91 : 17;
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    if (
-      (await frontend.evaluate(`function elements(root) { const found = [...root.querySelectorAll('*')]; for (const element of [...found]) if (element.shadowRoot) found.push(...elements(element.shadowRoot)); return found; }
-elements(document).some(element => element.getAttribute('role') === 'tab' && element.getAttribute('aria-selected') === 'true' && element.textContent === 'Devkit')`)) ===
-      extension
-    )
-      return;
-    await frontend.send('Input.dispatchKeyEvent', {
-      type: 'keyDown',
-      modifiers,
-      key: modifierKey,
-      code: modifierCode,
-      windowsVirtualKeyCode: modifierKeyCode,
-    });
-    await frontend.send('Input.dispatchKeyEvent', {
-      type: 'keyDown',
-      modifiers,
-      key: ']',
-      code: 'BracketRight',
-      windowsVirtualKeyCode: 221,
-    });
-    await frontend.send('Input.dispatchKeyEvent', {
-      type: 'keyUp',
-      modifiers,
-      key: ']',
-      code: 'BracketRight',
-      windowsVirtualKeyCode: 221,
-    });
-    await frontend.send('Input.dispatchKeyEvent', {
-      type: 'keyUp',
-      modifiers: 0,
-      key: modifierKey,
-      code: modifierCode,
-      windowsVirtualKeyCode: modifierKeyCode,
-    });
-    await setTimeout(100);
-  }
-  throw new Error(`Native DevTools did not ${extension ? 'show' : 'hide'} the Devkit tab`);
-}
-
 async function checkLivePanel({
   panel,
   options,
   provider,
 }: {
-  panel: OpenPanel;
+  panel: DevtoolsPanel;
   options: Page;
   provider: string;
 }): Promise<string> {
@@ -163,10 +79,10 @@ async function checkLivePanel({
   const timeOrigin = await panel.panel.evaluate('performance.timeOrigin');
   await increase(panel.panel);
   await expect(options.getByText('Counter: 19', { exact: true })).toBeVisible();
-  await selectPanel(panel.frontend, false);
+  await selectDevtoolsPanel(panel.frontend, false);
   await options.locator('#routed').click();
   await expect(options.getByText('Counter: 20', { exact: true })).toBeVisible();
-  await selectPanel(panel.frontend, true);
+  await selectDevtoolsPanel(panel.frontend, true);
   assert.equal(await panel.panel.evaluate('performance.timeOrigin'), timeOrigin);
   assert.equal(await identity(panel.panel), caller);
   await counter(panel.panel, 20);
@@ -194,19 +110,6 @@ async function checkReplacement({
   await expect(options.getByText('Counter: 21', { exact: true })).toBeVisible();
   await options.locator('#executions').click();
   await expect(options.locator('#result')).toHaveText('{"started":3,"completed":3}');
-}
-
-async function closePanel(control: CDPSession, panel: OpenPanel): Promise<void> {
-  await control.send('Target.closeTarget', { targetId: panel.targetId });
-  await expect
-    .poll(async () =>
-      (await control.send('Target.getTargets')).targetInfos.some(
-        (target) => target.targetId === panel.panelTargetId,
-      ),
-    )
-    .toBe(false);
-  panel.frontend.dispose();
-  panel.panel.dispose();
 }
 
 async function identity(panel: DevtoolsSession): Promise<string> {

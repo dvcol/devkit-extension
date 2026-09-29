@@ -21,7 +21,8 @@ export async function attachFirefox(marionettePort: number): Promise<{
     .setStdio('inherit')
     .build();
   try {
-    const driver = Driver.createSession(new Options().setPageLoadStrategy('none'), service);
+    /** Normal page loading retains Marionette's navigation binding for native sidebar clicks. */
+    const driver = Driver.createSession(new Options(), service);
     const capabilities = await driver.getCapabilities();
     const browserVersion = capabilities.getBrowserVersion();
     assert.ok(typeof browserVersion === 'string');

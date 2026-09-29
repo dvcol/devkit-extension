@@ -90,7 +90,7 @@ async function checkReplacement(windows: Windows, provider: string, caller: stri
   await useDevtools(windows);
 }
 
-async function openPanel(driver: Driver): Promise<void> {
+export async function openPanel(driver: Driver): Promise<void> {
   await driver.actions().sendKeys(Key.F12).perform();
   await driver.wait(
     () =>
@@ -131,7 +131,7 @@ async function selectPanel(driver: Driver, extension: boolean): Promise<void> {
   );
 }
 
-async function closePanel(driver: Driver): Promise<void> {
+export async function closePanel(driver: Driver): Promise<void> {
   await driver.actions().sendKeys(Key.F12).perform();
   await driver.wait(
     () =>
@@ -141,8 +141,8 @@ async function closePanel(driver: Driver): Promise<void> {
 }
 
 /** Only tests use this pinned Firefox actor: public WebDriver frame APIs omit the XUL panel browser. */
-async function panelScript(driver: Driver, script: string): Promise<unknown> {
-  const response = await driver.executeAsyncScript<{ value?: unknown; error?: string }>(
+export async function panelScript<Value = unknown>(driver: Driver, script: string): Promise<Value> {
+  const response = await driver.executeAsyncScript<{ value: Value; error?: string }>(
     `
     const done = arguments[arguments.length - 1];
     const toolbox = document.querySelector('.devtools-toolbox-iframe').contentDocument;
@@ -160,7 +160,7 @@ async function panelScript(driver: Driver, script: string): Promise<unknown> {
   return response.value;
 }
 
-async function identity(driver: Driver): Promise<string> {
+export async function identity(driver: Driver): Promise<string> {
   await panelScript(driver, "document.querySelector('#identity').click(); return true;");
   await driver.wait(
     async () =>
@@ -174,7 +174,7 @@ async function identity(driver: Driver): Promise<string> {
   return caller;
 }
 
-async function increase(driver: Driver, value: number): Promise<void> {
+export async function increase(driver: Driver, value: number): Promise<void> {
   await panelScript(
     driver,
     "document.querySelector('#renderer').shadowRoot.querySelector('button').click(); return true;",

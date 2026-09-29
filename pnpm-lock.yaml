@@ -171,7 +171,7 @@ patchedDependencies:
   crossws@0.4.12: 7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605
   devframe@1.0.0: 6033f5717f6adf7d74420484134aeda0338a3bc38b554ca42d926884ba8d91d0
   h3@2.0.1-rc.32: 878b51f550d6bf45ce196ff6958e8367cb8b8cd00098a70ffc1bb777f0be9491
-  wxt@0.21.4: 91c328428ac7d03d8cc4b0dcb79769fd2eefc47924f039258452500e38da59c9
+  wxt@0.21.4: 2285587869bc2e9c8eb8301d47c9b5f974e372181f637f018170e27406275e8b
 
 importers:
 
@@ -369,7 +369,7 @@ importers:
         version: 10.7.0(jiti@2.6.1)(supports-color@7.2.0)
       wxt:
         specifier: 0.21.4
-        version: 0.21.4(patch_hash=91c328428ac7d03d8cc4b0dcb79769fd2eefc47924f039258452500e38da59c9)(eslint@9.39.4(jiti@2.6.1)(supports-color@7.2.0))(rolldown@1.2.8)(rollup@4.63.4)(typescript@7.0.2)(vite@8.3.0)(web-ext@10.7.0(jiti@2.6.1)(supports-color@7.2.0))
+        version: 0.21.4(patch_hash=2285587869bc2e9c8eb8301d47c9b5f974e372181f637f018170e27406275e8b)(eslint@9.39.4(jiti@2.6.1)(supports-color@7.2.0))(rolldown@1.2.8)(rollup@4.63.4)(typescript@7.0.2)(vite@8.3.0)(web-ext@10.7.0(jiti@2.6.1)(supports-color@7.2.0))
 
   packages/client:
     dependencies:
@@ -6079,7 +6079,7 @@ snapshots:
       is-wsl: 3.1.1
       powershell-utils: 0.1.0
 
-  wxt@0.21.4(patch_hash=91c328428ac7d03d8cc4b0dcb79769fd2eefc47924f039258452500e38da59c9)(eslint@9.39.4(jiti@2.6.1)(supports-color@7.2.0))(rolldown@1.2.8)(rollup@4.63.4)(typescript@7.0.2)(vite@8.3.0)(web-ext@10.7.0(jiti@2.6.1)(supports-color@7.2.0)):
+  wxt@0.21.4(patch_hash=2285587869bc2e9c8eb8301d47c9b5f974e372181f637f018170e27406275e8b)(eslint@9.39.4(jiti@2.6.1)(supports-color@7.2.0))(rolldown@1.2.8)(rollup@4.63.4)(typescript@7.0.2)(vite@8.3.0)(web-ext@10.7.0(jiti@2.6.1)(supports-color@7.2.0)):
     dependencies:
       '@1natsu/wait-element': 4.2.0
       '@aklinker1/rollup-plugin-visualizer': 5.12.0(rollup@4.63.4)
