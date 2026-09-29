@@ -1,0 +1,36 @@
+✓ Lockfile passes supply-chain policies (verified 52m ago)
+Lockfile is up to date, resolution step is skipped
+Already up to date
+Done in 313ms using pnpm v12.5.1
+✔ Started dev server @ http://localhost:51361 (listening on 127.0.0.1)
+ℹ Pre-rendering chrome-mv3 for development with Vite 8.3.0
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Built extension in 63 ms
+  ├─ .output/chrome-mv3-dev/manifest.json             864 B   
+  ├─ .output/chrome-mv3-dev/popup.html                476 B   
+  ├─ .output/chrome-mv3-dev/background.js             23.26 kB
+  └─ .output/chrome-mv3-dev/chunks/popup-Dhc0evAJ.js  8.34 kB 
+Σ Total size: 32.94 kB                              
+✔ Opened browser in 628 ms
+ℹ Press o + enter to reopen the browser
+ℹ Changed: entrypoints/background.ts
+[?25l⠋ Preparing...[K⠋ [1/1] background, popup[K[K[?25h[K[?25h✔ Reloaded extension
+✔ Opened browser in 521 ms
+ℹ Press o + enter to reopen the browser
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+false !== true
+
+    at file:///private/tmp/devkit-wxt-profile-retention-_qwoor4c/check-profile-retention.mjs:144:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.9.0

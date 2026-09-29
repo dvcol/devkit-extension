@@ -1,0 +1,88 @@
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profilePolicy": "dedicated native profile reused across browser restarts, removed after test",
+  "runId": "f535bf2a-1cf1-45ff-bdd3-8b63920ba304",
+  "chromiumPort": 51360,
+  "developmentPort": 51361,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790652727805
+    },
+    {
+      "event": "closed",
+      "at": 1790652733034
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "background count initializer source edit from 0 to 100",
+  "browserVersion": "153.0.8010.12",
+  "initialDebugEndpoint": "ws://127.0.0.1:51360/devtools/browser/cf530611-2e53-48d2-88ea-520d7ec9572d",
+  "before": {
+    "extensionId": "jaoblfdaebicfiienlngkfnapogchdnb",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "8ef9dab5-28a2-4453-91e3-a5441cec3e81",
+      "count": 1,
+      "generation": "db89845f-79f2-4d3c-9e18-6bac17926b28",
+      "version": "1.0.0"
+    }
+  },
+  "extensionsBefore": {
+    "extensions": [
+      {
+        "id": "jaoblfdaebicfiienlngkfnapogchdnb",
+        "name": "Managed lifecycle proof",
+        "version": "1.0.0",
+        "path": "/private/tmp/devkit-wxt-profile-retention-_qwoor4c/.output/chrome-mv3-dev",
+        "enabled": true
+      }
+    ]
+  },
+  "developerModeBefore": {
+    "checked": false,
+    "disabled": false,
+    "role": "button",
+    "aria": "false"
+  },
+  "developerModeAfterClick": {
+    "checked": true,
+    "disabled": false
+  },
+  "manifestBefore": "{\n  \"manifest_version\": 3,\n  \"name\": \"Managed lifecycle proof\",\n  \"version\": \"1.0.0\",\n  \"commands\": {\n    \"wxt:reload-extension\": {\n      \"description\": \"Reload the extension during development\",\n      \"suggested_key\": {\n        \"default\": \"Alt+R\"\n      }\n    }\n  },\n  \"background\": {\n    \"type\": \"module\",\n    \"service_worker\": \"background.js\"\n  },\n  \"action\": {\n    \"default_title\": \"Managed reload proof\",\n    \"default_popup\": \"popup.html\"\n  },\n  \"host_permissions\": [\n    \"http://localhost/*\"\n  ],\n  \"content_security_policy\": {\n    \"extension_pages\": \"script-src 'self' 'wasm-unsafe-eval' http://localhost:51361; object-src 'self';\",\n    \"sandbox\": \"script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:51361; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';\"\n  },\n  \"permissions\": [\n    \"tabs\",\n    \"scripting\"\n  ]\n}",
+  "changeAt": 1790652728931,
+  "manifestAfter": "{\n  \"manifest_version\": 3,\n  \"name\": \"Managed lifecycle proof\",\n  \"version\": \"1.0.0\",\n  \"commands\": {\n    \"wxt:reload-extension\": {\n      \"description\": \"Reload the extension during development\",\n      \"suggested_key\": {\n        \"default\": \"Alt+R\"\n      }\n    }\n  },\n  \"background\": {\n    \"type\": \"module\",\n    \"service_worker\": \"background.js\"\n  },\n  \"action\": {\n    \"default_title\": \"Managed reload proof\",\n    \"default_popup\": \"popup.html\"\n  },\n  \"host_permissions\": [\n    \"http://localhost/*\"\n  ],\n  \"content_security_policy\": {\n    \"extension_pages\": \"script-src 'self' 'wasm-unsafe-eval' http://localhost:51361; object-src 'self';\",\n    \"sandbox\": \"script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:51361; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';\"\n  },\n  \"permissions\": [\n    \"tabs\",\n    \"scripting\"\n  ]\n}",
+  "extensionsAfter": {
+    "extensions": [
+      {
+        "id": "jaoblfdaebicfiienlngkfnapogchdnb",
+        "name": "Managed lifecycle proof",
+        "version": "1.0.0",
+        "path": "/private/tmp/devkit-wxt-profile-retention-_qwoor4c/.output/chrome-mv3-dev",
+        "enabled": true
+      }
+    ]
+  },
+  "developerModeAfter": {
+    "checked": true,
+    "disabled": false,
+    "role": "button",
+    "aria": "true"
+  },
+  "managerText": "",
+  "navigationFailures": [],
+  "after": {
+    "requestId": "3a87f226-9f14-42e1-8f7e-fff5b75c6d3c",
+    "count": 101,
+    "generation": "497c5bb9-018f-46d7-a900-f51f789bf416",
+    "version": "1.0.0"
+  },
+  "developerModeAfterNativeRestart": false,
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ],
+  "profileRemoved": true
+}

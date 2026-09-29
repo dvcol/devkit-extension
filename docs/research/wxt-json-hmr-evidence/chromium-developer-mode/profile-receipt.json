@@ -1,0 +1,109 @@
+{
+  "binary": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profilePolicy": "dedicated native profile reused across browser restarts, removed after test",
+  "runId": "7af4b639-e3f0-4e77-91f2-49edea5494f0",
+  "chromiumPort": 52002,
+  "developmentPort": 52003,
+  "lifecycle": [
+    {
+      "event": "started",
+      "at": 1790652963167
+    },
+    {
+      "event": "closed",
+      "at": 1790652977739
+    }
+  ],
+  "browserOwner": "WXT native web-ext runner",
+  "trigger": "background count initializer source edit from 0 to 100",
+  "browserVersion": "153.0.8010.12",
+  "initialDebugEndpoint": "ws://127.0.0.1:52002/devtools/browser/2e34df22-4b31-41c8-8dd0-d330d1d3af04",
+  "before": {
+    "extensionId": "jaoblfdaebicfiienlngkfnapogchdnb",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "50d500cb-5fc6-42ce-ada7-6b14fe2ca047",
+      "count": 1,
+      "generation": "ebe51085-1ad7-4530-b42a-fde571955157",
+      "version": "1.0.0"
+    }
+  },
+  "extensionsBefore": {
+    "extensions": [
+      {
+        "id": "jaoblfdaebicfiienlngkfnapogchdnb",
+        "name": "Managed lifecycle proof",
+        "version": "1.0.0",
+        "path": "/private/tmp/devkit-wxt-profile-retention-_qwoor4c/.output/chrome-mv3-dev",
+        "enabled": true
+      }
+    ]
+  },
+  "developerModeBefore": {
+    "checked": false,
+    "disabled": false,
+    "role": "button",
+    "aria": "false"
+  },
+  "developerModeAfterClick": {
+    "checked": true,
+    "disabled": false
+  },
+  "manifestBefore": "{\n  \"manifest_version\": 3,\n  \"name\": \"Managed lifecycle proof\",\n  \"version\": \"1.0.0\",\n  \"commands\": {\n    \"wxt:reload-extension\": {\n      \"description\": \"Reload the extension during development\",\n      \"suggested_key\": {\n        \"default\": \"Alt+R\"\n      }\n    }\n  },\n  \"background\": {\n    \"type\": \"module\",\n    \"service_worker\": \"background.js\"\n  },\n  \"action\": {\n    \"default_title\": \"Managed reload proof\",\n    \"default_popup\": \"popup.html\"\n  },\n  \"host_permissions\": [\n    \"http://localhost/*\"\n  ],\n  \"content_security_policy\": {\n    \"extension_pages\": \"script-src 'self' 'wasm-unsafe-eval' http://localhost:52003; object-src 'self';\",\n    \"sandbox\": \"script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:52003; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';\"\n  },\n  \"permissions\": [\n    \"tabs\",\n    \"scripting\"\n  ]\n}",
+  "changeAt": 1790652964377,
+  "manifestAfter": "{\n  \"manifest_version\": 3,\n  \"name\": \"Managed lifecycle proof\",\n  \"version\": \"1.0.0\",\n  \"commands\": {\n    \"wxt:reload-extension\": {\n      \"description\": \"Reload the extension during development\",\n      \"suggested_key\": {\n        \"default\": \"Alt+R\"\n      }\n    }\n  },\n  \"background\": {\n    \"type\": \"module\",\n    \"service_worker\": \"background.js\"\n  },\n  \"action\": {\n    \"default_title\": \"Managed reload proof\",\n    \"default_popup\": \"popup.html\"\n  },\n  \"host_permissions\": [\n    \"http://localhost/*\"\n  ],\n  \"content_security_policy\": {\n    \"extension_pages\": \"script-src 'self' 'wasm-unsafe-eval' http://localhost:52003; object-src 'self';\",\n    \"sandbox\": \"script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:52003; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';\"\n  },\n  \"permissions\": [\n    \"tabs\",\n    \"scripting\"\n  ]\n}",
+  "extensionsAfter": {
+    "extensions": [
+      {
+        "id": "jaoblfdaebicfiienlngkfnapogchdnb",
+        "name": "Managed lifecycle proof",
+        "version": "1.0.0",
+        "path": "/private/tmp/devkit-wxt-profile-retention-_qwoor4c/.output/chrome-mv3-dev",
+        "enabled": true
+      }
+    ]
+  },
+  "developerModeAfter": {
+    "checked": true,
+    "disabled": false,
+    "role": "button",
+    "aria": "true"
+  },
+  "managerText": "",
+  "navigationFailures": [],
+  "after": {
+    "requestId": "0f4a8f1d-8369-41f3-960a-a5ebffa07658",
+    "count": 101,
+    "generation": "88f56920-ba84-4d2e-997d-1fd23a6cad70",
+    "version": "1.0.0"
+  },
+  "developerModePersistedBeforeRestart": true,
+  "developerModeAfterNativeRestart": true,
+  "afterNativeRestart": {
+    "extensionId": "jaoblfdaebicfiienlngkfnapogchdnb",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "ddc4802c-da0f-4676-b6c3-9103b6d89b41",
+      "count": 101,
+      "generation": "5a8f4af3-2564-464d-b6ae-2c10dd93adc5",
+      "version": "1.0.0"
+    }
+  },
+  "afterSecondNativeReload": {
+    "extensionId": "jaoblfdaebicfiienlngkfnapogchdnb",
+    "manifestVersion": "1.0.0",
+    "action": {
+      "requestId": "23ed9468-a0bd-441d-abeb-6f3df8f8732d",
+      "count": 201,
+      "generation": "dd2a79b8-11d5-49ed-bc69-37dbe58de951",
+      "version": "1.0.0"
+    }
+  },
+  "passed": true,
+  "cleanup": [
+    {
+      "status": "fulfilled"
+    }
+  ],
+  "profileRemoved": true
+}

@@ -61,6 +61,22 @@ Replay from the same standalone fixture:
 PROOF_ENABLE_DEVELOPER_MODE=1 DEVKIT_REPOSITORY=/absolute/path/to/devkit-extension pnpm exec node check-native-reloads.mjs
 ```
 
-The environment option tells the test to enable Developer mode through the owned browser's normal extension-management UI. It is not a maintained extension option. Without it, the fresh-profile failure remains reproducible in the measured environment. web-ext already writes a Developer mode preference, so why that preference is ineffective on first launch still needs a native-runner investigation before promising unattended fresh-profile startup.
+The environment option tells the test to enable Developer mode through the owned browser's normal extension-management UI. It is not a maintained extension option. Without it, the fresh-profile failure remains reproducible in the measured environment. web-ext already writes a Developer mode preference, but Chrome protects that preference; the normal persistent-profile setup below avoids depending on a launcher-created value.
 
 To reproduce the generic comparison, install this parent fixture's frozen dependencies, change into `chromium-developer-mode/`, then run `pnpm exec node check-background-only.mjs` with and without `PROOF_ENABLE_DEVELOPER_MODE=1`. Preserve each resulting receipt before the next run. This minimal test does not import or edit the maintained repository.
+
+## Native dedicated-profile setup
+
+Chrome 153 marks Developer mode as an [integrity-protected atomic preference with enforcement on load](https://github.com/chromium/chromium/blob/153.0.8010.12/chrome/browser/prefs/chrome_pref_service_factory.cc#L176). Its [validation can reset untrusted values](https://github.com/chromium/chromium/blob/153.0.8010.12/services/preferences/tracked/tracked_preference_helper.cc#L31). The normal browser toggle [writes through Chrome's PrefService](https://github.com/chromium/chromium/blob/153.0.8010.12/chrome/browser/extensions/extension_util.cc#L334). These sources explain why a launcher-written JSON value is not a reliable setup contract. The exact internal validation result was not captured, so attributing the observed reset to this path is a source-supported inference.
+
+WXT's public `chromiumProfile` and `keepProfileChanges: true` options provide a [dedicated persistent profile](https://wxt.dev/guide/essentials/config/browser-startup#persist-data). `check-profile-retention.mjs` creates a temporary profile, enables Developer mode through its normal UI, verifies native background reload, restarts the browser through public WXT `restartBrowser()`, and verifies another background reload. The final check passes: Developer mode remains enabled after restart, the changed background initializers return `101` and `201` with different execution generations, native stop succeeds and the owned profile is removed.
+
+An initial immediate restart lost the newly toggled setting. The retained passing test first waits for Chrome's own `Secure Preferences` file to contain its saved boolean, then restarts. That read-only wait is test observation, not a production hook or custom persistence policy. `immediate-restart-receipt.json` preserves the failure; `profile-receipt.json` and `logs/profile-retention.log` record the passing replay. No preference hashes or browser policy controls were modified.
+
+From `chromium-developer-mode/`, using the parent fixture's frozen dependencies:
+
+```sh
+PROOF_ENABLE_DEVELOPER_MODE=1 pnpm exec node check-profile-retention.mjs
+```
+
+The supported setup candidate is therefore one-time normal Developer mode setup in a dedicated native profile, after Chrome saves the setting. Automatic setup of a brand-new disposable profile is not established. The test does not read or alter the user's regular browser profile, and these remain research fixtures rather than maintained development commands.
