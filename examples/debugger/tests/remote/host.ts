@@ -3,14 +3,12 @@ import { createServer } from 'node:http';
 import type { Server } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { createCdbService, getCdbService } from '@dvcol/cdb-devframe';
 import type { CdbDevframeService } from '@dvcol/cdb-devframe';
-import { defineDevframe } from 'devframe';
 import type { DevframeNodeRpcSession, DevframeRpcConnection } from 'devframe';
 import { initDevframe } from 'devframe/initiate';
 import type { DevframeInstance } from 'devframe/initiate';
 import { createWsOriginRegistry } from 'devframe/rpc/transports/ws-server';
-import { z } from 'zod';
+import { createDefinition } from './definition.ts';
 
 /** A native host fixture. Devframe owns trust/RPC; CDB owns pairing, grants and operations. */
 export async function createNativeHost() {
@@ -48,42 +46,13 @@ export async function createNativeHost() {
     fixtureUrl: `${origin}/owned-target`,
     allowedOrigins,
     service,
+    provider: fixture.requireProvider(),
+    diagnostics: fixture.diagnostics,
     sessions: peers.sessions,
     errors: peers.errors,
     settled: peers.settled,
     close: () => lifetime.disposeAsync(),
   };
-}
-
-function createDefinition() {
-  let service: CdbDevframeService | undefined;
-  function requireService() {
-    if (service === undefined) throw new Error('Native CDB service is not ready');
-    return service;
-  }
-  const definition = defineDevframe({
-    id: 'example-cdb-auth',
-    name: 'Authenticated CDB example',
-    packageName: '@devkit/example-debugger',
-    version: '0.0.0',
-    description: 'Native browser provider over an authenticated Devframe connection.',
-    homepage: 'https://github.com/dvcol/devkit-extension',
-    services: [createCdbService()],
-    setup(context) {
-      service = getCdbService(context);
-      context.rpc.register({
-        name: 'fixture:echo',
-        type: 'query',
-        handler(value: unknown) {
-          return {
-            value: z.string().parse(value),
-            trusted: context.rpc.getCurrentRpcSession()?.meta.isTrusted === true,
-          };
-        },
-      });
-    },
-  });
-  return { definition, requireService, dispose: () => service?.dispose() };
 }
 
 function createPeerLifecycle(service: () => CdbDevframeService) {

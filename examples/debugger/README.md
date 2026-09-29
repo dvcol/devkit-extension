@@ -112,7 +112,7 @@ The [retained receipt](./evidence/devframe.json) records nine checked steps:
 1. Missing credentials and an invalid code fail; the real code establishes trust. Ordinary RPC confirms trust from the actual server session.
 2. CDB pairing completes with no grant or published scope.
 3. The actual extension control approves one explicit fixture tab.
-4. The shared portable title action runs through the native broker, releases its lease, rejects a mismatched generation and retains the target after contribution disposal.
+4. A separate authenticated extension-page caller invokes the shared portable title action. It cannot borrow the host agent's grant. Its own approval creates a second principal-bound grant for the same native target, after which title reading succeeds. Missing caller context and mismatched generations reject. Disable/enable and disposal retain native grants, target ownership and ordinary RPC, with no remaining lease.
 5. A host-owned agent invokes native `browser.evaluate`, changing the actual target DOM.
 6. Ordinary RPC still works on the same peer during browser control.
 7. Provider disposal releases this extension's debugger attachment while retaining the peer.
@@ -123,18 +123,28 @@ The attachment check uses a harmless native evaluation before and after disposal
 
 `dist/devframe/` contains the separate test extension. Its worker bundle uses the public browser client entry and rejects external imports, Node builtins and MCP implementation code. Strict TypeScript checks use `skipLibCheck: false` and Chrome's ambient types.
 
-The [remote title service](./src/remote-service.ts) implements the same imported capability and action contracts as the embedded service. A host-local provider in the `devserver` realm supplies the real CDB broker through a native context. `browser.list_target_authorities` supplies CDB's actual ID/generation; `browser.acquire`, `browser.raw_cdp` and `browser.release` preserve that identity and native lease ownership. The service uses CDB's public Standard Schema validators and only evaluates the fixed `document.title` expression. It forwards the operation signal and releases its lease independently of cancellation.
+The [remote title service](./src/remote-service.ts) implements the same imported capability and action contracts as the embedded service. The host supplies its actual `DevframeNodeContext` through a local native descriptor. The service reads `context.rpc.getCurrentRpcSession()` at invocation time and calls `getCdbService(context).invoke(session, ...)`. Devframe authenticates the caller; CDB resolves that caller's principal and checks its grants. No supplied principal ID, fixed demo grant, identity map or second authorization layer is involved.
 
 ```mermaid
-flowchart LR
-  Contract[Same readPageTitleAction contract] --> Local[Embedded webext implementation]
-  Contract --> Server[Host-local devserver implementation]
-  Local --> Embedded[Native embedded CDB client]
-  Server --> Broker[Native CDB broker / explicit demo principal]
-  Broker --> RPC[Authenticated native peer]
-  RPC --> Extension[Native Chrome provider]
+sequenceDiagram
+  participant Caller as Authenticated extension-page caller
+  participant Portable as Portable client and native RPC provider
+  participant Service as Title service
+  participant CDB as Native CDB service
+  participant Browser as Background Chrome provider
+  Caller->>Portable: readPageTitleAction({ id, generation })
+  Portable->>Service: Existing action and capability dispatch
+  Service->>Service: Read actual current RPC session
+  Service->>CDB: invoke(session, acquire / raw_cdp / release)
+  CDB->>CDB: Verify caller and its native grants
+  CDB->>Browser: Existing native RPC and lease
+  Browser-->>Caller: Actual document.title through the same call chain
 ```
 
-The [contribution check](./tests/remote/contribution.ts) invokes the server implementation through the existing portable runtime and observes its actual browser result. A different positive generation rejects through the native broker and is reported as `operation-failed`. Successful calls leave no lease; disposing the contribution retains the approved target and scope. Subsequent browser and ordinary RPC operations still work.
+`browser.list_target_authorities` supplies CDB's ID/generation; `browser.acquire`, `browser.raw_cdp` and `browser.release` preserve that identity. Public native Standard Schema validators check lease and command results. The expression is fixed to `document.title`. The generic `createRpcProvider` exposes only the imported title action on the existing native host. The extension-page caller shares one native peer between its CDB client and portable provider connection; the background browser provider has a separate peer.
 
-The demo principal is host-owned. This slice exposes no fixed-principal action to remote callers and adds no identity map. Per-caller remote contribution exposure, an authenticated remote agent client, in-flight cancellation, persistent credential UX, MV3 recovery, revocation during remote execution and JSON UI remain separate work. The native [same-peer reattachment failure](../../docs/research/cdb-devframe-integration.md#reproduced-same-peer-registration-failure) is unchanged; this test creates one peer and does not claim reconnect recovery.
+The [contribution check](./tests/remote/contribution.ts) confirms that authentication alone does not grant access to a target approved for a different principal. The caller's own explicit approval authorizes the same native target with a separate grant. A missing native caller fails locally, and a different positive generation rejects with the exact native `TARGET_GENERATION_STALE` cause in the owning host's diagnostic. Disabling the service makes its action unavailable; reenabling restores it. Disposing the portable provider preserves the caller's target, grants and ordinary authenticated RPC. The host-local agent remains only in the test's independent raw broker operation and cannot be borrowed by the exposed contribution.
+
+Cancellation follows the existing native contract. `CdbDevframeService.invoke` has no external signal parameter. The recipe checks the contribution signal before acquire and before command dispatch; release runs in `finally`. Disabling during native work therefore waits for native settlement and cleanup before the runtime rejects a late result as cancelled. Native peer disconnect independently aborts CDB operations and releases peer-owned leases. A subsequent release with that disconnected session can reject through native authorization; the recipe never substitutes another principal. These in-flight paths still need separate live acceptance; this slice proves settled disable/enable and disposal.
+
+Persistent credential UX, MV3 recovery, revocation during remote execution and JSON UI remain separate work. The native [same-peer reattachment failure](../../docs/research/cdb-devframe-integration.md#reproduced-same-peer-registration-failure) is unchanged; this test does not claim reconnect recovery.

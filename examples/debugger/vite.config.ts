@@ -15,6 +15,13 @@ export default defineConfig(({ mode }) => {
             fileName: 'manifest.json',
             source: JSON.stringify(manifest),
           });
+          if (remote)
+            this.emitFile({
+              type: 'asset',
+              fileName: 'caller.html',
+              source:
+                '<!doctype html><title>Native CDB caller</title><script type="module" src="caller.js"></script>',
+            });
           this.emitFile({
             type: 'asset',
             fileName: remote ? 'control.html' : 'probe.html',
@@ -28,8 +35,8 @@ export default defineConfig(({ mode }) => {
       target: 'esnext',
       minify: false,
       rolldownOptions: {
-        input: remote ? 'tests/remote/worker.ts' : 'tests/fixtures/background.ts',
-        output: { entryFileNames: 'background.js' },
+        input: remoteEntries(remote),
+        output: { entryFileNames: '[name].js' },
       },
     },
   };
@@ -65,4 +72,9 @@ function manifestFor(browser: 'chromium' | 'firefox') {
     background: { service_worker: 'background.js', type: 'module' },
     permissions: ['debugger', 'tabs'],
   };
+}
+
+function remoteEntries(remote: boolean) {
+  if (remote) return { background: 'tests/remote/worker.ts', caller: 'tests/remote/caller.ts' };
+  return { background: 'tests/fixtures/background.ts' };
 }

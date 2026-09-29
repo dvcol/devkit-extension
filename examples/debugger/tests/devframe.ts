@@ -54,8 +54,8 @@ async function run() {
   const approved = await approveTarget(control, host);
   record('The actual extension control approves only the owned fixture tab', approved.approvals);
   record(
-    'Shared portable title contract uses native target authority and releases its lease',
-    await checkRemoteContribution(host.service.broker),
+    'Remote title contribution uses its actual caller grants and retains native ownership',
+    await checkRemoteContribution(host, control),
   );
   await checkBrowserOperation(control, host, { page: target, reference: approved.targetRef });
   await checkDisposal(control, host);

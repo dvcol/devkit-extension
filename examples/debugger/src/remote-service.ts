@@ -6,68 +6,75 @@ import {
   defineService,
 } from '@devkit/core';
 import { cdpCommandResultSchema, leaseSchema } from '@dvcol/cdb';
-import type { CdbDevframeService } from '@dvcol/cdb-devframe';
+import { getCdbService } from '@dvcol/cdb-devframe';
+import type { DevframeNodeContext } from 'devframe';
 import { z } from 'zod';
 import { pageTitleCapability, readPageTitleAction } from './contracts.ts';
 import type { DebuggerTarget } from './contracts.ts';
 
-type NativeBroker = CdbDevframeService['broker'];
-
-/** This example principal is owned by the host; the contribution is not exposed to remote callers. */
-export const remoteDebuggerAgent = { id: 'owned-example-agent', label: 'Owned fixture host agent' };
 export const remoteDebuggerExecution = defineExecution({ id: 'example.debugger.server' });
-export const remoteDebuggerContext = defineNativeContext<NativeBroker>({
-  id: 'example.cdb.broker',
+export const remoteDebuggerContext = defineNativeContext<DevframeNodeContext>({
+  id: 'example.devframe.context',
 });
 const titleResult = z.object({ result: z.object({ value: z.string() }) });
 
+/** Native peer disconnect owns cancellation; local disable waits for native work to settle. */
 async function readTitle(
-  broker: NativeBroker,
+  context: DevframeNodeContext,
   target: DebuggerTarget,
   signal: AbortSignal,
 ): Promise<string> {
   signal.throwIfAborted();
+  const session = requireCaller(context);
+  const service = getCdbService(context);
+  const authority = { targetId: target.id, targetGeneration: target.generation };
   const lease = await leaseSchema['~standard'].validate(
-    await broker.invoke(
-      remoteDebuggerAgent,
-      'browser.acquire',
-      {
-        targetId: target.id,
-        targetGeneration: target.generation,
+    await service.invoke(session, {
+      operationId: crypto.randomUUID(),
+      name: 'browser.acquire',
+      arguments: {
+        ...authority,
         durationMilliseconds: 10_000,
         mode: 'exclusive-control',
         requestedMethods: ['Runtime.evaluate'],
       },
-      { signal },
-    ),
+    }),
   );
   if (lease.issues !== undefined) throw new Error('Native broker returned an invalid lease');
   try {
     signal.throwIfAborted();
     const command = await cdpCommandResultSchema['~standard'].validate(
-      await broker.invoke(
-        remoteDebuggerAgent,
-        'browser.raw_cdp',
-        {
-          targetId: target.id,
-          targetGeneration: target.generation,
+      await service.invoke(session, {
+        operationId: crypto.randomUUID(),
+        name: 'browser.raw_cdp',
+        arguments: {
+          ...authority,
           leaseId: lease.value.id,
           method: 'Runtime.evaluate',
           parameters: { expression: 'document.title', returnByValue: true },
         },
-        { signal },
-      ),
+      }),
     );
     if (command.issues !== undefined)
       throw new Error('Native broker returned an invalid command result');
     return titleResult.parse(command.value.value).result.value;
   } finally {
-    await broker.invoke(remoteDebuggerAgent, 'browser.release', {
-      targetId: target.id,
-      targetGeneration: target.generation,
-      leaseId: lease.value.id,
+    await service.invoke(session, {
+      operationId: crypto.randomUUID(),
+      name: 'browser.release',
+      arguments: {
+        ...authority,
+        leaseId: lease.value.id,
+      },
     });
   }
+}
+
+/** Read once per invocation; setup has no caller, and a supplied ID is not a native session. */
+function requireCaller(context: DevframeNodeContext) {
+  const session = context.rpc.getCurrentRpcSession();
+  if (session === undefined) throw new Error('A current Devframe RPC caller is required');
+  return session;
 }
 
 export const remotePageTitleService = defineService({
@@ -75,9 +82,9 @@ export const remotePageTitleService = defineService({
   capability: pageTitleCapability,
   execution: remoteDebuggerExecution,
   setup({ native }) {
-    const broker = native.get(remoteDebuggerContext);
-    if (broker === undefined) throw new Error('Native CDB broker is unavailable');
-    return { read: (target, { signal }) => readTitle(broker, target, signal) };
+    const context = native.get(remoteDebuggerContext);
+    if (context === undefined) throw new Error('Native Devframe context is unavailable');
+    return { read: (target, { signal }) => readTitle(context, target, signal) };
   },
 });
 

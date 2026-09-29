@@ -14,7 +14,9 @@
     "test:devframe": "node tests/devframe.ts"
   },
   "dependencies": {
+    "@devkit/client": "workspace:*",
     "@devkit/core": "workspace:*",
+    "@devkit/devframe": "workspace:*",
     "@devkit/runtime": "workspace:*",
     "@dvcol/cdb": "0.3.0",
     "@dvcol/cdb-devframe": "0.3.0",

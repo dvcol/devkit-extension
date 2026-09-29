@@ -229,9 +229,15 @@ importers:
 
   examples/debugger:
     dependencies:
+      '@devkit/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@devkit/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@devkit/devframe':
+        specifier: workspace:*
+        version: link:../../packages/devframe
       '@devkit/runtime':
         specifier: workspace:*
         version: link:../../packages/runtime
