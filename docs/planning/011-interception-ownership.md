@@ -66,7 +66,7 @@ The exact unsupported outcome would be explicit where coverage can be establishe
 
 ## B: contributions request interception coverage
 
-Each contribution declares native interception patterns alongside its local handler. Installing or disabling a contribution changes active demand. One native CDB owner reconciles that demand; the generic SDK does not send competing enable/disable commands or maintain a second debugger broker.
+Each contribution declares native interception patterns alongside its local handler. Installing or disabling a contribution changes active demand. The native CDB domain owner reconciles pattern demand. Provider-local code owns the response handlers. CDB does not import SDK contribution types or application transforms; the generic SDK does not send competing enable/disable commands or maintain a second debugger broker.
 
 ```ts
 // Proposed authoring shape only; names and remaining fields are not settled.
@@ -90,15 +90,18 @@ await handle.disable();
 
 ```mermaid
 flowchart LR
-  One[Contribution A patterns and handler] --> Owner[Single native interception owner]
-  Two[Contribution B patterns and handler] --> Owner
-  Owner -->|reconcile active native patterns| Chrome[Chrome]
-  Chrome -->|paused response| Owner
-  Owner -->|one final response| Chrome
-  Portable[Generic contribution lifecycle] -->|activate or dispose local registration| Owner
+  One[Contribution A] -->|pattern demand| CDB[Native CDB domain owner]
+  Two[Contribution B] -->|pattern demand| CDB
+  One -->|local handler| Responses[Provider-local response owner]
+  Two -->|local handler| Responses
+  CDB -->|native configuration| Chrome[Chrome]
+  Chrome -->|native event subscription| Responses
+  Responses -->|one final response through CDB lease| Chrome
+  Portable[Generic contribution lifecycle] -->|activate or dispose| One
+  Portable -->|activate or dispose| Two
 ```
 
-This better supports independently installed plugins. The current CDB demand API cannot express the configuration update, so it needs a narrow native design and proof before a local patch. An upstream draft would still require explicit approval after a concrete diff and tests are prepared.
+This better supports independently installed plugins. The current CDB demand API cannot express the configuration update, so it needs a narrow native design and proof before a local patch. That native work would handle domain configuration only; application transformation logic stays downstream. An upstream draft would still require explicit approval after a concrete diff and tests are prepared.
 
 Native reconciliation must preserve existing handlers and already paused requests while demand changes. A failed update must reject the new registration or report its failure, rather than claim that Chrome uses a configuration it never accepted. Disabling one contribution must preserve another's coverage. Updating configuration cannot replay an action or silently move an already dispatched operation to another provider.
 
