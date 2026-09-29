@@ -1,13 +1,12 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { styleText } from 'node:util';
-import { chromium } from '@playwright/test';
-import type { BrowserContext, Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { createNativeHost } from './remote/host.ts';
+import { createNativeBrowser } from './remote/browser.ts';
 import { poll, send } from './remote/driver.ts';
 import { agent, checkTrust, approveTarget } from './remote/authentication.ts';
+import { checkRemoteContribution } from './remote/contribution.ts';
 import {
   echoResponseSchema,
   attachmentOwnershipResponseSchema,
@@ -18,7 +17,7 @@ import {
 
 type NativeHost = Awaited<ReturnType<typeof createNativeHost>>;
 const checks: Array<{ name: string; details: unknown }> = [];
-const pageErrors: string[] = [];
+let pageErrors: readonly string[] = [];
 let browserVersion: string | undefined;
 
 await run();
@@ -35,22 +34,13 @@ console.info(
 
 async function run() {
   await using cleanup = new AsyncDisposableStack();
-  const profile = await mkdtemp(join(tmpdir(), 'devkit-cdb-browser-'));
-  cleanup.defer(() => rm(profile, { recursive: true, force: true }));
   const host = await createNativeHost();
   cleanup.defer(host.close);
-  const extensionPath = resolve('dist/devframe');
-  const browser = await chromium.launchPersistentContext(profile, {
-    channel: 'chromium',
-    headless: true,
-    args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
-  });
-  cleanup.defer(() => browser.close());
-  browserVersion = browser.browser()?.version();
-  browser.on('weberror', (error) => pageErrors.push(error.error().message));
-  const target = await browser.newPage();
-  await target.goto(host.fixtureUrl);
-  const control = await createControl(browser, host);
+  const browser = await createNativeBrowser(host);
+  cleanup.defer(browser.close);
+  browserVersion = browser.version;
+  pageErrors = browser.errors;
+  const { target, control } = browser;
   let controlDisposed = false;
   cleanup.defer(async () => {
     if (!controlDisposed) await disposeControl(control);
@@ -63,22 +53,14 @@ async function run() {
   record('Native pairing grants no target access automatically', trust.pairing);
   const approved = await approveTarget(control, host);
   record('The actual extension control approves only the owned fixture tab', approved.approvals);
+  record(
+    'Shared portable title contract uses native target authority and releases its lease',
+    await checkRemoteContribution(host.service.broker),
+  );
   await checkBrowserOperation(control, host, { page: target, reference: approved.targetRef });
   await checkDisposal(control, host);
   controlDisposed = true;
   assert.deepEqual(pageErrors, []);
-}
-
-async function createControl(browser: BrowserContext, host: NativeHost): Promise<Page> {
-  const worker = browser.serviceWorkers()[0] ?? (await browser.waitForEvent('serviceworker'));
-  const extensionOrigin = `chrome-extension://${new URL(worker.url()).host}`;
-  const registration = new URL(`${host.baseURL}__connection.json`);
-  registration.searchParams.set('devframe_viewer_origin', extensionOrigin);
-  registration.searchParams.set('devframe_viewer_origin_token', host.allowedOrigins.token);
-  host.allowedOrigins.registerFromUrl(registration.href);
-  const control = await browser.newPage();
-  await control.goto(`${extensionOrigin}/control.html`);
-  return control;
 }
 
 async function checkBrowserOperation(

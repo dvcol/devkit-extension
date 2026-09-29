@@ -2,12 +2,13 @@ import assert from 'node:assert/strict';
 import type { Page } from '@playwright/test';
 import { getTempAuthCode } from 'devframe/node/auth';
 import { z } from 'zod';
+import { remoteDebuggerAgent as agent } from '../../src/remote-service.ts';
 import type { createNativeHost } from './host.ts';
 import { poll, send } from './driver.ts';
 import { prepareResponseSchema, stateResponseSchema, approveResponseSchema } from './protocol.ts';
 
 type NativeHost = Awaited<ReturnType<typeof createNativeHost>>;
-export const agent = { id: 'owned-example-agent', label: 'Owned fixture host agent' };
+export { agent };
 
 export async function checkTrust(control: Page, host: NativeHost) {
   const prepared = await send(

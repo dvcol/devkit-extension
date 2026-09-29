@@ -15,7 +15,7 @@
           "status": "connected",
           "isTrusted": true,
           "isolated": true,
-          "targetTabId": 973055143,
+          "targetTabId": 587329252,
           "providerDisposed": false,
           "clientDisposed": false,
           "closed": false,
@@ -35,10 +35,10 @@
       "name": "The actual extension control approves only the owned fixture tab",
       "details": [
         {
-          "requestId": "eb1733a7-33c3-41e6-8274-788d081d6add",
+          "requestId": "ac030428-506f-49bc-98e2-5bec1b3293fd",
           "selector": {
             "kind": "explicit-tabs",
-            "tabIds": [973055143]
+            "tabIds": [587329252]
           },
           "accepted": true,
           "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
@@ -46,10 +46,19 @@
       ]
     },
     {
+      "name": "Shared portable title contract uses native target authority and releases its lease",
+      "details": {
+        "title": "Owned remote debugger target",
+        "generationMismatch": "rejected",
+        "leases": 0,
+        "targetRetainedAfterContributionDisposal": true
+      }
+    },
+    {
       "name": "Host broker operation changes the real page through native RPC",
       "details": {
         "result": {
-          "operationId": "07069890-0ee2-4d57-a12f-36d1ff3d879e",
+          "operationId": "a72208c9-f0bd-4863-ae4b-252866f44ef3",
           "value": {
             "result": {
               "type": "string",
