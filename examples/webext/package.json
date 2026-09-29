@@ -8,7 +8,7 @@
     "dev:firefox": "wxt --browser firefox --mv3",
     "build": "vite build && vite build --mode firefox",
     "typecheck": "wxt prepare && tsc --noEmit -p tsconfig.json",
-    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src entrypoints tests manifest.ts vite.config.ts wxt.config.ts",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src entrypoints tests vite.config.ts wxt.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
     "test": "vitest run --root .",
     "test:browser": "node tests/browser.ts",

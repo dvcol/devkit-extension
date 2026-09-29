@@ -1,7 +1,7 @@
 import { copyFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
-import { createManifest } from './manifest.ts';
+import { createManifest } from './wxt.config.ts';
 
 export default defineConfig(({ mode }) => {
   const firefox = mode === 'firefox';

@@ -1,4 +1,5 @@
-import { cp, mkdtemp, realpath, rm, symlink } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import { cp, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join, resolve as resolvePath } from 'node:path';
@@ -7,7 +8,7 @@ import { join, resolve as resolvePath } from 'node:path';
 export async function createDevelopmentFixture(): Promise<string> {
   const root = await realpath(await mkdtemp(join(tmpdir(), 'devkit-webext-development-')));
   try {
-    for (const name of ['package.json', 'wxt.config.ts', 'manifest.ts', 'src', 'entrypoints']) {
+    for (const name of ['package.json', 'wxt.config.ts', 'src', 'entrypoints']) {
       await cp(resolvePath(name), join(root, name), { recursive: true });
     }
     await symlink(resolvePath('node_modules'), join(root, 'node_modules'), 'dir');
@@ -33,4 +34,13 @@ export async function availablePort(): Promise<number> {
   });
   if (address === null || typeof address === 'string') throw new Error('Expected a TCP port');
   return address.port;
+}
+
+/** Change the application's actual watched configuration, not the generated manifest. */
+export async function updateDevelopmentVersion(root: string): Promise<void> {
+  const path = join(root, 'wxt.config.ts');
+  const source = await readFile(path, 'utf8');
+  const updated = source.replace("version: '0.0.1'", "version: '0.0.2'");
+  assert.notEqual(updated, source, 'Expected the application version in the native WXT config');
+  await writeFile(path, updated);
 }

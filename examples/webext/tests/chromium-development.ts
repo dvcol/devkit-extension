@@ -8,7 +8,11 @@ import { chromium, expect } from '@playwright/test';
 import type { Browser, BrowserContext, Page } from '@playwright/test';
 import { createServer } from 'wxt';
 import type { WxtDevServer } from 'wxt';
-import { availablePort, createDevelopmentFixture } from './development-fixture.ts';
+import {
+  availablePort,
+  createDevelopmentFixture,
+  updateDevelopmentVersion,
+} from './development-fixture.ts';
 
 const root = await createDevelopmentFixture();
 const errors: string[] = [];
@@ -47,11 +51,13 @@ try {
   const origin = `chrome-extension://${new URL(worker.url()).host}`;
   const first = await openPanel(context, origin);
   const second = await openPanel(context, origin);
+  assert.equal(await first.evaluate(() => chrome.runtime.getManifest().version), '0.0.1');
   await checkModuleReplacement(first, second);
   await checkHtmlReplacement(first, second);
   const replacement = await checkBackgroundReplacement(first, second, origin);
+  const configured = await checkConfigurationRestart(replacement, origin, observerPort);
   assert.deepEqual(errors, []);
-  await replacement.screenshot({
+  await configured.screenshot({
     path: `${artifactDirectory}/panel.png`,
     fullPage: true,
   });
@@ -81,6 +87,7 @@ await writeFile(
         'Pending old action completes without overwriting replacement UI',
         'HTML edit reloads documents and retains provider state',
         'Background edit replaces provider, resets ephemeral state and does not replay actions',
+        'Config edit closes the original browser and adopts manifest 0.0.2 in a new provider',
         'Native stop closes browser',
       ],
       errors,
@@ -205,4 +212,59 @@ async function checkBackgroundReplacement(
   await replacement.getByRole('button', { name: 'Increase counter', exact: true }).click();
   await expect(replacement.getByText('Counter: 1', { exact: true })).toBeVisible();
   return replacement;
+}
+
+async function checkConfigurationRestart(
+  page: Page,
+  origin: string,
+  observerPort: number,
+): Promise<Page> {
+  assert.ok(browser);
+  const previousBrowser = browser;
+  const provider = await page.locator('#provider').innerText();
+  await waitForSavedDeveloperMode();
+  await updateDevelopmentVersion(root);
+  await expect.poll(() => previousBrowser.isConnected(), { timeout: 30_000 }).toBe(false);
+  browser = await connectObserver(observerPort);
+  const context = browser.contexts()[0];
+  assert.ok(context);
+  context.on('weberror', (error) => errors.push(error.error().message));
+  const manager = await context.newPage();
+  await manager.goto('chrome://extensions');
+  await expect(manager.locator('#devMode')).toHaveAttribute('checked', '');
+  await manager.close();
+  const replacement = await openPanel(context, origin);
+  assert.equal(await replacement.evaluate(() => chrome.runtime.getManifest().version), '0.0.2');
+  assert.notEqual(await replacement.locator('#provider').innerText(), provider);
+  await replacement.getByRole('button', { name: 'Increase counter', exact: true }).click();
+  await expect(replacement.getByText('Counter: 1', { exact: true })).toBeVisible();
+  return replacement;
+}
+
+/** Wait for the platform's native store before restart; the live UI is checked again afterward. */
+async function waitForSavedDeveloperMode(): Promise<void> {
+  /** Linux does not enforce this preference; macOS and Windows protect it in a separate store. */
+  const protectedPreferences = process.platform === 'darwin' || process.platform === 'win32';
+  const filename = protectedPreferences ? 'Secure Preferences' : 'Preferences';
+  const path = join(root, '.wxt/chromium-profile/Default', filename);
+  await expect
+    .poll(
+      async () => {
+        if (!existsSync(path)) return false;
+        const saved: unknown = JSON.parse(await readFile(path, 'utf8'));
+        if (typeof saved !== 'object' || saved === null || !('extensions' in saved)) return false;
+        const { extensions } = saved;
+        if (typeof extensions !== 'object' || extensions === null || !('ui' in extensions))
+          return false;
+        const { ui } = extensions;
+        return (
+          typeof ui === 'object' &&
+          ui !== null &&
+          'developer_mode' in ui &&
+          ui.developer_mode === true
+        );
+      },
+      { timeout: 30_000 },
+    )
+    .toBe(true);
 }

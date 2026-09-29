@@ -8,6 +8,7 @@ export async function attachFirefox(marionettePort: number): Promise<{
   driver: Driver;
   origin: string;
   browserVersion: string;
+  processId: number;
   dispose: () => Promise<void>;
 }> {
   const service = new ServiceBuilder(process.env.GECKODRIVER_BINARY)
@@ -34,6 +35,7 @@ export async function attachFirefox(marionettePort: number): Promise<{
       driver,
       origin: `moz-extension://${extensionUuid}`,
       browserVersion,
+      processId,
       dispose: () => disposeObserver(processId, service),
     };
   } catch (error) {

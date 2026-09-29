@@ -1,10 +1,12 @@
 {
   "passed": true,
   "browserVersion": "156.0.1",
+  "manifestVersion": "0.0.2",
   "nativeStopClosedBrowser": true,
   "scenarios": [
     "Panel module HMR preserves document, provider and state; replaces caller; invokes each action once",
     "HTML reload replaces document while retaining provider and state",
-    "Background reload closes old extension page; new page receives new incarnation and reset state"
+    "Background reload closes old extension page; new page receives new incarnation and reset state",
+    "Config restart closes old Firefox; replacement runs manifest 0.0.2 with a new provider and working actions"
   ]
 }

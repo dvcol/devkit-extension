@@ -4,7 +4,11 @@ import { styleText } from 'node:util';
 import { By, until } from 'selenium-webdriver';
 import type { Driver } from 'selenium-webdriver/firefox.js';
 import { createServer } from 'wxt';
-import { availablePort, createDevelopmentFixture } from './development-fixture.ts';
+import {
+  availablePort,
+  createDevelopmentFixture,
+  updateDevelopmentVersion,
+} from './development-fixture.ts';
 import { attachFirefox } from './firefox-development-observer.ts';
 
 const fixture = await createDevelopmentFixture();
@@ -12,6 +16,7 @@ const artifactDirectory = 'artifacts/firefox-development';
 let server: Awaited<ReturnType<typeof createServer>> | undefined;
 let observer: Awaited<ReturnType<typeof attachFirefox>> | undefined;
 let driver: Driver;
+let manifestVersion: string | undefined;
 
 try {
   await mkdir(artifactDirectory, { recursive: true });
@@ -40,6 +45,7 @@ try {
   await checkModuleUpdate();
   await checkHtmlReload();
   await checkBackgroundReload(observer.origin);
+  manifestVersion = await checkConfigurationRestart(marionettePort);
   await writeFile(`${artifactDirectory}/panel.png`, await driver.takeScreenshot(), 'base64');
 } finally {
   const cleanup = [
@@ -58,11 +64,13 @@ await writeFile(
     {
       passed: true,
       browserVersion: observer.browserVersion,
+      manifestVersion,
       nativeStopClosedBrowser: true,
       scenarios: [
         'Panel module HMR preserves document, provider and state; replaces caller; invokes each action once',
         'HTML reload replaces document while retaining provider and state',
         'Background reload closes old extension page; new page receives new incarnation and reset state',
+        'Config restart closes old Firefox; replacement runs manifest 0.0.2 with a new provider and working actions',
       ],
     },
     null,
@@ -71,7 +79,7 @@ await writeFile(
 );
 console.info(
   styleText('green', '✅ [webext/firefox-development]'),
-  'Native panel HMR, HTML reload, background reload and cleanup passed',
+  'Native panel HMR, HTML/background reload, configuration restart and cleanup passed',
 );
 
 async function checkModuleUpdate(): Promise<void> {
@@ -142,6 +150,31 @@ async function checkBackgroundReload(origin: string): Promise<void> {
   await click('#routed');
   await waitText('#result', '1');
   await counter(1);
+}
+
+async function checkConfigurationRestart(marionettePort: number): Promise<string> {
+  const previousObserver = observer;
+  assert.ok(previousObserver !== undefined);
+  const provider = await text('#provider');
+  assert.equal(
+    await driver.executeScript<string>('return chrome.runtime.getManifest().version'),
+    '0.0.1',
+  );
+  await updateDevelopmentVersion(fixture);
+  await previousObserver.dispose();
+  observer = await attachFirefox(marionettePort);
+  assert.notEqual(observer.processId, previousObserver.processId);
+  ({ driver } = observer);
+  await driver.get(`${observer.origin}/panel.html`);
+  await connected(0);
+  assert.notEqual(await text('#provider'), provider);
+  const version = await driver.executeScript<string>('return chrome.runtime.getManifest().version');
+  assert.equal(version, '0.0.2');
+  await click('#routed');
+  await waitText('#result', '1');
+  await increase();
+  await counter(2);
+  return version;
 }
 
 async function connected(value: number): Promise<void> {
