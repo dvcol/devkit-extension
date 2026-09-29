@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { setTimeout } from 'node:timers/promises';
@@ -12,6 +13,12 @@ import { availablePort, createDevelopmentFixture } from './development-fixture.t
 const root = await createDevelopmentFixture();
 const errors: string[] = [];
 const artifactDirectory = 'artifacts/chromium-development';
+/** Native CDP pipe failures can terminate before the launch promise rejects. */
+process.on('uncaughtExceptionMonitor', () => {
+  const path = join(root, '.wxt/chromium-profile/chrome-err.log');
+  if (!existsSync(path)) return;
+  console.error(styleText('red', '❌ [webext/dev]'), readFileSync(path, 'utf8'));
+});
 let server: WxtDevServer | undefined;
 let browser: Browser | undefined;
 try {
