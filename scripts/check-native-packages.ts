@@ -62,7 +62,7 @@ async function installConsumer(): Promise<void> {
   const workspace = await readFile(join(repository, 'pnpm-workspace.yaml'), 'utf8');
   /** This consumer does not install the examples' debugger or extension development dependencies. */
   const runtimeWorkspace = workspace.replaceAll(
-    /^  (?:'@(?:wxt-dev\/browser|dvcol\/cdb)@[^']+'|wxt@[^:]+):.*\n/gmu,
+    /^  (?:'@(?:wxt-dev\/browser|dvcol\/cdb(?:-extension)?)@[^']+'|wxt@[^:]+):.*\n/gmu,
     '',
   );
   await writeFile(
