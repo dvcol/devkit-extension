@@ -36,6 +36,7 @@ export default defineConfig(({ mode }) => {
       rolldownOptions: {
         input: {
           panel: resolve(import.meta.dirname, 'entrypoints/panel.html'),
+          devtools: resolve(import.meta.dirname, 'entrypoints/devtools.html'),
           background: resolve(import.meta.dirname, 'src/background-entry.ts'),
         },
         output: { entryFileNames: '[name].js' },

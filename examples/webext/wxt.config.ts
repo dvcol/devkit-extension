@@ -30,6 +30,7 @@ export function createManifest(firefox: boolean): UserManifest {
     version: '0.0.1',
     action: { default_popup: 'panel.html' },
     options_ui: { page: 'panel.html', open_in_tab: true },
+    devtools_page: 'devtools.html',
     host_permissions: ['http://127.0.0.1/*'],
     permissions: ['scripting'],
     /** Allow loopback WebSockets without Firefox's default insecure-request upgrade. */

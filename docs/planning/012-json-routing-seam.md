@@ -4,7 +4,7 @@ Status: owner review required. These are proposals, not implemented APIs. This n
 
 ## What works now
 
-The extension example passes 24 real Chromium scenarios. Its page-owned router connects to native Devframe, DevTools and extension providers. The JSON-rendered counter button still invokes its own worker. Separate HTML controls exercise selection, fallback and broadcast.
+The extension example passes 34 real Chromium scenarios and 28 Firefox scenario groups, including actual popup/options and native DevTools panel lifetimes. Its page-owned router connects to native Devframe, DevTools and extension providers. The JSON-rendered counter button still invokes its own worker. Separate HTML controls exercise selection, fallback and broadcast.
 
 ```mermaid
 flowchart LR
@@ -18,6 +18,8 @@ flowchart LR
 ```
 
 The public reference renderer accepts `entry`, `container` and `context`. A view can be an inline native JSON spec or a native shared-state reference. Non-built-in actions call `context.rpc.call(name, params)`. Native built-ins such as `setState` remain local. The public mount exposes no action-handler callback. Replacing the complete renderer or moving all connections into a new orchestration host would be larger changes.
+
+Published `1.1.0` was checked on 2026-09-29. Its renderer still mounts with only `entry`, `container` and `context`, and its action bridge still calls native RPC. It adds no public local-handler seam and still lacks the `./renderer` and `./view` exports supplied by draft 411. Its exact Devframe/Hub peers also require a coordinated upgrade. The release is still inside the repository's seven-day age threshold; the tested patched `1.0.0` graph remains installed. [UI metadata](https://registry.npmjs.org/@devframes/json-render-ui/1.1.0), [protocol metadata](https://registry.npmjs.org/@devframes/json-render/1.1.0).
 
 Disposing and remounting against another native context already supports changing the selected view provider. It does not by itself make one JSON action broadcast or follow an ordered fallback across providers.
 

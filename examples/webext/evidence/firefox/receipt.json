@@ -26,7 +26,11 @@
     "popup action updates the surviving options page exactly once",
     "catalog disable/enable reaches both native surfaces",
     "popup close destroys its window and pending action completes without replay",
-    "reopened popup has a new caller, reset local form and retained native provider state"
+    "reopened popup has a new caller, reset local form and retained native provider state",
+    "native DevTools panel mounts the existing renderer and shares background state",
+    "hiding DevTools panel retains its document, connection and live subscriptions",
+    "closing DevTools removes its panel and pending action completes without replay",
+    "reopened DevTools panel has a new caller, retained provider and working JSON action"
   ],
   "limitations": ["No global page-error capture through WebDriver Classic"]
 }

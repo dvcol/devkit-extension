@@ -22,13 +22,13 @@ flowchart LR
 
 The worker admits only its own extension ID, expected channel name and exact packaged page URL. Its native RPC metadata retains each actual sender. The channel uses Devframe's records serializer. Native state accepts normal native writes, and view publication retains one context object for its index and duplicate detection. Each page owns its RPC close, state mirrors and renderer disposal. Disconnect does not cancel remote side effects or replay an action.
 
-The Chromium test uses a disposable profile and removes it afterward. Its 30 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
+The Chromium test uses a disposable profile and removes it afterward. Its 34 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
 
 ![Native renderer using the installed workspace dependencies](./evidence/native-port-proof.png)
 
 `pnpm --filter @devkit/example-webext test` also builds the extension and rejects Node or browser-external modules in the graph. Both build modes assert the expected native background manifest, permissions and CSP. CI runs these checks through the normal workspace gates, then executes both real-browser tests.
 
-This is the native extension foundation. Automatic discovery, cross-provider rendering, DevTools/side-panel lifecycle, content/page request bridging, debugger support, full browser conformance and complete extension HMR coverage remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
+This is the native extension foundation. Automatic discovery, cross-provider rendering, side-panel lifecycle, content/page request bridging, debugger support, full browser conformance and complete extension HMR coverage remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
 
 ## Firefox execution
 
@@ -41,7 +41,7 @@ FIREFOX_BINARY=/Applications/Firefox.app/Contents/MacOS/firefox \
 
 The driver owns a temporary profile, assigns this add-on a test-only origin UUID and removes the session on exit. Its `--allow-system-access` option permits automation of `moz-extension` documents; it is never applied to a normal browsing profile. WebDriver Classic provides working extension-page navigation. Firefox BiDi currently omits extension-page lifecycle events, causing Puppeteer navigation to time out, as tracked in [Puppeteer #14314](https://github.com/puppeteer/puppeteer/issues/14314).
 
-The [Firefox receipt](./evidence/firefox/receipt.json) records 24 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Both suites open actual options pages and toolbar popups through native APIs. DevTools and side-panel lifecycle remain untested.
+The [Firefox receipt](./evidence/firefox/receipt.json) records 28 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Both suites open actual options pages and toolbar popups through native APIs. Both suites also exercise the real DevTools panel lifecycle described below. Side-panel lifecycle remains untested.
 
 ![Firefox native renderer and mixed-provider state](./evidence/firefox/native-port-proof.png)
 
@@ -70,7 +70,23 @@ flowchart LR
 
 The shared browser scenario in `tests/native-surfaces.ts` runs through both maintained production suites. It uses native `runtime.openOptionsPage`, `action.openPopup` and `extension.getViews({ type: 'popup' })`. From the surviving options document, it inspects and clicks the actual popup DOM, including its native JSON renderer. It never substitutes an ordinary tab for a popup or adds application test hooks. Firefox invalidates closed-window references, so closure is observed through the native view registry.
 
-The retained screenshots show the surviving options page after the popup checks, not a recreated popup. Popup sizing is asserted on the actual window, including absence of horizontal overflow. This proves packaged popup/options behavior. It does not claim popup-specific HMR, background suspension, DevTools/sidebar support or cross-provider JSON action dispatch. Those remain separate work.
+The retained screenshots show the surviving options page after the popup checks, not a recreated popup. Popup sizing is asserted on the actual window, including absence of horizontal overflow. This proves packaged popup/options behavior. It does not claim popup-specific HMR, background suspension, sidebar support or cross-provider JSON action dispatch. Those remain separate work.
+
+## Native DevTools panel
+
+Open the browser's DevTools on a normal page and select **Devkit**, using the overflow tab menu if needed. `devtools.html` makes one native `chrome.devtools.panels.create` call pointing to the existing `panel.html`. WXT recognizes that HTML entrypoint for development; the production build emits the same `devtools_page`. No additional extension permission, SDK host abstraction or renderer wrapper is required.
+
+Hiding the panel preserves its document, caller and native state subscription. Closing DevTools ends the document and connection. Reopening creates a new caller against the same live background provider. The tests click actual JSON-rendered actions, observe the options peer, hide/show around a peer update, close with an action pending, release it from options, and verify reopening does not replay it.
+
+![Actual Chromium DevTools panel](./evidence/native-devtools.png)
+
+![Actual Firefox DevTools panel](./evidence/firefox/native-devtools.png)
+
+Chromium automation uses public CDP target APIs because Playwright omits the DevTools frontend from ordinary pages. It selects the actual native extension tab with the browser's next-panel shortcut. The CDP observer exists only in tests and uses the pinned Chromium version's experimental target APIs.
+
+Firefox automation uses the existing isolated WebDriver system context and native F12/DevTools controls. Public frame switching and BiDi omit the remote XUL panel browser. One test-only helper therefore calls the pinned Firefox version's existing private `MarionetteCommands` actor to inspect that actual document. It waits for the final extension document, since querying the temporary blank document races its destruction. This is a browser-test maintenance dependency, not an SDK or application API. No testing endpoint is shipped with the extension.
+
+These checks cover the built host and its native document lifetime. They do not add inspected-page backend discovery, debugger authority, navigation policy, or DevTools-specific HMR guarantees. The panel currently uses the same background provider and explicit connection controls as options and popup.
 
 ## Provider and connection ownership
 
@@ -120,7 +136,7 @@ The Firefox test attaches to the browser WXT opened. Its isolated automation ses
 
 On Linux CI only, the Chromium development test passes `--no-sandbox`, matching Playwright's existing test-launch default. The Ubuntu runner rejects the downloaded Chromium sandbox before CDP startup. This flag applies only to the disposable automated browser; the normal WXT development commands keep Chromium's default sandbox behavior. Native launch crashes print the owned browser's stderr before exiting.
 
-The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, popup development transitions, DevTools/side-panel lifetimes and watched production remain open.
+The exact dependency corrections and removal gates are in the [patch inventory](../../patches/README.md#wxt-development-tooling). Content/page updates, repeated rapid changes, popup/DevTools development transitions, side-panel lifetimes and watched production remain open.
 
 ## Explicit native server connections
 

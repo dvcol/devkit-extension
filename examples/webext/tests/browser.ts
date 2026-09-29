@@ -7,6 +7,7 @@ import { chromium, expect } from '@playwright/test';
 import { checkConfiguredServers } from './configured-servers.ts';
 import { checkSelectedPage } from './selected-page.ts';
 import { nativeSurfaceScript } from './native-surfaces.ts';
+import { checkChromiumDevtools } from './chromium-devtools.ts';
 
 const extensionPath = resolve('dist/chromium');
 const profile = await mkdtemp(join(tmpdir(), 'native-port-chromium-'));
@@ -111,6 +112,7 @@ try {
   const surfaceChecks = await first.evaluate<string[]>(
     `"use strict";\n${nativeSurfaceScript}\ncheckNativeSurfaces()`,
   );
+  const devtoolsChecks = await checkChromiumDevtools(first);
   assert.deepEqual(errors, []);
   await mkdir('artifacts', { recursive: true });
   await first.screenshot({ path: 'artifacts/native-port-proof.png', fullPage: true });
@@ -142,6 +144,7 @@ try {
       'absent, malformed and closed selected documents reject without attaching',
       'native scripting permission rejection and independent adopted connection lifetime',
       ...surfaceChecks,
+      ...devtoolsChecks,
     ],
     pageErrors: errors,
   };

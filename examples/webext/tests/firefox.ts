@@ -7,6 +7,7 @@ import { Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
 import { checkFirefoxServers } from './firefox-servers.ts';
 import { checkFirefoxSelectedPage } from './firefox-selected-page.ts';
 import { nativeSurfaceScript } from './native-surfaces.ts';
+import { checkFirefoxDevtools } from './firefox-devtools.ts';
 
 const extensionUuid = crypto.randomUUID();
 const options = new Options()
@@ -71,7 +72,8 @@ checkNativeSurfaces().then(checks => done({ checks }), error => done({ error: er
   );
   assert.equal(surfaceResult.error, undefined);
   assert.ok(surfaceResult.checks !== undefined);
-  await saveEvidence(surfaceResult.checks);
+  const devtoolsChecks = await checkFirefoxDevtools(driver);
+  await saveEvidence([...surfaceResult.checks, ...devtoolsChecks]);
 } catch (error) {
   const result = await text('#server-result').catch(() => 'Extension page unavailable');
   console.error(styleText('red', '❌ [webext/firefox]'), result);

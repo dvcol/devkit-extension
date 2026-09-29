@@ -29,7 +29,13 @@ it.each([
     expect(modules.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
     expect(imports.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
     expect(files).toEqual(
-      expect.arrayContaining(['background.js', 'panel.js', 'panel.html', 'manifest.json']),
+      expect.arrayContaining([
+        'background.js',
+        'panel.js',
+        'panel.html',
+        'devtools.html',
+        'manifest.json',
+      ]),
     );
     expect(manifest).toEqual({
       manifest_version: 3,
@@ -38,6 +44,7 @@ it.each([
       background,
       action: { default_popup: 'panel.html' },
       options_ui: { page: 'panel.html', open_in_tab: true },
+      devtools_page: 'devtools.html',
       host_permissions: ['http://127.0.0.1/*'],
       permissions: ['scripting'],
       content_security_policy: {
