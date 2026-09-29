@@ -319,6 +319,18 @@ importers:
       '@devframes/json-render-ui':
         specifier: 1.0.0
         version: 1.0.0(patch_hash=e919d78a74ba3373391bafcef25c3c5e0663de10c18eb36c515757542e8f505e)(@devframes/hub@1.0.0(@devframes/agentic@1.0.0)(crossws@0.4.12(patch_hash=7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605)(srvx@1.0.5))(devframe@1.0.0))(devframe@1.0.0)
+      '@devkit/client':
+        specifier: workspace:*
+        version: link:../../packages/client
+      '@devkit/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@devkit/devframe':
+        specifier: workspace:*
+        version: link:../../packages/devframe
+      '@devkit/example-contribution':
+        specifier: workspace:*
+        version: link:../contribution
       '@devkit/webext':
         specifier: workspace:*
         version: link:../../packages/webext
@@ -356,6 +368,27 @@ importers:
         specifier: 4.6.5
         version: 4.6.5
 
+  packages/devframe:
+    dependencies:
+      '@devkit/client':
+        specifier: workspace:*
+        version: link:../client
+      '@devkit/core':
+        specifier: workspace:*
+        version: link:../core
+      '@devkit/runtime':
+        specifier: workspace:*
+        version: link:../runtime
+      cac:
+        specifier: 7.0.0
+        version: 7.0.0
+      devframe:
+        specifier: 1.0.0
+        version: 1.0.0(patch_hash=6033f5717f6adf7d74420484134aeda0338a3bc38b554ca42d926884ba8d91d0)(@devframes/agentic@1.0.0)(cac@7.0.0)(srvx@1.0.5)
+      zod:
+        specifier: 4.6.5
+        version: 4.6.5
+
   packages/runtime:
     dependencies:
       '@devkit/core':
@@ -380,6 +413,9 @@ importers:
       '@devkit/core':
         specifier: workspace:*
         version: link:../core
+      '@devkit/devframe':
+        specifier: workspace:*
+        version: link:../devframe
       '@devkit/runtime':
         specifier: workspace:*
         version: link:../runtime
@@ -395,12 +431,32 @@ importers:
       zod:
         specifier: 4.6.5
         version: 4.6.5
+    devDependencies:
+      '@devkit/example-contribution':
+        specifier: workspace:*
+        version: link:../../examples/contribution
+      '@devkit/webext':
+        specifier: workspace:*
+        version: link:../webext
 
   packages/webext:
     dependencies:
       devframe:
         specifier: 1.0.0
         version: 1.0.0(patch_hash=6033f5717f6adf7d74420484134aeda0338a3bc38b554ca42d926884ba8d91d0)(@devframes/agentic@1.0.0)(cac@7.0.0)(srvx@1.0.5)
+    devDependencies:
+      '@devkit/client':
+        specifier: workspace:*
+        version: link:../client
+      '@devkit/core':
+        specifier: workspace:*
+        version: link:../core
+      '@devkit/devframe':
+        specifier: workspace:*
+        version: link:../devframe
+      '@devkit/example-contribution':
+        specifier: workspace:*
+        version: link:../../examples/contribution
 
 packages:
 

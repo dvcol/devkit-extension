@@ -2,7 +2,7 @@ import { createClient } from '@devkit/client';
 import { describe, expect, it, vi } from 'vitest';
 import { createDevframeProviderConnection } from '../src/client/index.js';
 import { createDevframeProvider } from '../src/index.js';
-import { catalogMethod } from '../src/rpc-contract.js';
+import { catalogMethod } from './exposure-fixtures.js';
 import { counterCapability, incrementAction, available, admitted } from './fixtures.js';
 import { ownCleanup, remoteComposition, remoteHost } from './remote-fixtures.js';
 

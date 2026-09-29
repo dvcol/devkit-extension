@@ -1,11 +1,11 @@
 import { defineActionContract, defineCapability } from '@devkit/core';
 import type { OperationDefinition } from '@devkit/core';
 
-import type { ServerComposition, ServerProviderHandle } from './types.js';
+import type { RpcProviderComposition, RpcProviderHandle } from './types.js';
 import { actionMethod, capabilityMethod } from './rpc-contract.js';
 
 export type ExposedProvider = Pick<
-  ServerProviderHandle<boolean>,
+  RpcProviderHandle<boolean>,
   'provider' | 'catalog' | 'invoke' | 'resolve'
 >;
 
@@ -17,7 +17,7 @@ export interface ExposedMethod {
 
 /** Includes empty capabilities, which advertise a contract without creating operation methods. */
 export function exposureIdentity(
-  composition: ServerComposition<boolean>,
+  composition: RpcProviderComposition<boolean>,
   methods: readonly ExposedMethod[],
 ): string {
   return JSON.stringify([
@@ -30,7 +30,9 @@ export function exposureIdentity(
 }
 
 /** A native method name encodes a tuple so arbitrary contract identifiers cannot collide. */
-export function exposureMethods(composition: ServerComposition<boolean>): readonly ExposedMethod[] {
+export function exposureMethods(
+  composition: RpcProviderComposition<boolean>,
+): readonly ExposedMethod[] {
   const methods: ExposedMethod[] = [];
   const capabilities = new Set<string>();
   for (const descriptor of composition.expose?.actions ?? []) {

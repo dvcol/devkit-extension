@@ -197,10 +197,16 @@ This package supports local integration, explicit native RPC exposure, authentic
 
 The package is private and relies on the repository's exact-version declaration patches and dependency metadata for the released Devframe/hub/kit graph. The `devframe@1.0.0` patch also backports opt-in RPC connection isolation from [Devframe draft PR 401](https://github.com/devframes/devframe/pull/401). SDK-owned browser connections use `connection: { isolated: true }` when discovering an endpoint, or set `isolated: true` on a complete `DevframeConnection`. The returned descriptor retains the setting, so reconnecting with `{ connection }` keeps credentials local without another flag. Omitting `isolated` or setting it to `false` preserves shared behavior.
 
-The patch changes the installed `devframe/client` artifacts. Prebuilt hub UI bundles contain their own RPC code and are unaffected. Root pnpm patches do not propagate to a published SDK's consumers; distribution still requires an upstream release or an explicit consumer patch policy. The local multi-provider router is implemented in `@devkit/client`; the native remote connection adapter is available through this package’s browser entry. Extension connections and their sender/resource checks remain outstanding.
+The patch changes the installed `devframe/client` artifacts. Prebuilt hub UI bundles contain their own RPC code and are unaffected. Root pnpm patches do not propagate to a published SDK's consumers; distribution still requires an upstream release or an explicit consumer patch policy. The local multi-provider router is implemented in `@devkit/client`; the native remote connection adapter is available through this package’s browser entry. Extension connections reuse the shared native adapter; endpoint discovery and page/content-script resource checks remain outstanding.
 
 ## Domain applicability over native connections
 
 [`tests/applicability.test.ts`](./tests/applicability.test.ts) runs two authenticated Devframe backends and two independent routed clients. The client broadcasts a schema-defined domain/resource command to both `devserver` recipients. One service applies it; the other returns its own declared `not-applicable` value. Both are fulfilled results, both providers stay available, and direct capability calls enforce the same implementation-owned check.
 
 The second client reads the provider-local values through RPC and keeps working after the first client closes. This proves command delivery, typed results, independent ownership and provider-local applicability. It does not prove live state subscriptions, reconnection recovery or a WebExtension host. The fixture adds no SDK acceptance hook or event bus.
+
+## Shared native adapter
+
+The existing provider factories and `@devkit/server/client` entry now delegate to [`@devkit/devframe`](../devframe/README.md). The server adapter still selects `devserver`, exposes the actual hub/kit contexts, keeps Node diagnostic formatting and rejects static clients. Host-owned native cache and connection-status behavior is unchanged. Generic registration, catalog projection, schemas, incarnation checks and lifecycle logic are shared with the Port host instead of copied.
+
+`tests/mixed-connections.test.ts` attaches an authenticated WebSocket server and a JSON Port provider to one client. The providers deliberately share an ID in different realms. It verifies ambiguity without selection, typed broadcast to both, and explicit fallback to the server after the Port closes. The affected server suite now contains 49 tests.

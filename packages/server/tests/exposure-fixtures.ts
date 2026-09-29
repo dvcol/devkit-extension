@@ -1,6 +1,11 @@
 import type { DevframeHubContext } from '@devframes/hub/node';
 import { getRpcHandler } from 'devframe/rpc';
 
+export const catalogChanged = 'devkit:catalog:changed';
+export function catalogMethod(providerId: string): string {
+  return `devkit:${JSON.stringify([providerId, 'catalog'])}`;
+}
+
 /** Resolve the real collector handler, including native schemas; socket tests own auth evidence. */
 export async function invokeExposed(
   context: DevframeHubContext,

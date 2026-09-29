@@ -1,32 +1,21 @@
-import type { ProviderConnection } from '@devkit/client';
-import { RemoteCatalog } from './catalog.js';
-import type { RemoteCatalogOptions } from './catalog.js';
-import { RemoteConnection } from './connection.js';
-import { waitForNative } from './native-call.js';
+import type { DevframeRpcClient } from 'devframe/client';
+import { createRpcProviderConnection } from '@devkit/devframe/client';
+import type { RpcProviderConnectionOptions, RpcProviderConnection } from '@devkit/devframe/client';
 
-export interface DevframeProviderConnectionOptions extends RemoteCatalogOptions {
-  /** Cancels startup locally; the native connection remains owned by its caller. */
-  readonly signal?: AbortSignal;
+export interface DevframeProviderConnectionOptions extends Omit<
+  RpcProviderConnectionOptions,
+  'rpc' | 'realm'
+> {
+  readonly rpc: DevframeRpcClient;
 }
+export type DevframeProviderConnection = RpcProviderConnection;
 
-export interface DevframeProviderConnection extends ProviderConnection {
-  /** Remove adapter subscriptions and stop local waits. Does not close native RPC or provider work. */
-  dispose(): void;
-}
-
-/** Adapt an existing Devframe client, including the native client supplied by Vite DevTools. */
+/** Keep native authorization, cache checks and events on the supplied live client. */
 export async function createDevframeProviderConnection(
   options: DevframeProviderConnectionOptions,
 ): Promise<DevframeProviderConnection> {
   options.signal?.throwIfAborted();
-  const catalog = new RemoteCatalog(options);
-  try {
-    const startup = catalog.start();
-    if (options.signal === undefined) await startup;
-    else await waitForNative(startup, options.signal);
-    return new RemoteConnection(catalog);
-  } catch (cause) {
-    catalog.dispose(cause);
-    throw cause;
-  }
+  if (options.rpc.transport === 'static') throw new Error('A live native connection is required');
+  const connection = await createRpcProviderConnection({ ...options, realm: { id: 'devserver' } });
+  return connection;
 }

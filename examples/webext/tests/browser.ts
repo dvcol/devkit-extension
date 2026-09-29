@@ -26,7 +26,10 @@ try {
     await page.goto(`chrome-extension://${extensionId}/panel.html`);
     await expect(page.locator('#status')).toHaveText('Connected');
     await expect(page.getByText('Counter: 0', { exact: true })).toBeVisible();
+    await expect(page.locator('#catalog')).toHaveText('active');
   }
+  const providerIdentity = await first.locator('#provider').innerText();
+  assert.equal(await second.locator('#provider').innerText(), providerIdentity);
   await first.getByRole('button', { name: 'Increase counter', exact: true }).click();
   for (const page of [first, second])
     await expect(page.getByText('Counter: 1', { exact: true })).toBeVisible();
@@ -58,11 +61,28 @@ try {
   await first.reload();
   await expect(first.locator('#status')).toHaveText('Connected');
   await expect(first.getByText('Counter: 10', { exact: true })).toBeVisible();
+  assert.equal(await first.locator('#provider').innerText(), providerIdentity);
   await first.getByRole('button', { name: 'Execution counts' }).click();
   await expect(first.locator('#result')).toHaveText('{"started":1,"completed":1}');
   await first.getByRole('button', { name: 'Increase counter', exact: true }).click();
   for (const page of [first, second])
     await expect(page.getByText('Counter: 11', { exact: true })).toBeVisible();
+  await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
+  await expect(first.locator('#result')).toHaveText('12');
+  await second.getByRole('button', { name: 'Read capability', exact: true }).click();
+  await expect(second.locator('#result')).toHaveText('12');
+  await first.getByRole('button', { name: 'Broadcast increase', exact: true }).click();
+  await expect(first.locator('#result')).toContainText('fulfilled');
+  for (const page of [first, second])
+    await expect(page.getByText('Counter: 13', { exact: true })).toBeVisible();
+  await second.getByRole('button', { name: 'Disable service', exact: true }).click();
+  for (const page of [first, second]) await expect(page.locator('#catalog')).toHaveText('disabled');
+  await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
+  await expect(first.locator('#result')).toContainText('No currently available provider');
+  await second.getByRole('button', { name: 'Enable service', exact: true }).click();
+  for (const page of [first, second]) await expect(page.locator('#catalog')).toHaveText('active');
+  await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
+  await expect(first.locator('#result')).toHaveText('14');
   const denied = await browser.newPage();
   denied.on('pageerror', (error) => errors.push(error.message));
   await denied.goto(`chrome-extension://${extensionId}/denied.html`);
@@ -74,6 +94,8 @@ try {
   await expect(second.locator('#status')).toHaveText('Disconnected');
   await expect(second.locator('#result')).toContainText('closed');
   await expect(first.locator('#status')).toHaveText('Connected');
+  await first.getByRole('button', { name: 'Read capability', exact: true }).click();
+  await expect(first.locator('#result')).toHaveText('14');
   assert.deepEqual(errors, []);
   await mkdir('artifacts', { recursive: true });
   await first.screenshot({ path: 'artifacts/native-port-proof.png', fullPage: true });
@@ -92,6 +114,11 @@ try {
       'reconnect with retained worker state',
       'denied sender and failed-mount cleanup',
       'worker-initiated disconnect',
+      'shared portable action and capability contracts',
+      'explicit realm/provider routing and broadcast',
+      'catalog disable/enable updates on both clients',
+      'provider incarnation retained across UI reconnect',
+      'independent routed client survives peer disconnect',
     ],
     pageErrors: errors,
   };

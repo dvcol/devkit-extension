@@ -2,10 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { getRpcHandler } from 'devframe/rpc';
 import type { DevframeRpcClient } from 'devframe/client';
 import { createDevframeProviderConnection } from '../src/client/index.js';
-import * as nativeCalls from '../src/client/native-call.js';
-import { catalogChanged, catalogMethod } from '../src/rpc-contract.js';
 import { admitted, counterCapability, deferred, incrementAction } from './fixtures.js';
-import { invokeExposed } from './exposure-fixtures.js';
+import { catalogChanged, catalogMethod, invokeExposed } from './exposure-fixtures.js';
 import { ownCleanup, remoteComposition, remoteHost } from './remote-fixtures.js';
 
 describe('authoritative native catalog synchronization', () => {
@@ -36,9 +34,7 @@ describe('authoritative native catalog synchronization', () => {
     const rpc = await host.connect();
     const stale = await invokeExposed(host.context, catalogMethod('example.remote'));
     const held = deferred();
-    const calls = vi
-      .spyOn(nativeCalls, 'nativeCall')
-      .mockReturnValueOnce(held.promise.then(() => stale));
+    const calls = vi.spyOn(rpc, 'call').mockReturnValueOnce(held.promise.then(() => stale));
     const pending = createDevframeProviderConnection({ rpc, providerId: 'example.remote' });
     await admitted(host.provider.startup.services[0]).disable();
     await notifyCatalog(rpc);
@@ -58,7 +54,7 @@ describe('authoritative native catalog synchronization', () => {
     expect.assertions(2);
     const host = await remoteHost();
     const rpc = await host.connect();
-    const calls = vi.spyOn(nativeCalls, 'nativeCall');
+    const calls = vi.spyOn(rpc, 'call');
     calls.mockResolvedValueOnce({ provider: { id: 'forged' } });
     await expect(
       createDevframeProviderConnection({ rpc, providerId: 'example.remote' }),
@@ -76,7 +72,7 @@ describe('authoritative native catalog synchronization', () => {
     const rpc = await host.connect();
     const held = deferred();
     const calls = vi
-      .spyOn(nativeCalls, 'nativeCall')
+      .spyOn(rpc, 'call')
       .mockReturnValueOnce(held.promise.then(() => host.provider.catalog.snapshot()));
     const cancellation = new AbortController();
     const pending = createDevframeProviderConnection({
@@ -96,7 +92,9 @@ describe('authoritative native catalog synchronization', () => {
       connection.dispose();
     });
     expect(connection.catalog.snapshot()?.status).toBe('open');
-    expect(calls).toHaveBeenCalledTimes(2);
+    expect(
+      calls.mock.calls.filter(([method]) => method === catalogMethod('example.remote')),
+    ).toHaveLength(2);
   });
 });
 

@@ -12,7 +12,12 @@
     "backend completion without replay",
     "reconnect with retained worker state",
     "denied sender and failed-mount cleanup",
-    "worker-initiated disconnect"
+    "worker-initiated disconnect",
+    "shared portable action and capability contracts",
+    "explicit realm/provider routing and broadcast",
+    "catalog disable/enable updates on both clients",
+    "provider incarnation retained across UI reconnect",
+    "independent routed client survives peer disconnect"
   ],
   "pageErrors": []
 }

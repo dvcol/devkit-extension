@@ -1,6 +1,6 @@
 # @devkit/webext
 
-A native Devframe channel for an already admitted WebExtension `runtime.Port`. The structural Port type accepts Chrome or Firefox objects without a browser polyfill or global browser lookup. This first package slice contains the channel binding; portable provider/catalog composition is still pending.
+A native Devframe channel for an already admitted WebExtension `runtime.Port`. The structural Port type accepts Chrome or Firefox objects without a browser polyfill or global browser lookup. Portable provider/catalog composition uses the shared [`@devkit/devframe`](../devframe/README.md) adapter and [`@devkit/client`](../client/README.md) router.
 
 ```ts
 import { createPortChannel } from '@devkit/webext';
@@ -26,3 +26,5 @@ Devframe owns request IDs, responses, errors and value serialization. Its record
 The package uses the existing public serializer and RPC channel type from the pinned Devframe release. Native shared-state and renderer integration uses the exact-version workspace backports from drafts [410](https://github.com/devframes/devframe/pull/410) and [411](https://github.com/devframes/devframe/pull/411).
 
 `pnpm --filter @devkit/webext test` exercises native RPC over real MessageChannels with both JSON and structured-clone delivery. The [Chromium example](../../examples/webext/README.md) imports the built package and exercises actual extension Ports. Firefox browser execution is still required before claiming Firefox conformance.
+
+The provider tests also exercise shared counter contracts, explicit selection, ambiguity, broadcast, catalog disable/enable, replacement and independent connections. Provider integration adds no runtime dependency to this channel package; the host composes the shared native adapter alongside it.

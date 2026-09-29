@@ -6,6 +6,8 @@ export default defineConfig({
     rolldownOptions: {
       external: [
         '@devkit/core',
+        '@devkit/devframe',
+        '@devkit/devframe/client',
         '@devkit/runtime',
         '@devkit/client',
         'zod',

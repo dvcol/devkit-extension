@@ -1,4 +1,4 @@
-import type { DevframeRpcClient } from 'devframe/client';
+import type { ProviderRpcClient } from './types.js';
 import { catalogChanged } from '../rpc-contract.js';
 
 interface CatalogEvents {
@@ -6,10 +6,13 @@ interface CatalogEvents {
   failed: boolean;
 }
 
-const clients = new WeakMap<DevframeRpcClient['client'], CatalogEvents>();
+const clients = new WeakMap<object, CatalogEvents>();
 
 /** The native client owns one retained definition; each adapter owns only its subscription. */
-export function onCatalogChanged(rpc: DevframeRpcClient, listener: () => void): () => void {
+export function onCatalogChanged<Context>(
+  rpc: ProviderRpcClient<Context>,
+  listener: () => void,
+): () => void {
   let events = clients.get(rpc.client);
   if (events === undefined) {
     if (rpc.client.definitions.has(catalogChanged))

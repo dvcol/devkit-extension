@@ -2,7 +2,9 @@ import type { DevframeJsonRenderSpec } from '@devframes/json-render';
 
 declare module 'devframe/types' {
   interface DevframeRpcServerFunctions {
-    'probe:increase': () => number;
+    'probe:increase': () => Promise<number>;
+    'probe:disable-service': () => Promise<void>;
+    'probe:enable-service': () => Promise<void>;
     'probe:identity': () => Promise<{ id: number; url: string }>;
     'probe:echo': (value: unknown) => unknown;
     'probe:wait': () => Promise<void>;

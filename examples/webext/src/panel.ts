@@ -1,36 +1,28 @@
+import { createExampleConnection } from './connection';
 import type { DevframeJsonRenderSpec } from '@devframes/json-render';
-import type { RpcClientEvents } from 'devframe/client';
-import type { DevframeRpcClientFunctions, DevframeRpcServerFunctions } from 'devframe/types';
 import renderer from '@devframes/json-render-ui/renderer';
-import { RpcFunctionsCollectorBase } from 'devframe/rpc';
-import { createRpcClient } from 'devframe/rpc/client';
-import { createRpcSharedStateClientHost } from 'devframe/rpc/shared-state';
-import { createEventEmitter } from 'devframe/utils/events';
-import { createPortChannel } from '@devkit/webext';
+import { createClient } from '@devkit/client';
+import { createRpcProviderConnection } from '@devkit/devframe/client';
+import type { RpcProviderConnection } from '@devkit/devframe/client';
+import { counterCapability, increaseCounterAction, providerId, realm } from './contracts';
 
-const port = chrome.runtime.connect({ name: 'devkit-native-port-example' });
-const client = new RpcFunctionsCollectorBase<DevframeRpcClientFunctions, undefined>(undefined);
-const rpc = createRpcClient<DevframeRpcServerFunctions, DevframeRpcClientFunctions>(
-  client.functions,
-  { channel: createPortChannel({ port, onDisconnect: close }) },
-);
-const sharedState = createRpcSharedStateClientHost({
-  call: rpc.$call,
-  callEvent: rpc.$callEvent,
-  client,
-  events: createEventEmitter<RpcClientEvents>(),
-  isTrusted: true,
-  connectionMeta: { backend: 'none' },
-});
+const { port, client, events, rpc, sharedState } = createExampleConnection(close);
 const container = document.querySelector<HTMLElement>('#renderer')!;
 const status = document.querySelector<HTMLElement>('#status')!;
 const result = document.querySelector<HTMLElement>('#result')!;
 let mounted: { dispose?: () => void } | undefined;
 let closed = false;
+const routedClient = createClient();
+let providerConnection: RpcProviderConnection | undefined;
+let unsubscribeCatalog: (() => void) | undefined;
 function close(): void {
   if (closed) return;
   closed = true;
   rpc.$close();
+  events.emit('connection:status', 'disconnected', 'connected');
+  unsubscribeCatalog?.();
+  routedClient.dispose();
+  providerConnection?.dispose();
   for (const key of sharedState.keys()) sharedState.delete(key);
   mounted?.dispose?.();
   port.disconnect();
@@ -52,8 +44,23 @@ try {
     container,
     context: nativeContext,
   });
-  if (closed) mounted.dispose?.();
-  else status.textContent = 'Connected';
+  providerConnection = await createRpcProviderConnection({
+    rpc: { call: rpc.$call, client, events },
+    providerId,
+    realm,
+  });
+  if (closed) {
+    providerConnection.dispose();
+    mounted.dispose?.();
+    throw new Error('The native connection closed during startup');
+  }
+  routedClient.providers.attach({ connection: providerConnection });
+  document.querySelector('#provider')!.textContent = JSON.stringify(providerConnection.provider);
+  unsubscribeCatalog = providerConnection.catalog.subscribe((catalog) => {
+    document.querySelector('#catalog')!.textContent =
+      catalog?.capabilities[0]?.status ?? 'Disconnected';
+  });
+  status.textContent = 'Connected';
 } catch (error) {
   close();
   result.textContent = error instanceof Error ? error.message : String(error);
@@ -102,4 +109,36 @@ document.querySelector('#unsupported')!.addEventListener('click', () => {
 
 document.querySelector('#remote-close')!.addEventListener('click', () => {
   void run(() => rpc.$call('probe:disconnect'));
+});
+
+document.querySelector('#routed')!.addEventListener('click', () => {
+  void run(() =>
+    routedClient.actions.invoke({
+      action: increaseCounterAction,
+      input: { amount: 1 },
+      routing: { realm: realm.id, provider: providerId },
+    }),
+  );
+});
+document.querySelector('#capability')!.addEventListener('click', () => {
+  void run(async () => {
+    const resolution = await routedClient.capabilities.resolve({ capability: counterCapability });
+    if (resolution.status !== 'available') throw new Error(`Counter is ${resolution.reason}`);
+    return resolution.binding.api.read({});
+  });
+});
+document.querySelector('#broadcast')!.addEventListener('click', () => {
+  void run(() =>
+    routedClient.actions.broadcast({
+      action: increaseCounterAction,
+      input: { amount: 1 },
+      selection: [{ realm: realm.id }],
+    }),
+  );
+});
+document.querySelector('#disable-service')!.addEventListener('click', () => {
+  void run(() => rpc.$call('probe:disable-service'));
+});
+document.querySelector('#enable-service')!.addEventListener('click', () => {
+  void run(() => rpc.$call('probe:enable-service'));
 });

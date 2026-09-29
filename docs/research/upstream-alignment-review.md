@@ -85,3 +85,11 @@ The maintained `@devkit/webext` package adds only `createPortChannel({ port, onD
 The shared-state and renderer exports are now backported to the workspace's pinned 1.0 packages. [examples/webext](../../examples/webext/README.md) replaces the temporary prototype and imports only installed public exports. It passes all 12 live Chromium scenarios with zero page errors, plus strict TS7, Oxlint and a browser graph check that rejects Node modules. CI executes the real Chromium test after the normal workspace gates.
 
 The RPC/state backport is in [5ebcb5a](https://github.com/dvcol/devkit-extension/commit/5ebcb5a), and the JSON backport is in [631db2b](https://github.com/dvcol/devkit-extension/commit/631db2b). Tests cover native subscriptions across Port peers and shared ownership between the portable/node view exports. The server regression suite passes all 48 tests and the JSON server example passes six tests. Portable provider/catalog composition and full browser surface coverage remain open.
+
+## Portable provider over native Ports, 2026-09-29
+
+`@devkit/devframe` now contains the existing provider exposure, catalog and lifecycle implementation shared by server and WebExtension hosts. Server entry points stay compatible. The raw Port client supplies actual native call, collector and connection-event members; it does not imitate a full server client. The shared adapter validates the expected realm and preserves native cache checks where available. No additional upstream patch was needed.
+
+Four new MessageChannel provider cases cover JSON/clone delivery, two providers, independent clients, ambiguity, explicit selection, broadcast, catalog disable/enable, wrong-realm rejection and replacement. A real authenticated WebSocket plus JSON Port test verifies both realms in one client, including equal provider IDs and fallback after disconnect. All 49 server tests pass.
+
+The maintained extension example uses the same counter contracts as the server examples through built public exports. Its 17 real Chromium scenarios pass with zero page errors, including catalog updates in two clients and retained incarnation across UI reconnects. [Commands, receipt and screenshot](../../examples/webext/README.md). Automatic endpoint discovery, page/content-script trust, cross-provider rendering, remaining surfaces and Firefox browser conformance remain open.

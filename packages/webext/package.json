@@ -23,5 +23,11 @@
   },
   "dependencies": {
     "devframe": "1.0.0"
+  },
+  "devDependencies": {
+    "@devkit/client": "workspace:*",
+    "@devkit/core": "workspace:*",
+    "@devkit/devframe": "workspace:*",
+    "@devkit/example-contribution": "workspace:*"
   }
 }

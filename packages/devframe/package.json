@@ -1,7 +1,8 @@
 {
-  "name": "@devkit/server",
+  "name": "@devkit/devframe",
   "version": "0.0.0",
   "private": true,
+  "description": "Portable provider contracts over native Devframe RPC.",
   "files": [
     "dist"
   ],
@@ -9,7 +10,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js"
     },
     "./client": {
       "types": "./dist/client/index.d.ts",
@@ -24,18 +25,11 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@devframes/hub": "1.0.0",
     "@devkit/client": "workspace:*",
     "@devkit/core": "workspace:*",
-    "@devkit/devframe": "workspace:*",
     "@devkit/runtime": "workspace:*",
-    "@vitejs/devtools-kit": "0.7.5",
     "cac": "7.0.0",
     "devframe": "1.0.0",
     "zod": "4.6.5"
-  },
-  "devDependencies": {
-    "@devkit/example-contribution": "workspace:*",
-    "@devkit/webext": "workspace:*"
   }
 }

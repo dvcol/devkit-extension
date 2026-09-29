@@ -36,6 +36,8 @@ Descriptive variable and generic names, no IIFEs, JSDoc placement, no multiline 
 
 The old Vue UI, its CSS and its Stylelint rules were removed. Future renderer and host examples must state any required CSS semantics, accessibility and browser constraints with their own relevant checks. Oxfmt's CSS support only checks formatting.
 
+The MV3 example's `background.ts` has one inline `unicorn/prefer-top-level-await` exception. It observes asynchronous provider startup failures while registering browser event listeners synchronously. Other source checks remain enabled, and its real Chromium test verifies startup and connection behavior.
+
 ## Preserved research evidence
 
 `docs/probes/**` and `docs/contracts/**` are preserved research artifacts, not maintained workspace packages. Their exact executed files have their own recorded validation and are excluded from the new lint and formatting gates. `docs/planning/**` retains historical review formatting. Canonical architecture and glossary documents, new maintained documentation, packages and examples use Oxfmt.

@@ -14,10 +14,10 @@ import { actionMethod, capabilityMethod } from '../rpc-contract.js';
 import type { RemoteCatalog } from './catalog.js';
 import { nativeCall, waitForNative } from './native-call.js';
 
-export class RemoteConnection implements ProviderConnection {
+export class RemoteConnection<Context> implements ProviderConnection {
   readonly provider;
   readonly catalog;
-  constructor(private readonly state: RemoteCatalog) {
+  constructor(private readonly state: RemoteCatalog<Context>) {
     this.provider = state.provider;
     this.catalog = Object.freeze({
       snapshot: () => state.snapshot(),

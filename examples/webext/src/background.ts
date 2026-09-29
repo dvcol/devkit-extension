@@ -11,6 +11,8 @@ import { createRpcSharedStateServerHost } from 'devframe/rpc/shared-state';
 import { createSharedState } from 'devframe/utils/shared-state';
 import { createPortChannel } from '@devkit/webext';
 import { spec } from './spec';
+import { createExampleProvider } from './provider';
+import { increaseCounterAction } from './contracts';
 
 const collector = new RpcFunctionsCollectorBase<DevframeRpcServerFunctions, undefined>(undefined);
 const group = createRpcServer<DevframeRpcClientFunctions, DevframeRpcServerFunctions>(
@@ -31,6 +33,18 @@ const sharedState = createRpcSharedStateServerHost({
   broadcast,
 });
 const view = createJsonRenderView({ rpc: { sharedState } }, { id: 'counter', spec });
+const provider = createExampleProvider({
+  rpc: {
+    register: collector.register.bind(collector),
+    has: collector.has.bind(collector),
+    broadcast,
+  },
+  view,
+});
+// oxlint-disable-next-line unicorn/prefer-top-level-await -- MV3 listeners must register synchronously during worker evaluation.
+void provider.catch((error: unknown) => {
+  console.error('Provider startup failed', error);
+});
 const executions = createSharedState({ initialValue: { started: 0, completed: 0 } });
 void sharedState.get('probe:executions', { sharedState: executions });
 let release: (() => void) | undefined;
@@ -38,11 +52,18 @@ let release: (() => void) | undefined;
 collector.register({
   name: 'probe:increase',
   type: 'action',
-  handler: () => {
-    const value = Number(view.value().state?.value) + 1;
-    view.patchState([{ op: 'replace', path: '/value', value }]);
-    return value;
-  },
+  handler: async () =>
+    (await provider).invoke({ action: increaseCounterAction, input: { amount: 1 } }),
+});
+collector.register({
+  name: 'probe:disable-service',
+  type: 'action',
+  handler: async () => (await provider).startup.services[0]!.disable(),
+});
+collector.register({
+  name: 'probe:enable-service',
+  type: 'action',
+  handler: async () => (await provider).startup.services[0]!.enable(),
 });
 collector.register({ name: 'probe:echo', type: 'query', handler: (value: unknown) => value });
 collector.register({
@@ -106,7 +127,8 @@ chrome.runtime.onConnect.addListener((port) => {
   function disconnect(): void {
     group.clients.find((client) => client.$meta === meta)?.$close();
     group.updateChannels((channels) => {
-      channels.splice(channels.indexOf(channel), 1);
+      const index = channels.indexOf(channel);
+      if (index !== -1) channels.splice(index, 1);
     });
   }
 });

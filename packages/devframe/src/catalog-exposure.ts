@@ -1,11 +1,11 @@
 import type { ProviderCatalogSnapshot } from '@devkit/core';
 import type { ExposedMethod, ExposedProvider } from './exposure-methods.js';
 import { actionMethod, capabilityMethod } from './rpc-contract.js';
-import type { ServerComposition } from './types.js';
+import type { RpcProviderComposition } from './types.js';
 
 /** Only explicitly exposed contracts enter the remote catalog; local additions remain private. */
 export function projectCatalog(
-  composition: ServerComposition<boolean>,
+  composition: RpcProviderComposition<boolean>,
   methods: readonly ExposedMethod[],
 ) {
   const names = new Set(methods.map((method) => method.name));

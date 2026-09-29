@@ -1,9 +1,6 @@
-import type { DevframeHubContext } from '@devframes/hub/node';
-import { styleText } from 'node:util';
-
 import { exposureIdentity, exposureMethods, incarnationSchema } from './exposure-methods.js';
 import type { ExposedMethod, ExposedProvider } from './exposure-methods.js';
-import type { ServerComposition } from './types.js';
+import type { ProviderRpc, RpcProviderComposition } from './types.js';
 import { catalogSchema } from './catalog-schema.js';
 import { projectCatalog } from './catalog-exposure.js';
 import { catalogChanged, catalogMethod } from './rpc-contract.js';
@@ -19,12 +16,12 @@ export interface PreparedExposure {
   clear(): void;
 }
 
-const exposures = new WeakMap<DevframeHubContext, HostExposure>();
+const exposures = new WeakMap<object, HostExposure>();
 
 /** Reserve a finite host contract once; successful provider startup supplies its implementation. */
-export function prepareExposure(
-  context: DevframeHubContext,
-  composition: ServerComposition<boolean>,
+export function prepareExposure<Context>(
+  context: ProviderRpc<Context>,
+  composition: RpcProviderComposition<boolean>,
 ): PreparedExposure | undefined {
   if (composition.expose === undefined) return undefined;
   const methods = exposureMethods(composition);
@@ -39,10 +36,10 @@ export function prepareExposure(
     );
   let unsubscribe: (() => void) | undefined;
   const notify = () => {
-    void context.rpc
+    void context
       .broadcast({ method: catalogChanged, args: [], event: true, optional: true })
       .catch((cause: unknown) => {
-        console.error(styleText('red', '⚠️ [devkit/server]'), 'Catalog invalidation failed', cause);
+        console.error('[devkit/devframe]', 'Catalog invalidation failed', cause);
       });
   };
   return {
@@ -58,14 +55,14 @@ export function prepareExposure(
   };
 }
 
-function registerExposure(
-  context: DevframeHubContext,
+function registerExposure<Context>(
+  context: ProviderRpc<Context>,
   methods: readonly ExposedMethod[],
-  composition: ServerComposition<boolean>,
+  composition: RpcProviderComposition<boolean>,
 ): HostExposure {
   const catalogName = catalogMethod(composition.providerId);
   for (const name of [catalogName, ...methods.map((method) => method.name)]) {
-    if (context.rpc.has(name)) throw new Error(`Native RPC method is already registered: ${name}`);
+    if (context.has(name)) throw new Error(`Native RPC method is already registered: ${name}`);
   }
   const exposure: HostExposure = {
     identity: exposureIdentity(composition, methods),
@@ -75,7 +72,7 @@ function registerExposure(
   exposures.set(context, exposure);
   try {
     const snapshot = projectCatalog(composition, methods);
-    context.rpc.register({
+    context.register({
       name: catalogName,
       type: 'query',
       args: [] as const,
@@ -83,7 +80,7 @@ function registerExposure(
       handler: () => snapshot(exposure.current),
     });
     for (const method of methods) {
-      context.rpc.register({
+      context.register({
         name: method.name,
         type: 'action',
         args: [incarnationSchema, method.operation.input] as const,

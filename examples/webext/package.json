@@ -15,6 +15,10 @@
     "@devframes/hub": "1.0.0",
     "@devframes/json-render": "1.0.0",
     "@devframes/json-render-ui": "1.0.0",
+    "@devkit/client": "workspace:*",
+    "@devkit/core": "workspace:*",
+    "@devkit/devframe": "workspace:*",
+    "@devkit/example-contribution": "workspace:*",
     "@devkit/webext": "workspace:*",
     "devframe": "1.0.0"
   },

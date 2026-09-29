@@ -1,12 +1,12 @@
-import type { DevframeRpcClient } from 'devframe/client';
+import type { ProviderRpcClient } from './types.js';
 
 /** Dynamic native names are derived from imported contracts; no second RPC dispatcher is used. */
 export async function nativeCall(
-  rpc: DevframeRpcClient,
+  rpc: Pick<ProviderRpcClient, 'call' | 'cacheManager'>,
   method: string,
   parameters: readonly unknown[],
 ): Promise<unknown> {
-  if (rpc.cacheManager.validate(method))
+  if (rpc.cacheManager?.validate(method) === true)
     throw new Error(`Native caching must be disabled for provider method ${method}`);
   const value: unknown = await Reflect.apply(rpc.call, rpc, [method, ...parameters]);
   return value;

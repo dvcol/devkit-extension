@@ -1,18 +1,19 @@
 import type { ProviderCatalogSnapshot, ProviderDescriptor } from '@devkit/core';
-import type { DevframeRpcClient } from 'devframe/client';
+import type { ProviderRpcClient } from './types.js';
 import { captureCatalog } from '../catalog-schema.js';
 import { catalogMethod } from '../rpc-contract.js';
 import { onCatalogChanged } from './catalog-events.js';
 import { nativeCall, waitForNative } from './native-call.js';
 
-export interface RemoteCatalogOptions {
-  readonly rpc: DevframeRpcClient;
+export interface RemoteCatalogOptions<Context = never> {
+  readonly rpc: ProviderRpcClient<Context>;
   readonly providerId: string;
+  readonly realm: { readonly id: string };
   readonly report?: (error: Error) => void;
 }
 
 /** Owns only metadata synchronization and local waits, never the supplied native connection. */
-export class RemoteCatalog {
+export class RemoteCatalog<Context> {
   private readonly cancellation = new AbortController();
   readonly signal = this.cancellation.signal;
   private readonly listeners = new Set<(snapshot: ProviderCatalogSnapshot | undefined) => void>();
@@ -22,7 +23,7 @@ export class RemoteCatalog {
   private revision = 0;
   private pending: Promise<void> | undefined;
 
-  constructor(readonly options: RemoteCatalogOptions) {}
+  constructor(readonly options: RemoteCatalogOptions<Context>) {}
 
   get provider(): ProviderDescriptor {
     if (this.identity === undefined) throw new Error('Provider catalog has not synchronized');
@@ -32,7 +33,6 @@ export class RemoteCatalog {
   async start(): Promise<void> {
     const { rpc, providerId } = this.options;
     if (providerId.trim().length === 0) throw new TypeError('Provider ID must not be empty');
-    if (rpc.transport === 'static') throw new Error('A live native connection is required');
     this.cleanup[0] = onCatalogChanged(rpc, () => {
       this.invalidate();
     });
@@ -66,7 +66,7 @@ export class RemoteCatalog {
   report(cause: unknown): void {
     const error = cause instanceof Error ? cause : new Error('Remote catalog failed', { cause });
     try {
-      if (this.options.report === undefined) console.error('[devkit/server/client]', error);
+      if (this.options.report === undefined) console.error('[devkit/devframe/client]', error);
       else this.options.report(error);
     } catch {
       /* Observer failures cannot prevent cleanup. */
@@ -125,7 +125,7 @@ export class RemoteCatalog {
   }
 
   private assertIdentity(provider: ProviderDescriptor): void {
-    if (provider.id !== this.options.providerId || provider.realm.id !== 'devserver')
+    if (provider.id !== this.options.providerId || provider.realm.id !== this.options.realm.id)
       throw new Error('Native catalog belongs to a different provider');
     if (this.identity === undefined) {
       this.identity = provider;
