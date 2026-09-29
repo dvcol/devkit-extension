@@ -1,0 +1,26 @@
+{
+  "browser": "156.0.1",
+  "driver": "Firefox WebDriver Classic",
+  "geckodriver": "0.37.1",
+  "checks": [
+    "two real Ports and distinct caller identities",
+    "native JSON renderer action and shared state on both pages",
+    "native state write and Map/BigInt round trip",
+    "unsupported function rejects",
+    "pending call rejects on disconnect and renderer unmounts",
+    "backend completes once without replay after reconnect",
+    "provider incarnation survives page reconnect",
+    "portable action, capability and explicit routing",
+    "broadcast and catalog disable/enable reach both pages",
+    "denied packaged URL rejects and cleans up mount",
+    "worker-initiated disconnect leaves peer usable",
+    "native origin admission and authentication reject unauthorized connections",
+    "isolated Devframe and DevTools connections coexist with the extension provider",
+    "devserver-only and all-realm broadcast update the selected backends",
+    "explicit provider preference, disconnect fallback and partial broadcast failure",
+    "selected document publishes a real native connection and retains backend ownership after closing",
+    "absent, malformed and closed selected documents reject without attaching",
+    "native scripting permission rejects a tampered about:blank selection"
+  ],
+  "limitations": ["No global page-error capture through WebDriver Classic"]
+}

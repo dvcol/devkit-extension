@@ -19,5 +19,16 @@ jobs:
         run: pnpm run ci
       - name: Install Chromium for the extension example
         run: pnpm --filter @devkit/example-webext exec playwright install --with-deps chromium
-      - name: Run the real extension browser test
+      - name: Run the Chromium extension browser test
         run: pnpm --filter @devkit/example-webext test:browser
+      - name: Install Firefox for the extension example
+        id: firefox
+        uses: browser-actions/setup-firefox@v1
+        with:
+          firefox-version: '156.0.1'
+      - name: Run the Firefox extension browser test
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-webext test:firefox

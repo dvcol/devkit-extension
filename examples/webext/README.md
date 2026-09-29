@@ -1,14 +1,15 @@
 # Native WebExtension example
 
-This Manifest V3 example runs a module service worker and two packaged pages using the maintained `@devkit/webext` channel. It publishes a native JSON view, mounts the existing reference renderer and synchronizes native shared state. The worker installs the shared counter action/capability contracts through `@devkit/devframe`; both pages attach its catalog to `@devkit/client` for typed selection, broadcast and lifecycle updates. All runtime imports resolve through the workspace's pinned, patched Devframe 1.0 packages. No upstream checkout or source alias is required.
+This Manifest V3 example runs the same background module as a Chromium service worker or a Firefox event page, with two packaged pages using the maintained `@devkit/webext` channel. It publishes a native JSON view, mounts the existing reference renderer and synchronizes native shared state. The worker installs the shared counter action/capability contracts through `@devkit/devframe`; both pages attach its catalog to `@devkit/client` for typed selection, broadcast and lifecycle updates. All runtime imports resolve through the workspace's pinned, patched Devframe 1.0 packages. No upstream checkout or source alias is required.
 
 ```sh
 pnpm exec turbo run build --filter=@devkit/example-webext --concurrency=1
 pnpm --filter @devkit/example-webext exec playwright install chromium
 pnpm --filter @devkit/example-webext test:browser
+pnpm --filter @devkit/example-webext test:firefox
 ```
 
-Load `examples/webext/dist` unpacked in Chromium to explore it manually. Open the extension's options page twice. The manifest also points its popup to that page; the automated test opens full pages and does not claim toolbar-popup lifecycle coverage. Its only host permission is `http://127.0.0.1/*`, for local backends and selected local pages. The `scripting` permission reads a native descriptor from a selected page.
+Load `examples/webext/dist/chromium` unpacked in Chromium, or load `examples/webext/dist/firefox/manifest.json` as a temporary add-on from Firefox’s `about:debugging`. Open the extension's options page twice. The manifest also points its popup to that page; the automated test opens full pages and does not claim toolbar-popup lifecycle coverage. Its only host permission is `http://127.0.0.1/*`, for local backends and selected local pages. The `scripting` permission reads a native descriptor from a selected page.
 
 ```mermaid
 flowchart LR
@@ -21,13 +22,30 @@ flowchart LR
 
 The worker admits only its own extension ID, expected channel name and exact packaged page URL. Its native RPC metadata retains each actual sender. The channel uses Devframe's records serializer. Native state accepts normal native writes, and view publication retains one context object for its index and duplicate detection. Each page owns its RPC close, state mirrors and renderer disposal. Disconnect does not cancel remote side effects or replay an action.
 
-The browser test uses a disposable Chromium profile and removes it afterward. Its 24 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
+The Chromium test uses a disposable profile and removes it afterward. Its 24 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
 
 ![Native renderer using the installed workspace dependencies](./evidence/native-port-proof.png)
 
-`pnpm --filter @devkit/example-webext test` also builds the extension and rejects Node or browser-external modules in the graph. CI runs that check through the normal workspace gates and then executes the real Chromium test.
+`pnpm --filter @devkit/example-webext test` also builds the extension and rejects Node or browser-external modules in the graph. Both build modes assert the expected native background manifest, permissions and CSP. CI runs these checks through the normal workspace gates, then executes both real-browser tests.
 
-This is the native extension foundation. Automatic discovery, cross-provider rendering, full popup/DevTools/side-panel lifecycle, content/page request bridging, debugger support, Firefox browser conformance and extension HMR remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
+This is the native extension foundation. Automatic discovery, cross-provider rendering, full popup/DevTools/side-panel lifecycle, content/page request bridging, debugger support, full browser conformance and extension HMR remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
+
+## Firefox execution
+
+`test:firefox` uses Selenium WebDriver Classic with Firefox 156.0.1 and geckodriver 0.37.1. Selenium Manager resolves the driver; CI pins both versions. Set `FIREFOX_BINARY` to use a specific Firefox executable. For example, on macOS:
+
+```sh
+FIREFOX_BINARY=/Applications/Firefox.app/Contents/MacOS/firefox \
+  SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-webext test:firefox
+```
+
+The driver owns a temporary profile, assigns this add-on a test-only origin UUID and removes the session on exit. Its `--allow-system-access` option permits automation of `moz-extension` documents; it is never applied to a normal browsing profile. WebDriver Classic provides working extension-page navigation. Firefox BiDi currently omits extension-page lifecycle events, causing Puppeteer navigation to time out, as tracked in [Puppeteer #14314](https://github.com/puppeteer/puppeteer/issues/14314).
+
+The [Firefox receipt](./evidence/firefox/receipt.json) records 18 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Neither suite automates browser-toolbar popup, DevTools or side-panel lifecycle.
+
+![Firefox native renderer and mixed-provider state](./evidence/firefox/native-port-proof.png)
+
+The example declares `script-src 'self'` and limits `connect-src` to itself and loopback HTTP/WebSocket endpoints. This explicit CSP omits Firefox's default `upgrade-insecure-requests`, which otherwise upgrades the local `ws:` endpoint to `wss:` and prevents connection. [Mozilla documents this native behavior](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_Security_Policy#upgrade_insecure_network_requests_in_manifest_v3). Packaged code, host permissions, native origin admission and native RPC authentication remain enforced. No SDK transport or Devframe patch is added for Firefox.
 
 ## Provider and connection ownership
 

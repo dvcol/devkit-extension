@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && vite build --mode firefox",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
     "test": "vitest run",
-    "test:browser": "node tests/browser.ts"
+    "test:browser": "node tests/browser.ts",
+    "test:firefox": "node tests/firefox.ts"
   },
   "dependencies": {
     "@devframes/hub": "1.0.0",
@@ -26,6 +27,8 @@
   "devDependencies": {
     "@devkit/example-server-contexts": "workspace:*",
     "@playwright/test": "1.63.0",
-    "@types/chrome": "0.3.0"
+    "@types/chrome": "0.3.0",
+    "@types/selenium-webdriver": "4.35.7",
+    "selenium-webdriver": "4.49.0"
   }
 }

@@ -7,7 +7,7 @@ import { chromium, expect } from '@playwright/test';
 import { checkConfiguredServers } from './configured-servers.ts';
 import { checkSelectedPage } from './selected-page.ts';
 
-const extensionPath = resolve('dist');
+const extensionPath = resolve('dist/chromium');
 const profile = await mkdtemp(join(tmpdir(), 'native-port-chromium-'));
 const browser = await chromium.launchPersistentContext(profile, {
   channel: 'chromium',
