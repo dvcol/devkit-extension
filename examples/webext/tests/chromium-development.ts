@@ -25,13 +25,16 @@ try {
   await mkdir(artifactDirectory, { recursive: true });
   await writeFile(`${artifactDirectory}/receipt.json`, JSON.stringify({ passed: false }));
   const observerPort = await availablePort();
+  const chromiumArgs = ['--headless=new', `--remote-debugging-port=${observerPort}`];
+  /** Ubuntu CI cannot sandbox downloaded Chromium; match Playwright's isolated test launch. */
+  if (process.platform === 'linux' && process.env.CI === 'true') chromiumArgs.push('--no-sandbox');
   server = await createServer({
     root,
     browser: 'chrome',
     dev: { server: { port: await availablePort() } },
     webExt: {
       binaries: { chrome: chromium.executablePath() },
-      chromiumArgs: ['--headless=new', `--remote-debugging-port=${observerPort}`],
+      chromiumArgs,
     },
   });
   await server.start();
