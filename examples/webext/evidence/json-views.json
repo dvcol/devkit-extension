@@ -1,0 +1,23 @@
+{
+  "browser": "153.0.8010.12",
+  "checks": [
+    "native view index discovers an existing view on connection",
+    "empty native view index keeps its provider connected",
+    "late publication mounts without reconnecting",
+    "identical view IDs and state keys stay separate across native hosts",
+    "rendered portable actions route to the publishing provider",
+    "backend state updates affect only that provider view",
+    "removed view unmounts; retained button cannot dispatch",
+    "republishing the same view key creates one working mount",
+    "server disconnect removes only its views; other server and extension stay usable",
+    "page disconnect removes all server views and their handlers",
+    "fresh connection reads current native state without replay or duplicate actions"
+  ],
+  "finalCounters": {
+    "devframe": 2,
+    "devtools": 7,
+    "extension": 1
+  },
+  "pageErrors": [],
+  "limitations": ["Provider-view discovery acceptance currently runs in Chromium"]
+}

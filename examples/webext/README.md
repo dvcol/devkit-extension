@@ -28,7 +28,7 @@ The Chromium test uses a disposable profile and removes it afterward. Its 39 sce
 
 `pnpm --filter @devkit/example-webext test` also builds the extension and rejects Node or browser-external modules in the graph. Both build modes assert the expected native background manifest, permissions and CSP. CI runs these checks through the normal workspace gates, then executes both real-browser tests.
 
-This is the native extension foundation. Explicit server connections, cross-provider JSON action dispatch and the recorded browser-surface HMR cases are implemented below. Automatic discovery, provider-published view composition, content/page request bridging and complete browser/reload conformance remain open. The separate [debugger example](../debugger/README.md) owns debugger and optional CDB evidence. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
+This is the native extension foundation. Explicit server connections, cross-provider JSON action dispatch and the recorded browser-surface HMR cases are implemented below. Automatic discovery, content/page request bridging and complete browser/reload conformance remain open. Native server view discovery is covered below; its full host/lifecycle matrix is still incomplete. The separate [debugger example](../debugger/README.md) owns debugger and optional CDB evidence. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
 
 ## Firefox execution
 
@@ -301,3 +301,47 @@ The dedicated Chromium scenario clicks actual JSON-rendered controls against thr
 The reference renderer retains its last-error banner after a successful retry. This is a confirmed upstream error-lifecycle bug in `@devframes/json-render-ui`: its action bridge never resets the stored error. The example's `onSuccess` callback clears its own status and subsequent actions execute correctly. The [isolated reproduction and source diagnosis](../../docs/research/json-render-stale-action-error.md) also reproduce the failure with the unmodified npm renderer, without the extension or SDK. The current receipt and screenshot include the failed-selection/retry sequence; the dependency remains unfixed.
 
 [Executed receipt](./evidence/json-actions.json) · [Rendered example](./evidence/json-actions.png)
+
+## Native server views
+
+Each configured server connection subscribes to Devframe's `JSON_RENDER_INDEX_KEY`. Existing and newly published entries mount through the unchanged bundled renderer. The page groups views by configured provider ID, using that connection's native shared state and RPC. Identical view IDs and state keys on different backends remain independent.
+
+```mermaid
+flowchart LR
+  ConnectionA[Devframe connection] --> IndexA[Native view index A]
+  ConnectionB[DevTools connection] --> IndexB[Native view index B]
+  IndexA --> MountA[Provider A mounts]
+  IndexB --> MountB[Provider B mounts]
+  MountA --> StateA[Native state A]
+  MountB --> StateB[Native state B]
+  MountA --> BindingA[Known actions routed to provider A]
+  MountB --> BindingB[Known actions routed to provider B]
+```
+
+The index belongs to the native context, not the portable capability catalog. The example does not invent per-plugin view ownership, merge indexes or filter a host's published views by service availability. Empty indexes are valid. Imported counter actions use the existing `createActionCall` binding with an explicit provider; other native RPC calls stay on that connection. The separate broadcast controls retain their outgoing realm/provider selection.
+
+Publish with the existing native API on an authenticated host:
+
+```ts
+const view = createJsonRenderView(context, {
+  id: 'status',
+  title: 'Server status',
+  spec: {
+    root: 'text',
+    elements: { text: { type: 'Text', props: { text: 'Connected' } } },
+  },
+});
+// Removing the entry unmounts this view without disconnecting its siblings.
+view.dispose();
+```
+
+Use that host's base URL, native credential and configured provider ID in the connection form. Its native `allowedOrigins` must admit the extension origin, as described above. No additional discovery service or renderer runtime is needed.
+
+```sh
+pnpm --filter @devkit/example-webext build
+pnpm --filter @devkit/example-webext test:json-views
+```
+
+The maintained command starts real Devframe and DevTools hosts and the packaged Chromium extension. The [receipt](./evidence/json-views.json) records existing/late publication, an empty index, identical keys with distinct values, portable actions, backend updates, removal and republishing, isolated server disconnect, page cleanup and fresh connection without replay. It also clicks retained detached buttons to verify the removed mount's action lifetime has ended. The [screenshot](./evidence/json-views.png) shows the surviving server and extension after the other server disconnects. Chromium 153.0.8010.12 passed with zero page errors. CI runs this command separately from JSON action broadcasting.
+
+The implementation uses one cancellation signal per mount and disposes late asynchronous mounts if their entry has already been removed. It adds no public SDK API or dependency patch. Firefox view-index acceptance, multi-provider view HMR and the complete renderer catalog remain unproven by this command. Native RPC cancellation and state persistence retain their existing host semantics.

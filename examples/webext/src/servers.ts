@@ -5,6 +5,7 @@ import { connectDevframe } from 'devframe/client';
 import type { SetupDevframeConnectionOptions } from 'devframe/client';
 import { increaseCounterAction } from './contracts';
 import { mountPageConnections } from './pages';
+import { mountServerViews } from './server-views';
 
 interface ConfiguredServer extends SetupDevframeConnectionOptions {
   readonly providerId: string;
@@ -29,8 +30,10 @@ function createServerAttachments(client: Client) {
     const rpc = await connectServer(options);
     let connection: DevframeProviderConnection | undefined;
     let attachment: ProviderAttachment | undefined;
+    let releaseViews: (() => void) | undefined;
     const dispose = () => {
       cleanup.delete(dispose);
+      releaseViews?.();
       attachment?.detach();
       connection?.dispose();
       rpc.close?.();
@@ -44,6 +47,8 @@ function createServerAttachments(client: Client) {
       });
       if (disposed) throw new Error('The page connection is closed');
       attachment = client.providers.attach({ connection });
+      releaseViews = await mountServerViews({ providerId, rpc, actions: client.actions });
+      if (disposed) throw new Error('The page connection is closed');
       return `Connected ${providerId}`;
     } catch (error) {
       dispose();

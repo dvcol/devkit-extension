@@ -16,7 +16,8 @@
     "test:dev": "pnpm --workspace-concurrency=2 run \"/^test:dev:(chromium|firefox)$/\"",
     "test:dev:chromium": "node tests/chromium-development.ts",
     "test:dev:firefox": "node tests/firefox-development.ts",
-    "test:json-actions": "node tests/json-actions.ts"
+    "test:json-actions": "node tests/json-actions.ts",
+    "test:json-views": "node tests/json-views.ts"
   },
   "dependencies": {
     "@devframes/hub": "1.0.0",
