@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8"><title>Native action error reproduction</title></head>
+  <body>
+    <output id="calls">0</output>
+    <div id="renderer"></div>
+    <script type="module">
+      import render from './renderer.mjs';
+
+      let calls = 0;
+      await render({
+        entry: {
+          id: 'stale-error',
+          type: 'json-render',
+          title: 'Stale error',
+          view: {
+            spec: {
+              root: 'root',
+              state: { status: 'Ready' },
+              elements: {
+                root: { type: 'Stack', props: {}, children: ['retry', 'status'] },
+                retry: {
+                  type: 'Button',
+                  props: { label: 'Retry' },
+                  on: {
+                    press: {
+                      action: 'example.retry',
+                      onError: { set: { '/status': 'Handled failure' } },
+                      onSuccess: { set: { '/status': 'Succeeded' } },
+                    },
+                  },
+                },
+                status: { type: 'Text', props: { text: { $state: '/status' } } },
+              },
+            },
+          },
+        },
+        container: document.querySelector('#renderer'),
+        context: {
+          rpc: {
+            async call() {
+              calls += 1;
+              document.querySelector('#calls').textContent = String(calls);
+              if (calls === 1) throw new Error('First attempt failed');
+              return 'ok';
+            },
+            get sharedState() {
+              throw new Error('The inline reproduction must not access shared state');
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
