@@ -28,7 +28,7 @@ The Chromium test uses a disposable profile and removes it afterward. Its 39 sce
 
 `pnpm --filter @devkit/example-webext test` also builds the extension and rejects Node or browser-external modules in the graph. Both build modes assert the expected native background manifest, permissions and CSP. CI runs these checks through the normal workspace gates, then executes both real-browser tests.
 
-This is the native extension foundation. Automatic discovery, cross-provider rendering, content/page request bridging, debugger support, full browser conformance and complete extension HMR coverage remain open. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
+This is the native extension foundation. Explicit server connections, cross-provider JSON action dispatch and the recorded browser-surface HMR cases are implemented below. Automatic discovery, provider-published view composition, content/page request bridging and complete browser/reload conformance remain open. The separate [debugger example](../debugger/README.md) owns debugger and optional CDB evidence. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
 
 ## Firefox execution
 

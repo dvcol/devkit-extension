@@ -64,10 +64,10 @@ The [lifecycle investigation](../research/native-rpc-lifecycle.md) also distingu
 The combined startup API, finite native method lifetime, schema-validated method mapping, authorized catalog synchronization and shared-client connection are implemented. Remaining work includes:
 
 1. Keep resource selection, applicability and freshness in each capability implementation. The universal target API and required-target exposure prohibition were removed after owner review. Browser/debugger capabilities must still check their actual resource identity and permissions; [the investigation](../research/native-target-authority.md) remains evidence for that domain work.
-2. Adapt a real extension Port to the existing RPC channel and codec. Verify rich values, malformed/unsupported data, disconnection and listener cleanup on Chromium and Firefox. Bridge sender/target checks must precede privileged dispatch.
+2. Extend the proven native Port boundary to untrusted page/content requests only when that integration is implemented. Both Chromium and Firefox already prove packaged-page sender admission, rich values, unsupported functions, disconnection and owned cleanup in the [extension example](../../examples/webext/README.md). That evidence does not authenticate an originating page or establish arbitrary resource freshness.
 3. Complete actor permissions, state privacy, error disclosure and real-host conformance. The current native transport tests do not establish those broader guarantees.
 
-Existing upstream PRs remain drafts. This review opens no new upstream PR.
+Upstream proposal status is tracked on its linked PR; this review opens no new upstream PR.
 
 ## Readiness and completion
 
@@ -76,7 +76,8 @@ Existing upstream PRs remain drafts. This review opens no new upstream PR.
 - [x] Public serializer compatibility and unsupported-function rejection have maintained installed-package tests.
 - [x] Finite native registration and local disconnect cleanup are proven for the native adapter, with the accepted backend-cancellation limitation.
 - [x] Real authenticated hosts prove native allow/deny behavior and disposal; socket tests cover catalog synchronization and malformed/mismatched metadata at the native call boundary. Browser smoke checks cover both hosts.
-- [ ] Real extension hosts prove wire compatibility, page/extension authority and target freshness.
+- [x] Real Chromium/Firefox extension hosts prove native wire compatibility and packaged-page sender admission.
+- [ ] Untrusted page/content authority and target freshness have real-host proof.
 - [ ] Cancellation, permission revocation and error-detail disclosure meet the complete issue-9 contract.
 
 

@@ -4,6 +4,8 @@
 
 Review of the maintained packages, examples and open issues on 2026-09-27, at `ffcc8f1121f1a344360e6630840f00bf01b00d94`. The owner's direction is to stay close to Devframe, minimize adapter code, and maintain compatibility as upstream evolves. Upstream adoption is desirable, not a dependency of delivery.
 
+The initial review tables below record the inspected implementation at that time. Later dated sections and the [maintained extension example](../../examples/webext/README.md) supersede claims that native Port composition, mixed-provider routing, JSON action binding or Firefox execution are still absent. Remaining acceptance criteria live in the linked decision issues.
+
 ## Findings and corrections
 
 | Finding                                                                                                                            | Correction                                                                                                                                                                                                                                                         | Owner                                                                                                                                   |
