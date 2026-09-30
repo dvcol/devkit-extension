@@ -3,18 +3,14 @@ import { createRemoteHost } from '@devkit/example-server-contexts';
 import { counterCapability } from '@devkit/example-contribution';
 import { By, until } from 'selenium-webdriver';
 import type { Driver } from 'selenium-webdriver/firefox.js';
+import { checkFirefoxViews, viewText } from './firefox-views.ts';
 
 type ServerHost = Awaited<ReturnType<typeof createRemoteHost>>;
 
 export async function checkFirefoxServers(driver: Driver): Promise<void> {
   await using cleanup = new AsyncDisposableStack();
   const allowedOrigins = [await driver.executeScript<string>('return location.origin')];
-  const denied = await createRemoteHost('devframe');
-  cleanup.defer(denied.close);
-  await connect(driver, denied, denied.token);
-  await result(driver, /^error$/u);
-  assert.equal(await readCounter(denied), 0);
-  assert.doesNotMatch(await driver.findElement(By.css('#providers')).getText(), /example\.remote/u);
+  await checkDeniedOrigin(driver);
   const devframe = await createRemoteHost('devframe', {
     providerId: 'example.devframe',
     allowedOrigins,
@@ -38,12 +34,27 @@ export async function checkFirefoxServers(driver: Driver): Promise<void> {
   await connect(driver, devtools, devtools.token);
   await result(driver, /^"Connected example\.devtools"$/u);
   await checkBroadcast(driver, devframe, devtools);
+  cleanup.defer(await checkFirefoxViews(driver, devframe, devtools));
   await fill(driver, '#preferred-server', 'example.devframe');
   await driver.findElement(By.css('#fallback-increase')).click();
-  await result(driver, /^4$/u);
-  assert.equal(await readCounter(devframe), 4);
+  await result(driver, /^5$/u);
+  assert.equal(await readCounter(devframe), 5);
   assert.equal(await readCounter(devtools), 3);
+  await checkDisconnectedServer(driver, devframe, devtools);
+}
+
+async function checkDisconnectedServer(
+  driver: Driver,
+  devframe: ServerHost,
+  devtools: ServerHost,
+): Promise<void> {
   await devframe.close();
+  await driver.wait(
+    async () =>
+      (await driver.findElements(By.css('[data-provider="example.devframe"]'))).length === 0,
+    10_000,
+  );
+  await viewText(driver, 'example.devtools', 3);
   await driver.wait(
     until.elementTextContains(driver.findElement(By.css('#providers')), '"status":"unknown"'),
     10_000,
@@ -53,6 +64,17 @@ export async function checkFirefoxServers(driver: Driver): Promise<void> {
   await dispatchJson(driver, 'servers', 'shared.example.test');
   await result(driver, /rejected/u, '#json-result');
   assert.equal(await readCounter(devtools), 4);
+  await viewText(driver, 'example.devtools', 4);
+}
+
+async function checkDeniedOrigin(driver: Driver): Promise<void> {
+  await using cleanup = new AsyncDisposableStack();
+  const denied = await createRemoteHost('devframe');
+  cleanup.defer(denied.close);
+  await connect(driver, denied, denied.token);
+  await result(driver, /^error$/u);
+  assert.equal(await readCounter(denied), 0);
+  assert.doesNotMatch(await driver.findElement(By.css('#providers')).getText(), /example\.remote/u);
 }
 
 async function checkBroadcast(

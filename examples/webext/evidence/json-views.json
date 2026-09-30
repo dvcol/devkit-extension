@@ -19,5 +19,5 @@
     "extension": 1
   },
   "pageErrors": [],
-  "limitations": ["Provider-view discovery acceptance currently runs in Chromium"]
+  "limitations": ["This receipt covers Chromium; Firefox has separate native view lifecycle checks"]
 }

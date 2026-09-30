@@ -3,11 +3,11 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { styleText } from 'node:util';
-import { createJsonRenderView } from '@devframes/json-render/view';
 import { increaseCounterAction } from '@devkit/example-contribution';
-import { counterStateKey, createRemoteHost } from '@devkit/example-server-contexts';
+import { createRemoteHost } from '@devkit/example-server-contexts';
 import { chromium, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { publishCounterView } from './json-view-fixture.ts';
 
 type ServerHost = Awaited<ReturnType<typeof createRemoteHost>>;
 const profile = await mkdtemp(join(tmpdir(), 'devkit-json-views-'));
@@ -36,7 +36,7 @@ try {
     allowedOrigins: [origin],
   });
   cleanup.defer(devtools.close);
-  const first = await publish(devframe);
+  const first = await publishCounterView(devframe);
   cleanup.defer(first.dispose);
   await connect(page, devframe);
   const firstGroup = page.locator('[data-provider="example.devframe"]');
@@ -44,7 +44,7 @@ try {
   await expect(firstGroup.getByText('Remote: 0', { exact: true })).toBeVisible();
   await connect(page, devtools);
   await expect(secondGroup.locator('[data-view]')).toHaveCount(0);
-  const second = await publish(devtools);
+  const second = await publishCounterView(devtools);
   cleanup.defer(second.dispose);
   assert.equal(first.view.ref.stateKey, second.view.ref.stateKey);
   await expect(secondGroup.getByText('Remote: 0', { exact: true })).toBeVisible();
@@ -63,7 +63,7 @@ try {
   await removedButton.evaluate((element) =>
     element.dispatchEvent(new MouseEvent('click', { bubbles: true })),
   );
-  const replacement = await publish(devframe);
+  const replacement = await publishCounterView(devframe);
   cleanup.defer(replacement.dispose);
   await expect(firstGroup.getByText('Remote: 1', { exact: true })).toBeVisible();
   await expect(firstGroup.locator('[data-view]')).toHaveCount(1);
@@ -114,52 +114,15 @@ try {
     ],
     finalCounters: { devframe: 2, devtools: 7, extension: 1 },
     pageErrors: errors,
-    limitations: ['Provider-view discovery acceptance currently runs in Chromium'],
+    limitations: [
+      'This receipt covers Chromium; Firefox has separate native view lifecycle checks',
+    ],
   };
   await writeFile('artifacts/json-views.json', JSON.stringify(receipt, null, 2));
   console.info(styleText('green', '✅ [json-views]'), receipt);
 } finally {
   await browser.close();
   await rm(profile, { recursive: true, force: true });
-}
-
-/** Same native view ID on separate hosts intentionally exercises independent key spaces. */
-async function publish(host: ServerHost) {
-  const state = await host.context.rpc.sharedState.get<{ value: number }>(counterStateKey);
-  const view = createJsonRenderView(host.context, {
-    id: 'published-counter',
-    title: 'Published counter',
-    spec: {
-      root: 'layout',
-      state: { ...state.value(), actionError: '' },
-      elements: {
-        layout: { type: 'Stack', props: { gap: 2 }, children: ['value', 'increase', 'error'] },
-        error: { type: 'Text', props: { text: { $state: '/actionError' } } },
-        value: { type: 'Text', props: { text: { $template: 'Remote: ${/value}' } } },
-        increase: {
-          type: 'Button',
-          props: { label: 'Increase published counter' },
-          on: {
-            press: {
-              action: increaseCounterAction.id,
-              params: { amount: 1 },
-              onError: { set: { '/actionError': 'Action unavailable' } },
-            },
-          },
-        },
-      },
-    },
-  });
-  const unsubscribe = state.on('updated', (value) => {
-    view.patchState([{ op: 'replace', path: '/value', value: value.value }]);
-  });
-  return {
-    view,
-    dispose: () => {
-      unsubscribe();
-      view.dispose();
-    },
-  };
 }
 
 async function connect(page: Page, host: ServerHost): Promise<void> {
