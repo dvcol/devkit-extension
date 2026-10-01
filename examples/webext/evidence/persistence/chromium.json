@@ -3,14 +3,14 @@
   "storageKey": "example.persisted-counter",
   "previous": {
     "id": "example.extension",
-    "incarnation": "c0bdcdcf-b226-4859-a25a-9dce33672919",
+    "incarnation": "5980cabc-bfd4-46d7-acda-c5cbac07f8e7",
     "realm": {
       "id": "webext"
     }
   },
   "replacement": {
     "id": "example.extension",
-    "incarnation": "b68b06ff-ede9-40c3-9498-7f0c24be0cb4",
+    "incarnation": "7edd9d1d-a3a3-4e84-beec-cfa9811a3ae7",
     "realm": {
       "id": "webext"
     }
@@ -19,7 +19,7 @@
     "method": "ServiceWorker.stopWorker",
     "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
     "versionId": "0",
-    "targetId": "DBFAA241E6D1B2767DE780C1E7B7A814",
+    "targetId": "AF48EF2AD689C47BFE07D1C2B56F6672",
     "statuses": ["running", "stopping", "stopped"]
   },
   "confirmedBeforeTermination": {
@@ -41,17 +41,38 @@
     "liveAfterFailure": 10,
     "nextWrite": 11
   },
+  "browserRestart": {
+    "previous": {
+      "id": "example.extension",
+      "incarnation": "0f934ff7-23ab-4540-a35b-cf515d623711",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "replacement": {
+      "id": "example.extension",
+      "incarnation": "2130270d-8af7-4f92-a3e6-7d20eff9a366",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "restored": 7,
+    "nextValue": 8,
+    "independent": 44,
+    "pageErrors": []
+  },
   "checks": [
     "two native clients share action and native-state updates written to storage.local",
     "forced worker termination restores the saved counter under a fresh provider incarnation without replay",
     "restored clients have one counter and management mount, while domain UI state remains ephemeral",
     "a separate storage key remains unchanged",
     "native storage quota failure is visible without rollback or retry, and the next explicit mutation can persist",
-    "invalid stored input rejects native startup without overwrite and an explicit fresh worker can recover"
+    "invalid stored input rejects native startup without overwrite and an explicit fresh worker can recover",
+    "a full Chromium restart with the same profile restores saved state for two fresh clients and preserves an independent key"
   ],
   "pageErrors": [],
   "limitations": [
-    "Forced Chromium worker termination, not natural idle suspension or browser restart",
+    "Forced worker termination and normal Chromium shutdown, not natural idle suspension or process crashes",
     "Native writes are asynchronous; action completion is not durable storage acknowledgement"
   ]
 }

@@ -54,22 +54,10 @@ try {
   }
   await Promise.all([first.reload(), second.reload()]);
   await counters([first, second], 10);
-  const replacement = await readProvider(first);
-  assert.equal(replacement.id, previous.id);
-  assert.deepEqual(replacement.realm, previous.realm);
-  assert.notEqual(replacement.incarnation, previous.incarnation);
-  assert.deepEqual(await readProvider(second), replacement);
+  const replacement = await checkRestoredProvider([first, second], previous);
   await expect(first.getByRole('textbox', { name: 'Domain', exact: true })).toHaveValue(
     'shared.example.test',
   );
-  for (const page of [first, second]) {
-    await expect(
-      page.locator('#renderer').locator('.devframes-json-render-scroll-root'),
-    ).toHaveCount(1);
-    await expect(
-      page.locator('#management').locator('.devframes-json-render-scroll-root'),
-    ).toHaveCount(1);
-  }
   await first.getByRole('button', { name: 'Increase counter', exact: true }).click();
   await counters([first, second], 11);
   await expect.poll(() => readRecord(second, key)).toEqual({ value: 11 });
@@ -80,9 +68,22 @@ try {
   await first.screenshot({ path: 'artifacts/persistence/chromium.png', fullPage: true });
   const quota = await checkQuotaFailure({ first, second, storageKey: key });
   const invalid = await checkInvalidStorage(first, second, key);
+  const browserVersion = browser.browser()?.version();
+  const beforeRestart = await readProvider(first);
+  await expect.poll(() => readRecord(first, key)).toEqual({ value: 7 });
+  await browser.close();
+  assert.equal(first.isClosed(), true);
+  assert.equal(second.isClosed(), true);
+  const browserRestart = await checkBrowserRestart({
+    profile,
+    extensionPath,
+    storageKey: key,
+    independentKey,
+    previous: beforeRestart,
+  });
   assert.deepEqual(errors, []);
   const receipt = {
-    browser: browser.browser()?.version(),
+    browser: browserVersion,
     storageKey: key,
     previous,
     replacement,
@@ -92,6 +93,7 @@ try {
     nextValue: 11,
     invalid,
     quota,
+    browserRestart,
     checks: [
       'two native clients share action and native-state updates written to storage.local',
       'forced worker termination restores the saved counter under a fresh provider incarnation without replay',
@@ -99,10 +101,11 @@ try {
       'a separate storage key remains unchanged',
       'native storage quota failure is visible without rollback or retry, and the next explicit mutation can persist',
       'invalid stored input rejects native startup without overwrite and an explicit fresh worker can recover',
+      'a full Chromium restart with the same profile restores saved state for two fresh clients and preserves an independent key',
     ],
     pageErrors: errors,
     limitations: [
-      'Forced Chromium worker termination, not natural idle suspension or browser restart',
+      'Forced worker termination and normal Chromium shutdown, not natural idle suspension or process crashes',
       'Native writes are asynchronous; action completion is not durable storage acknowledgement',
     ],
   };
@@ -111,6 +114,76 @@ try {
 } finally {
   await browser.close();
   await rm(profile, { recursive: true, force: true });
+}
+
+async function checkBrowserRestart(options: {
+  profile: string;
+  extensionPath: string;
+  storageKey: string;
+  independentKey: string;
+  previous: Awaited<ReturnType<typeof readProvider>>;
+}) {
+  const restartedBrowser = await chromium.launchPersistentContext(options.profile, {
+    channel: 'chromium',
+    headless: true,
+    args: [
+      `--disable-extensions-except=${options.extensionPath}`,
+      `--load-extension=${options.extensionPath}`,
+    ],
+  });
+  const pageErrors: string[] = [];
+  restartedBrowser.on('weberror', (error) => pageErrors.push(error.error().message));
+  try {
+    const worker =
+      restartedBrowser.serviceWorkers()[0] ??
+      (await restartedBrowser.waitForEvent('serviceworker'));
+    const url = `chrome-extension://${new URL(worker.url()).host}/panel.html`;
+    const first = await restartedBrowser.newPage();
+    const second = await restartedBrowser.newPage();
+    await Promise.all([first.goto(url), second.goto(url)]);
+    await counters([first, second], 7);
+    const replacement = await checkRestoredProvider([first, second], options.previous);
+    assert.deepEqual(await readRecord(first, options.storageKey), { value: 7 });
+    assert.deepEqual(await readRecord(second, options.independentKey), { value: 44 });
+    await first.getByRole('button', { name: 'Increase counter', exact: true }).click();
+    await counters([first, second], 8);
+    await expect.poll(() => readRecord(second, options.storageKey)).toEqual({ value: 8 });
+    await expect(
+      second.getByText('Counter storage: Wrote counter 8', { exact: true }),
+    ).toBeVisible();
+    await first.screenshot({ path: 'artifacts/persistence/chromium-restart.png', fullPage: true });
+    assert.deepEqual(pageErrors, []);
+    return {
+      previous: options.previous,
+      replacement,
+      restored: 7,
+      nextValue: 8,
+      independent: 44,
+      pageErrors,
+    };
+  } finally {
+    await restartedBrowser.close();
+  }
+}
+
+async function checkRestoredProvider(
+  pages: readonly [Page, Page],
+  previous: Awaited<ReturnType<typeof readProvider>>,
+) {
+  const [first, second] = pages;
+  const replacement = await readProvider(first);
+  assert.equal(replacement.id, previous.id);
+  assert.deepEqual(replacement.realm, previous.realm);
+  assert.notEqual(replacement.incarnation, previous.incarnation);
+  assert.deepEqual(await readProvider(second), replacement);
+  for (const page of pages) {
+    for (const selector of ['#renderer', '#management']) {
+      await expect(
+        page.locator(selector).locator('.devframes-json-render-scroll-root'),
+      ).toHaveCount(1);
+    }
+  }
+  return replacement;
 }
 
 async function checkQuotaFailure(options: { first: Page; second: Page; storageKey: string }) {
