@@ -20,9 +20,13 @@
     "tooling:lint": "oxlint --config .oxlintrc.json --deny-warnings scripts commitlint.config.ts lint-staged.config.ts",
     "tooling:typecheck": "tsc --noEmit -p tsconfig.tools.json",
     "tooling:test": "node scripts/check-enforcement.ts",
-    "ci": "pnpm run tooling:lint && pnpm run tooling:typecheck && pnpm run tooling:test && pnpm run build && pnpm run artifacts:test && pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test",
+    "ci": "pnpm run tooling:lint && pnpm run tooling:typecheck && pnpm run tooling:test && pnpm run conformance:test && pnpm run build && pnpm run artifacts:test && pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test && pnpm run conformance:check",
     "artifacts:test": "node scripts/check-packages.ts && node scripts/check-example-package.ts && pnpm run artifacts:native",
-    "artifacts:native": "node scripts/check-native-packages.ts"
+    "artifacts:native": "node scripts/check-native-packages.ts",
+    "conformance:check": "node scripts/check-conformance.ts",
+    "conformance:inventory": "node scripts/check-conformance.ts --inventory",
+    "conformance:release": "node scripts/check-conformance.ts --complete",
+    "conformance:test": "vitest run scripts/conformance"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.2",

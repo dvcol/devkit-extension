@@ -2,6 +2,8 @@
 
 Required implementation evidence for [ARCHITECTURE.md](../../ARCHITECTURE.md) and the maintained [core package](../../packages/core/README.md). The declaration probe in this directory is an archived review snapshot. Planned rows below are obligations; dated implementation sections record the evidence actually completed.
 
+The [machine-checked inventory](./api-coverage.json) now enumerates exports and SDK-owned nested members from built package declarations. [Its guide](./API-COVERAGE.md) explains the exact test-result checks and remaining gaps. This document retains the broader host/mode obligations and historical evidence while those mappings are reconciled. An inventoried item is not a completed conformance claim.
+
 Host codes: **DF** standalone Devframe, **DT** Vite DevTools, **CH** Chromium extension, **FF** Firefox extension. Each runtime row applies to all four unless it names a native restriction. The renderer-independent example also runs with the renderer absent. Target-bearing rows run against real target/document generations.
 
 | Public exports or hooks | Example/fixture | Required assertions |

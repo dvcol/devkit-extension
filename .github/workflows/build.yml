@@ -17,6 +17,16 @@ jobs:
       - uses: ./.github/actions/install
       - name: Build, types, strict lint, format and tests
         run: pnpm run ci
+      - name: Retain API inventory and executed test evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: api-conformance
+          include-hidden-files: true
+          path: |
+            .conformance/report.json
+            packages/core/.conformance/vitest.json
+            examples/contribution/.conformance/vitest.json
       - name: Install Chromium for the extension example
         run: pnpm --filter @devkit/example-webext exec playwright install --with-deps chromium
       - name: Run the Chromium extension browser test

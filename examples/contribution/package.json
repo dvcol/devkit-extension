@@ -20,7 +20,7 @@
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
     "demo": "node src/demo.ts",
-    "test": "vitest run",
+    "test": "vitest run --reporter=default --reporter=json --outputFile=.conformance/vitest.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check ."
