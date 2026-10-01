@@ -717,9 +717,61 @@
         }
       ],
       "gaps": [
-        "These tests use real native RPC over a Node MessageChannel for unbound calls and local provider lifecycles for bound action routing. They do not mount the JSON renderer, operate a browser view, or prove runtime.Port transport behavior.",
-        "Linked cases cover selection, per-provider outcomes, explicit routing, argument validation, duplicate action IDs, unavailable versions and view-signal cancellation. Binding contract routing defaults, native renderer built-ins and complete output-validation failures require separate exact evidence.",
-        "Maintained Chromium and Firefox example receipts for native renderer dispatch remain to be linked by the conformance gate."
+        "Node tests cover native passthrough and argument preservation, duplicate IDs, unavailable versions and cancellation. Browser references separately prove native renderer dispatch through actual Ports and authenticated native server connections; neither establishes all host/mode cells.",
+        "Linked browser assertions cover explicit routing, broadcast selection, provider-owned applicability, partial failures, absence of backend effects from detached buttons and native input/success/error callbacks. Contract routing defaults, complete renderer built-ins, duplicate/malformed bindings in browser hosts and output-validation failure parity still require exact evidence.",
+        "Firefox does not yet retain a detached domain-action button across unmount as the Chromium matrix does. Mixed-backend development HMR and production-server preview remain separate obligations."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/browser.ts",
+          "receiptFile": "artifacts/receipt.json",
+          "checks": [
+            "native renderer action",
+            "renderer unmount",
+            "reconnect with retained worker state"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/json-actions.ts",
+          "receiptFile": "artifacts/json-actions.json",
+          "checks": [
+            "unchanged native JSON renderer dispatches the shared action",
+            "outgoing realm and explicit provider selection",
+            "provider-owned domain applicability across all three native hosts",
+            "ordinary not-applicable result remains fulfilled",
+            "unavailable provider preserves successful siblings",
+            "disconnected native server reports failure without rerouting",
+            "detached rendered button cannot dispatch after unmount",
+            "reconnect retains background state without replay",
+            "native input state binding and onSuccess callback",
+            "native onError handles unmatched recipients; onSuccess clears the application status",
+            "native renderer clears its failed-action alert when the same action is retried successfully"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension/native-development-servers",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox.ts",
+          "receiptFile": "artifacts/firefox/receipt.json",
+          "checks": [
+            "native JSON renderer action and shared state on both pages",
+            "native JSON controls broadcast to selected devserver and all-realm recipients",
+            "native JSON input reaches provider-owned domain applicability on all three backends",
+            "native JSON explicit provider filter excludes other recipients",
+            "native JSON broadcast preserves successful siblings after server disconnect",
+            "native renderer clears its failed-action alert when the same action is retried successfully"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension/native-development-servers",
+          "requirePageErrors": false
+        }
       ]
     },
     {
