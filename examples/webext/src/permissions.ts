@@ -2,6 +2,18 @@ const permissions = { origins: ['http://localhost/*'] };
 
 /** Permission requests stay in the user gesture that owns the native browser prompt. */
 export function mountPermissionControls(): () => void {
+  if (chrome.permissions !== undefined) return mountAvailableControls();
+  /** Firefox omits permissions in DevTools documents; requests must use another packaged UI. */
+  document.querySelector('#permission-status')!.textContent =
+    'Unavailable in this context. Use extension options.';
+  for (const button of document.querySelectorAll<HTMLButtonElement>(
+    '#permission-request, #permission-remove',
+  ))
+    button.disabled = true;
+  return () => {};
+}
+
+function mountAvailableControls(): () => void {
   const lifetime = new AbortController();
   const { signal } = lifetime;
   const status = document.querySelector<HTMLOutputElement>('#permission-status')!;

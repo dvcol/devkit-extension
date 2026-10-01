@@ -9,6 +9,7 @@
     "native prompt grant permits injection",
     "removing permission rejects next injection on the same tab",
     "regrant permits the same native operation without reconnect or replay",
-    "native permission events update a second open extension page"
+    "native permission events update a second open extension page",
+    "DevTools without the native permissions API disables those controls and still connects"
   ]
 }

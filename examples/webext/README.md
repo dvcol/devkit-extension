@@ -352,6 +352,8 @@ Local Firefox 157.0 fails the existing sidebar automation selector, also reprodu
 
 The panel's **Optional localhost access** controls call native `permissions.request` directly in the button's user gesture and `permissions.remove` on removal. The manifest declares only `http://localhost/*` as optional. Existing required `http://127.0.0.1/*` access remains separate because Chrome cannot remove a required permission through this API. Native `onAdded` and `onRemoved` events refresh every open panel. Page disposal removes its listeners; it does not invent a permission or RPC lifetime.
 
+Firefox does not expose `permissions` in DevTools documents. Those controls show an unavailable message and remain disabled there; the rest of the panel still connects and renders normally. Use the extension's options page to manage access. The focused Firefox test opens the actual DevTools panel and asserts this behavior, rather than replacing the missing native API with a background permission broker.
+
 | Actor or operation                                    | Implemented boundary                                                                                                                                               |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Packaged `panel.html` using the expected Port channel | Background admits its actual browser-created extension ID and sender URL. This fixture exposes its counter actions and writable counter state to admitted callers. |

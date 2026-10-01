@@ -6,6 +6,7 @@ import { By } from 'selenium-webdriver';
 import { Context, Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
 import { startTimingServer } from './script-timing.ts';
 import { createDeniedRequests, findTab, probeCaller, readDocument } from './trust-fixture.ts';
+import { openPanel, panelScript, closePanel } from './firefox-devtools.ts';
 
 const extensionUuid = crypto.randomUUID();
 const options = new Options()
@@ -109,6 +110,22 @@ try {
   assert.equal(restored.documentId, granted.documentId);
   await driver.switchTo().window(peer);
   await waitText('#permission-status', 'Granted');
+  await driver.switchTo().window(source);
+  await driver.setContext(Context.CHROME);
+  await openPanel(driver);
+  assert.equal(
+    await panelScript(driver, 'return document.querySelector("#permission-status").textContent'),
+    'Unavailable in this context. Use extension options.',
+  );
+  assert.equal(
+    await panelScript(
+      driver,
+      'return document.querySelector("#permission-request").disabled && document.querySelector("#permission-remove").disabled',
+    ),
+    true,
+  );
+  await closePanel(driver);
+  await driver.setContext(Context.CONTENT);
   const receipt = {
     browser: (await driver.getCapabilities()).getBrowserVersion(),
     checks: [
@@ -121,6 +138,7 @@ try {
       'removing permission rejects next injection on the same tab',
       'regrant permits the same native operation without reconnect or replay',
       'native permission events update a second open extension page',
+      'DevTools without the native permissions API disables those controls and still connects',
     ],
   };
   await writeFile('artifacts/trust/firefox.json', JSON.stringify(receipt, null, 2));
