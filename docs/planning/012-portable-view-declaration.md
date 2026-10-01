@@ -6,6 +6,8 @@
 
 `PluginInput.views` currently accepts only `{ kind, id, execution }`. The runtime reports these entries as `unsupported`. Examples instead call native `createJsonRenderView` directly, own its cleanup and discover published views through the native JSON index.
 
+The shared example now exports `publishCounterView({ context, actionName? })`, used by the standalone JSON and Vite hosts. It composes the native publisher and counter-state subscription with one disposal handle. This reduces duplication in the examples but does not activate `plugin.views`; either declaration below still needs the contribution lifecycle integration described here.
+
 A useful portable view contribution must activate on installation, stop on disable/disposal or dependency loss, and activate afresh on enable. It must also support the existing example's live business-state subscription. Native publication, shared state, validation, rendering and transport already provide their behavior; the SDK needs contribution lifecycle ownership around those calls.
 
 ```mermaid
@@ -29,7 +31,7 @@ const counterView = defineView({
   execution,
   scope: 'example',
   title: 'Shared counter',
-  spec: counterSpec(0),
+  spec: counterSpec({ value: 0 }),
 });
 
 const plugin = definePlugin({ id: 'example', views: [counterView] });
@@ -69,7 +71,7 @@ const counterView = defineView({
       id: 'counter',
       scope: 'example',
       title: 'Shared counter',
-      spec: counterSpec(state.value().value),
+      spec: counterSpec({ value: state.value().value }),
     });
     scope.onDispose(view.dispose);
     scope.onDispose(
