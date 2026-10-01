@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
-import { Key } from 'selenium-webdriver';
+import { Key, WebElementCondition } from 'selenium-webdriver';
 import type { WebElement } from 'selenium-webdriver';
 import { Context } from 'selenium-webdriver/firefox.js';
 import type { Driver } from 'selenium-webdriver/firefox.js';
@@ -132,10 +132,15 @@ export async function closeSidebar(driver: Driver): Promise<void> {
   await driver.wait(async () => (await sidebarCount(driver)) === 0, 10_000);
 }
 
-/** Chrome context requires script lookup for shadow elements; WebDriver performs the native click. */
+/** Wait for the browser-owned shadow button before the single native WebDriver click. */
 async function toggleSidebar(driver: Driver): Promise<void> {
-  const button = await driver.executeScript<WebElement>(
-    `return document.querySelector('sidebar-main').shadowRoot.querySelector('[extensionId="devkit-native-port@example.invalid"]');`,
+  const button = await driver.wait(
+    new WebElementCondition('for the Firefox extension sidebar button', () =>
+      driver.executeScript<WebElement | null>(
+        `return document.querySelector('sidebar-main')?.shadowRoot?.querySelector('[extensionId="devkit-native-port@example.invalid"]') ?? null;`,
+      ),
+    ),
+    10_000,
   );
   await button.click();
 }
