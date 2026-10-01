@@ -59,7 +59,7 @@ export function createRendererRpc(options: {
   };
 }
 
-function recipients(value: string): BroadcastInvocationOptions['selection'] {
+export function recipients(value: string): BroadcastInvocationOptions['selection'] {
   if (value === 'all') return [{ realm: 'devserver' }, { realm: 'webext' }];
   if (value === 'servers') return [{ realm: 'devserver' }];
   if (value === 'devframe') return [{ realm: 'devserver', provider: 'example.devframe' }];

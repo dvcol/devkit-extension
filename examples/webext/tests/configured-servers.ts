@@ -34,6 +34,7 @@ export async function checkConfiguredServers(page: Page, peer: Page): Promise<vo
   await expect(page.locator('#server-result')).toHaveText('3');
   assert.equal(await readCounter(devframe), 3);
   assert.equal(await readCounter(devtools), 2);
+  await checkCapabilityBroadcast(page, devframe, devtools);
   await devframe.close();
   await expect(page.locator('#providers')).toContainText('"status":"unknown"');
   await page.getByRole('button', { name: 'Increase with extension fallback' }).click();
@@ -43,6 +44,73 @@ export async function checkConfiguredServers(page: Page, peer: Page): Promise<vo
   await expect(page.locator('#server-result')).toContainText('rejected');
   await expect(page.locator('#server-result')).toContainText('fulfilled');
   assert.equal(await readCounter(devtools), 3);
+  await checkDisconnectedCapabilities(page, devframe, devtools);
+}
+
+async function checkDisconnectedCapabilities(
+  page: Page,
+  devframe: ServerHost,
+  devtools: ServerHost,
+): Promise<void> {
+  await checkCapabilities(page, 'all', [
+    {
+      provider: JSON.parse(await page.locator('#provider').innerText()) as unknown,
+      status: 'fulfilled',
+      value: 16,
+    },
+    {
+      provider: devframe.provider.provider,
+      status: 'rejected',
+      reason: { code: 'unavailable-provider' },
+    },
+    { provider: devtools.provider.provider, status: 'fulfilled', value: 3 },
+  ]);
+}
+
+async function checkCapabilityBroadcast(
+  page: Page,
+  devframe: ServerHost,
+  devtools: ServerHost,
+): Promise<void> {
+  const extension: unknown = JSON.parse(await page.locator('#provider').innerText());
+  const extensionResult = { provider: extension, status: 'fulfilled', value: 15 };
+  const devframeResult = { provider: devframe.provider.provider, status: 'fulfilled', value: 3 };
+  const devtoolsResult = { provider: devtools.provider.provider, status: 'fulfilled', value: 2 };
+  const all = [extensionResult, devframeResult, devtoolsResult];
+  await checkCapabilities(page, 'all', all);
+  await checkCapabilities(page, 'servers', [devframeResult, devtoolsResult]);
+  await checkCapabilities(page, 'devframe', [devframeResult]);
+  await checkCapabilities(page, 'extension', [extensionResult]);
+  await page
+    .locator('#management')
+    .getByRole('button', { name: 'Disable service', exact: true })
+    .click();
+  await expect(page.locator('#catalog')).toHaveText('disabled');
+  await checkCapabilities(page, 'all', [
+    { provider: extension, status: 'rejected', reason: { code: 'unavailable-provider' } },
+    devframeResult,
+    devtoolsResult,
+  ]);
+  await page
+    .locator('#management')
+    .getByRole('button', { name: 'Enable service', exact: true })
+    .click();
+  await expect(page.locator('#catalog')).toHaveText('active');
+  await checkCapabilities(page, 'all', all);
+}
+
+async function checkCapabilities(
+  page: Page,
+  selection: string,
+  expected: readonly unknown[],
+): Promise<void> {
+  await page.locator('#json-selection').selectOption(selection);
+  await page.getByRole('button', { name: 'Read selected capabilities', exact: true }).click();
+  await expect(page.locator('#result')).toHaveText(/^\[.*\]$/u);
+  const outcomes: unknown = JSON.parse(await page.locator('#result').innerText());
+  assert.ok(Array.isArray(outcomes));
+  assert.equal(outcomes.length, expected.length);
+  assert.partialDeepStrictEqual(outcomes, expected);
 }
 
 async function checkDeniedOrigin(page: Page): Promise<void> {

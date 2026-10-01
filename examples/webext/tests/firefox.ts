@@ -21,6 +21,14 @@ if (process.env.FIREFOX_BINARY !== undefined) options.setBinary(process.env.FIRE
 const service = new ServiceBuilder().addArguments('--allow-system-access');
 const driver = Driver.createSession(options, service.build());
 const origin = `moz-extension://${extensionUuid}`;
+const capabilityChecks = [
+  'portable action, capability and explicit routing',
+  'broadcast and catalog disable/enable reach both pages',
+  'native capability broadcast reads independent values from all three providers',
+  'native capability broadcast honors realm and explicit provider selection',
+  'native capability broadcast preserves successful servers while the extension service is disabled and recovers after enable',
+  'native capability broadcast preserves successful recipients after server disconnect',
+];
 
 try {
   await mkdir('artifacts/firefox', { recursive: true });
@@ -251,8 +259,6 @@ async function saveEvidence(surfaceChecks: string[]): Promise<void> {
       'pending call rejects on disconnect and renderer unmounts',
       'backend completes once without replay after reconnect',
       'provider incarnation survives page reconnect',
-      'portable action, capability and explicit routing',
-      'broadcast and catalog disable/enable reach both pages',
       'native JSON management controls disable and reenable the service with authoritative status on both pages',
       'management renderer unmounts on disconnect and remounts once with current state',
       'detached management button cannot disable the service after disconnect',
@@ -266,6 +272,7 @@ async function saveEvidence(surfaceChecks: string[]): Promise<void> {
       'native JSON explicit provider filter excludes other recipients',
       'native JSON broadcast preserves successful siblings after server disconnect',
       'explicit provider preference, disconnect fallback and partial broadcast failure',
+      ...capabilityChecks,
       'late native view publication on both server connections',
       'identical native view keys retain separate state and action ownership',
       'view removal and republication leave one working mount',

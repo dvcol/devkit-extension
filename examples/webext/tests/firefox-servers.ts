@@ -47,6 +47,7 @@ export async function checkFirefoxServers(driver: Driver): Promise<void> {
   await result(driver, /^5$/u);
   assert.equal(await readCounter(devframe), 5);
   assert.equal(await readCounter(devtools), 3);
+  await checkCapabilityBroadcast(driver, devframe, devtools);
   await checkDisconnectedServer(driver, devframe, devtools);
   await checkReconnectedView(driver, devtools);
 }
@@ -96,6 +97,69 @@ async function checkDisconnectedServer(
   await result(driver, /rejected/u, '#json-result');
   assert.equal(await readCounter(devtools), 4);
   await viewText(driver, 'example.devtools', 4);
+  await checkCapabilities(driver, 'all', [
+    {
+      provider: JSON.parse(await driver.findElement(By.css('#provider')).getText()) as unknown,
+      status: 'fulfilled',
+      value: 16,
+    },
+    {
+      provider: devframe.provider.provider,
+      status: 'rejected',
+      reason: { code: 'unavailable-provider' },
+    },
+    { provider: devtools.provider.provider, status: 'fulfilled', value: 4 },
+  ]);
+}
+
+async function checkCapabilityBroadcast(
+  driver: Driver,
+  devframe: ServerHost,
+  devtools: ServerHost,
+): Promise<void> {
+  const extension: unknown = JSON.parse(await driver.findElement(By.css('#provider')).getText());
+  const extensionResult = { provider: extension, status: 'fulfilled', value: 15 };
+  const devframeResult = { provider: devframe.provider.provider, status: 'fulfilled', value: 5 };
+  const devtoolsResult = { provider: devtools.provider.provider, status: 'fulfilled', value: 3 };
+  const all = [extensionResult, devframeResult, devtoolsResult];
+  await checkCapabilities(driver, 'all', all);
+  await checkCapabilities(driver, 'servers', [devframeResult, devtoolsResult]);
+  await checkCapabilities(driver, 'devframe', [devframeResult]);
+  await checkCapabilities(driver, 'extension', [extensionResult]);
+  await changeService(driver, 'Disable service', 'disabled');
+  await checkCapabilities(driver, 'all', [
+    { provider: extension, status: 'rejected', reason: { code: 'unavailable-provider' } },
+    devframeResult,
+    devtoolsResult,
+  ]);
+  await changeService(driver, 'Enable service', 'active');
+  await checkCapabilities(driver, 'all', all);
+}
+
+async function changeService(driver: Driver, label: string, status: string): Promise<void> {
+  const root = await driver.findElement(By.css('#management')).getShadowRoot();
+  const buttons = await root.findElements(By.css('button'));
+  for (const button of buttons) {
+    if ((await button.getText()) !== label) continue;
+    await button.click();
+    await result(driver, new RegExp(`^${status}$`, 'u'), '#catalog');
+    return;
+  }
+  throw new Error(`Missing JSON management action ${label}`);
+}
+
+async function checkCapabilities(
+  driver: Driver,
+  selection: string,
+  expected: readonly unknown[],
+): Promise<void> {
+  await driver.findElement(By.css(`#json-selection option[value="${selection}"]`)).click();
+  await driver.findElement(By.css('#capabilities')).click();
+  await result(driver, /^\[.*\]$/u, '#result');
+  const outcomes: unknown = JSON.parse(await driver.findElement(By.css('#result')).getText());
+  assert.ok(Array.isArray(outcomes));
+  assert.equal(outcomes.length, expected.length);
+  assert.partialDeepStrictEqual(outcomes, expected);
 }
 
 async function checkDeniedOrigin(driver: Driver): Promise<void> {

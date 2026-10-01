@@ -1,6 +1,6 @@
 import { createExampleConnection } from './connection';
 import { mountServerControls } from './servers';
-import { createRendererRpc } from './renderer-actions';
+import { createRendererRpc, recipients } from './renderer-actions';
 import { mountPermissionControls } from './permissions';
 import type { DevframeJsonRenderSpec } from '@devframes/json-render';
 import renderer from '@devframes/json-render-ui/renderer';
@@ -155,6 +155,14 @@ onClick('#capability', async () => {
   if (resolution.status !== 'available') throw new Error(`Counter is ${resolution.reason}`);
   return resolution.binding.api.read({});
 });
+onClick('#capabilities', () =>
+  routedClient.capabilities.broadcast({
+    capability: counterCapability,
+    operation: 'read',
+    input: {},
+    selection: recipients(document.querySelector<HTMLSelectElement>('#json-selection')!.value),
+  }),
+);
 onClick('#broadcast', () =>
   routedClient.actions.broadcast({
     action: increaseCounterAction,

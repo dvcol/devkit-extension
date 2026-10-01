@@ -22,7 +22,7 @@ flowchart LR
 
 The worker admits only its own extension ID, expected channel name and exact packaged page URL. Its native RPC metadata retains each actual sender. The channel uses Devframe's records serializer. Native state accepts normal native writes, and view publication retains one context object for its index and duplicate detection. Each page owns its RPC close, state mirrors and renderer disposal. Disconnect does not cancel remote side effects or replay an action.
 
-The Chromium test uses a disposable profile and removes it afterward. Its 43 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
+The Chromium test uses a disposable profile and removes it afterward. Its 47 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
 
 ![Native renderer using the installed workspace dependencies](./evidence/native-port-proof.png)
 
@@ -54,7 +54,7 @@ FIREFOX_BINARY=/Applications/Firefox.app/Contents/MacOS/firefox \
 
 The driver owns a temporary profile, assigns this add-on a test-only origin UUID and removes the session on exit. Its `--allow-system-access` option permits automation of `moz-extension` documents; it is never applied to a normal browsing profile. WebDriver Classic provides working extension-page navigation. Firefox BiDi currently omits extension-page lifecycle events, causing Puppeteer navigation to time out, as tracked in [Puppeteer #14314](https://github.com/puppeteer/puppeteer/issues/14314).
 
-The [Firefox receipt](./evidence/firefox/receipt.json) records 47 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Both suites open actual options pages and toolbar popups through native APIs. Both suites also exercise the real DevTools panel and browser sidebar lifetimes described below.
+The [Firefox receipt](./evidence/firefox/receipt.json) records 51 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Both suites open actual options pages and toolbar popups through native APIs. Both suites also exercise the real DevTools panel and browser sidebar lifetimes described below.
 
 ![Firefox native renderer and mixed-provider state](./evidence/firefox/native-port-proof.png)
 
@@ -219,6 +219,10 @@ flowchart LR
 ```
 
 `tests/configured-servers.ts` starts real Devframe and DevTools backends using the same imported counter contracts. It proves denied origin and invalid credentials leave counters unchanged, both authorized connections coexist, a devserver-only broadcast excludes the extension, and an all-realm broadcast updates all three providers. Explicit preference selects Devframe; after its shutdown, a new invocation falls back to the extension. A subsequent broadcast returns a rejected Devframe outcome and a fulfilled DevTools result. No request is replayed after dispatch.
+
+**Read selected capabilities** is a diagnostic control that calls `client.capabilities.broadcast` with the shared counter contract's `read` operation. It uses the same recipient picker as the JSON action, and displays each provider's identity and separate outcome in the diagnostic result. The existing Port and isolated WebSocket connections own the calls. This control remains host-authored HTML, alongside the connection probes.
+
+Both production browser suites click the control after their actions have produced different values on all three providers. They check exact recipient counts, realm/provider IDs and backend incarnations for all-realm, devserver-only, explicit Devframe and extension-only selection. Disabling the extension service returns `unavailable-provider` beside successful server results; reenabling it restores the same values. Closing Devframe returns its failure beside successful extension and DevTools results. These reads add no counter mutations. The [Chromium receipt](./evidence/receipt.json) and [Firefox receipt](./evidence/firefox/receipt.json) record the four capability-broadcast checks. The separate unit suite covers selector errors, action deduplication/cancellation and capability handler failures; these browser checks do not extend those cases.
 
 These controls demonstrate application-owned explicit configuration. The selected-page alternative below uses the same owned connection setup. The reference JSON view still renders the extension provider's native state; cross-provider view composition remains separate work.
 
