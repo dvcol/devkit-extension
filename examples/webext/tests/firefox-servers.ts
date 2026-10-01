@@ -3,7 +3,13 @@ import { createRemoteHost } from '@devkit/example-server-contexts';
 import { counterCapability } from '@devkit/example-contribution';
 import { By, until } from 'selenium-webdriver';
 import type { Driver } from 'selenium-webdriver/firefox.js';
-import { checkFirefoxViews, viewText } from './firefox-views.ts';
+import {
+  checkFirefoxViews,
+  clickRetainedViewButton,
+  clickView,
+  retainViewButton,
+  viewText,
+} from './firefox-views.ts';
 
 type ServerHost = Awaited<ReturnType<typeof createRemoteHost>>;
 
@@ -42,6 +48,30 @@ export async function checkFirefoxServers(driver: Driver): Promise<void> {
   assert.equal(await readCounter(devframe), 5);
   assert.equal(await readCounter(devtools), 3);
   await checkDisconnectedServer(driver, devframe, devtools);
+  await checkReconnectedView(driver, devtools);
+}
+
+async function checkReconnectedView(driver: Driver, host: ServerHost): Promise<void> {
+  const providerId = host.provider.provider.id;
+  await retainViewButton(driver, providerId);
+  await driver.findElement(By.css('#disconnect')).click();
+  await result(driver, /^Disconnected$/u, '#status');
+  assert.equal((await driver.findElements(By.css('#server-views > *'))).length, 0);
+  await clickRetainedViewButton(driver);
+  assert.equal(await readCounter(host), 4);
+  await driver.navigate().refresh();
+  await result(driver, /^Connected$/u, '#status');
+  await connect(driver, host, host.token);
+  await result(driver, /^"Connected example\.devtools"$/u);
+  await viewText(driver, providerId, 4);
+  assert.equal(
+    (await driver.findElements(By.css(`[data-provider="${providerId}"] [data-view]`))).length,
+    1,
+  );
+  await clickView(driver, providerId);
+  await viewText(driver, providerId, 5);
+  assert.equal(await readCounter(host), 5);
+  await counter(driver, 16);
 }
 
 async function checkDisconnectedServer(

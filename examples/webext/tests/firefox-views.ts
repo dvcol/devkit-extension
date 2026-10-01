@@ -20,6 +20,7 @@ export async function checkFirefoxViews(
   assert.equal(first.view.ref.stateKey, second.view.ref.stateKey);
   await viewText(driver, 'example.devframe', 3);
   await viewText(driver, 'example.devtools', 3);
+  await retainViewButton(driver, 'example.devframe');
   first.dispose();
   await driver.wait(
     async () =>
@@ -27,14 +28,11 @@ export async function checkFirefoxViews(
         .length === 0,
     10_000,
   );
+  await clickRetainedViewButton(driver);
   const replacement = await publishCounterView(devframe);
   cleanup.defer(replacement.dispose);
   await viewText(driver, 'example.devframe', 3);
-  const root = await driver
-    .findElement(By.css('[data-provider="example.devframe"] [data-view]'))
-    .getShadowRoot();
-  const button = await root.findElement(By.css('button'));
-  await button.click();
+  await clickView(driver, 'example.devframe');
   await viewText(driver, 'example.devframe', 4);
   await viewText(driver, 'example.devtools', 3);
   assert.equal(
@@ -46,6 +44,34 @@ export async function checkFirefoxViews(
   return () => {
     lifetime.dispose();
   };
+}
+
+export async function clickView(driver: Driver, providerId: string): Promise<void> {
+  const root = await driver
+    .findElement(By.css(`[data-provider="${providerId}"] [data-view]`))
+    .getShadowRoot();
+  const button = await root.findElement(By.css('button'));
+  await button.click();
+}
+
+/** Keep the DOM node in the page because WebDriver rejects detached element references. */
+export async function retainViewButton(driver: Driver, providerId: string): Promise<void> {
+  await driver.executeScript((identifier: string) => {
+    const container = document.querySelector(`[data-provider="${identifier}"] [data-view]`);
+    const button = container?.shadowRoot?.querySelector('button');
+    if (button === null || button === undefined) throw new Error('View button is unavailable');
+    Reflect.set(window, '__devkitRetainedViewButton', button);
+  }, providerId);
+}
+
+export async function clickRetainedViewButton(driver: Driver): Promise<void> {
+  await driver.executeScript(() => {
+    const button: unknown = Reflect.get(window, '__devkitRetainedViewButton');
+    Reflect.deleteProperty(window, '__devkitRetainedViewButton');
+    if (!(button instanceof HTMLButtonElement)) throw new Error('Retained button is unavailable');
+    if (button.isConnected) throw new Error('Retained button is still mounted');
+    button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
 }
 
 export async function viewText(driver: Driver, providerId: string, value: number): Promise<void> {
