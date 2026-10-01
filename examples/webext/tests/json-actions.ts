@@ -28,6 +28,7 @@ try {
   await page.locator('#json-selection').selectOption('servers');
   await page.getByRole('button', { name: 'Increase matching domain', exact: true }).click();
   await expect(page.locator('#json-result')).toContainText('Broadcast was not dispatched');
+  await expect(page.getByRole('alert')).toContainText('Broadcast was not dispatched');
   await expect(
     page.getByText('Dispatch failed. See action results.', { exact: true }),
   ).toBeVisible();
@@ -81,13 +82,11 @@ try {
       'reconnect retains background state without replay',
       'native input state binding and onSuccess callback',
       'native onError handles unmatched recipients; onSuccess clears the application status',
+      'native renderer clears its failed-action alert when the same action is retried successfully',
     ],
     finalCounters: { devframe: 3, devtools: 4, extension: 3 },
     pageErrors: errors,
-    limitations: [
-      'Native renderer last-error banner remains visible after successful retry',
-      'Domain applicability matrix currently runs in Chromium',
-    ],
+    limitations: ['Domain applicability matrix currently runs in Chromium'],
   };
   await writeFile('artifacts/json-actions.json', JSON.stringify(receipt, null, 2));
   console.info(styleText('green', '✅ [json-actions]'), receipt);
@@ -103,6 +102,7 @@ async function checkSelection(
 ): Promise<void> {
   await dispatch(page, 'servers', 'shared.example.test');
   await expect(page.locator('#json-result')).toContainText('"value":1');
+  await expect(page.getByRole('alert')).toHaveCount(0);
   await expect(page.getByText('Dispatch failed. See action results.', { exact: true })).toHaveCount(
     0,
   );

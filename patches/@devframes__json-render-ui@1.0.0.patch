@@ -1,8 +1,17 @@
 diff --git a/dist/renderer/json-render.mjs b/dist/renderer/json-render.mjs
-index d7d3eed3e1e39916452ad03804d932fbb78ad677..3e8d931c82e974b273cb97c717b4b74bfda06e15 100644
+index d7d3eed3e1e39916452ad03804d932fbb78ad677..192784a0dafd6cd124f0ce2758306c18f61a5e4c 100644
 --- a/dist/renderer/json-render.mjs
 +++ b/dist/renderer/json-render.mjs
-@@ -23203,11 +23203,18 @@ var XF = qF(), ZF = async ({ entry: e, container: t, context: r }) => {
+@@ -23028,6 +23028,8 @@ function VF(e, t = {}) {
+ 					error: e
+ 				}, e;
+ 			}
++			if (i.value?.action === t)
++				i.value = null;
+ 			r[t] = !0;
+ 			try {
+ 				return await e.call(t, a);
+@@ -23203,11 +23205,18 @@ var XF = qF(), ZF = async ({ entry: e, container: t, context: r }) => {
  		attributes: !0,
  		attributeFilter: ["class"]
  	}), a.append(o), i.append(a);
@@ -45,7 +54,7 @@ index 0000000000000000000000000000000000000000..772ad636741e8dfce8bf3d2e6fb5977f
 +export { jsonRenderDockRenderer as default };
 \ No newline at end of file
 diff --git a/package.json b/package.json
-index c6c9bbf4ce1ada3a65fd6ff84773e4e63264abcd..d7a112c1c10f6e2ae25d143a9d741ae6c708ab29 100644
+index c6c9bbf4ce1ada3a65fd6ff84773e4e63264abcd..00efdb1a686ba1cc8ba5e383983cb1e7629d83e9 100644
 --- a/package.json
 +++ b/package.json
 @@ -22,14 +22,19 @@

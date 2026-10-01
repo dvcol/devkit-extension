@@ -2,6 +2,8 @@
 
 Investigation for [issue 12](https://github.com/dvcol/devkit-extension/issues/12), 2026-09-30.
 
+Implementation follow-up, 2026-10-01: [upstream PR 416](https://github.com/devframes/devframe/pull/416) contains the native reset and four source regressions. Its two runtime lines are now included in the repository's [versioned renderer patch](../../patches/README.md#native-renderer-action-retry). Maintained Chromium and Firefox tests assert native alert recovery. The experiments below describe the earlier unpatched behavior; the installed-package probe should now pass without `--candidate`.
+
 The stale banner originates in `@devframes/json-render-ui`'s `createActionBridge`. The bridge records failures but never clears its error reference. `JsonRenderView` renders that reference as an alert independently of the JSON specification's state and action callbacks. Calling this a native quirk understated a reproducible error-lifecycle defect.
 
 ## Reproduction and isolation

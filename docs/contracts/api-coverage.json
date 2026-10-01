@@ -2027,7 +2027,8 @@
             "outgoing realm and explicit provider selection",
             "provider-owned domain applicability across all three native hosts",
             "unavailable provider preserves successful siblings",
-            "disconnected native server reports failure without rerouting"
+            "disconnected native server reports failure without rerouting",
+            "native renderer clears its failed-action alert when the same action is retried successfully"
           ],
           "host": "chromium-webext",
           "mode": "production-extension/native-development-servers",
@@ -2039,7 +2040,8 @@
           "receiptFile": "artifacts/firefox/receipt.json",
           "checks": [
             "native JSON controls broadcast to selected devserver and all-realm recipients",
-            "native JSON broadcast preserves successful siblings after server disconnect"
+            "native JSON broadcast preserves successful siblings after server disconnect",
+            "native renderer clears its failed-action alert when the same action is retried successfully"
           ],
           "host": "firefox-webext",
           "mode": "production-extension/native-development-servers",

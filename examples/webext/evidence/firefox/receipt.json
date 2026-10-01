@@ -17,6 +17,7 @@
     "native origin admission and authentication reject unauthorized connections",
     "isolated Devframe and DevTools connections coexist with the extension provider",
     "native JSON controls broadcast to selected devserver and all-realm recipients",
+    "native renderer clears its failed-action alert when the same action is retried successfully",
     "native JSON input reaches provider-owned domain applicability on all three backends",
     "native JSON explicit provider filter excludes other recipients",
     "native JSON broadcast preserves successful siblings after server disconnect",

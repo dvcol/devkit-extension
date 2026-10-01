@@ -9,6 +9,7 @@ type ServerHost = Awaited<ReturnType<typeof createRemoteHost>>;
 
 export async function checkFirefoxServers(driver: Driver): Promise<void> {
   await using cleanup = new AsyncDisposableStack();
+  await checkMissingServers(driver);
   const allowedOrigins = [await driver.executeScript<string>('return location.origin')];
   await checkDeniedOrigin(driver);
   const devframe = await createRemoteHost('devframe', {
@@ -83,6 +84,11 @@ async function checkBroadcast(
   devtools: ServerHost,
 ): Promise<void> {
   await dispatchJson(driver, 'servers', 'shared.example.test');
+  const root = await driver.findElement(By.css('#renderer')).getShadowRoot();
+  await driver.wait(
+    async () => (await root.findElements(By.css('[role="alert"]'))).length === 0,
+    10_000,
+  );
   assert.equal(await readCounter(devframe), 1);
   assert.equal(await readCounter(devtools), 1);
   await counter(driver, 14);
@@ -110,6 +116,19 @@ async function checkBroadcast(
 }
 
 async function dispatchJson(driver: Driver, selection: string, domain: string): Promise<void> {
+  await clickJson(driver, selection, domain);
+  await result(driver, /fulfilled/u, '#json-result');
+}
+
+async function checkMissingServers(driver: Driver): Promise<void> {
+  await clickJson(driver, 'servers', 'shared.example.test');
+  await result(driver, /Broadcast was not dispatched/u, '#json-result');
+  const root = await driver.findElement(By.css('#renderer')).getShadowRoot();
+  const alert = await root.findElement(By.css('[role="alert"]'));
+  await driver.wait(until.elementTextContains(alert, 'Broadcast was not dispatched'), 10_000);
+}
+
+async function clickJson(driver: Driver, selection: string, domain: string): Promise<void> {
   await driver.findElement(By.css(`#json-selection option[value="${selection}"]`)).click();
   const root = await driver.findElement(By.css('#renderer')).getShadowRoot();
   const input = await root.findElement(By.css('input'));
@@ -120,7 +139,6 @@ async function dispatchJson(driver: Driver, selection: string, domain: string): 
   assert.ok(matching !== undefined);
   assert.equal(await matching.getText(), 'Increase matching domain');
   await matching.click();
-  await result(driver, /fulfilled/u, '#json-result');
 }
 
 async function counter(driver: Driver, value: number): Promise<void> {

@@ -44,6 +44,12 @@ The exact-version patches for `@devframes/json-render@1.0.0` and `@devframes/jso
 
 The installed-package test checks cross-entry duplicate detection, discovery and replacement. The actual patched 1.0 dependency graph passes the 12-scenario Chromium proof, including denied admission and failed-mount cleanup, with zero page errors. This removes the prototype checkout requirement for the runtime APIs; full portable provider/catalog composition and browser surface coverage remain separate work.
 
+## Native renderer action retry
+
+The `@devframes/json-render-ui@1.0.0` patch also backports the two runtime lines from [Devframe PR 416](https://github.com/devframes/devframe/pull/416) at `dc7b205c`. The native action bridge clears its retained error before retrying that same action. Other actions leave the error intact; a new failure replaces it. Successful completion does not clear a failure received while that call was pending.
+
+The maintained Chromium JSON-action and Firefox production tests assert the native alert is visible after unmatched routing rejects, then disappears when the same action succeeds after connecting providers. The Chromium assertion fails against the previous patch despite successful counter updates. No SDK routing, error policy or renderer implementation is added. Remove this backport when a released renderer passes those native regressions. Like the other patches, it is private workspace installation policy, not an automatically distributed consumer fix.
+
 ## WXT development tooling
 
 The maintained extension development commands use WXT 0.21.4 and its native web-ext 10.7.0 runner. Two exact-version patches promote the independently replayed [declaration and lifecycle fixes](../docs/research/wxt-adoption-gates.md):

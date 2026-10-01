@@ -12,7 +12,8 @@
     "detached rendered button cannot dispatch after unmount",
     "reconnect retains background state without replay",
     "native input state binding and onSuccess callback",
-    "native onError handles unmatched recipients; onSuccess clears the application status"
+    "native onError handles unmatched recipients; onSuccess clears the application status",
+    "native renderer clears its failed-action alert when the same action is retried successfully"
   ],
   "finalCounters": {
     "devframe": 3,
@@ -20,8 +21,5 @@
     "extension": 3
   },
   "pageErrors": [],
-  "limitations": [
-    "Native renderer last-error banner remains visible after successful retry",
-    "Domain applicability matrix currently runs in Chromium"
-  ]
+  "limitations": ["Domain applicability matrix currently runs in Chromium"]
 }
