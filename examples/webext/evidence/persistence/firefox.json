@@ -1,0 +1,46 @@
+{
+  "browser": "157.0",
+  "storageKey": "example.persisted-counter",
+  "lifecycle": "chrome.runtime.reload()",
+  "oldExtensionTabsClosed": 2,
+  "previous": {
+    "id": "example.extension",
+    "incarnation": "fe3bced2-073b-4652-917d-2bafec4a0e51",
+    "realm": {
+      "id": "webext"
+    }
+  },
+  "replacement": {
+    "id": "example.extension",
+    "incarnation": "85ea88ac-bf34-4d32-93d0-41d95fa41341",
+    "realm": {
+      "id": "webext"
+    }
+  },
+  "confirmedBeforeReload": {
+    "value": 10
+  },
+  "restored": 10,
+  "nextValue": 11,
+  "independentValue": 44,
+  "executionsBeforeReload": {
+    "started": 1,
+    "completed": 1
+  },
+  "executions": {
+    "started": 0,
+    "completed": 0
+  },
+  "checks": [
+    "two Firefox native clients share action and native-state updates written to storage.local",
+    "explicit native extension reload closes both old tabs and restores the saved counter under a fresh provider incarnation",
+    "fresh Firefox clients each mount one counter and management view and share one action effect",
+    "a separate storage key remains unchanged and diagnostic execution state stays ephemeral"
+  ],
+  "limitations": [
+    "Explicit extension reload after a confirmed write, not natural event-page suspension or browser restart",
+    "Native writes are asynchronous; action completion is not durable storage acknowledgement",
+    "Firefox quota and interrupted-write behavior are not exercised",
+    "No global page-error capture through WebDriver Classic"
+  ]
+}

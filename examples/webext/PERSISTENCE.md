@@ -43,6 +43,7 @@ Writes remain asynchronous native operations. An action can finish before its wr
 ```sh
 VITE_COUNTER_STORAGE_KEY=example.persisted-counter pnpm --filter @devkit/example-webext build
 VITE_COUNTER_STORAGE_KEY=example.persisted-counter pnpm --filter @devkit/example-webext exec node tests/chromium-persistence.ts
+VITE_COUNTER_STORAGE_KEY=example.persisted-counter pnpm --filter @devkit/example-webext exec node tests/firefox-persistence.ts
 pnpm --filter @devkit/example-webext test
 ```
 
@@ -54,4 +55,6 @@ The module tests replace only browser storage/Port I/O. They execute the real ba
 
 Chromium 153.0.8010.12 passed with zero page errors. [Receipt](./evidence/persistence/chromium.json), [restored UI](./evidence/persistence/chromium.png), [native quota failure](./evidence/persistence/chromium-quota.png). Fresh runs write the same artifacts under `artifacts/persistence`, retained by CI.
 
-This establishes forced Chromium worker termination **after a confirmed storage write**. It does not establish natural idle suspension, interruption of an outstanding write, persistence across browser restart/uninstall, cross-profile synchronization, concurrent external-writer behavior or a Firefox persistent-background reload. Firefox's persistent bundle is checked; its live persistence behavior remains unproved. The default Chromium and Firefox examples retain their separate native regression suites.
+The Firefox test uses the public `chrome.runtime.reload()` API after observing the saved counter at 10. It verifies that both old extension tabs close. Explicit replacement tabs restore 10 under the same provider ID/realm and a different incarnation, with one counter and management mount in each. One JSON action then reaches 11 in both pages and storage. A separate key retains 44; diagnostic execution state changes from 1 started/1 completed before reload to 0/0 afterward. Firefox 157.0 passed this actual extension-reload scenario. [Receipt](./evidence/persistence/firefox.json), [restored UI](./evidence/persistence/firefox.png). WebDriver Classic does not provide the global page-error capture used by the Chromium test.
+
+These checks establish forced Chromium worker termination and explicit Firefox extension reload **after a confirmed storage write**. They do not establish natural idle suspension, interruption of an outstanding write, persistence across browser restart/uninstall, cross-profile synchronization or concurrent external-writer behavior. Firefox's quota and interrupted-write behavior remain unproved. The default Chromium and Firefox examples retain their separate native regression suites.
