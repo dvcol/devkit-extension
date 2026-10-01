@@ -3,6 +3,7 @@ import { appendFile, readFile, writeFile } from 'node:fs/promises';
 import { Context } from 'selenium-webdriver/firefox.js';
 import type { Driver } from 'selenium-webdriver/firefox.js';
 import { closePanel, identity, increase, openPanel, panelScript } from './firefox-devtools.ts';
+import { updateDevtoolsRegistration } from './devtools-registration.ts';
 
 type PanelSnapshot = {
   timeOrigin: number;
@@ -46,6 +47,7 @@ export async function checkFirefoxDevtoolsDevelopment(
     await checkHtmlReload(driver, fixture, updated, counter + 1);
     await increase(driver, counter + 2);
     await peerCounter(windows, counter + 2, provider);
+    await checkRegistrationUpdate(windows, fixture);
     await closePanel(driver);
   } finally {
     await driver.setContext(Context.CONTENT);
@@ -53,6 +55,41 @@ export async function checkFirefoxDevtoolsDevelopment(
     await driver.close();
     await driver.switchTo().window(options);
   }
+}
+
+async function checkRegistrationUpdate(windows: Windows, fixture: string): Promise<void> {
+  const { driver } = windows;
+  const before = await snapshot(driver);
+  await updateDevtoolsRegistration(fixture);
+  await driver.wait(async () => (await registrationTitles(driver)).length === 0, 30_000);
+  const immediateTitles = await registrationTitles(driver);
+  assert.deepEqual(immediateTitles, []);
+  await closePanel(driver);
+  await openPanel(driver);
+  assert.deepEqual(await registrationTitles(driver), ['Devkit updated']);
+  const after = await snapshot(driver);
+  assert.notEqual(after.timeOrigin, before.timeOrigin);
+  assert.notEqual(after.caller, before.caller);
+  assert.equal(after.provider, before.provider);
+  assert.equal(after.counter, before.counter);
+  const counter = Number(before.counter) + 1;
+  await increase(driver, counter);
+  await peerCounter(windows, counter, before.provider);
+  const receipt = {
+    immediateTitles,
+    reopenedTitles: await registrationTitles(driver),
+    before,
+    after,
+  };
+  await writeFile(
+    'artifacts/firefox-development/devtools-registration.json',
+    JSON.stringify(receipt, null, 2),
+  );
+}
+
+function registrationTitles(driver: Driver): Promise<string[]> {
+  return driver.executeScript(`const toolbox = document.querySelector('.devtools-toolbox-iframe')?.contentDocument;
+    return Array.from(toolbox?.querySelectorAll('[data-extension-id="devkit-native-port@example.invalid"]') ?? [], tab => tab.textContent.trim());`);
 }
 
 async function updateModule(driver: Driver, fixture: string): Promise<void> {

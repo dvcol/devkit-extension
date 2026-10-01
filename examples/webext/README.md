@@ -157,7 +157,18 @@ Actual DevTools panels and browser sidebars now exercise both module HMR and HTM
 
 ![Chromium sidebar after native HTML reload](./evidence/development/chromium/sidebar.png)
 
-WXT originally reloaded every HTML entry in the rebuilt group, including unchanged `devtools.html`. That removed Firefox's Devkit tab after a `panel.html` edit. The [small WXT correction](../../docs/research/wxt-html-reload.md) compares emitted HTML and reloads changed pages through the existing native method. A real-build regression also checks shared transform output and missing snapshots. This does not handle direct changes to the DevTools registration page, whose native lifetime can require reopening the toolbox.
+WXT originally reloaded every HTML entry in the rebuilt group, including unchanged `devtools.html`. That removed Firefox's Devkit tab after a `panel.html` edit. The [small WXT correction](../../docs/research/wxt-html-reload.md) compares emitted HTML and reloads changed pages through the existing native method. A real-build regression also checks shared transform output and missing snapshots.
+
+Changing the registration module itself has a different native lifetime. The development tests edit the disposable fixture's `src/devtools.ts` to rename the panel, then explicitly close and reopen the native toolbox:
+
+| Observation                                   | Chromium                                                       | Firefox                                                     |
+| --------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------- |
+| Open toolbox after registration module update | Registration document reloads; existing tab keeps its old name | Extension tab disappears                                    |
+| Native toolbox reopened                       | Exactly one tab with the updated name                          | Exactly one tab with the updated name                       |
+| Reopened panel                                | Fresh document/caller; same background provider and counter    | Fresh document/caller; same background provider and counter |
+| One rendered action                           | One increment, observed by options                             | One increment, observed by options                          |
+
+[Chromium registration receipt](./evidence/development/chromium/devtools-registration.json) and [Firefox registration receipt](./evidence/development/firefox/devtools-registration.json) retain the observed transitions. Chromium observes the hidden registration document through its native debugging protocol because it is omitted from normal extension view enumeration. Firefox observes the actual DevTools tab disappearing. The SDK adds no automatic toolbox reopen. These checks cover registration-module edits; direct registration-HTML edits remain a separate acceptance case.
 
 ```sh
 # Run both installed browsers concurrently:

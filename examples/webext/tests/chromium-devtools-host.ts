@@ -7,14 +7,24 @@ import { attachTargetSession } from './target-session.ts';
 type DevtoolsSession = Awaited<ReturnType<typeof attachTargetSession>>;
 export type DevtoolsPanel = Awaited<ReturnType<typeof openDevtoolsPanel>>;
 
+/** Native extension view enumeration excludes the hidden registration document. */
+export async function attachDevtoolsRegistration(control: CDPSession, origin: string) {
+  const { targetInfos } = await control.send('Target.getTargets');
+  const target = targetInfos.find((candidate) => candidate.url === `${origin}/devtools.html`);
+  assert.ok(target);
+  return attachTargetSession(control, target.targetId);
+}
+
 export async function openDevtoolsPanel({
   control,
   inspectedId,
   origin,
+  panelTitle = 'Devkit',
 }: {
   control: CDPSession;
   inspectedId: string;
   origin: string;
+  panelTitle?: string;
 }) {
   const { targetId } = await control.send('Target.openDevTools', {
     targetId: inspectedId,
@@ -29,7 +39,7 @@ export async function openDevtoolsPanel({
       ),
     )
     .toBe(true);
-  await selectDevtoolsPanel(frontend, true);
+  await selectDevtoolsPanel(frontend, true, panelTitle);
   let panelTargetId: string | undefined;
   await expect
     .poll(async () => {
@@ -50,6 +60,7 @@ export async function openDevtoolsPanel({
 export async function selectDevtoolsPanel(
   frontend: DevtoolsSession,
   extension: boolean,
+  panelTitle = 'Devkit',
 ): Promise<void> {
   /** Native next-panel shortcut also reaches tabs hidden in the overflow menu. */
   const modifiers = process.platform === 'darwin' ? 4 : 2;
@@ -59,7 +70,7 @@ export async function selectDevtoolsPanel(
   for (let attempt = 0; attempt < 20; attempt += 1) {
     if (
       (await frontend.evaluate(`function elements(root) { const found = [...root.querySelectorAll('*')]; for (const element of [...found]) if (element.shadowRoot) found.push(...elements(element.shadowRoot)); return found; }
-elements(document).some(element => element.getAttribute('role') === 'tab' && element.getAttribute('aria-selected') === 'true' && element.textContent === 'Devkit')`)) ===
+elements(document).some(element => element.getAttribute('role') === 'tab' && element.getAttribute('aria-selected') === 'true' && element.textContent === ${JSON.stringify(panelTitle)})`)) ===
       extension
     )
       return;
@@ -93,7 +104,7 @@ elements(document).some(element => element.getAttribute('role') === 'tab' && ele
     });
     await setTimeout(100);
   }
-  throw new Error(`Native DevTools did not ${extension ? 'show' : 'hide'} the Devkit tab`);
+  throw new Error(`Native DevTools did not ${extension ? 'show' : 'hide'} the ${panelTitle} tab`);
 }
 
 export async function closeDevtoolsPanel(control: CDPSession, panel: DevtoolsPanel): Promise<void> {

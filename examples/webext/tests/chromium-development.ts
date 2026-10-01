@@ -96,6 +96,7 @@ await writeFile(
         'Pre-HMR popup work completes once without overwriting the replacement result',
         'Actual popup HTML reload replaces document and caller, resets local form, retains provider/state and invokes one JSON action observed by options',
         'Actual DevTools panel module HMR retains document and state; HTML reload replaces document; each JSON action reaches options once',
+        'DevTools registration module edit reloads its hidden document but retains the old tab title; native toolbox reopen adopts one updated tab with retained provider/state and one JSON action effect',
         'Actual browser sidebar module HMR retains document and state; HTML reload replaces document; each JSON action reaches options once',
         'Native stop closes browser',
       ],

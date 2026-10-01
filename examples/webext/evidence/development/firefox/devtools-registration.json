@@ -1,0 +1,18 @@
+{
+  "immediateTitles": [],
+  "reopenedTitles": ["Devkit updated"],
+  "before": {
+    "buttonLabels": ["Increase counter", "Increase matching domain"],
+    "counter": "8",
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"d7404f80-6c56-4dbc-8b43-92d943cee94d\",\"realm\":{\"id\":\"webext\"}}",
+    "timeOrigin": 1790859210537,
+    "caller": "{\"id\":12,\"url\":\"moz-extension://96275c44-2aae-40b3-98e0-a2b8df7e299e/panel.html\"}"
+  },
+  "after": {
+    "buttonLabels": ["Increase counter", "Increase matching domain"],
+    "counter": "8",
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"d7404f80-6c56-4dbc-8b43-92d943cee94d\",\"realm\":{\"id\":\"webext\"}}",
+    "timeOrigin": 1790859211341,
+    "caller": "{\"id\":13,\"url\":\"moz-extension://96275c44-2aae-40b3-98e0-a2b8df7e299e/panel.html\"}"
+  }
+}
