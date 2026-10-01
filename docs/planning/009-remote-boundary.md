@@ -64,7 +64,7 @@ The [lifecycle investigation](../research/native-rpc-lifecycle.md) also distingu
 The combined startup API, finite native method lifetime, schema-validated method mapping, authorized catalog synchronization and shared-client connection are implemented. Remaining work includes:
 
 1. Keep resource selection, applicability and freshness in each capability implementation. The universal target API and required-target exposure prohibition were removed after owner review. Browser/debugger capabilities must still check their actual resource identity and permissions; [the investigation](../research/native-target-authority.md) remains evidence for that domain work.
-2. Extend the proven native Port boundary to untrusted page/content requests only when that integration is implemented. Both Chromium and Firefox already prove packaged-page sender admission, rich values, unsupported functions, disconnection and owned cleanup in the [extension example](../../examples/webext/README.md). That evidence does not authenticate an originating page or establish arbitrary resource freshness.
+2. Extend the proven native Port boundary to privileged page/content requests only when that integration is implemented. Both browsers now reject real content-script callers even when their message fields claim the packaged sender. This establishes the current deny boundary, not an authenticated page relay. [Native caller and permission evidence](../../examples/webext/README.md#native-caller-and-permission-boundaries) also covers stale document targeting and Firefox optional-host removal/regrant.
 3. Complete actor permissions, state privacy, error disclosure and real-host conformance. The current native transport tests do not establish those broader guarantees.
 
 Upstream proposal status is tracked on its linked PR; this review opens no new upstream PR.
@@ -77,7 +77,9 @@ Upstream proposal status is tracked on its linked PR; this review opens no new u
 - [x] Finite native registration and local disconnect cleanup are proven for the native adapter, with the accepted backend-cancellation limitation.
 - [x] Real authenticated hosts prove native allow/deny behavior and disposal; socket tests cover catalog synchronization and malformed/mismatched metadata at the native call boundary. Browser smoke checks cover both hosts.
 - [x] Real Chromium/Firefox extension hosts prove native wire compatibility and packaged-page sender admission.
-- [ ] Untrusted page/content authority and target freshness have real-host proof.
+- [x] Both browsers reject content-script Ports with forged sender fields and actual native action/state requests; native document IDs reject a replaced document.
+- [x] Firefox's real optional-host prompt, refusal/grant, removal/regrant and cross-panel events are tested without mocking permission grants.
+- [ ] Privileged page relays and remaining target/child-frame authority have real-host proof; the current deny-only content boundary is covered above.
 - [ ] Cancellation, permission revocation and error-detail disclosure meet the complete issue-9 contract.
 
 
@@ -94,3 +96,11 @@ The native adapter borrows a `DevframeRpcClient`; it neither creates nor owns it
 Caller abort, client disposal, connection disposal and native disconnect all stop local waiting. Real-socket tests confirm an already-dispatched backend handler still finishes exactly once. This is the accepted native behavior, not a claim of backend cancellation. Browser smoke checks on both native hosts invoke the shared action and retain counter value/provider incarnation across reload. Endpoint discovery, browser capability authority, extension actors and complete security conformance remain open.
 
 [Source investigation](../research/native-catalog-sync.md), [adapter API](../../packages/server/README.md), [browser example](../../examples/server-contexts/README.md#browser-client).
+
+## Native permission evidence, October 1
+
+The extension example adds optional localhost permission controls and scoped real-browser trust commands. It changes no SDK contracts, Port admission policy or native serializer. The [implemented actor/operation table and diagram](../../examples/webext/README.md#native-caller-and-permission-boundaries) distinguish packaged callers, rejected content callers, page code and browser operations.
+
+Browser host access is checked when a new native operation executes. A previously successful read does not authorize a read after removal. Native `documentIds` reject a selected document that has since been replaced; this identity stays in the capability's browser operation. The test deliberately uses one top-level document and no `activeTab` grant. Removal does not promise rollback, termination of already-running code, erasure of returned values or closure of an independently authenticated server connection.
+
+Chromium 153.0.8010.12 passes the rejection/freshness checks. Firefox 157.0 additionally passes real native prompt refusal/grant, removal/regrant and cross-panel permission events. Chrome's native extension prompt grant/refusal and post-grant removal remain a manual acceptance gap; website permission overrides are not a substitute. The broader page-relay, state-privacy and error-disclosure work remains open. The native tests and their limits are part of issue #9, not evidence that its complete security contract is done.

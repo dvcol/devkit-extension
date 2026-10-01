@@ -1,6 +1,7 @@
 import { createExampleConnection } from './connection';
 import { mountServerControls } from './servers';
 import { createRendererRpc } from './renderer-actions';
+import { mountPermissionControls } from './permissions';
 import type { DevframeJsonRenderSpec } from '@devframes/json-render';
 import renderer from '@devframes/json-render-ui/renderer';
 import { createClient } from '@devkit/client';
@@ -22,6 +23,7 @@ let mounted: { dispose?: () => void } | undefined;
 let closed = false;
 const routedClient = createClient();
 const disposeServers = mountServerControls(routedClient);
+const disposePermissions = mountPermissionControls();
 let providerConnection: RpcProviderConnection | undefined;
 let unsubscribeCatalog: (() => void) | undefined;
 function close(): void {
@@ -41,6 +43,7 @@ function close(): void {
 }
 function dispose(): void {
   listeners.abort();
+  disposePermissions();
   close();
 }
 window.addEventListener('pagehide', dispose, { once: true, signal: listeners.signal });

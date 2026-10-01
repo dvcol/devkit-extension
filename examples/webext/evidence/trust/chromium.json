@@ -1,0 +1,15 @@
+{
+  "browser": "153.0.8010.12",
+  "checks": [
+    "wrong channel rejects valid native action/state requests with no replies",
+    "content Port with forged packaged sender rejects valid native requests with no replies",
+    "denied action does not disable service; admitted panel can still invoke it",
+    "MAIN world has no extension runtime.connect",
+    "stale documentId rejects after reload; explicit current-document selection succeeds",
+    "optional localhost starts ungranted and native injection rejects"
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "Native Chrome prompt grant/refusal and post-grant revocation need a manual browser receipt."
+  ]
+}

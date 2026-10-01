@@ -25,6 +25,8 @@ jobs:
         run: pnpm --filter @devkit/example-webext test:json-actions
       - name: Discover native provider views in the extension
         run: pnpm --filter @devkit/example-webext test:json-views
+      - name: Reject untrusted extension callers and stale browser documents
+        run: pnpm --filter @devkit/example-webext test:trust:chromium
       - name: Run native Vite HTML timing in development and preview
         run: pnpm --filter @devkit/example-vite-hosts test:browser
       - name: Run custom and reference renderers on both native backends
@@ -50,6 +52,12 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-debugger test:firefox
+      - name: Verify native Firefox permission prompts and revocation
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-webext test:trust:firefox
       - name: Run concurrent native Chromium and Firefox development transitions
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

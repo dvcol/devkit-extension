@@ -59,6 +59,7 @@ it.each([
       options_ui: { page: 'panel.html', open_in_tab: true },
       devtools_page: 'devtools.html',
       host_permissions: ['http://127.0.0.1/*'],
+      optional_host_permissions: ['http://localhost/*'],
       permissions: ['scripting'],
       content_security_policy: {
         extension_pages:

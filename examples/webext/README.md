@@ -347,3 +347,43 @@ The maintained command starts real Devframe and DevTools hosts and the packaged 
 The implementation uses one cancellation signal per mount and disposes late asynchronous mounts if their entry has already been removed. It adds no public SDK API or dependency patch. The Firefox suite also runs the same native view fixture against both hosts. Its [receipt](./evidence/firefox/receipt.json) and [screenshot](./evidence/firefox/json-views.png) prove late publication, identical keys with separate state/actions, removal/republishing and isolated disconnect. The full suite passes on CI's Firefox 156.0.1 with geckodriver 0.37.1. Detached-button and fresh-connection view scenarios remain Chromium-specific; mixed-backend view HMR and the complete renderer catalog remain open. Native RPC cancellation and state persistence retain their existing host semantics.
 
 Local Firefox 157.0 fails the existing sidebar automation selector, also reproduced with unchanged committed tests. This is separate from provider-view discovery; CI remains pinned to 156.0.1. Upgrade validation must update and rerun the native sidebar fixture before claiming full Firefox 157 conformance.
+
+## Native caller and permission boundaries
+
+The panel's **Optional localhost access** controls call native `permissions.request` directly in the button's user gesture and `permissions.remove` on removal. The manifest declares only `http://localhost/*` as optional. Existing required `http://127.0.0.1/*` access remains separate because Chrome cannot remove a required permission through this API. Native `onAdded` and `onRemoved` events refresh every open panel. Page disposal removes its listeners; it does not invent a permission or RPC lifetime.
+
+| Actor or operation                                    | Implemented boundary                                                                                                                                               |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Packaged `panel.html` using the expected Port channel | Background admits its actual browser-created extension ID and sender URL. This fixture exposes its counter actions and writable counter state to admitted callers. |
+| Another channel or an isolated content script         | Background disconnects before constructing an RPC client. Message fields claiming the packaged sender do not change native sender identity.                        |
+| MAIN-world page code                                  | Cannot call extension `runtime.connect` in the fixture. There is no page-to-extension request bridge.                                                              |
+| Browser script execution                              | The browser checks current host access on each invocation. Removing access rejects the next operation.                                                             |
+| Operation pinned to a document                        | Native `{ tabId, documentIds: [documentId] }` rejects the old document after reload. A fresh explicit selection can obtain its replacement.                        |
+| Previously adopted Devframe connection                | Retains its own native authentication and lifetime. Removing browser host access does not redefine that independent backend session.                               |
+
+```mermaid
+flowchart LR
+  Button[Packaged button / real user gesture] --> Prompt[Native browser permission prompt]
+  Prompt --> Grant[Browser-owned host grant]
+  Operation[Capability's native browser operation] --> Check[Current grant and native document target]
+  Grant --> Check
+  Content[Content script / forged sender fields] --> Admission[Background checks actual Port sender]
+  Admission --> Reject[Disconnect before native RPC]
+  Panel[Admitted packaged panel] --> RPC[Native RPC and shared state]
+```
+
+The maintained tests send actual action and state-read frames produced by Devframe's public RPC client through rejected Ports. They receive no replies, the attempted service-disable action has no effect, and the admitted panel can still invoke the service. They also execute against a real document, reload it, reject its old document ID and select the current document successfully. No private wire format, universal SDK target, permission cache or second authorization API is added.
+
+```sh
+pnpm --filter @devkit/example-webext build
+pnpm --filter @devkit/example-webext test:trust:chromium
+pnpm --filter @devkit/example-webext test:trust:firefox
+```
+
+The [Chromium receipt](./evidence/trust/chromium.json) covers caller rejection, native document targeting and ungranted optional-host rejection on Chromium 153.0.8010.12. The [Firefox receipt](./evidence/trust/firefox.json) additionally covers actual native prompt refusal/grant, removal/regrant and permission events reaching a second panel on Firefox 157.0. The Firefox test uses WebDriver's real pointer action on the browser notification after it has opened; it does not modify stored grants or stub the permissions API. This focused Firefox 157 result does not resolve the separate full-suite sidebar limitation above. CI runs both commands against its installed browser versions.
+
+Chrome prompt grant/refusal and post-grant removal still need a manual receipt. Playwright's website permission overrides do not grant extension host permissions. To verify manually, load the packaged Chromium extension in a disposable profile, open its options page and a page at `http://localhost:<port>`, then use the request button to deny and allow access in turn. From the options page's extension DevTools console, invoke `chrome.scripting.executeScript({ target: { tabId: <local page ID> }, func: () => document.title })`. It must reject before grant, succeed after grant, reject after **Remove localhost access**, and succeed after requesting access again. Chrome may remember the earlier approval and omit the second prompt. Record the browser version and each actual result; clicking the request button alone is not acceptance evidence.
+
+These tests do not prove a privileged page relay, child-frame policy, cancellation of already-running code, erasure of previously returned values, private shared-state isolation or error redaction for untrusted recipients. Those remain explicit parts of [Permissions and trust](https://github.com/dvcol/devkit-extension/issues/9). Resource checks stay in each capability; permission status shown in the UI is not an authorization decision.
+
+Native references: [Chrome permissions](https://developer.chrome.com/docs/extensions/reference/api/permissions), [Firefox gesture-bound requests](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/permissions/request), and [native document targeting](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Work_with_documentId).

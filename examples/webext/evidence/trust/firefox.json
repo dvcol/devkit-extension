@@ -1,0 +1,14 @@
+{
+  "browser": "157.0",
+  "checks": [
+    "wrong channel and forged content sender reject native action/state requests without replies",
+    "admitted panel retains working service after denied disable request",
+    "MAIN cannot connect to extension runtime",
+    "stale documentId rejects after reload; current-document selection succeeds",
+    "native optional-host prompt refusal resolves false and injection remains denied",
+    "native prompt grant permits injection",
+    "removing permission rejects next injection on the same tab",
+    "regrant permits the same native operation without reconnect or replay",
+    "native permission events update a second open extension page"
+  ]
+}

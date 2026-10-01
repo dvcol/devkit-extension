@@ -58,6 +58,12 @@
     <output id="server-result"></output>
     <h2>Provider views</h2>
     <div id="server-views"></div>
+    <h2>Optional localhost access</h2>
+    <p>Allow browser operations on http://localhost/* through the native permission prompt.</p>
+    <button id="permission-request">Request localhost access</button>
+    <button id="permission-remove">Remove localhost access</button>
+    <p>Permission: <output id="permission-status"></output></p>
+    <output id="permission-result"></output>
     <script type="module" src="../src/panel.ts"></script>
   </body>
 </html>
