@@ -1,5 +1,8 @@
 import type { DevframeJsonRenderSpec } from '@devframes/json-render';
+import { createJsonRenderView } from '@devframes/json-render/view';
+import type { RpcSharedStateHost } from 'devframe/types';
 import { increaseCounterAction, increaseMatchingCounterAction } from './contracts';
+import { managementSpec } from './management-spec';
 
 declare module 'devframe/types' {
   interface DevframeRpcServerFunctions {
@@ -45,3 +48,11 @@ export const spec: DevframeJsonRenderSpec = {
     'action-error': { type: 'Text', props: { text: { $state: '/actionError' } } },
   },
 };
+
+export function createCounterViews(sharedState: RpcSharedStateHost) {
+  const context = { rpc: { sharedState } };
+  return {
+    view: createJsonRenderView(context, { id: 'counter', spec }),
+    management: createJsonRenderView(context, { id: 'management', spec: managementSpec }),
+  };
+}

@@ -4,15 +4,15 @@ import type {
   DevframeRpcServerFunctions,
   RpcFunctionsHost,
 } from 'devframe/types';
-import { createJsonRenderView } from '@devframes/json-render/view';
 import { RpcFunctionsCollectorBase } from 'devframe/rpc';
 import { createRpcServer } from 'devframe/rpc/server';
 import { createRpcSharedStateServerHost } from 'devframe/rpc/shared-state';
 import { createSharedState } from 'devframe/utils/shared-state';
 import { createPortChannel } from '@devkit/webext';
-import { spec } from './spec';
-import { managementSpec } from './management-spec';
+import { createCounterViews } from './spec';
+import { observeProvider } from './management-spec';
 import { createExampleProvider } from './provider';
+import { connectCounterStorage } from './counter-storage';
 
 /** Initialize once during the native background entrypoint's synchronous startup. */
 export function startExampleBackground(): void {
@@ -26,6 +26,18 @@ function createBackground() {
   const collector = new RpcFunctionsCollectorBase<DevframeRpcServerFunctions, undefined>(undefined);
   const group = createRpcServer<DevframeRpcClientFunctions, DevframeRpcServerFunctions>(
     collector.functions,
+    {
+      rpcOptions: {
+        /** Native birpc serializes handler errors, but not rejected resolvers. */
+        resolver: (_name, resolved) =>
+          ready.then(
+            () => resolved,
+            (error: unknown) => () => {
+              throw error;
+            },
+          ),
+      },
+    },
   );
   const broadcast: RpcFunctionsHost['broadcast'] = async (options) => {
     const { filter } = options;
@@ -41,9 +53,7 @@ function createBackground() {
     },
     broadcast,
   });
-  const context = { rpc: { sharedState } };
-  const view = createJsonRenderView(context, { id: 'counter', spec });
-  const management = createJsonRenderView(context, { id: 'management', spec: managementSpec });
+  const { view, management } = createCounterViews(sharedState);
   const provider = createExampleProvider({
     rpc: {
       register: collector.register.bind(collector),
@@ -52,17 +62,13 @@ function createBackground() {
     },
     view,
   });
-  void provider.then(
-    ({ catalog }) => {
-      return catalog.subscribe((snapshot) => {
-        const status = snapshot.capabilities[0]?.status ?? 'unavailable';
-        management.patchState([{ op: 'replace', path: '/status', value: status }]);
-      });
-    },
-    (error: unknown) => {
-      console.error('Provider startup failed', error);
-    },
-  );
+  const key = import.meta.env.VITE_COUNTER_STORAGE_KEY;
+  const storage = connectCounterStorage({ key, view, management, sharedState });
+  const ready = Promise.all([provider, storage]);
+  void ready.catch((error: unknown) => {
+    console.error('Background startup failed', error);
+  });
+  observeProvider({ provider, management });
   return { collector, group, provider, sharedState };
 }
 

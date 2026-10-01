@@ -294,7 +294,9 @@ A backend connection owns its transport, state mirrors and associated mounts. Lo
 
 The [optional server persistence example](./examples/server-contexts/README.md#optional-native-counter-persistence) supplies native `createStorage` under the existing state key before installing its service. Both native hosts restore observed disk writes under a fresh provider incarnation. Native debounced writes and diagnostics remain unchanged; action completion does not confirm persistence. The example owns saved-data validation, and the caller owns the file.
 
-The [state contract](https://github.com/dvcol/devkit-extension/issues/8) tracks remaining host integration evidence. Browser storage, extension worker restart and document lifetime must be tested at those real boundaries before claiming support. Their absence does not justify a generic recovery or enforcement layer.
+The [opt-in extension example](./examples/webext/PERSISTENCE.md) restores one counter record through native `storage.local`. Its native RPC resolver waits for background initialization, and native shared-state changes trigger asynchronous writes. Actual Chromium tests cover restoration after a confirmed write and forced worker termination, visible quota failure without rollback, and invalid saved data without overwrite. The default example remains ephemeral.
+
+The [state contract](https://github.com/dvcol/devkit-extension/issues/8) tracks remaining host integration evidence. Natural suspension, browser restart, interrupted writes and Firefox persistent-background lifetime still need direct evidence. Those gaps do not justify a generic recovery or enforcement layer.
 
 ## Representative shared and native declarations
 

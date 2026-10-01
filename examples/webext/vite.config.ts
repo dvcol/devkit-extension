@@ -5,10 +5,18 @@ import { createManifest } from './wxt.config.ts';
 
 export default defineConfig(({ mode }) => {
   const firefox = mode === 'firefox';
-  const outDir = resolve(import.meta.dirname, firefox ? 'dist/firefox' : 'dist/chromium');
+  const storageKey = process.env.VITE_COUNTER_STORAGE_KEY ?? '';
+  const directory = firefox ? 'dist/firefox' : 'dist/chromium';
+  const outDir = resolve(
+    import.meta.dirname,
+    storageKey === '' ? directory : `${directory}-persistent`,
+  );
   return {
     root: resolve(import.meta.dirname, 'entrypoints'),
     base: './',
+    define: {
+      'import.meta.env.VITE_COUNTER_STORAGE_KEY': JSON.stringify(storageKey),
+    },
     plugins: [
       {
         name: 'webext-example-manifest',

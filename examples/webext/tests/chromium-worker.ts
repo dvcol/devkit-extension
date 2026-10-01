@@ -65,7 +65,7 @@ async function checkClosedBackground(page: Page): Promise<void> {
     );
 }
 
-async function stopWorker(page: Page) {
+export async function stopWorker(page: Page) {
   const scriptURL = await page.evaluate(() => chrome.runtime.getURL('background.js'));
   const control = await page.context().newCDPSession(page);
   let version: { versionId: string; runningStatus: string; targetId?: string } | undefined;
@@ -194,7 +194,7 @@ async function checkFreshBackground(
   return replacement;
 }
 
-async function readProvider(page: Page): Promise<ProviderDescriptor> {
+export async function readProvider(page: Page): Promise<ProviderDescriptor> {
   const provider: unknown = JSON.parse(await page.locator('#provider').innerText());
   assert.ok(typeof provider === 'object' && provider !== null);
   assert.ok('id' in provider && typeof provider.id === 'string');

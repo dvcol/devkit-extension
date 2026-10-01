@@ -21,6 +21,12 @@ jobs:
         run: pnpm --filter @devkit/example-webext exec playwright install --with-deps chromium
       - name: Run the Chromium extension browser test
         run: pnpm --filter @devkit/example-webext test:browser
+      - name: Verify opt-in Chromium counter persistence
+        env:
+          VITE_COUNTER_STORAGE_KEY: example.persisted-counter
+        run: |
+          pnpm --filter @devkit/example-webext build
+          pnpm --filter @devkit/example-webext exec node tests/chromium-persistence.ts
       - name: Run native JSON actions across extension and server providers
         run: pnpm --filter @devkit/example-webext test:json-actions
       - name: Discover native provider views in the extension
@@ -85,5 +91,7 @@ jobs:
             examples/webext/artifacts/json-actions.json
             examples/webext/artifacts/worker-recovery.json
             examples/webext/artifacts/worker-recovery.png
+            examples/webext/artifacts/persistence/*.json
+            examples/webext/artifacts/persistence/*.png
             examples/webext/artifacts/*-development/*.json
             examples/webext/artifacts/*-development/*.png

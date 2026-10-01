@@ -1,0 +1,57 @@
+{
+  "browser": "153.0.8010.12",
+  "storageKey": "example.persisted-counter",
+  "previous": {
+    "id": "example.extension",
+    "incarnation": "c0bdcdcf-b226-4859-a25a-9dce33672919",
+    "realm": {
+      "id": "webext"
+    }
+  },
+  "replacement": {
+    "id": "example.extension",
+    "incarnation": "b68b06ff-ede9-40c3-9498-7f0c24be0cb4",
+    "realm": {
+      "id": "webext"
+    }
+  },
+  "termination": {
+    "method": "ServiceWorker.stopWorker",
+    "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+    "versionId": "0",
+    "targetId": "DBFAA241E6D1B2767DE780C1E7B7A814",
+    "statuses": ["running", "stopping", "stopped"]
+  },
+  "confirmedBeforeTermination": {
+    "value": 10
+  },
+  "restored": 10,
+  "nextValue": 11,
+  "invalid": {
+    "rejected": "invalid",
+    "explicitRecovery": 7
+  },
+  "quota": {
+    "bytes": {
+      "quota": 10485760,
+      "used": 10485760
+    },
+    "message": "Counter storage: Write failed for counter 10: Resource::kQuotaBytes quota exceeded",
+    "retained": 9,
+    "liveAfterFailure": 10,
+    "nextWrite": 11
+  },
+  "checks": [
+    "two native clients share action and native-state updates written to storage.local",
+    "forced worker termination restores the saved counter under a fresh provider incarnation without replay",
+    "restored clients have one counter and management mount, while domain UI state remains ephemeral",
+    "a separate storage key remains unchanged",
+    "native storage quota failure is visible without rollback or retry, and the next explicit mutation can persist",
+    "invalid stored input rejects native startup without overwrite and an explicit fresh worker can recover"
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "Forced Chromium worker termination, not natural idle suspension or browser restart",
+    "Native writes are asynchronous; action completion is not durable storage acknowledgement"
+  ]
+}

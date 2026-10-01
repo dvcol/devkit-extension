@@ -12,6 +12,11 @@ export default defineConfig({
   vite: ({ browser }) => ({
     /** Concurrent browser servers must not overwrite each other's optimized modules. */
     cacheDir: resolve(import.meta.dirname, '.wxt', 'vite', browser),
+    define: {
+      'import.meta.env.VITE_COUNTER_STORAGE_KEY': JSON.stringify(
+        process.env.VITE_COUNTER_STORAGE_KEY ?? '',
+      ),
+    },
   }),
   hooks: {
     /** web-ext requires a persistent profile directory to exist before opening Chrome. */
@@ -29,6 +34,8 @@ export default defineConfig({
 
 /** Shared application permissions and page URLs for native development and production builds. */
 export function createManifest(firefox: boolean): UserManifest {
+  const permissions: NonNullable<UserManifest['permissions']> = ['scripting'];
+  if ((process.env.VITE_COUNTER_STORAGE_KEY ?? '') !== '') permissions.push('storage');
   const manifest = {
     name: 'Devkit native Port example',
     version: '0.0.1',
@@ -37,7 +44,7 @@ export function createManifest(firefox: boolean): UserManifest {
     devtools_page: 'devtools.html',
     host_permissions: ['http://127.0.0.1/*'],
     optional_host_permissions: ['http://localhost/*'],
-    permissions: ['scripting'],
+    permissions,
     /** Allow loopback WebSockets without Firefox's default insecure-request upgrade. */
     content_security_policy: {
       extension_pages:

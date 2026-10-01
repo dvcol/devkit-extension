@@ -1,6 +1,10 @@
 import { Script } from 'node:vm';
 import { build } from 'vite';
-import { expect, it } from 'vitest';
+import { afterEach, expect, it, vi } from 'vitest';
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 it.each([
   {
@@ -70,12 +74,25 @@ it.each([
   },
 );
 
+it.each(['production', 'firefox'])(
+  'adds storage permission only in the opted-in %s build',
+  async (mode) => {
+    expect.assertions(3);
+    vi.stubEnv('VITE_COUNTER_STORAGE_KEY', 'example.persisted-counter');
+    const { manifest, modules, backgroundScript } = await inspectBundle(mode);
+    expect(manifest).toHaveProperty('permissions', expect.arrayContaining(['storage']));
+    expect(modules.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
+    expect(backgroundScript).toContain('example.persisted-counter');
+  },
+);
+
 async function inspectBundle(mode: string) {
   const modules: string[] = [];
   const imports: string[] = [];
   const files: string[] = [];
   let manifest: unknown;
   let timingScript = '';
+  let backgroundScript = '';
   await build({
     configFile: './vite.config.ts',
     mode,
@@ -88,6 +105,8 @@ async function inspectBundle(mode: string) {
           modules.push(...this.getModuleIds());
           files.push(...Object.keys(bundle));
           for (const output of Object.values(bundle)) {
+            if (output.type === 'chunk' && output.fileName === 'background.js')
+              backgroundScript = output.code;
             if (output.type === 'chunk' && output.fileName === 'script-timing.js')
               timingScript = output.code;
             if (output.type === 'chunk') imports.push(...output.imports, ...output.dynamicImports);
@@ -101,5 +120,5 @@ async function inspectBundle(mode: string) {
     ],
     build: { write: false },
   });
-  return { modules, imports, files, manifest, timingScript };
+  return { modules, imports, files, manifest, timingScript, backgroundScript };
 }
