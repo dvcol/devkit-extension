@@ -37,14 +37,16 @@ Provider descriptors carry a stable configured `id` and a mandatory opaque `inca
 Run package checks from the workspace root:
 
 ```sh
+pnpm --filter @devkit/core build
 pnpm --filter @devkit/core typecheck
 pnpm --filter @devkit/core lint
 pnpm --filter @devkit/core format:check
 pnpm --filter @devkit/core test
-pnpm --filter @devkit/core build
 ```
 
 `tests/core.type-test.ts` compiles against the implementation and checks negative declaration fixtures. `tests/requests.type-test.ts` adds 12 negative request fixtures, including dynamic operation/input correlation and rejection of the removed positional calls. `tests/routing.type-test.ts` adds seven negative selector/default fixtures. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
+
+`tests/declarations.test.ts` additionally compiles five accepted consumers and 19 isolated rejected consumers through the built `@devkit/core` package export. Run the build first. Strict TypeScript 7 checks operation/payload/result correlation, broadcast selection and outcomes, guard-only schema transforms, named requirements and local/remote native context access. Each rejected consumer must produce its expected single diagnostic, without `@ts-expect-error` or source aliases. This complements the existing packed-package checks; it does not claim every exported type member is covered.
 
 ## Invocation requests
 

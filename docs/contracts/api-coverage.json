@@ -213,11 +213,216 @@
       ]
     },
     {
+      "id": "portable-public-declaration-contracts",
+      "apis": [
+        "@devkit/core:ActionClient.broadcast",
+        "@devkit/core:ActionClient.invoke",
+        "@devkit/core:ActionDefinition.handler",
+        "@devkit/core:ActionInvocationRequest",
+        "@devkit/core:BindingContext",
+        "@devkit/core:BroadcastInvocationOptions.routing",
+        "@devkit/core:BroadcastInvocationOptions.selection",
+        "@devkit/core:BroadcastOutcome",
+        "@devkit/core:CapabilityApi",
+        "@devkit/core:CapabilityBinding.api",
+        "@devkit/core:CapabilityClient.broadcast",
+        "@devkit/core:CapabilityClient.invoke",
+        "@devkit/core:CapabilityClient.resolve",
+        "@devkit/core:CapabilityImplementation",
+        "@devkit/core:CapabilityInvocationRequest",
+        "@devkit/core:CapabilityResolution",
+        "@devkit/core:NativeContextAccess.get",
+        "@devkit/core:NativeContextDescriptor",
+        "@devkit/core:OperationInput",
+        "@devkit/core:OperationValue",
+        "@devkit/core:RequirementBindings",
+        "@devkit/core:ServiceDefinition.setup",
+        "@devkit/core:SetupContext.services"
+      ],
+      "examples": [
+        "examples/contribution",
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts operation input and output correlation including discriminated requests",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts broadcast result inference and outcome narrowing",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts guard-only schema input and result types in services actions and clients",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts named service requirements and action handler inference",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts local and remote binding contexts with typed native lookup",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an unknown capability operation",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects another capability operation payload",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an uncorrelated dynamic operation and payload",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a discriminated request result narrowed to one operation",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an action payload that widens its contract",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a capability result with the wrong type",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects broadcast without explicit selection",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an empty broadcast selection",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects ordinary routing on a broadcast request",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a broadcast payload from another capability operation",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a broadcast action result with the wrong type",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a broadcast value before narrowing its outcome status",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects transformed output as operation input",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects transformed output as a service result",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects transformed output as an action result",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an undeclared service dependency during setup",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an undeclared operation on an action dependency",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects native primitives on a remote binding context",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an unknown property from a typed native lookup",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        }
+      ],
+      "gaps": [
+        "These consumers resolve the built package export under pinned TypeScript 7 with Bundler resolution. Packed NodeNext consumers remain separate evidence; other compiler versions and resolution modes are not proved here.",
+        "The tests cover operation/input/result correlation, broadcast selection and outcome narrowing, guard-only schema types, named requirements and local/remote native context access. They do not prove every member, overload, readonly constraint or runtime lifecycle of the linked contracts.",
+        "Declaration compilation does not establish native RPC serialization, provider execution, browser behavior or the full host/mode matrix."
+      ]
+    },
+    {
       "id": "@devkit/core-unmapped",
       "apis": [
         "@devkit/core:ActionClient",
-        "@devkit/core:ActionClient.broadcast",
-        "@devkit/core:ActionClient.invoke",
         "@devkit/core:ActionDeclaration",
         "@devkit/core:ActionDeclaration.contract",
         "@devkit/core:ActionDeclaration.contract.id",
@@ -248,7 +453,6 @@
         "@devkit/core:ActionDefinition.contract.version",
         "@devkit/core:ActionDefinition.execution",
         "@devkit/core:ActionDefinition.execution.id",
-        "@devkit/core:ActionDefinition.handler",
         "@devkit/core:ActionDefinition.id",
         "@devkit/core:ActionDefinition.kind",
         "@devkit/core:ActionDefinition.requires",
@@ -262,7 +466,6 @@
         "@devkit/core:ActionDescriptor.routing.provider",
         "@devkit/core:ActionDescriptor.routing.realm",
         "@devkit/core:ActionDescriptor.version",
-        "@devkit/core:ActionInvocationRequest",
         "@devkit/core:ActionInvocationRequest.action",
         "@devkit/core:ActionInvocationRequest.action.id",
         "@devkit/core:ActionInvocationRequest.action.kind",
@@ -280,7 +483,6 @@
         "@devkit/core:ActivationScope.signal",
         "@devkit/core:AvailabilityReason",
         "@devkit/core:Awaitable",
-        "@devkit/core:BindingContext",
         "@devkit/core:BindingContext.access",
         "@devkit/core:BindingContext.execution",
         "@devkit/core:BindingContext.execution.id",
@@ -292,10 +494,7 @@
         "@devkit/core:BindingContext.provider.realm",
         "@devkit/core:BindingContext.provider.realm.id",
         "@devkit/core:BroadcastInvocationOptions",
-        "@devkit/core:BroadcastInvocationOptions.routing",
-        "@devkit/core:BroadcastInvocationOptions.selection",
         "@devkit/core:BroadcastInvocationOptions.signal",
-        "@devkit/core:BroadcastOutcome",
         "@devkit/core:BroadcastOutcome.provider",
         "@devkit/core:BroadcastOutcome.provider.id",
         "@devkit/core:BroadcastOutcome.provider.incarnation",
@@ -304,9 +503,7 @@
         "@devkit/core:BroadcastOutcome.reason",
         "@devkit/core:BroadcastOutcome.status",
         "@devkit/core:BroadcastOutcome.value",
-        "@devkit/core:CapabilityApi",
         "@devkit/core:CapabilityBinding",
-        "@devkit/core:CapabilityBinding.api",
         "@devkit/core:CapabilityBinding.context",
         "@devkit/core:CapabilityBinding.context.access",
         "@devkit/core:CapabilityBinding.context.execution",
@@ -319,16 +516,11 @@
         "@devkit/core:CapabilityBinding.context.provider.realm",
         "@devkit/core:CapabilityBinding.context.provider.realm.id",
         "@devkit/core:CapabilityClient",
-        "@devkit/core:CapabilityClient.broadcast",
-        "@devkit/core:CapabilityClient.invoke",
-        "@devkit/core:CapabilityClient.resolve",
         "@devkit/core:CapabilityDescriptor",
         "@devkit/core:CapabilityDescriptor.id",
         "@devkit/core:CapabilityDescriptor.kind",
         "@devkit/core:CapabilityDescriptor.operations",
         "@devkit/core:CapabilityDescriptor.version",
-        "@devkit/core:CapabilityImplementation",
-        "@devkit/core:CapabilityInvocationRequest",
         "@devkit/core:CapabilityInvocationRequest.capability",
         "@devkit/core:CapabilityInvocationRequest.capability.id",
         "@devkit/core:CapabilityInvocationRequest.capability.kind",
@@ -338,7 +530,6 @@
         "@devkit/core:CapabilityInvocationRequest.operation",
         "@devkit/core:CapabilityInvocationRequest.signal",
         "@devkit/core:CapabilityRequirements",
-        "@devkit/core:CapabilityResolution",
         "@devkit/core:CapabilityResolution.binding",
         "@devkit/core:CapabilityResolution.binding.api",
         "@devkit/core:CapabilityResolution.binding.context",
@@ -450,8 +641,6 @@
         "@devkit/core:InvocationOptions",
         "@devkit/core:InvocationOptions.signal",
         "@devkit/core:NativeContextAccess",
-        "@devkit/core:NativeContextAccess.get",
-        "@devkit/core:NativeContextDescriptor",
         "@devkit/core:NativeContextDescriptor.[nativeContextValue]",
         "@devkit/core:NativeContextDescriptor.id",
         "@devkit/core:OperationArguments",
@@ -479,11 +668,9 @@
         "@devkit/core:OperationError.diagnostic.pluginId",
         "@devkit/core:OperationError.diagnostic.providerId",
         "@devkit/core:OperationError.diagnostic.severity",
-        "@devkit/core:OperationInput",
         "@devkit/core:OperationRequest",
         "@devkit/core:OperationRequest.input",
         "@devkit/core:OperationRequest.signal",
-        "@devkit/core:OperationValue",
         "@devkit/core:PluginDefinition",
         "@devkit/core:PluginDefinition.actions",
         "@devkit/core:PluginDefinition.extensions",
@@ -520,7 +707,6 @@
         "@devkit/core:ProviderDescriptor.realm.id",
         "@devkit/core:RealmDescriptor",
         "@devkit/core:RealmDescriptor.id",
-        "@devkit/core:RequirementBindings",
         "@devkit/core:RouteSelector",
         "@devkit/core:RouteSelector.provider",
         "@devkit/core:RouteSelector.realm",
@@ -580,7 +766,6 @@
         "@devkit/core:ServiceDefinition.id",
         "@devkit/core:ServiceDefinition.kind",
         "@devkit/core:ServiceDefinition.requires",
-        "@devkit/core:ServiceDefinition.setup",
         "@devkit/core:SetupContext",
         "@devkit/core:SetupContext.execution",
         "@devkit/core:SetupContext.execution.id",
@@ -594,7 +779,6 @@
         "@devkit/core:SetupContext.scope",
         "@devkit/core:SetupContext.scope.onDispose",
         "@devkit/core:SetupContext.scope.signal",
-        "@devkit/core:SetupContext.services",
         "@devkit/core:Unsubscribe"
       ],
       "examples": [],
