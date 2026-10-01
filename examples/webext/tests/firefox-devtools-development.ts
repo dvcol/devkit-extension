@@ -3,7 +3,10 @@ import { appendFile, readFile, writeFile } from 'node:fs/promises';
 import { Context } from 'selenium-webdriver/firefox.js';
 import type { Driver } from 'selenium-webdriver/firefox.js';
 import { closePanel, identity, increase, openPanel, panelScript } from './firefox-devtools.ts';
-import { updateDevtoolsRegistration } from './devtools-registration.ts';
+import {
+  updateDevtoolsRegistration,
+  updateDevtoolsRegistrationHtml,
+} from './devtools-registration.ts';
 
 type PanelSnapshot = {
   timeOrigin: number;
@@ -14,6 +17,18 @@ type PanelSnapshot = {
 };
 
 type Windows = { driver: Driver; options: string; inspected: string };
+type PeerSnapshot = {
+  url: string;
+  timeOrigin: number;
+  readyState: string;
+  status: string | null;
+  provider: string | null;
+  counter: string | null;
+};
+const peerObservations: Array<{
+  expected: { counter: number; provider: string };
+  snapshot: PeerSnapshot | null;
+}> = [];
 const counterScript =
   "return document.querySelector('#renderer')?.shadowRoot?.textContent.match(/Counter:\\s*(\\d+)/)?.[1]";
 
@@ -47,7 +62,8 @@ export async function checkFirefoxDevtoolsDevelopment(
     await checkHtmlReload(driver, fixture, updated, counter + 1);
     await increase(driver, counter + 2);
     await peerCounter(windows, counter + 2, provider);
-    await checkRegistrationUpdate(windows, fixture);
+    await checkRegistrationUpdate(windows, fixture, 'module');
+    await checkRegistrationUpdate(windows, fixture, 'html');
     await closePanel(driver);
   } finally {
     await driver.setContext(Context.CONTENT);
@@ -57,11 +73,20 @@ export async function checkFirefoxDevtoolsDevelopment(
   }
 }
 
-async function checkRegistrationUpdate(windows: Windows, fixture: string): Promise<void> {
+async function checkRegistrationUpdate(
+  windows: Windows,
+  fixture: string,
+  change: 'module' | 'html',
+): Promise<void> {
   const { driver } = windows;
   const before = await snapshot(driver);
-  await updateDevtoolsRegistration(fixture);
+  if (change === 'module') await updateDevtoolsRegistration(fixture);
+  else await updateDevtoolsRegistrationHtml(fixture);
   await driver.wait(async () => (await registrationTitles(driver)).length === 0, 30_000);
+  if (change === 'html') {
+    const output = await readFile(`${fixture}/.output/firefox-mv3-dev/devtools.html`, 'utf8');
+    assert.match(output, /data-registration-html="updated"/u);
+  }
   const immediateTitles = await registrationTitles(driver);
   assert.deepEqual(immediateTitles, []);
   await closePanel(driver);
@@ -81,10 +106,9 @@ async function checkRegistrationUpdate(windows: Windows, fixture: string): Promi
     before,
     after,
   };
-  await writeFile(
-    'artifacts/firefox-development/devtools-registration.json',
-    JSON.stringify(receipt, null, 2),
-  );
+  const filename =
+    change === 'module' ? 'devtools-registration.json' : 'devtools-registration-html.json';
+  await writeFile(`artifacts/firefox-development/${filename}`, JSON.stringify(receipt, null, 2));
 }
 
 function registrationTitles(driver: Driver): Promise<string[]> {
@@ -170,14 +194,34 @@ async function peerCounter(
 ): Promise<void> {
   await driver.setContext(Context.CONTENT);
   await driver.switchTo().window(options);
-  await driver.wait(
-    async () => (await driver.executeScript(counterScript)) === String(counter),
-    30_000,
-  );
-  assert.equal(
-    await driver.executeScript("return document.querySelector('#provider').textContent"),
-    provider,
-  );
+  try {
+    await driver.wait(async () => {
+      const observed = await peerSnapshot(driver);
+      peerObservations.push({ expected: { counter, provider }, snapshot: observed });
+      return (
+        observed?.status === 'Connected' &&
+        observed.counter === String(counter) &&
+        observed.provider === provider
+      );
+    }, 30_000);
+  } finally {
+    await writeFile(
+      'artifacts/firefox-development/devtools-peer.json',
+      JSON.stringify(peerObservations, null, 2),
+    );
+  }
   await driver.switchTo().window(inspected);
   await driver.setContext(Context.CHROME);
+}
+
+/** Native HMR can navigate between driver commands; a discarded executeScript returns null. */
+function peerSnapshot(driver: Driver): Promise<PeerSnapshot | null> {
+  return driver.executeScript(`return {
+    url: location.href,
+    timeOrigin: performance.timeOrigin,
+    readyState: document.readyState,
+    status: document.querySelector('#status')?.textContent ?? null,
+    provider: document.querySelector('#provider')?.textContent ?? null,
+    counter: document.querySelector('#renderer')?.shadowRoot?.textContent.match(/Counter:\\s*(\\d+)/)?.[1] ?? null,
+  };`);
 }

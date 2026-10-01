@@ -1,0 +1,58 @@
+[
+  {
+    "expected": {
+      "counter": 7,
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    "snapshot": {
+      "counter": "7",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790860027140,
+      "url": "moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html"
+    }
+  },
+  {
+    "expected": {
+      "counter": 8,
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    "snapshot": {
+      "counter": "8",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790860029296,
+      "url": "moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html"
+    }
+  },
+  {
+    "expected": {
+      "counter": 9,
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    "snapshot": {
+      "counter": "9",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790860029296,
+      "url": "moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html"
+    }
+  },
+  {
+    "expected": {
+      "counter": 10,
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    "snapshot": {
+      "counter": "10",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790860030347,
+      "url": "moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html"
+    }
+  }
+]

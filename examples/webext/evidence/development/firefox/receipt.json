@@ -11,6 +11,7 @@
     "Native toolbar popup HTML reload replaces document and caller, retains provider/state and invokes one pointer JSON action observed by the peer",
     "Native DevTools panel module HMR retains document and HTML reload replaces it; both replace caller, retain provider/state and invoke one JSON action observed by the peer; native close removes the toolbox",
     "DevTools registration module edit removes its tab; native toolbox reopen adopts one updated tab with retained provider/state and one JSON action effect",
+    "DevTools registration HTML edit changes native output and removes its tab; toolbox reopen creates one fresh panel/caller with retained provider/state and one JSON action effect",
     "Native sidebar module HMR retains document and HTML reload replaces it; both replace caller, retain provider/state and invoke one pointer JSON action observed by the peer; native close removes the view",
     "Background reload closes old extension page; new page receives new incarnation and reset state",
     "Config restart closes old Firefox; replacement runs manifest 0.0.2 with a new provider and working actions"

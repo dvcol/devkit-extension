@@ -10,3 +10,12 @@ export async function updateDevtoolsRegistration(fixture: string): Promise<void>
   assert.notEqual(updated, source);
   await writeFile(sourcePath, `${updated}\ndocument.title = 'Updated Devkit DevTools';\n`);
 }
+
+/** Change the actual registration HTML entry so WXT rebuilds its native output. */
+export async function updateDevtoolsRegistrationHtml(fixture: string): Promise<void> {
+  const path = join(fixture, 'entrypoints/devtools.html');
+  const source = await readFile(path, 'utf8');
+  const updated = source.replace('<body>', '<body data-registration-html="updated">');
+  assert.notEqual(updated, source);
+  await writeFile(path, updated);
+}

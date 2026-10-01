@@ -1,0 +1,71 @@
+[
+  {
+    "expected": {
+      "counter": 7,
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    "matched": {
+      "counter": "7",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790859909634,
+      "url": "moz-extension://eea7dc66-2884-4fa0-8672-488be5479dbd/panel.html"
+    },
+    "actualProvider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}",
+    "after": {
+      "counter": "7",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790859909634,
+      "url": "moz-extension://eea7dc66-2884-4fa0-8672-488be5479dbd/panel.html"
+    }
+  },
+  {
+    "expected": {
+      "counter": 8,
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    "matched": {
+      "counter": "8",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790859911772,
+      "url": "moz-extension://eea7dc66-2884-4fa0-8672-488be5479dbd/panel.html"
+    },
+    "actualProvider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}",
+    "after": {
+      "counter": "8",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790859911772,
+      "url": "moz-extension://eea7dc66-2884-4fa0-8672-488be5479dbd/panel.html"
+    }
+  },
+  {
+    "expected": {
+      "counter": 9,
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}"
+    },
+    "matched": {
+      "counter": "9",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"e8fa42fa-3bea-4db5-bd40-588a4437af35\",\"realm\":{\"id\":\"webext\"}}",
+      "readyState": "complete",
+      "status": "Connected",
+      "timeOrigin": 1790859911772,
+      "url": "moz-extension://eea7dc66-2884-4fa0-8672-488be5479dbd/panel.html"
+    },
+    "actualProvider": null,
+    "after": {
+      "counter": null,
+      "provider": "",
+      "readyState": "interactive",
+      "status": "Connecting",
+      "timeOrigin": 1790859912678,
+      "url": "moz-extension://eea7dc66-2884-4fa0-8672-488be5479dbd/panel.html"
+    }
+  }
+]

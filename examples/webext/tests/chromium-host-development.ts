@@ -6,7 +6,10 @@ import type { CDPSession, Page } from '@playwright/test';
 import { checkScriptTiming } from './chromium-script-timing.ts';
 import { checkChromiumScriptReload } from './chromium-script-reload.ts';
 import { checkChromiumPopupDevelopment } from './chromium-popup-development.ts';
-import { updateDevtoolsRegistration } from './devtools-registration.ts';
+import {
+  updateDevtoolsRegistration,
+  updateDevtoolsRegistrationHtml,
+} from './devtools-registration.ts';
 import {
   attachDevtoolsRegistration,
   openDevtoolsPanel,
@@ -50,8 +53,21 @@ async function checkDevtools(options: Page, fixture: string): Promise<void> {
     const panel = await openDevtoolsPanel(connection);
     await checkUpdates({ options, panel: panel.panel, fixture, name: 'DevTools', counter: 3 });
     await screenshot(panel.frontend, 'devtools');
-    const replacement = await checkRegistrationUpdate({ options, fixture, panel, connection });
-    await closeDevtoolsPanel(control, replacement);
+    const replacement = await checkRegistrationUpdate({
+      options,
+      fixture,
+      panel,
+      connection,
+      change: 'module',
+    });
+    const htmlReplacement = await checkRegistrationUpdate({
+      options,
+      fixture,
+      panel: replacement,
+      connection,
+      change: 'html',
+    });
+    await closeDevtoolsPanel(control, htmlReplacement);
     assert.equal(inspected.isClosed(), false);
   } finally {
     await pageSession.detach();
@@ -67,7 +83,7 @@ async function checkSidebar(options: Page, fixture: string): Promise<void> {
   const host = { options, control, windowId };
   try {
     const sidebar = await openChromiumSidebar(host);
-    await checkUpdates({ options, panel: sidebar.panel, fixture, name: 'Sidebar', counter: 6 });
+    await checkUpdates({ options, panel: sidebar.panel, fixture, name: 'Sidebar', counter: 7 });
     await screenshot(sidebar.panel, 'sidebar');
     await closeChromiumSidebar(host, sidebar);
   } finally {
@@ -80,16 +96,19 @@ async function checkRegistrationUpdate({
   fixture,
   panel,
   connection,
+  change,
 }: {
   options: Page;
   fixture: string;
   panel: DevtoolsPanel;
   connection: { control: CDPSession; inspectedId: string; origin: string };
+  change: 'module' | 'html';
 }): Promise<DevtoolsPanel> {
   const before = await snapshot(panel.panel);
-  const registration = await observeRegistrationUpdate({ ...connection, fixture });
+  const registration = await observeRegistrationUpdate({ ...connection, fixture, change });
   const immediateTitles = await registrationTitles(panel.frontend);
-  assert.deepEqual(immediateTitles, ['Devkit']);
+  const previousTitle = change === 'module' ? 'Devkit' : 'Devkit updated';
+  assert.deepEqual(immediateTitles, [previousTitle]);
   await closeDevtoolsPanel(connection.control, panel);
   const replacement = await openDevtoolsPanel({ ...connection, panelTitle: 'Devkit updated' });
   assert.deepEqual(await registrationTitles(replacement.frontend), ['Devkit updated']);
@@ -98,7 +117,12 @@ async function checkRegistrationUpdate({
   assert.notEqual(after.caller, before.caller);
   assert.equal(after.provider, before.provider);
   assert.equal(after.counter, before.counter);
-  await increase({ options, panel: replacement.panel, fixture, name: 'DevTools', counter: 5 }, 6);
+  const counter = Number(before.counter);
+  assert.ok(Number.isInteger(counter));
+  await increase(
+    { options, panel: replacement.panel, fixture, name: 'DevTools', counter },
+    counter + 1,
+  );
   const receipt = {
     ...registration,
     immediateTitles,
@@ -106,10 +130,9 @@ async function checkRegistrationUpdate({
     before,
     after,
   };
-  await writeFile(
-    'artifacts/chromium-development/devtools-registration.json',
-    JSON.stringify(receipt, null, 2),
-  );
+  const filename =
+    change === 'module' ? 'devtools-registration.json' : 'devtools-registration-html.json';
+  await writeFile(`artifacts/chromium-development/${filename}`, JSON.stringify(receipt, null, 2));
   return replacement;
 }
 
@@ -117,20 +140,32 @@ async function observeRegistrationUpdate({
   control,
   origin,
   fixture,
+  change,
 }: {
   control: CDPSession;
   origin: string;
   fixture: string;
+  change: 'module' | 'html';
 }) {
   const registration = await attachDevtoolsRegistration(control, origin);
-  const expression = '({ title: document.title, timeOrigin: performance.timeOrigin })';
+  const expression =
+    '({ title: document.title, timeOrigin: performance.timeOrigin, htmlUpdate: document.body.dataset.registrationHtml ?? null })';
   try {
     const previousRegistration = await registration.evaluate(expression);
     const previousTimeOrigin = await registration.evaluate('performance.timeOrigin');
-    await updateDevtoolsRegistration(fixture);
-    await expect
-      .poll(() => registration.evaluate('document.title'), { timeout: 30_000 })
-      .toBe('Updated Devkit DevTools');
+    if (change === 'module') {
+      await updateDevtoolsRegistration(fixture);
+      await expect
+        .poll(() => registration.evaluate('document.title'), { timeout: 30_000 })
+        .toBe('Updated Devkit DevTools');
+    } else {
+      await updateDevtoolsRegistrationHtml(fixture);
+      await expect
+        .poll(() => registration.evaluate('document.body?.dataset.registrationHtml'), {
+          timeout: 30_000,
+        })
+        .toBe('updated');
+    }
     assert.notEqual(await registration.evaluate('performance.timeOrigin'), previousTimeOrigin);
     const updatedRegistration = await registration.evaluate(expression);
     return { previousRegistration, updatedRegistration };

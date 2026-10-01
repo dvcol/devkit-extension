@@ -79,3 +79,5 @@ jobs:
             examples/webext/artifacts/receipt.json
             examples/webext/artifacts/firefox/receipt.json
             examples/webext/artifacts/json-actions.json
+            examples/webext/artifacts/*-development/*.json
+            examples/webext/artifacts/*-development/*.png
