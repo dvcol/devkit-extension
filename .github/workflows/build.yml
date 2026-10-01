@@ -76,6 +76,8 @@ jobs:
             .conformance/report.json
             packages/*/.conformance/vitest.json
             examples/*/.conformance/vitest.json
+            examples/debugger/artifacts/*.json
+            examples/debugger/artifacts/*.png
             examples/vite-hosts/artifacts/*.json
             examples/vite-hosts/artifacts/*.png
             examples/webext/artifacts/receipt.json

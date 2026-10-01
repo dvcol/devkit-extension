@@ -15,7 +15,7 @@
           "status": "connected",
           "isTrusted": true,
           "isolated": true,
-          "targetTabId": 1976517673,
+          "targetTabId": 1812328080,
           "pairingConfirmations": 0,
           "providerDisposed": false,
           "clientDisposed": false,
@@ -36,10 +36,10 @@
       "name": "The actual extension control approves only the owned fixture tab",
       "details": [
         {
-          "requestId": "a871126c-23f2-4d6a-996f-8c6ada931135",
+          "requestId": "1644113e-2824-426b-b867-fa0222d02a83",
           "selector": {
             "kind": "explicit-tabs",
-            "tabIds": [1976517673]
+            "tabIds": [1812328080]
           },
           "accepted": true,
           "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
@@ -101,7 +101,7 @@
       "name": "Host broker operation changes the real page through native RPC",
       "details": {
         "result": {
-          "operationId": "38e2a4fe-0b7f-4f57-8ad0-63ffa9100aba",
+          "operationId": "d76c4631-20f1-4caa-85bc-4256bbd7bd1c",
           "value": {
             "result": {
               "type": "string",
@@ -142,6 +142,47 @@
         "scopes": 0,
         "leases": 0
       }
+    },
+    {
+      "name": "Native DevTools opening and closing preserves CDB operations in both attachment orders",
+      "details": [
+        {
+          "order": "devtools-first",
+          "browserVersion": "153.0.8010.12",
+          "frontend": {
+            "linkedTarget": true,
+            "documentReady": "complete",
+            "consoleRendered": true
+          },
+          "event": {
+            "method": "Runtime.consoleAPICalled",
+            "value": "devkit-native-devtools"
+          },
+          "titleAfterOpenAndClose": "Owned remote debugger target",
+          "detaches": [],
+          "leasesAfterDisposal": 0,
+          "pageErrors": [],
+          "hostErrors": []
+        },
+        {
+          "order": "extension-first",
+          "browserVersion": "153.0.8010.12",
+          "frontend": {
+            "linkedTarget": true,
+            "documentReady": "complete",
+            "consoleRendered": true
+          },
+          "event": {
+            "method": "Runtime.consoleAPICalled",
+            "value": "devkit-native-devtools"
+          },
+          "titleAfterOpenAndClose": "Owned remote debugger target",
+          "detaches": [],
+          "leasesAfterDisposal": 0,
+          "pageErrors": [],
+          "hostErrors": []
+        }
+      ]
     }
   ],
   "pageErrors": []

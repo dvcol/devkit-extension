@@ -59,7 +59,7 @@ Disabling a service aborts its operation signal and forwards cancellation to `br
 
 Chromium uses an MV3 service worker with required `debugger` and `tabs` permissions. Firefox receives a separate MV3 manifest without `debugger`; `createDebuggerHost('firefox', ...)` returns `{ status: 'unavailable', reason: 'unsupported-browser' }` before accessing Chrome debugger APIs. The portable action remains installed, its requirement waits, capability resolution is unavailable, and invocation rejects with the runtime's `unavailable-capability` result.
 
-This package does not claim Firefox CDP parity, native DevTools coexistence, dynamic Fetch configuration, process recovery, HMR, or integration into a renderer. Those remain separate contract and host work.
+This package does not claim Firefox CDP parity, dynamic Fetch configuration, general process recovery, HMR, or integration into a renderer. Those remain separate contract and host work. The native DevTools coexistence and explicit worker restoration checks below cover their stated Chromium scenarios.
 
 ## Run and verify
 
@@ -80,7 +80,7 @@ The Chromium command uses the installed Playwright Chromium channel in a tempora
 
 Embedded build outputs are `dist/chromium/` and `dist/firefox/`. The former can be loaded unpacked through Chrome's extension developer page; the latter can be loaded temporarily through Firefox's add-on debugging page. There is no action/popup UI. Browser automation opens `probe.html` and starts the checks. Production package imports are bundled, and bundle tests reject Node externals or MCP implementation modules in either browser graph.
 
-Eleven Vitest cases cover ownership, native command failure and later success without replay, stale target references, invalid replies, delayed cancellation, native lifecycle forwarding, events received during domain activation, Firefox absence, and all three bundle targets. The unit tests use the installed CDB broker/publisher/client and mock only native Chrome I/O. The activation regression fails against unpatched 0.3.0 and passes with the workspace patch.
+Twenty-one Vitest cases cover ownership, native command failure and later success without replay, stale target references, invalid replies, delayed cancellation, native lifecycle forwarding, events received during domain activation, Firefox absence, and all three bundle targets. The unit tests use the installed CDB broker/publisher/client and mock only native Chrome I/O. The activation regression fails against unpatched 0.3.0 and passes with the workspace patch.
 
 The retained native receipts in `evidence/` record Chromium **153.0.8010.12** and Firefox **156.0.1**. These are exact tested binaries, not a claim about today's stable channel. Chromium observed the title action, a real CDB `Runtime.consoleAPICalled` event and value `42`, raw native value `63` after client disposal, one attachment/detachment, two successful Runtime enable/disable pairs, zero outstanding leases, and the expected post-revocation command failure. The raw command bypasses CDB leases and is deliberately confined to the trusted host test. Firefox observed the actual missing API and unavailable contribution path. Fresh runs write complete receipts to ignored `artifacts/`.
 
@@ -127,7 +127,7 @@ The [host fixture](./tests/remote/host.ts) installs `createCdbService` through `
 
 The runner requests trust using the native temporary code, completes CDB pairing and approves exactly its owned target tab. Automatic confirmation of this fixture broker and the broad `debug` grant are test policies, not defaults for a consuming application. Authentication secrets remain in memory or the temporary native stores and are excluded from receipts. All stores and the browser profile are removed afterward. The control schemas are test instrumentation, not another contribution protocol or approval UI.
 
-The [retained receipt](./evidence/devframe.json) records nine checked steps:
+The [retained receipt](./evidence/devframe.json) records ten checked steps:
 
 1. Missing credentials and an invalid code fail; the real code establishes trust. Ordinary RPC confirms trust from the actual server session.
 2. CDB pairing completes with no grant or published scope.
@@ -138,6 +138,7 @@ The [retained receipt](./evidence/devframe.json) records nine checked steps:
 7. Provider disposal releases this extension's debugger attachment while retaining the peer.
 8. Disposing the CDB client preserves ordinary authenticated RPC.
 9. Closing the owning peer triggers native disconnect cleanup with no remaining scope or lease.
+10. Two independent fixtures open the real native DevTools Console before or after the extension's debugger attachment, retain CDB operations and an active event subscription, then verify explicit owner cleanup.
 
 The attachment check uses a harmless native evaluation before and after disposal. Chrome's global `getTargets().attached` cannot establish extension ownership because Playwright also attaches. The runner closes its server/browser and removes temporary storage before writing a successful receipt. Fresh runs write `artifacts/devframe.json`; CI executes this command after the ordinary Chromium debugger checks.
 
@@ -189,3 +190,11 @@ The [worker acceptance check](./tests/remote/restart.ts) force-stops the owned M
 Chrome retains this extension's debugger attachment after termination. Released CDB 0.3.0 tries to attach again and fails. The [narrow native patch](../../docs/research/cdb-worker-recovery.md) resets only a verified same-extension attachment during persisted recovery, after the specific attachment conflict. It keeps native ownership, grant checks and failure propagation.
 
 The real browser test verifies the same provider installation, no repeated pairing confirmation, the same approved scope/principal and target ID, and the next target generation. CDB replaces the grant binding for that generation. The portable title action succeeds against the recovered target and rejects the previous generation. Existing caller disconnect/revocation checks and final attachment, scope and lease cleanup still run. The retained receipt includes this sequence. Natural idle expiry, browser restart and competing managers inside one extension are not covered by this check.
+
+### Native DevTools coexistence
+
+The [coexistence check](./tests/remote/devtools.ts) runs both attachment orders in disposable Chromium profiles. Public browser CDP opens the actual Console frontend and verifies its relationship to the inspected fixture. Standard DOM reads establish that its document and Console have rendered; no private DevTools modules are imported. Screenshots in `artifacts/devtools-*.png` show those frontends, with one [retained screenshot](./evidence/devtools-extension-first.png).
+
+In the tested Chromium **153.0.8010.12**, neither opening nor closing DevTools terminates the extension attachment. Both orders receive a real `Runtime.consoleAPICalled` event through a CDB lease, with exactly one lease during the subscription. In the extension-first order, that subscription is active before DevTools opens. A separately authenticated caller reads the title through the portable action while DevTools is open and again after it closes, with unchanged target identity and no native `onDetach` event. Explicit native provider disposal then releases the physical attachment, leaves zero leases, rejects the stale title call and preserves ordinary authenticated RPC. Host and browser errors are checked after all owned cleanup completes.
+
+This extends the earlier [native browser research](../../docs/research/browser-capabilities.md) to the maintained CDB composition. It proves a rendered frontend and continuing CDB commands/events; it does not exercise debugger commands through the DevTools UI, conflicting breakpoints, child sessions, other Chromium versions or Firefox. Chrome's documented browser-terminated detach path remains distinct from the coexistence observed here. No reattachment or recovery mechanism was added.

@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { styleText } from 'node:util';
-import type { Page } from '@playwright/test';
 import { createNativeHost } from './remote/host.ts';
 import { createNativeBrowser } from './remote/browser.ts';
 import { poll, send } from './remote/driver.ts';
 import { agent, checkTrust, approveTarget } from './remote/authentication.ts';
 import { checkRemoteContribution } from './remote/contribution.ts';
+import { checkNativeDevTools } from './remote/devtools.ts';
 import {
   echoResponseSchema,
   attachmentOwnershipResponseSchema,
@@ -16,12 +16,17 @@ import {
 } from './remote/protocol.ts';
 
 type NativeHost = Awaited<ReturnType<typeof createNativeHost>>;
+type NativePage = Awaited<ReturnType<typeof createNativeBrowser>>['target'];
 const checks: Array<{ name: string; details: unknown }> = [];
 let pageErrors: readonly string[] = [];
 let browserVersion: string | undefined;
 
 await run();
 await mkdir('artifacts', { recursive: true });
+record(
+  'Native DevTools opening and closing preserves CDB operations in both attachment orders',
+  await checkNativeDevTools(),
+);
 await writeFile(
   'artifacts/devframe.json',
   JSON.stringify({ browserVersion, checks, pageErrors }, null, 2) + '\n',
@@ -64,9 +69,9 @@ async function run() {
 }
 
 async function checkBrowserOperation(
-  control: Page,
+  control: NativePage,
   host: NativeHost,
-  target: { page: Page; reference: string },
+  target: { page: NativePage; reference: string },
 ): Promise<void> {
   const marker = 'changed-through-authenticated-native-cdb';
   const result = await host.service.broker.invoke(agent, 'browser.evaluate', {
@@ -91,7 +96,7 @@ async function checkBrowserOperation(
   record('Ordinary authenticated RPC shares the peer during browser control', { echo });
 }
 
-async function checkDisposal(control: Page, host: NativeHost): Promise<void> {
+async function checkDisposal(control: NativePage, host: NativeHost): Promise<void> {
   const stopped = await send(control, { kind: 'stop-provider' }, stopProviderResponseSchema);
   assert.equal(stopped.providerDisposed, true);
   assert.equal(stopped.isTrusted, true);
@@ -130,7 +135,7 @@ async function checkDisposal(control: Page, host: NativeHost): Promise<void> {
   });
 }
 
-function disposeControl(control: Page): Promise<void> {
+function disposeControl(control: NativePage): Promise<void> {
   const cleanup = new AsyncDisposableStack();
   cleanup.defer(async () => {
     await send(control, { kind: 'close-peer' }, closePeerResponseSchema);
