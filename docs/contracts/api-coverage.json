@@ -2969,7 +2969,8 @@
       ],
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
-        "Forced Chromium service-worker termination and explicit fresh connections are linked. Natural idle suspension, Firefox event-page lifetime, navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback."
+        "Forced Chromium service-worker termination and explicit fresh connections are linked. Natural idle suspension, Firefox event-page lifetime, navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
+        "Opt-in storage evidence proves explicit reconnection after forced worker termination following a confirmed native write. It does not prove natural suspension, interrupted-write durability, browser restart or Firefox persistent-background recovery. Storage is example-owned native behavior, not a public SDK persistence contract."
       ],
       "browserEvidence": [
         {
@@ -3001,6 +3002,18 @@
           "host": "firefox-webext",
           "mode": "production-extension",
           "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-persistence.ts",
+          "receiptFile": "artifacts/persistence/chromium.json",
+          "checks": [
+            "forced worker termination restores the saved counter under a fresh provider incarnation without replay",
+            "restored clients have one counter and management mount, while domain UI state remains ephemeral"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension-opt-in-storage",
+          "requirePageErrors": true
         }
       ]
     },
