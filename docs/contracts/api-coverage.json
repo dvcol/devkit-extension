@@ -2142,7 +2142,38 @@
         }
       ],
       "gaps": [
-        "Node fixtures prove capability broadcast and selector error behavior. Native action broadcast is classified separately; it does not prove capability broadcast on native hosts or its browser/server mode matrix."
+        "Unit references cover shared broadcast selection and capability unavailability/handler failures; their deduplication and cancellation assertions currently invoke actions. The native browser references cover read-only capability broadcast across extension, Devframe and DevTools providers, recipient selection, service disable/enable and disconnected-provider outcomes.",
+        "Browser unmatched-selector details, overlapping selectors, handler failures, cancellation and lifecycle races remain unverified here. Native development HMR and production-server preview are separate host/mode obligations."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/browser.ts",
+          "receiptFile": "artifacts/receipt.json",
+          "checks": [
+            "native capability broadcast reads independent values from all three providers",
+            "native capability broadcast honors realm and explicit provider selection",
+            "native capability broadcast preserves successful servers while the extension service is disabled and recovers after enable",
+            "native capability broadcast preserves successful recipients after server disconnect"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension/native-development-servers",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox.ts",
+          "receiptFile": "artifacts/firefox/receipt.json",
+          "checks": [
+            "native capability broadcast reads independent values from all three providers",
+            "native capability broadcast honors realm and explicit provider selection",
+            "native capability broadcast preserves successful servers while the extension service is disabled and recovers after enable",
+            "native capability broadcast preserves successful recipients after server disconnect"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension/native-development-servers",
+          "requirePageErrors": false
+        }
       ]
     },
     {
