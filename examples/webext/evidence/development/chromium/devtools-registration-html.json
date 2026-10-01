@@ -1,26 +1,26 @@
 {
   "previousRegistration": {
     "title": "Updated Devkit DevTools",
-    "timeOrigin": 1790860039222.1,
+    "timeOrigin": 1790874658748.2,
     "htmlUpdate": null
   },
   "updatedRegistration": {
     "title": "Updated Devkit DevTools",
-    "timeOrigin": 1790860040238.7,
+    "timeOrigin": 1790874659760.9,
     "htmlUpdate": "updated"
   },
   "immediateTitles": ["Devkit updated"],
   "reopenedTitles": ["Devkit updated"],
   "before": {
-    "timeOrigin": 1790860039924.6,
-    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c1fd02c3-2219-416b-90a4-57d33980a940\",\"realm\":{\"id\":\"webext\"}}",
-    "caller": "{\"id\":13,\"url\":\"chrome-extension://gbkjahdjnobmgeaelbecgmcanldcaaei/panel.html\"}",
+    "timeOrigin": 1790874659460.3,
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"18dd0220-7731-45de-9d02-010ed1187f92\",\"realm\":{\"id\":\"webext\"}}",
+    "caller": "{\"id\":13,\"url\":\"chrome-extension://gjbddohbfbfpddpmejlfodaabfcnpnon/panel.html\"}",
     "counter": "6"
   },
   "after": {
-    "timeOrigin": 1790860041595.6,
-    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c1fd02c3-2219-416b-90a4-57d33980a940\",\"realm\":{\"id\":\"webext\"}}",
-    "caller": "{\"id\":14,\"url\":\"chrome-extension://gbkjahdjnobmgeaelbecgmcanldcaaei/panel.html\"}",
+    "timeOrigin": 1790874661015.1,
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"18dd0220-7731-45de-9d02-010ed1187f92\",\"realm\":{\"id\":\"webext\"}}",
+    "caller": "{\"id\":14,\"url\":\"chrome-extension://gjbddohbfbfpddpmejlfodaabfcnpnon/panel.html\"}",
     "counter": "6"
   }
 }

@@ -2,57 +2,57 @@
   {
     "expected": {
       "counter": 7,
-      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}"
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}"
     },
     "snapshot": {
       "counter": "7",
-      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}",
       "readyState": "complete",
       "status": "Connected",
-      "timeOrigin": 1790860027140,
-      "url": "moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html"
+      "timeOrigin": 1790874646639,
+      "url": "moz-extension://e424abda-9337-4e8d-8e2f-19bdb909a2f5/panel.html"
     }
   },
   {
     "expected": {
       "counter": 8,
-      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}"
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}"
     },
     "snapshot": {
       "counter": "8",
-      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}",
       "readyState": "complete",
       "status": "Connected",
-      "timeOrigin": 1790860029296,
-      "url": "moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html"
+      "timeOrigin": 1790874648877,
+      "url": "moz-extension://e424abda-9337-4e8d-8e2f-19bdb909a2f5/panel.html"
     }
   },
   {
     "expected": {
       "counter": 9,
-      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}"
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}"
     },
     "snapshot": {
       "counter": "9",
-      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}",
       "readyState": "complete",
       "status": "Connected",
-      "timeOrigin": 1790860029296,
-      "url": "moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html"
+      "timeOrigin": 1790874648877,
+      "url": "moz-extension://e424abda-9337-4e8d-8e2f-19bdb909a2f5/panel.html"
     }
   },
   {
     "expected": {
       "counter": 10,
-      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}"
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}"
     },
     "snapshot": {
       "counter": "10",
-      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}",
       "readyState": "complete",
       "status": "Connected",
-      "timeOrigin": 1790860030347,
-      "url": "moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html"
+      "timeOrigin": 1790874649827,
+      "url": "moz-extension://e424abda-9337-4e8d-8e2f-19bdb909a2f5/panel.html"
     }
   }
 ]

@@ -4,15 +4,15 @@
   "before": {
     "buttonLabels": ["Increase counter", "Increase matching domain"],
     "counter": "8",
-    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
-    "timeOrigin": 1790860029296,
-    "caller": "{\"id\":12,\"url\":\"moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html\"}"
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}",
+    "timeOrigin": 1790874648877,
+    "caller": "{\"id\":11,\"url\":\"moz-extension://e424abda-9337-4e8d-8e2f-19bdb909a2f5/panel.html\"}"
   },
   "after": {
     "buttonLabels": ["Increase counter", "Increase matching domain"],
     "counter": "8",
-    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"4073203f-203e-4523-b384-e5c5661f3fe4\",\"realm\":{\"id\":\"webext\"}}",
-    "timeOrigin": 1790860030101,
-    "caller": "{\"id\":13,\"url\":\"moz-extension://d3949950-b549-4928-9b39-ee3ffe6a2cd2/panel.html\"}"
+    "provider": "{\"id\":\"example.extension\",\"incarnation\":\"76d22ce1-4db2-4b27-9707-7f6209dd34e7\",\"realm\":{\"id\":\"webext\"}}",
+    "timeOrigin": 1790874649588,
+    "caller": "{\"id\":13,\"url\":\"moz-extension://e424abda-9337-4e8d-8e2f-19bdb909a2f5/panel.html\"}"
   }
 }

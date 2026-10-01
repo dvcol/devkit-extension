@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import assert, { AssertionError } from 'node:assert/strict';
 import { appendFile, readFile, writeFile } from 'node:fs/promises';
 import { Context } from 'selenium-webdriver/firefox.js';
 import type { Driver } from 'selenium-webdriver/firefox.js';
@@ -147,15 +147,7 @@ async function checkHtmlReload(
       `<span hidden data-devtools-reload="${marker}"></span></body>`,
     ),
   );
-  await driver.wait(
-    () =>
-      panelScript<boolean>(
-        driver,
-        `return !!document.querySelector('[data-devtools-reload="${marker}"]')
-          && document.querySelector('#status')?.textContent === 'Connected'`,
-      ),
-    30_000,
-  );
+  await driver.wait(() => panelReloaded(driver, marker), 30_000);
   const reloaded = await snapshot(driver);
   assert.notEqual(reloaded.timeOrigin, previous.timeOrigin);
   assert.notEqual(reloaded.caller, previous.caller);
@@ -169,6 +161,25 @@ async function checkHtmlReload(
     ),
     'true',
   );
+}
+
+/** Reload can destroy an observation's actor; only this read-only poll may wait for its successor. */
+export async function panelReloaded(driver: Driver, marker: string): Promise<boolean> {
+  try {
+    return await panelScript<boolean>(
+      driver,
+      `return !!document.querySelector('[data-devtools-reload="${marker}"]')
+        && document.querySelector('#status')?.textContent === 'Connected'`,
+    );
+  } catch (error) {
+    if (
+      error instanceof AssertionError &&
+      error.actual ===
+        "AbortError: Actor 'MarionetteCommands' destroyed before query 'MarionetteCommandsParent:executeScript' was resolved"
+    )
+      return false;
+    throw error;
+  }
 }
 
 async function snapshot(driver: Driver): Promise<PanelSnapshot> {
