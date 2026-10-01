@@ -122,8 +122,8 @@ async function startProvider(client: CdbClient, baseURL: string) {
     maximumLevel: 'debug',
     isExposureAllowed: (tab) => tab.url === fixtureURL,
     authorizeApproval,
-    onError() {
-      errors.push('Provider lifecycle reported an error.');
+    onError(error) {
+      errors.push(error instanceof Error ? error.message : String(error));
     },
     recoveryStorageKey: 'owned-native-provider-recovery',
   });

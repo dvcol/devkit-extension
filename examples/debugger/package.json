@@ -11,7 +11,7 @@
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
     "test:firefox": "node tests/firefox.ts",
-    "test:devframe": "node tests/devframe.ts"
+    "test:devframe": "node tests/devframe.ts && node tests/child-sessions.ts"
   },
   "dependencies": {
     "@devkit/client": "workspace:*",

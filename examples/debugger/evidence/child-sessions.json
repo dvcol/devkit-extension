@@ -1,0 +1,29 @@
+{
+  "browserVersion": "153.0.8010.12",
+  "child": {
+    "type": "iframe",
+    "generation": 1,
+    "title": "Owned child debugger frame",
+    "origin": "http://localhost:50341"
+  },
+  "root": {
+    "title": "Owned remote debugger target",
+    "origin": "http://127.0.0.1:50341"
+  },
+  "event": {
+    "method": "Runtime.consoleAPICalled",
+    "value": "owned-child-event",
+    "rootEventFiltered": true,
+    "publicSessionDiffersFromChrome": true
+  },
+  "childRemoved": true,
+  "staleChild": "CDP_COMMAND_FAILED",
+  "rootPreserved": true,
+  "ownership": {
+    "ownsAttachment": false,
+    "error": "native-not-attached"
+  },
+  "leasesAfterDisposal": 0,
+  "hostErrors": [],
+  "pageErrors": []
+}

@@ -30,3 +30,20 @@ index 7013a4f54c6dda9ed114c6b4e8de916318e5000a..ab1ae4b069d5504e87d40460b8a999c5
  					detach: async (target) => platform.debugger.detach(target),
  					sendCommand: async (target, method, parameters) => await platform.debugger.sendCommand(target, method, parameters) ?? {}
  				},
+diff --git a/dist/tab-scope-manager-BIpZjvxo.js b/dist/tab-scope-manager-BIpZjvxo.js
+index 5ecee2c8a85143d560b83f43e48ed21e72b245c4..e36c019f6ff944b45c9ef9cd86557ed0563e7c03 100644
+--- a/dist/tab-scope-manager-BIpZjvxo.js
++++ b/dist/tab-scope-manager-BIpZjvxo.js
+@@ -848,10 +848,10 @@ function createSelectedTabPublisher(options) {
+ 		}
+ 		const domain = methodPrefix.split(".", 1)[0];
+ 		if (domain === void 0 || !domainNamePattern.test(domain)) throw new Error("The subscription method is invalid.");
+-		const chromeSessionId = sessionId === void 0 ? void 0 : childSessionRouter.resolve(sessionId);
+-		if (sessionId !== void 0 && chromeSessionId === void 0) throw new Error("The requested session is not available.");
+ 		const demands = sessionId === void 0 ? activeRootSubscriptionDemands : activeChildSubscriptionDemands.get(sessionId) ?? /* @__PURE__ */ new Set();
+ 		if (active === demands.has(methodPrefix)) return;
++		const chromeSessionId = sessionId === void 0 ? void 0 : childSessionRouter.resolve(sessionId);
++		if (sessionId !== void 0 && chromeSessionId === void 0) throw new Error("The requested session is not available.");
+ 		const hadDomainDemand = [...demands].some((demand) => demand.startsWith(`${domain}.`));
+ 		if (active) demands.add(methodPrefix);
+ 		else demands.delete(methodPrefix);
