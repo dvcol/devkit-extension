@@ -11,9 +11,12 @@ import { createInteractiveAuth } from 'devframe/recipes/interactive-auth';
 
 import { registerRemoteProbes } from './remote-probes.js';
 import { createRemoteContext, remoteComposition } from './remote-context.js';
+import { publishCounterStorage } from './counter-storage.js';
 
 interface RemoteHostOptions extends Pick<InitHubOptions, 'renderers' | 'allowedOrigins'> {
   readonly providerId?: string;
+  /** Opt into native debounced persistence. The caller owns this file; closing never removes it. */
+  readonly counterStoragePath?: string;
 }
 
 /** Example-owned HTTP/RPC lifetime; contribution disposal does not remove host RPC definitions. */
@@ -42,7 +45,7 @@ export async function createRemoteHost(
   cleanup.defer(() => hub.close());
   cleanup.defer(hub.attach(server));
   await hub.ready;
-  const composition = createRemoteComposition(options.providerId);
+  const composition = await prepareRemoteComposition(nativeContext, options);
   const provider = await createProvider(composition);
   cleanup.defer(() => provider.dispose());
   const probes = registerRemoteProbes(nativeContext);
@@ -68,8 +71,13 @@ export async function createRemoteHost(
   };
 }
 
-function createRemoteComposition(providerId = remoteComposition.providerId) {
-  return { ...remoteComposition, providerId };
+async function prepareRemoteComposition(
+  context: Parameters<typeof publishCounterStorage>[0],
+  options: RemoteHostOptions,
+) {
+  if (options.counterStoragePath !== undefined)
+    await publishCounterStorage(context, options.counterStoragePath);
+  return { ...remoteComposition, providerId: options.providerId ?? remoteComposition.providerId };
 }
 
 async function listen(server: Server): Promise<string> {

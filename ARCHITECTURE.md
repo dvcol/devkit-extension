@@ -292,6 +292,8 @@ The example uses `sharedState.get`, `state.value()`, `state.on('updated', ...)` 
 
 A backend connection owns its transport, state mirrors and associated mounts. Losing that connection leaves independently authenticated connections to other providers usable in the same surface. A disconnected attachment that remains registered produces its own rejected broadcast outcome alongside successful recipients. Explicit surface disconnect, closure or replacement disposes all connections that surface owns. These events do not add automatic reconnect or replay.
 
+The [optional server persistence example](./examples/server-contexts/README.md#optional-native-counter-persistence) supplies native `createStorage` under the existing state key before installing its service. Both native hosts restore observed disk writes under a fresh provider incarnation. Native debounced writes and diagnostics remain unchanged; action completion does not confirm persistence. The example owns saved-data validation, and the caller owns the file.
+
 The [state contract](https://github.com/dvcol/devkit-extension/issues/8) tracks remaining host integration evidence. Browser storage, extension worker restart and document lifetime must be tested at those real boundaries before claiming support. Their absence does not justify a generic recovery or enforcement layer.
 
 ## Representative shared and native declarations

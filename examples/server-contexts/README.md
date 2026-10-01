@@ -100,9 +100,30 @@ Open the URL in two tabs. Increment in either tab and both counters update. Disc
 
 Both hosts passed that live in-app browser flow: `0 → 1` in both tabs, a disconnected peer retained `1` while the other reached `2`, reconnect read `2`, and the remaining peer reached `3` after the first tab closed. A separate host retained its own value. Actual DevTools host shutdown also marked the open view stale. [Evidence and native limits](../../docs/research/native-state-observation.md) record the checks.
 
-The page owns its native client; page/HMR disposal releases state listeners, the shared client, adapter subscriptions and native socket. The launcher owns the backend and Vite server; type `replace` to replace the portable provider while retaining native host state. The old page's action binding rejects; reload to attach to the new provider incarnation and continue from the retained value. Any other terminal input closes both servers and removes temporary storage. The native state API remains writable under this example's host policy. UI-only action usage does not establish backend-only write authority. This is a diagnostic page, not the JSON renderer example.
+The page owns its native client; page/HMR disposal releases state listeners, the shared client, adapter subscriptions and native socket. The launcher owns the backend and Vite server; type `replace` to replace the portable provider while retaining native host state. The old page's action binding rejects; reload to attach to the new provider incarnation and continue from the retained value. Any other terminal input closes both servers and removes temporary host storage. An explicitly supplied counter file is retained. The native state API remains writable under this example's host policy. UI-only action usage does not establish backend-only write authority. This is a diagnostic page, not the JSON renderer example.
 
 `checks/browser-build.ts` builds the browser entry using public package exports and rejects Node shims or backend runtime modules. Server-package socket tests additionally exercise authenticated catalog reads, invalid metadata, disable/enable, replacement, stale-query fencing, startup cancellation and caller/client/adapter/disconnect cancellation. Each cancellation path stops waiting while the backend finishes once. Test-only `location` supplies the environment required by the native browser client; transport, auth and handlers are real.
+
+## Optional native counter persistence
+
+Supply a file to retain the counter across native host restarts:
+
+```sh
+pnpm --filter @devkit/example-server-contexts demo:browser devframe /tmp/devkit-devframe-counter.json
+pnpm --filter @devkit/example-server-contexts demo:browser devtools /tmp/devkit-devtools-counter.json
+```
+
+The equivalent example API is `createRemoteHost('devframe', { counterStoragePath: '/absolute/path/counter.json' })`. The host publishes Devframe's public `createStorage` value under the existing `example:server-counter` key before installing the unchanged service and action. Native client writes and portable actions update the same shared state. Omitting the path keeps the existing ephemeral behavior.
+
+The caller owns the file. Closing the host removes its temporary auth/host directory, but never deletes the supplied counter file or its parent. A path identifies this example's stored record; use separate paths for independent hosts. Only one live host should own a path. This example provides no cross-process locking, file watching, merge policy, migrations or cross-provider replication.
+
+Devframe writes asynchronously after its native debounce, currently 100 milliseconds. An action result or observed state update does **not** confirm that the file was written. Open two tabs, increment the counter, inspect the actual JSON file, then stop and restart the command with the same path. Fresh clients attach to a new provider incarnation and read the saved value. No operation is replayed and no automatic reconnect is added.
+
+Saved data must be exactly `{ "value": <integer> }`. Native `mergeInitialValue` applies the example's schema. Malformed JSON or an invalid saved shape produces Devframe's `DF0012` warning and starts at zero; the file remains unchanged until a later state mutation. A native write failure emits `DF0035` in the server terminal while the live state and action result remain available. It does not roll back the counter or become a rejected action. After restart, only a successfully saved value can be restored. The public native store exposes no flush or disposal operation: host shutdown does not promise to flush or cancel a pending write, and abrupt process exit can lose recent changes.
+
+[`tests/persistence.test.ts`](./tests/persistence.test.ts) runs eight real HTTP/WebSocket tests across both native hosts. They verify two-client action/state updates, native client writes, physical file contents before shutdown, a fresh incarnation restoring the value, independent paths, caller-owned file retention, malformed and schema-invalid saved data, and a real filesystem obstruction that prevents saving. The existing six ephemeral-state tests still pass using the same client fixture. These checks preserve native diagnostics and do not claim crash consistency, atomic updates across processes or WebExtension storage support.
+
+Live in-app browser confirmation used two pages per host and separate caller-owned files. Devframe reached `2` and DevTools reached `1`; the physical files contained those values before shutdown. Restarting each command with its original path produced a new incarnation and restored the same value in both pages. Another action reached `3` and `2` in the respective peers and files. Both launchers stopped cleanly. The [observed identities and values](./evidence/persistence/browser-observations.json), [Devframe screenshot](./evidence/persistence/devframe-restored.jpg), [DevTools screenshot](./evidence/persistence/devtools-restored.jpg), and final file contents for [Devframe](./evidence/persistence/devframe.json) and [DevTools](./evidence/persistence/devtools.json) are retained. This is an explicit stop/restart check after an observed write, not an abrupt-exit durability guarantee.
 
 ## Scope
 

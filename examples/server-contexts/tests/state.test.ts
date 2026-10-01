@@ -1,10 +1,6 @@
-import { createClient } from '@devkit/client';
-import { increaseCounterAction } from '@devkit/example-contribution';
 import { createRemoteHost } from '@devkit/example-server-contexts';
-import { createDevframeProviderConnection } from '@devkit/server/client';
-import { connectDevframe } from 'devframe/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { counterStateKey } from '../src/state-key.js';
+import { connectState } from './state-fixtures.js';
 
 const cleanup: (() => void | Promise<void>)[] = [];
 afterEach(async () => {
@@ -18,51 +14,12 @@ async function host(mode: 'devframe' | 'devtools') {
   return instance;
 }
 
-/** Real native clients; location is the browser global expected by the upstream bootstrap. */
-async function connect(server: Awaited<ReturnType<typeof host>>) {
-  vi.stubGlobal('location', new URL(server.origin));
-  const nativeClient = await connectDevframe({
-    baseURL: `${server.origin}/__devkit-remote/`,
-    connection: { isolated: true },
-    authToken: server.token,
-    simpleAuth: false,
-    otpParam: false,
-    webmcp: false,
-    callTimeout: 3000,
-  });
-  cleanup.push(() => nativeClient.close?.());
-  const connection = await createDevframeProviderConnection({
-    rpc: nativeClient,
-    providerId: 'example.remote',
-  });
-  cleanup.push(() => {
-    connection.dispose();
-  });
-  const client = createClient({ connections: [connection] });
-  cleanup.push(() => {
-    client.dispose();
-  });
-  const state = await nativeClient.sharedState.get<{ value: number }>(counterStateKey);
-  return {
-    nativeClient,
-    state,
-    provider: connection.provider,
-    increase: (amount: number) =>
-      client.actions.invoke({ action: increaseCounterAction, input: { amount } }),
-    close() {
-      client.dispose();
-      connection.dispose();
-      nativeClient.close?.();
-    },
-  };
-}
-
 describe.each(['devframe', 'devtools'] as const)('%s native shared state', (mode) => {
   it('preserves host state and native observers across portable-provider replacement', async () => {
     expect.assertions(10);
     const server = await host(mode);
-    const original = await connect(server);
-    const observer = await connect(server);
+    const original = await connectState(server, cleanup);
+    const observer = await connectState(server, cleanup);
     await expect(original.increase(3)).resolves.toBe(3);
     await expect.poll(() => observer.state.value().value).toBe(3);
 
@@ -77,22 +34,22 @@ describe.each(['devframe', 'devtools'] as const)('%s native shared state', (mode
       /No currently available provider|unavailable|incarnation/u,
     );
 
-    const reattached = await connect(server);
+    const reattached = await connectState(server, cleanup);
     expect(reattached.provider.incarnation).toBe(successor.provider.incarnation);
     expect(reattached.state.value().value).toBe(7);
     await expect(reattached.increase(1)).resolves.toBe(8);
     await expect.poll(() => observer.state.value().value).toBe(8);
 
     const freshHost = await host(mode);
-    const freshClient = await connect(freshHost);
+    const freshClient = await connectState(freshHost, cleanup);
     expect(freshClient.state.value().value).toBe(0);
   });
 
   it('retains native client mutation semantics without implying command-only authority', async () => {
     expect.assertions(2);
     const server = await host(mode);
-    const writer = await connect(server);
-    const observer = await connect(server);
+    const writer = await connectState(server, cleanup);
+    const observer = await connectState(server, cleanup);
     writer.state.mutate((value) => {
       value.value = 42;
     });
@@ -104,9 +61,9 @@ describe.each(['devframe', 'devtools'] as const)('%s native shared state', (mode
     expect.assertions(17);
     const firstHost = await host(mode);
     const secondHost = await host(mode);
-    const first = await connect(firstHost);
-    const peer = await connect(firstHost);
-    const independent = await connect(secondHost);
+    const first = await connectState(firstHost, cleanup);
+    const peer = await connectState(firstHost, cleanup);
+    const independent = await connectState(secondHost, cleanup);
     expect([
       first.state.value().value,
       peer.state.value().value,
@@ -128,7 +85,7 @@ describe.each(['devframe', 'devtools'] as const)('%s native shared state', (mode
     peer.close();
     await expect.poll(() => peer.nativeClient.status).not.toBe('connected');
     await expect(first.increase(4)).resolves.toBe(7);
-    const reconnected = await connect(firstHost);
+    const reconnected = await connectState(firstHost, cleanup);
     expect(reconnected.state.value().value).toBe(7);
     expect(peer.state.value().value).toBe(3);
     expect(reconnected.provider.incarnation).toBe(first.provider.incarnation);

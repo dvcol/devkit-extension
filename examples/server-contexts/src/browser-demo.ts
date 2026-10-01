@@ -6,8 +6,12 @@ import { createRemoteHost } from '@devkit/example-server-contexts';
 
 const mode = process.argv[2] ?? 'devframe';
 if (mode !== 'devframe' && mode !== 'devtools') throw new Error('Choose devframe or devtools');
+const counterStoragePath = process.argv[3];
 await using cleanup = new AsyncDisposableStack();
-const host = await createRemoteHost(mode);
+const host = await createRemoteHost(
+  mode,
+  counterStoragePath === undefined ? {} : { counterStoragePath },
+);
 cleanup.defer(host.close);
 const server = await createServer({
   configFile: false,
@@ -22,6 +26,13 @@ const server = await createServer({
 cleanup.defer(() => server.close());
 await server.listen();
 console.info(styleText('cyan', '🚀 [remote-browser]'), mode, server.resolvedUrls?.local);
+if (counterStoragePath !== undefined)
+  console.info(
+    styleText('cyan', '🚀 [remote-browser]'),
+    'Native debounced counter storage:',
+    counterStoragePath,
+    'Action completion does not confirm a disk write. This file is retained when the demo stops.',
+  );
 const terminal = createInterface({ input: process.stdin, output: process.stdout });
 cleanup.defer(() => {
   terminal.close();

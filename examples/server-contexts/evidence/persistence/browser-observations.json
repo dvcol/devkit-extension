@@ -1,0 +1,110 @@
+{
+  "initial": {
+    "devframe": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "77b0af47-ae1f-42fb-a207-0aa48306164b",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 0
+    },
+    "devtools": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "e594584d-60a5-4846-b46f-a96879d5478e",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 0
+    }
+  },
+  "beforeRestart": {
+    "devframe": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "77b0af47-ae1f-42fb-a207-0aa48306164b",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 2
+    },
+    "devtools": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "e594584d-60a5-4846-b46f-a96879d5478e",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 1
+    }
+  },
+  "restored": {
+    "devframe": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "b38aace9-011f-4938-9256-f21b01c69132",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 2
+    },
+    "devtools": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "bd7e94c2-7633-48d5-94b7-882a490f557d",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 1
+    },
+    "devframePeer": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "b38aace9-011f-4938-9256-f21b01c69132",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 2
+    },
+    "devtoolsPeer": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "bd7e94c2-7633-48d5-94b7-882a490f557d",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 1
+    }
+  },
+  "afterRestart": {
+    "devframe": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "b38aace9-011f-4938-9256-f21b01c69132",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 3
+    },
+    "devtools": {
+      "provider": {
+        "id": "example.remote",
+        "incarnation": "bd7e94c2-7633-48d5-94b7-882a490f557d",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "value": 2
+    }
+  }
+}
