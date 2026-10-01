@@ -18,7 +18,7 @@ The TypeScript entry point is explicitly named `typescript/unstable/sync`. No pr
 | `evidence` | Workspace, test file, exact Vitest `fullName`, host and execution mode |
 | `gaps` | Unfinished evidence or host/mode obligations; any remaining gap blocks the completion check |
 
-The first linked group covers nine declaration factories in the UI-free contribution example. It checks five core declaration tests and the real local-provider integration test. Its node/unit and custom-local-provider/integration results make no claim about native browser or server modes. Other entries remain explicitly unmapped while existing evidence is reconciled. Unmapped does not mean untested.
+The linked groups currently associate 142 API paths with 74 distinct executed tests. They cover declaration factories, local provider routing and ownership, Port boundary composition, genuine Devframe/DevTools contexts and authenticated Devframe HTTP/WebSocket connections. JSON and structured-clone Port fixtures run through Node MessageChannel; they do not count as Chromium or Firefox acceptance. Headless server tests do not count as Vite, browser or production-preview evidence. Type-only contracts and remaining entries stay explicitly unmapped while existing evidence is reconciled. Unmapped does not mean untested.
 
 Vitest produces its normal JSON report through its built-in reporter. The checker requires the exact file and test name to appear once with `passed` status in a successful run. Missing, renamed, skipped, todo, failed or duplicated results cannot satisfy the entry. Example and test files must exist. Test authors still own meaningful assertions; matching a passed name alone cannot assess test quality.
 
@@ -31,6 +31,9 @@ Build affected package declarations before inventory checks. For the currently m
 ```sh
 pnpm --filter @devkit/core test
 pnpm --filter @devkit/example-contribution test
+pnpm --filter @devkit/client test
+pnpm --filter @devkit/webext test
+pnpm --filter @devkit/server test
 pnpm run conformance:test
 pnpm run conformance:check
 ```

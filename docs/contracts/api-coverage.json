@@ -66,62 +66,6 @@
       ]
     },
     {
-      "id": "@devkit/client-unmapped",
-      "apis": [
-        "@devkit/client:Client",
-        "@devkit/client:Client.actions",
-        "@devkit/client:Client.actions.broadcast",
-        "@devkit/client:Client.actions.invoke",
-        "@devkit/client:Client.capabilities",
-        "@devkit/client:Client.capabilities.broadcast",
-        "@devkit/client:Client.capabilities.invoke",
-        "@devkit/client:Client.capabilities.resolve",
-        "@devkit/client:Client.dispose",
-        "@devkit/client:Client.providers",
-        "@devkit/client:Client.providers.attach",
-        "@devkit/client:Client.providers.snapshot",
-        "@devkit/client:Client.providers.subscribe",
-        "@devkit/client:ClientOptions",
-        "@devkit/client:ClientOptions.connections",
-        "@devkit/client:ClientOptions.report",
-        "@devkit/client:ClientOptions.routing",
-        "@devkit/client:ClientOptions.routing.provider",
-        "@devkit/client:ClientOptions.routing.realm",
-        "@devkit/client:ConnectionSnapshot",
-        "@devkit/client:ConnectionSnapshot.provider",
-        "@devkit/client:ConnectionSnapshot.provider.id",
-        "@devkit/client:ConnectionSnapshot.provider.incarnation",
-        "@devkit/client:ConnectionSnapshot.provider.realm",
-        "@devkit/client:ConnectionSnapshot.provider.realm.id",
-        "@devkit/client:ConnectionSnapshot.status",
-        "@devkit/client:ProviderAttachment",
-        "@devkit/client:ProviderAttachment.detach",
-        "@devkit/client:ProviderConnection",
-        "@devkit/client:ProviderConnection.catalog",
-        "@devkit/client:ProviderConnection.catalog.snapshot",
-        "@devkit/client:ProviderConnection.catalog.subscribe",
-        "@devkit/client:ProviderConnection.invoke",
-        "@devkit/client:ProviderConnection.provider",
-        "@devkit/client:ProviderConnection.provider.id",
-        "@devkit/client:ProviderConnection.provider.incarnation",
-        "@devkit/client:ProviderConnection.provider.realm",
-        "@devkit/client:ProviderConnection.provider.realm.id",
-        "@devkit/client:ProviderConnection.resolve",
-        "@devkit/client:RoutingError",
-        "@devkit/client:RoutingError.candidates",
-        "@devkit/client:RoutingError.code",
-        "@devkit/client:RoutingError.name",
-        "@devkit/client:RoutingError.selectors",
-        "@devkit/client:RoutingErrorCode",
-        "@devkit/client:createClient"
-      ],
-      "examples": [],
-      "evidence": [],
-      "gaps": [
-        "Existing evidence in CORE-API-MATRIX.md still needs exact executable mappings and explicit host/mode obligations. This group does not claim these APIs lack tests or that conformance is complete."
-      ]
-    },
-    {
       "id": "@devkit/core-unmapped",
       "apis": [
         "@devkit/core:ActionClient",
@@ -767,9 +711,447 @@
       ]
     },
     {
-      "id": "@devkit/server-unmapped",
+      "id": "client-local-dispatch",
       "apis": [
-        "@devkit/server:DevToolsProviderOptions",
+        "@devkit/client:Client.actions",
+        "@devkit/client:Client.actions.invoke",
+        "@devkit/client:Client.capabilities",
+        "@devkit/client:Client.capabilities.invoke",
+        "@devkit/client:Client.capabilities.resolve",
+        "@devkit/client:ProviderConnection.invoke",
+        "@devkit/client:ProviderConnection.resolve",
+        "@devkit/client:createClient"
+      ],
+      "examples": [
+        "examples/server-contexts",
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/routing.test.ts",
+          "fullName": "ordinary provider routing executes real actions and capabilities and exposes provider identity",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/routing.test.ts",
+          "fullName": "ordinary provider routing keeps resolved bindings pinned after connection replacement",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "These tests dispatch through local ProviderConnection objects backed by the real contribution runtime. Native Devframe, DevTools and browser transport evidence has not been linked to this group.",
+        "The examples exercise these client calls, but this group does not yet link their development, production or reload runs. Exported interface type guarantees are recorded separately."
+      ]
+    },
+    {
+      "id": "client-attachment-ownership",
+      "apis": [
+        "@devkit/client:Client.dispose",
+        "@devkit/client:Client.providers",
+        "@devkit/client:Client.providers.attach",
+        "@devkit/client:Client.providers.snapshot",
+        "@devkit/client:Client.providers.subscribe",
+        "@devkit/client:ClientOptions.connections",
+        "@devkit/client:ClientOptions.report",
+        "@devkit/client:ConnectionSnapshot.provider",
+        "@devkit/client:ConnectionSnapshot.provider.id",
+        "@devkit/client:ConnectionSnapshot.provider.incarnation",
+        "@devkit/client:ConnectionSnapshot.provider.realm",
+        "@devkit/client:ConnectionSnapshot.provider.realm.id",
+        "@devkit/client:ConnectionSnapshot.status",
+        "@devkit/client:ProviderAttachment.detach",
+        "@devkit/client:ProviderConnection.catalog",
+        "@devkit/client:ProviderConnection.catalog.snapshot",
+        "@devkit/client:ProviderConnection.catalog.subscribe",
+        "@devkit/client:ProviderConnection.provider",
+        "@devkit/client:ProviderConnection.provider.id",
+        "@devkit/client:ProviderConnection.provider.incarnation",
+        "@devkit/client:ProviderConnection.provider.realm",
+        "@devkit/client:ProviderConnection.provider.realm.id"
+      ],
+      "examples": [
+        "examples/server-contexts",
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/registry.test.ts",
+          "fullName": "client connection ownership rejects a catalog that changes identity without a new attachment",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/registry.test.ts",
+          "fullName": "client connection ownership rejects duplicate logical providers, including the same instance, without replacing their owner",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/registry.test.ts",
+          "fullName": "client connection ownership keeps identical provider IDs distinct across realms and fences stale attachment handles",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/registry.test.ts",
+          "fullName": "client connection ownership does not confuse an unknown catalog with authoritative absence or wait for it",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/registry.test.ts",
+          "fullName": "client connection ownership isolates listener failures and unsubscribes connection observers on detach",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/registry.test.ts",
+          "fullName": "client connection ownership rolls back constructor attachments when initial composition contains a duplicate",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/routing.test.ts",
+          "fullName": "ordinary provider routing executes real actions and capabilities and exposes provider identity",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/callbacks.test.ts",
+          "fullName": "routing callback lifetime client disposal cancels a waiting callback without disposing backend resources",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/callbacks.test.ts",
+          "fullName": "routing callback lifetime does not deliver a late result or replay when its provider detaches during execution",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence covers local identity admission, snapshots, listener isolation, detach and client disposal. The report callback is observed being invoked; its full diagnostic payload is not asserted here.",
+        "Native connection loss, browser service-worker suspension and recovery, and development/production reload runs still need their own executable mappings. These local tests do not establish those host behaviors."
+      ]
+    },
+    {
+      "id": "client-local-routing",
+      "apis": [
+        "@devkit/client:ClientOptions.routing",
+        "@devkit/client:ClientOptions.routing.provider",
+        "@devkit/client:ClientOptions.routing.realm",
+        "@devkit/client:RoutingError.code"
+      ],
+      "examples": [
+        "examples/server-contexts",
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/routing.test.ts",
+          "fullName": "ordinary provider routing replaces host and action defaults with per-call routing without inherited fallback",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/routing.test.ts",
+          "fullName": "ordinary provider routing uses ordered fallback at dispatch and stops on ambiguous preferred groups",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/routing.test.ts",
+          "fullName": "ordinary provider routing never retries a dispatched failure on a fallback provider",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/callbacks.test.ts",
+          "fullName": "routing callback lifetime uses current readiness within the original candidate set for callback fallback",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/callbacks.test.ts",
+          "fullName": "routing callback lifetime preserves callback failures without dispatching",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/callbacks.test.ts",
+          "fullName": "routing callback lifetime rejects a replaced incarnation from a waiting callback and permits a fresh direct selection",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/callbacks.test.ts",
+          "fullName": "routing callback lifetime passes ordinary input to the selector and retains frozen candidates while other providers change",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/callbacks.test.ts",
+          "fullName": "routing callback lifetime cancels a waiting selector promptly and ignores its late completion",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rejects malformed explicit routing null instead of using a default",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rejects malformed explicit routing an array instead of using a default",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rejects malformed explicit routing an empty string instead of using a default",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rejects malformed explicit routing a provider without a realm instead of using a default",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rejects malformed callback results undefined",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rejects malformed callback results null",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rejects malformed callback results an array",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rejects malformed callback results a string",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/request-boundaries.test.ts",
+          "fullName": "routing request boundaries rechecks readiness when a callback selects the same live incarnation",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence checks local selection, readiness, replacement, cancellation and invalid-routing errors. It does not assert every RoutingErrorCode variant or every error metadata field.",
+        "Native host and browser transport, development, production and reload evidence remains to be linked. No claim is made about application-owned domain filtering from these local selector tests."
+      ]
+    },
+    {
+      "id": "client-local-broadcast",
+      "apis": [
+        "@devkit/client:Client.actions.broadcast",
+        "@devkit/client:Client.capabilities.broadcast",
+        "@devkit/client:RoutingError.selectors"
+      ],
+      "examples": [
+        "examples/server-contexts",
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/broadcast.test.ts",
+          "fullName": "broadcast recipient preflight reports every unmatched selector before any recipient runs",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/broadcast.test.ts",
+          "fullName": "broadcast recipient preflight deduplicates overlapping selectors and ignores ordinary routing defaults",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/broadcast.test.ts",
+          "fullName": "broadcast recipient preflight preserves successful siblings alongside known unavailability and handler failure",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/broadcast.test.ts",
+          "fullName": "broadcast recipient preflight rejects empty selection and pre-cancelled requests without side effects",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence covers local recipient preflight, unmatched selector reporting, deduplication, sibling outcomes and pre-dispatch cancellation. Provider-owned domain applicability is outside these fixtures.",
+        "Native Devframe, DevTools, Chromium and Firefox broadcast runs and their development/production modes still need exact executable mappings."
+      ]
+    },
+    {
+      "id": "client-exported-type-contracts-unmapped",
+      "apis": [
+        "@devkit/client:Client",
+        "@devkit/client:ClientOptions",
+        "@devkit/client:ConnectionSnapshot",
+        "@devkit/client:ProviderAttachment",
+        "@devkit/client:ProviderConnection",
+        "@devkit/client:RoutingErrorCode"
+      ],
+      "examples": [],
+      "evidence": [],
+      "gaps": [
+        "Runtime member behavior is mapped in the local client groups, but the exported TypeScript contracts need exact executable mappings to positive and negative declaration probes. Compiling the test suite alone is not evidence of all accepted and rejected type shapes.",
+        "RoutingErrorCode needs explicit coverage of the complete supported code union; the linked runtime tests exercise only selected codes."
+      ]
+    },
+    {
+      "id": "client-error-construction-unmapped",
+      "apis": [
+        "@devkit/client:RoutingError",
+        "@devkit/client:RoutingError.candidates",
+        "@devkit/client:RoutingError.name"
+      ],
+      "examples": [],
+      "evidence": [],
+      "gaps": [
+        "The local client tests inspect error codes and unmatched selectors, but do not assert RoutingError class identity, name or candidate metadata. The routing example performs an instanceof guard, but no exact executed example result is linked for that check yet."
+      ]
+    },
+    {
+      "id": "server-native-context-composition",
+      "apis": [
+        "@devkit/server:createDevToolsProvider",
+        "@devkit/server:createDevframeProvider",
+        "@devkit/server:devToolsContext",
+        "@devkit/server:devToolsContext.id",
+        "@devkit/server:devframeContext",
+        "@devkit/server:devframeContext.id",
+        "@devkit/server:devframeHubContext",
+        "@devkit/server:devframeHubContext.id",
+        "@devkit/server:serverExecution",
+        "@devkit/server:serverExecution.id",
+        "@devkit/server:serverRealm",
+        "@devkit/server:serverRealm.id"
+      ],
+      "examples": [
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration uses real hub state and cleans only owned registrations",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration exposes the actual layered kit context without inventing a Vite server",
+          "host": "devtools-kit",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration activates waiting actions after dynamic service admission and delegates replacement",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration retains a failed setup handle and its cleanup ownership with local diagnostic causes",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership guards concurrent installation across entry points and releases only after disposal",
+          "host": "devtools-kit-and-devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership releases a strict rejected startup without running any setup",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership keeps failed cleanup reserved and preserves its rejected disposal promise",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership rejects an empty configured identity before claiming a native context",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership keeps an externally listening HTTP server alive after adapter disposal",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        }
+      ],
+      "gaps": [
+        "Native browser panels, Vite development/restart, production build/preview and complete failure-mode obligations remain to be linked from maintained examples. These Node host tests do not satisfy those cells."
+      ]
+    },
+    {
+      "id": "server-provider-installation-and-exposure",
+      "apis": [
         "@devkit/server:DevToolsProviderOptions.context",
         "@devkit/server:DevToolsProviderOptions.expose",
         "@devkit/server:DevToolsProviderOptions.expose.actions",
@@ -780,7 +1162,6 @@
         "@devkit/server:DevToolsProviderOptions.report",
         "@devkit/server:DevToolsProviderOptions.services",
         "@devkit/server:DevToolsProviderOptions.strict",
-        "@devkit/server:DevframeProviderOptions",
         "@devkit/server:DevframeProviderOptions.context",
         "@devkit/server:DevframeProviderOptions.expose",
         "@devkit/server:DevframeProviderOptions.expose.actions",
@@ -791,7 +1172,6 @@
         "@devkit/server:DevframeProviderOptions.report",
         "@devkit/server:DevframeProviderOptions.services",
         "@devkit/server:DevframeProviderOptions.strict",
-        "@devkit/server:ServerComposition",
         "@devkit/server:ServerComposition.expose",
         "@devkit/server:ServerComposition.expose.actions",
         "@devkit/server:ServerComposition.expose.capabilities",
@@ -801,10 +1181,8 @@
         "@devkit/server:ServerComposition.report",
         "@devkit/server:ServerComposition.services",
         "@devkit/server:ServerComposition.strict",
-        "@devkit/server:ServerExposure",
         "@devkit/server:ServerExposure.actions",
         "@devkit/server:ServerExposure.capabilities",
-        "@devkit/server:ServerProviderHandle",
         "@devkit/server:ServerProviderHandle.catalog",
         "@devkit/server:ServerProviderHandle.catalog.snapshot",
         "@devkit/server:ServerProviderHandle.catalog.subscribe",
@@ -824,33 +1202,161 @@
         "@devkit/server:ServerProviderHandle.services.replace",
         "@devkit/server:ServerProviderHandle.startup",
         "@devkit/server:ServerProviderHandle.startup.plugins",
-        "@devkit/server:ServerProviderHandle.startup.services",
-        "@devkit/server:createDevToolsProvider",
-        "@devkit/server:createDevframeProvider",
-        "@devkit/server:devToolsContext",
-        "@devkit/server:devToolsContext.[nativeContextValue]",
-        "@devkit/server:devToolsContext.id",
-        "@devkit/server:devframeContext",
-        "@devkit/server:devframeContext.[nativeContextValue]",
-        "@devkit/server:devframeContext.id",
-        "@devkit/server:devframeHubContext",
-        "@devkit/server:devframeHubContext.[nativeContextValue]",
-        "@devkit/server:devframeHubContext.id",
-        "@devkit/server:serverExecution",
-        "@devkit/server:serverExecution.id",
-        "@devkit/server:serverRealm",
-        "@devkit/server:serverRealm.id"
+        "@devkit/server:ServerProviderHandle.startup.services"
       ],
-      "examples": [],
-      "evidence": [],
+      "examples": [
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/exposure.test.ts",
+          "fullName": "host-owned native exposure starts services, plugins and exposed schemas in one native host call",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/exposure.test.ts",
+          "fullName": "host-owned native exposure keeps methods while implementation availability changes and reuses them on replacement",
+          "host": "devtools-kit",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/exposure.test.ts",
+          "fullName": "host-owned native exposure does not publish unlisted contracts or reactivate exposure when omitted on replacement",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/exposure.test.ts",
+          "fullName": "host-owned native exposure keeps declared methods unavailable until their implementations are installed",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/extensions.test.ts",
+          "fullName": "server contribution kinds and diagnostics runs an explicit kind installer against the real native host and owns its cleanup",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/extensions.test.ts",
+          "fullName": "server contribution kinds and diagnostics reports skipped startup definitions through the default local sink",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration uses real hub state and cleans only owned registrations",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration exposes the actual layered kit context without inventing a Vite server",
+          "host": "devtools-kit",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration activates waiting actions after dynamic service admission and delegates replacement",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration retains a failed setup handle and its cleanup ownership with local diagnostic causes",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership guards concurrent installation across entry points and releases only after disposal",
+          "host": "devtools-kit-and-devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership releases a strict rejected startup without running any setup",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership keeps failed cleanup reserved and preserves its rejected disposal promise",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership rejects an empty configured identity before claiming a native context",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership keeps an externally listening HTTP server alive after adapter disposal",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection routes typed actions and capabilities through authenticated native RPC and follows availability",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection rejects unauthorized catalog reads without publishing provider identity",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection invalidates old connections on replacement and reuses the native client without accumulating methods",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection disposes only adapter subscriptions and rejects native method caching",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection rejects static transports before registering client notifications",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        }
+      ],
       "gaps": [
-        "Existing evidence in CORE-API-MATRIX.md still needs exact executable mappings and explicit host/mode obligations. This group does not claim these APIs lack tests or that conformance is complete."
+        "Native browser panels, Vite development/restart, production build/preview and complete failure-mode obligations remain to be linked from maintained examples. These Node host tests do not satisfy those cells.",
+        "Local custom-kind, relaxed admission and setup-failure cases run on Devframe hub; do not infer the corresponding DevTools cells from the shared implementation."
       ]
     },
     {
-      "id": "@devkit/server/client-unmapped",
+      "id": "server-authenticated-remote-connection",
       "apis": [
-        "@devkit/server/client:DevframeProviderConnection",
         "@devkit/server/client:DevframeProviderConnection.catalog",
         "@devkit/server/client:DevframeProviderConnection.catalog.snapshot",
         "@devkit/server/client:DevframeProviderConnection.catalog.subscribe",
@@ -862,47 +1368,303 @@
         "@devkit/server/client:DevframeProviderConnection.provider.realm",
         "@devkit/server/client:DevframeProviderConnection.provider.realm.id",
         "@devkit/server/client:DevframeProviderConnection.resolve",
-        "@devkit/server/client:DevframeProviderConnectionOptions",
         "@devkit/server/client:DevframeProviderConnectionOptions.providerId",
         "@devkit/server/client:DevframeProviderConnectionOptions.report",
         "@devkit/server/client:DevframeProviderConnectionOptions.rpc",
         "@devkit/server/client:DevframeProviderConnectionOptions.signal",
         "@devkit/server/client:createDevframeProviderConnection"
       ],
-      "examples": [],
-      "evidence": [],
+      "examples": [
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary caller abort stops waiting while dispatched backend work can finish once",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary client disposal stops waiting while dispatched backend work can finish once",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary connection disposal stops waiting while dispatched backend work can finish once",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary native disconnect stops waiting while dispatched backend work can finish once",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary does not dispatch a call whose caller is already aborted",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-catalog.test.ts",
+          "fullName": "authoritative native catalog synchronization projects only exposed contracts and never stores its catalog in client-writable shared state",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-catalog.test.ts",
+          "fullName": "authoritative native catalog synchronization rereads after invalidation during an outstanding query instead of publishing stale availability",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-catalog.test.ts",
+          "fullName": "authoritative native catalog synchronization rejects malformed or mismatched catalog metadata before attachment",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-catalog.test.ts",
+          "fullName": "authoritative native catalog synchronization cancels startup and ignores its late native response",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection routes typed actions and capabilities through authenticated native RPC and follows availability",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection rejects unauthorized catalog reads without publishing provider identity",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection invalidates old connections on replacement and reuses the native client without accumulating methods",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection disposes only adapter subscriptions and rejects native method caching",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection rejects static transports before registering client notifications",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        }
+      ],
       "gaps": [
-        "Existing evidence in CORE-API-MATRIX.md still needs exact executable mappings and explicit host/mode obligations. This group does not claim these APIs lack tests or that conformance is complete."
+        "Native browser panels, Vite development/restart, production build/preview and complete failure-mode obligations remain to be linked from maintained examples. These Node host tests do not satisfy those cells.",
+        "The tests exercise actual authenticated HTTP/WebSocket connections from Node to a Devframe hub. Browser storage, real document lifetimes and DevTools remote-host parity require their own receipts."
       ]
     },
     {
-      "id": "@devkit/webext-unmapped",
+      "id": "server-type-contracts-unmapped",
       "apis": [
-        "@devkit/webext:PortChannel",
-        "@devkit/webext:PortChannelOptions",
-        "@devkit/webext:PortChannelOptions.onDisconnect",
+        "@devkit/server:DevToolsProviderOptions",
+        "@devkit/server:DevframeProviderOptions",
+        "@devkit/server:ServerComposition",
+        "@devkit/server:ServerExposure",
+        "@devkit/server:ServerProviderHandle",
+        "@devkit/server:devToolsContext.[nativeContextValue]",
+        "@devkit/server:devframeContext.[nativeContextValue]",
+        "@devkit/server:devframeHubContext.[nativeContextValue]",
+        "@devkit/server/client:DevframeProviderConnection",
+        "@devkit/server/client:DevframeProviderConnectionOptions"
+      ],
+      "examples": [
+        "examples/server-contexts"
+      ],
+      "evidence": [],
+      "gaps": [
+        "Native-context brand types, option/handle interfaces and client aliases have existing compiler fixtures; the inventory does not yet link an executed type-check receipt."
+      ]
+    },
+    {
+      "id": "webext-port-rpc-composition",
+      "apis": [
+        "@devkit/webext:createPortChannel",
         "@devkit/webext:PortChannelOptions.port",
-        "@devkit/webext:PortChannelOptions.port.onDisconnect",
-        "@devkit/webext:PortChannelOptions.port.onDisconnect.addListener",
-        "@devkit/webext:PortChannelOptions.port.onDisconnect.removeListener",
+        "@devkit/webext:PortChannelOptions.port.postMessage",
+        "@devkit/webext:RuntimePort.postMessage"
+      ],
+      "examples": [
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/channel.test.ts",
+          "fullName": "uses native RPC through json Port messages",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/channel.test.ts",
+          "fullName": "uses native RPC through clone Port messages",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "portable provider through json Ports routes shared contracts, follows catalog lifecycle and retains independent client ownership",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "portable provider through json Ports rejects the wrong realm and invalidates old attachments on provider replacement",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "portable provider through clone Ports routes shared contracts, follows catalog lifecycle and retains independent client ownership",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "portable provider through clone Ports rejects the wrong realm and invalidates old attachments on provider replacement",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        }
+      ],
+      "gaps": [
+        "These are Node MessageChannel fixtures with JSON or structured-clone delivery. Actual Chromium and Firefox runtime.Port, background, content-script, popup, options, DevTools and sidebar evidence across development and production modes is not linked by these references."
+      ]
+    },
+    {
+      "id": "webext-port-message-listener-lifecycle",
+      "apis": [
         "@devkit/webext:PortChannelOptions.port.onMessage",
         "@devkit/webext:PortChannelOptions.port.onMessage.addListener",
         "@devkit/webext:PortChannelOptions.port.onMessage.removeListener",
-        "@devkit/webext:PortChannelOptions.port.postMessage",
-        "@devkit/webext:RuntimePort",
-        "@devkit/webext:RuntimePort.onDisconnect",
-        "@devkit/webext:RuntimePort.onDisconnect.addListener",
-        "@devkit/webext:RuntimePort.onDisconnect.removeListener",
         "@devkit/webext:RuntimePort.onMessage",
         "@devkit/webext:RuntimePort.onMessage.addListener",
-        "@devkit/webext:RuntimePort.onMessage.removeListener",
-        "@devkit/webext:RuntimePort.postMessage",
-        "@devkit/webext:createPortChannel"
+        "@devkit/webext:RuntimePort.onMessage.removeListener"
       ],
-      "examples": [],
+      "examples": [
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/channel.test.ts",
+          "fullName": "uses native RPC through json Port messages",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/channel.test.ts",
+          "fullName": "uses native RPC through clone Port messages",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/shared-state.test.ts",
+          "fullName": "keeps native shared-state subscriptions separate across Port peers",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        }
+      ],
+      "gaps": [
+        "These are Node MessageChannel fixtures with JSON or structured-clone delivery. Actual Chromium and Firefox runtime.Port, background, content-script, popup, options, DevTools and sidebar evidence across development and production modes is not linked by these references."
+      ]
+    },
+    {
+      "id": "webext-port-disconnect-lifecycle",
+      "apis": [
+        "@devkit/webext:PortChannelOptions.onDisconnect",
+        "@devkit/webext:PortChannelOptions.port.onDisconnect",
+        "@devkit/webext:PortChannelOptions.port.onDisconnect.addListener",
+        "@devkit/webext:PortChannelOptions.port.onDisconnect.removeListener",
+        "@devkit/webext:RuntimePort.onDisconnect",
+        "@devkit/webext:RuntimePort.onDisconnect.addListener",
+        "@devkit/webext:RuntimePort.onDisconnect.removeListener"
+      ],
+      "examples": [
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/channel.test.ts",
+          "fullName": "uses native RPC through json Port messages",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/channel.test.ts",
+          "fullName": "uses native RPC through clone Port messages",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/shared-state.test.ts",
+          "fullName": "keeps native shared-state subscriptions separate across Port peers",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/shared-state.test.ts",
+          "fullName": "rejects an initial state request when its native connection closes",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        }
+      ],
+      "gaps": [
+        "These are Node MessageChannel fixtures with JSON or structured-clone delivery. Actual Chromium and Firefox runtime.Port, background, content-script, popup, options, DevTools and sidebar evidence across development and production modes is not linked by these references.",
+        "Disconnection is triggered by the owned Node fixture. Browser suspension, worker termination, navigation and permission revocation require their separate native-host evidence; this group does not claim cancellation of already dispatched backend work."
+      ]
+    },
+    {
+      "id": "webext-port-declaration-contracts",
+      "apis": [
+        "@devkit/webext:PortChannel",
+        "@devkit/webext:PortChannelOptions",
+        "@devkit/webext:RuntimePort"
+      ],
+      "examples": [
+        "examples/webext"
+      ],
       "evidence": [],
       "gaps": [
-        "Existing evidence in CORE-API-MATRIX.md still needs exact executable mappings and explicit host/mode obligations. This group does not claim these APIs lack tests or that conformance is complete."
+        "These three exports are TypeScript-only declarations. Runtime tests instantiate structurally compatible fixtures, but they do not directly prove declaration compatibility. The package typecheck passes; dedicated executed positive/negative type-compatibility evidence against native Chrome and Firefox Port declarations is not linked here."
       ]
     }
   ]

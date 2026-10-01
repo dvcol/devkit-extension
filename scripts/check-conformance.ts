@@ -32,6 +32,10 @@ async function verifyCoverage(discovered: readonly string[]): Promise<void> {
     results.push({ ...group, evidence });
   }
   const incomplete = results.filter((group) => group.gaps.length > 0);
+  const linkedApiCount = results.reduce((count, group) => {
+    if (group.evidence.length === 0) return count;
+    return count + group.apis.length;
+  }, 0);
   const outputDirectory = join(repository, '.conformance');
   await mkdir(outputDirectory, { recursive: true });
   await writeFile(
@@ -42,6 +46,7 @@ async function verifyCoverage(discovered: readonly string[]): Promise<void> {
         checkedAt: new Date().toISOString(),
         complete: incomplete.length === 0,
         apiCount: discovered.length,
+        linkedApiCount,
         groups: results,
       },
       null,
@@ -50,7 +55,7 @@ async function verifyCoverage(discovered: readonly string[]): Promise<void> {
   );
   console.info(
     styleText('cyan', '🧪 [conformance]'),
-    `${discovered.length} API paths accounted for; ${results.reduce((count, group) => count + group.evidence.length, 0)} executed test references verified; ${incomplete.length} groups retain coverage gaps.`,
+    `${discovered.length} API paths accounted for; ${linkedApiCount} have linked execution evidence; ${incomplete.length} groups retain coverage gaps.`,
     'Report: .conformance/report.json',
   );
   if (process.argv.includes('--complete')) {
