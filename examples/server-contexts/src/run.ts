@@ -19,6 +19,7 @@ import {
   readCounterCommandId,
 } from './definitions.js';
 import { createHeadlessHost } from './host.js';
+import { commandInstaller, commandPlugin, exerciseCustomCommand } from './custom-command.js';
 
 function admitted(result: InstallationResult | undefined) {
   if (result === undefined) throw new Error('The counter installation was not admitted');
@@ -109,11 +110,16 @@ async function runContextDemo<Context extends DevframeHubContext>(
     provider = await installProvider({
       context: host.context,
       providerId: `example.${hostName}-server`,
+      kinds: [commandInstaller],
       services: [counterService],
-      plugins: [counterActionsPlugin],
+      plugins: [counterActionsPlugin, commandPlugin],
+    });
+    const customCommand = await exerciseCustomCommand({
+      context: host.context,
+      installation: admitted(provider.startup.plugins[1]),
     });
     const result = await exerciseProvider(provider, host.context);
-    return { host: hostName, ...result };
+    return { host: hostName, customCommand, ...result };
   } finally {
     try {
       await provider?.dispose();

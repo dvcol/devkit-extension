@@ -30,6 +30,23 @@ pnpm --filter @devkit/example-server-contexts run lint
 pnpm --filter @devkit/example-server-contexts run format:check
 ```
 
+## Custom contribution kind
+
+Both `demo:devframe` and `demo:devtools` also run the [custom command contribution](./src/custom-command.ts). `defineContributionKind` declares its schema, `defineExtension` supplies a title/message payload, and the host supplies a typed `ContributionKindInstaller`. Definitions remain inert until the provider installs the plugin.
+
+```ts
+const provider = await createDevframeProvider({
+  context,
+  providerId: 'example.devframe-server',
+  kinds: [commandInstaller],
+  plugins: [commandPlugin],
+});
+```
+
+The installer retrieves the existing `devframeHubContext`, registers an ordinary native command under the contribution ID, and registers `command.unregister()` with the activation scope. The same installer works with `createDevToolsProvider` because that host exposes the same native hub API. The SDK owns contribution activation; the native context owns command execution.
+
+The printed `customCommand` result shows the greeting when ready, no registered command after disable, a working greeting after reenable, and no command after disposal. [The two native-host tests](./tests/custom-command.test.ts) assert those results through this package's built exports. The native Vitest JSON report feeds the API inventory. This example covers headless native hosts; browser UI, extension-host custom kinds and reload behavior remain separate acceptance work.
+
 ## Two-provider routing
 
 `demo:routing` creates both native hosts together and attaches their provider handles to `@devkit/client`. An ordered default initially increments the Devframe counter to `3`. Disabling that service routes the next increment to DevTools, reaching `4`; a callback selects DevTools again, reaching `6`. After re-enabling Devframe, a broadcast requesting its provider and a missing provider rejects before dispatch. Capability broadcast reads confirm unchanged counters `[3, 6]`.

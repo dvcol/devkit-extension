@@ -66,6 +66,153 @@
       ]
     },
     {
+      "id": "custom-contribution-kind-lifecycle",
+      "apis": [
+        "@devkit/core:ContributionKindInstaller.activate",
+        "@devkit/core:ContributionKindInstaller.descriptor",
+        "@devkit/core:ExtensionDefinition.id",
+        "@devkit/core:ExtensionDefinition.payload",
+        "@devkit/core:defineContributionKind",
+        "@devkit/core:defineExtension"
+      ],
+      "examples": [
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/definitions.test.ts",
+          "fullName": "portable definitions preserves contract content and leaves setup, handlers and schema validation inert",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/invalid-definitions.test.ts",
+          "fullName": "invalid declarations rejects missing extension payload",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-contracts.test.ts",
+          "fullName": "provider admission and invocation contracts validates custom payloads before any batch setup and owns custom cleanup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/extensions.test.ts",
+          "fullName": "server contribution kinds and diagnostics runs an explicit kind installer against the real native host and owns its cleanup",
+          "host": "devframe-hub",
+          "mode": "integration"
+        },
+        {
+          "workspace": "examples/server-contexts",
+          "testFile": "tests/custom-command.test.ts",
+          "fullName": "devframe custom contribution kind registers the native command, disables, reenables and disposes it",
+          "host": "devframe-hub",
+          "mode": "integration"
+        },
+        {
+          "workspace": "examples/server-contexts",
+          "testFile": "tests/custom-command.test.ts",
+          "fullName": "devtools custom contribution kind registers the native command, disables, reenables and disposes it",
+          "host": "devtools-kit",
+          "mode": "integration"
+        }
+      ],
+      "gaps": [
+        "The runnable example uses actual headless Devframe and DevTools contexts through built public package exports. It proves a custom native command installation, disable, reenable and disposal; it does not mount a browser UI or establish WebExtension, Vite development, production-preview or reload behavior.",
+        "Payload rejection before batch setup is directly asserted by the local runtime test; equivalent malformed payload and cleanup-failure cases on each native host remain unlinked. These runtime references do not prove the complete generic type-inference or negative TypeScript contract."
+      ]
+    },
+    {
+      "id": "portable-operation-error-guard",
+      "apis": [
+        "@devkit/core:isOperationError"
+      ],
+      "examples": [
+        "examples/debugger"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError recognizes native errors and portable records using the same diagnostic shape",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 0",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 1",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 2",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 3",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 4",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 5",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 6",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 7",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/errors.test.ts",
+          "fullName": "isOperationError rejects incomplete or malformed portable errors 8",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "These Node assertions cover native Error instances, portable records and selected malformed diagnostic shapes. They do not prove every diagnostic variant, native transport error serialization or safe disclosure to untrusted recipients.",
+        "The maintained debugger example uses this guard for its missing-caller check, but its browser receipt format is not consumed by this inventory. Compile-time narrowing and host/mode coverage remain separate obligations."
+      ]
+    },
+    {
       "id": "@devkit/core-unmapped",
       "apis": [
         "@devkit/core:ActionClient",
@@ -265,8 +412,6 @@
         "@devkit/core:ContributionKindDescriptor.id",
         "@devkit/core:ContributionKindDescriptor.schema",
         "@devkit/core:ContributionKindInstaller",
-        "@devkit/core:ContributionKindInstaller.activate",
-        "@devkit/core:ContributionKindInstaller.descriptor",
         "@devkit/core:ContributionKindInstaller.descriptor.id",
         "@devkit/core:ContributionKindInstaller.descriptor.schema",
         "@devkit/core:ContributionSnapshot",
@@ -288,9 +433,7 @@
         "@devkit/core:ExtensionDefinition.descriptor.schema",
         "@devkit/core:ExtensionDefinition.execution",
         "@devkit/core:ExtensionDefinition.execution.id",
-        "@devkit/core:ExtensionDefinition.id",
         "@devkit/core:ExtensionDefinition.kind",
-        "@devkit/core:ExtensionDefinition.payload",
         "@devkit/core:InstallationHandle",
         "@devkit/core:InstallationHandle.disable",
         "@devkit/core:InstallationHandle.dispose",
@@ -452,10 +595,7 @@
         "@devkit/core:SetupContext.scope.onDispose",
         "@devkit/core:SetupContext.scope.signal",
         "@devkit/core:SetupContext.services",
-        "@devkit/core:Unsubscribe",
-        "@devkit/core:defineContributionKind",
-        "@devkit/core:defineExtension",
-        "@devkit/core:isOperationError"
+        "@devkit/core:Unsubscribe"
       ],
       "examples": [],
       "evidence": [],
