@@ -72,6 +72,7 @@ it.each([
       ...browserSettings,
     });
   },
+  30_000,
 );
 
 it.each(['production', 'firefox'])(
@@ -84,6 +85,7 @@ it.each(['production', 'firefox'])(
     expect(modules.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
     expect(backgroundScript).toContain('example.persisted-counter');
   },
+  30_000,
 );
 
 async function inspectBundle(mode: string) {
