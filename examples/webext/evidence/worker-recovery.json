@@ -1,0 +1,68 @@
+{
+  "browser": "153.0.8010.12",
+  "checks": [
+    "forced Chromium worker termination rejects the pending RPC and unmounts background views in both surviving documents",
+    "background loss preserves both independent server views, their actions and partial broadcast outcomes",
+    "explicit page disconnect disposes surviving server connections after background loss",
+    "explicit fresh page connections start a new provider incarnation with reset ephemeral state and no replay",
+    "reconnected pages mount one counter and management view and share one action effect"
+  ],
+  "observations": {
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "8e24e1ba-78f5-4270-a419-486577773590",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "executions": {
+      "started": 4,
+      "completed": 4
+    },
+    "termination": {
+      "method": "ServiceWorker.stopWorker",
+      "scriptURL": "chrome-extension://dcipeoelhglglhhlpiifnpfkejgkoinh/background.js",
+      "versionId": "0",
+      "targetId": "B96B8978AD0691E9E8A509260573F18D",
+      "statuses": ["running", "stopping", "stopped"]
+    },
+    "replacement": {
+      "id": "example.extension",
+      "incarnation": "17ebf15f-2e9a-4667-88b2-3e5f17fd1099",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "servers": [
+      {
+        "provider": {
+          "id": "example.devframe",
+          "incarnation": "26712209-ad01-4cba-893e-d3acc8c7bd6d",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "counter": 2
+      },
+      {
+        "provider": {
+          "id": "example.devtools",
+          "incarnation": "07f57be1-06f6-4bb9-a1f6-1bc4dfef9c6b",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "counter": 5
+      }
+    ]
+  },
+  "counters": {
+    "beforeTermination": 10,
+    "afterFreshConnection": 0,
+    "afterAction": 1
+  },
+  "limitations": [
+    "Forced service-worker termination, not natural idle suspension or Firefox event-page behavior",
+    "No persistent storage, automatic reconnection, automatic retry or remote side-effect rollback"
+  ]
+}

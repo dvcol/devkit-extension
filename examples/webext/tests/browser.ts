@@ -144,9 +144,9 @@ try {
   await expect(first.locator('#status')).toHaveText('Connected');
   await first.getByRole('button', { name: 'Read capability', exact: true }).click();
   await expect(first.locator('#result')).toHaveText('16');
-  const hostChecks = await checkChromiumHosts(first);
-  assert.deepEqual(errors, []);
+  const hostChecks = await checkChromiumHosts(first, second);
   await first.screenshot({ path: 'artifacts/native-port-proof.png', fullPage: true });
+  assert.deepEqual(errors, []);
   const receipt = {
     browser: browser.browser()?.version(),
     checks: [

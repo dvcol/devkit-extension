@@ -119,4 +119,6 @@ An asynchronous routing callback selects from its original candidate owners and 
 
 A **provider connection** is an adapter-owned authenticated connection with fixed provider identity, observable catalog and invocation methods. A **provider attachment** is the client's ownership of that connection in its registry; detaching it cancels client work without disposing the backend. For native remote unary RPC, cancellation stops the caller waiting; already-dispatched backend work may finish. No automatic retry or replay follows.
 
+A surface can own several provider connections. Losing one transport does not end the others; explicit surface disposal ends all connections that surface owns.
+
 An **unmatched broadcast selector** names no known provider. The entire broadcast rejects before dispatch and lists these selectors. A known provider that is currently unavailable remains a recipient and receives its own rejected outcome.

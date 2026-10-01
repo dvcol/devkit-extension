@@ -15,12 +15,13 @@ if (chrome.extension.getViews?.({ type: 'popup' }).includes(window))
 
 const listeners = new AbortController();
 const viewLifetime = new AbortController();
-const { port, client, events, rpc, sharedState } = createExampleConnection(close);
+const { port, client, events, rpc, sharedState } = createExampleConnection(closeBackground);
 const container = document.querySelector<HTMLElement>('#renderer')!;
 const status = document.querySelector<HTMLElement>('#status')!;
 const result = document.querySelector<HTMLElement>('#result')!;
 const mountedViews: Array<{ dispose?: () => void }> = [];
 let closed = false;
+let backgroundClosed = false;
 const routedClient = createClient();
 const disposeServers = mountServerControls(routedClient);
 const disposePermissions = mountPermissionControls();
@@ -29,12 +30,18 @@ let unsubscribeCatalog: (() => void) | undefined;
 function close(): void {
   if (closed) return;
   closed = true;
+  disposeServers();
+  routedClient.dispose();
+  closeBackground();
+}
+/** A lost background Port does not own the page's independent server connections. */
+function closeBackground(): void {
+  if (backgroundClosed) return;
+  backgroundClosed = true;
   viewLifetime.abort(new Error('Renderer connection closed'));
   rpc.$close();
   events.emit('connection:status', 'disconnected', 'connected');
   unsubscribeCatalog?.();
-  disposeServers();
-  routedClient.dispose();
   providerConnection?.dispose();
   for (const key of sharedState.keys()) sharedState.delete(key);
   for (const mounted of mountedViews) mounted.dispose?.();
@@ -69,7 +76,7 @@ try {
     providerId,
     realm,
   });
-  if (closed) {
+  if (backgroundClosed) {
     providerConnection.dispose();
     throw new Error('The native connection closed during startup');
   }
@@ -81,7 +88,7 @@ try {
   });
   status.textContent = 'Connected';
 } catch (error) {
-  close();
+  closeBackground();
   if (!listeners.signal.aborted)
     result.textContent = error instanceof Error ? error.message : String(error);
 }
@@ -98,7 +105,7 @@ async function mountView(id: string, target: HTMLElement): Promise<void> {
     container: target,
     context: nativeContext,
   });
-  if (closed) {
+  if (backgroundClosed) {
     mounted.dispose?.();
     throw new Error('The native connection closed during renderer startup');
   }

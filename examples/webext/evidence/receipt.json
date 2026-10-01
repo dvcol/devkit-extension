@@ -47,7 +47,12 @@
     "native side panel renders the shared JSON view within its actual narrow viewport",
     "global side panel retains its caller, local form and shared state across tab navigation",
     "closing side panel removes its context while the dispatched action completes once",
-    "reopened side panel has a fresh document and caller, retained provider and no replay"
+    "reopened side panel has a fresh document and caller, retained provider and no replay",
+    "forced Chromium worker termination rejects the pending RPC and unmounts background views in both surviving documents",
+    "background loss preserves both independent server views, their actions and partial broadcast outcomes",
+    "explicit page disconnect disposes surviving server connections after background loss",
+    "explicit fresh page connections start a new provider incarnation with reset ephemeral state and no replay",
+    "reconnected pages mount one counter and management view and share one action effect"
   ],
   "pageErrors": [],
   "limitations": [

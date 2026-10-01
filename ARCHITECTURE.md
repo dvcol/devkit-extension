@@ -290,6 +290,8 @@ State follows the native host's key space and lifetime. Separate hosts keep sepa
 
 The example uses `sharedState.get`, `state.value()`, `state.on('updated', ...)` and native mutation directly. TypeScript state types are not runtime validation, and choosing actions in a UI does not prohibit native client writes. Authoritative permissions and provider catalogs stay in their owning APIs. Cross-provider synchronization requires explicit contribution logic; broadcast does not merge or replicate state.
 
+A backend connection owns its transport, state mirrors and associated mounts. Losing that connection leaves independently authenticated connections to other providers usable in the same surface. A disconnected attachment that remains registered produces its own rejected broadcast outcome alongside successful recipients. Explicit surface disconnect, closure or replacement disposes all connections that surface owns. These events do not add automatic reconnect or replay.
+
 The [state contract](https://github.com/dvcol/devkit-extension/issues/8) tracks remaining host integration evidence. Browser storage, extension worker restart and document lifetime must be tested at those real boundaries before claiming support. Their absence does not justify a generic recovery or enforcement layer.
 
 ## Representative shared and native declarations
