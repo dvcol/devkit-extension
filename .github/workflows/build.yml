@@ -39,7 +39,7 @@ jobs:
         id: firefox
         uses: browser-actions/setup-firefox@v1
         with:
-          firefox-version: '156.0.1'
+          firefox-version: '157.0'
       - name: Run the Firefox extension browser test
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

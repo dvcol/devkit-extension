@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
-import { By, Key } from 'selenium-webdriver';
+import { Key } from 'selenium-webdriver';
+import type { WebElement } from 'selenium-webdriver';
 import { Context } from 'selenium-webdriver/firefox.js';
 import type { Driver } from 'selenium-webdriver/firefox.js';
 
@@ -106,10 +107,7 @@ export async function openSidebar(driver: Driver): Promise<void> {
   await driver.setContext(Context.CHROME);
   const modifier = process.platform === 'darwin' ? Key.COMMAND : Key.CONTROL;
   await driver.actions().keyDown(modifier).sendKeys('b').keyUp(modifier).perform();
-  await driver.findElement(By.id('sidebar-switcher-target')).click();
-  await driver
-    .findElement(By.id('sidebarswitcher_menu_devkit-native-port_example_invalid-sidebar-action'))
-    .click();
+  await toggleSidebar(driver);
   await driver.setContext(Context.CONTENT);
   await driver.wait(
     async () =>
@@ -129,9 +127,17 @@ export async function openSidebar(driver: Driver): Promise<void> {
 
 export async function closeSidebar(driver: Driver): Promise<void> {
   await driver.setContext(Context.CHROME);
-  await driver.findElement(By.id('sidebar-close')).click();
+  await toggleSidebar(driver);
   await driver.setContext(Context.CONTENT);
   await driver.wait(async () => (await sidebarCount(driver)) === 0, 10_000);
+}
+
+/** Chrome context requires script lookup for shadow elements; WebDriver performs the native click. */
+async function toggleSidebar(driver: Driver): Promise<void> {
+  const button = await driver.executeScript<WebElement>(
+    `return document.querySelector('sidebar-main').shadowRoot.querySelector('[extensionId="devkit-native-port@example.invalid"]');`,
+  );
+  await button.click();
 }
 
 function sidebarCount(driver: Driver): Promise<number> {

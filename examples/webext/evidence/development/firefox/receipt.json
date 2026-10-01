@@ -1,9 +1,10 @@
 {
   "passed": true,
-  "browserVersion": "156.0.1",
+  "browserVersion": "157.0",
   "manifestVersion": "0.0.2",
   "nativeStopClosedBrowser": true,
   "scenarios": [
+    "Packaged MAIN script edit reloads extension, removes temporary registration, preserves the old document, and needs explicit registration before fresh navigation",
     "Panel module HMR preserves document, provider and state; replaces caller; invokes each action once",
     "HTML reload replaces document while retaining provider and state",
     "Native toolbar popup module HMR preserves document, provider and state; replaces caller; one pointer action reaches the peer; popup closes cleanly",
