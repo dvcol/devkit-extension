@@ -22,13 +22,26 @@ flowchart LR
 
 The worker admits only its own extension ID, expected channel name and exact packaged page URL. Its native RPC metadata retains each actual sender. The channel uses Devframe's records serializer. Native state accepts normal native writes, and view publication retains one context object for its index and duplicate detection. Each page owns its RPC close, state mirrors and renderer disposal. Disconnect does not cancel remote side effects or replay an action.
 
-The Chromium test uses a disposable profile and removes it afterward. Its 39 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
+The Chromium test uses a disposable profile and removes it afterward. Its 43 scenarios cover native Port RPC/state/rendering and disposal, portable action/capability calls, catalog updates in both clients, configured-server routing and the selected-page handoff below. The [recorded run](./evidence/receipt.json) lists every scenario and passed with zero page errors. Fresh runs write their screenshot and receipt under ignored `artifacts/`.
 
 ![Native renderer using the installed workspace dependencies](./evidence/native-port-proof.png)
 
 `pnpm --filter @devkit/example-webext test` also builds the extension and rejects Node or browser-external modules in the graph. Both build modes assert the expected native background manifest, permissions and CSP. CI runs these checks through the normal workspace gates, then executes both real-browser tests.
 
 This is the native extension foundation. Explicit server connections, cross-provider JSON action dispatch and the recorded browser-surface HMR cases are implemented below. Automatic discovery, content/page request bridging and complete browser/reload conformance remain open. Native server view discovery is covered below; its full host/lifecycle matrix is still incomplete. The separate [debugger example](../debugger/README.md) owns debugger and optional CDB evidence. Worker termination can reset in-memory state; persistence remains host/contribution-owned. The exact native dependency backports and their removal conditions are recorded in [the patch inventory](../../patches/README.md).
+
+## Native JSON service management
+
+The separate management view uses the same native JSON renderer and Port connection as the counter. Its authored Buttons invoke the existing `probe:disable-service` and `probe:enable-service` native RPC methods; unbound native calls pass through the portable action binding unchanged. The background projects its actual provider catalog into the management view's native state. The view remains mounted while the counter service is disabled, so another surface can observe its status and reenable it. Native JSON `onError` callbacks display action failures; `onSuccess` clears the message. There is no additional SDK action API, renderer handler map or permission policy.
+
+```text
+JSON Disable / Enable → existing native RPC → service installation handle
+provider catalog → native management view state → options / popup / panel / sidebar
+```
+
+The document owns both renderer mounts. Disconnect, page closure and module disposal release both; a mount completing after disconnect is immediately disposed. The counter and management views have separate native state keys, so a counter write cannot overwrite lifecycle status. The existing plain catalog output remains a diagnostic probe. Permission buttons retain their direct native user-gesture path, and other diagnostic/server-connection controls are still authored HTML; this is not yet a complete JSON management interface.
+
+The maintained Chromium and Firefox production suites click the rendered Disable button, observe status on both pages and a rejected dependent action, then click Enable and resume the action. The actual popup also receives catalog status and reenables the service through its rendered button. Both suites retain a management button across disconnect, click the detached node, verify the surviving service remains active, and reconnect with one management mount showing current state. A retained native button can still invoke its handler after renderer disposal. The closed RPC prevents backend dispatch; native JSON failure callbacks handle that rejection without modifying the surviving view, and reconnection reads the unchanged native state. This check establishes no backend side effect, not removal of every detached DOM listener. The native development suites additionally check one management mount after panel module HMR.
 
 ## Firefox execution
 
@@ -41,7 +54,7 @@ FIREFOX_BINARY=/Applications/Firefox.app/Contents/MacOS/firefox \
 
 The driver owns a temporary profile, assigns this add-on a test-only origin UUID and removes the session on exit. Its `--allow-system-access` option permits automation of `moz-extension` documents; it is never applied to a normal browsing profile. WebDriver Classic provides working extension-page navigation. Firefox BiDi currently omits extension-page lifecycle events, causing Puppeteer navigation to time out, as tracked in [Puppeteer #14314](https://github.com/puppeteer/puppeteer/issues/14314).
 
-The [Firefox receipt](./evidence/firefox/receipt.json) records 43 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Both suites open actual options pages and toolbar popups through native APIs. Both suites also exercise the real DevTools panel and browser sidebar lifetimes described below.
+The [Firefox receipt](./evidence/firefox/receipt.json) records 47 scenario groups. They cover real Port RPC, native rendering/state, rich values, disconnection, catalog updates, mixed Devframe/DevTools/extension routing, native origin/auth rejection and selected-page handoff. These tests assert actual browser DOM and backend state. WebDriver Classic does not provide global page-error capture here, so this receipt makes no zero-page-error claim. The Chromium receipt still includes that assertion. Both suites open actual options pages and toolbar popups through native APIs. Both suites also exercise the real DevTools panel and browser sidebar lifetimes described below.
 
 ![Firefox native renderer and mixed-provider state](./evidence/firefox/native-port-proof.png)
 

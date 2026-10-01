@@ -19,7 +19,7 @@ const { port, client, events, rpc, sharedState } = createExampleConnection(close
 const container = document.querySelector<HTMLElement>('#renderer')!;
 const status = document.querySelector<HTMLElement>('#status')!;
 const result = document.querySelector<HTMLElement>('#result')!;
-let mounted: { dispose?: () => void } | undefined;
+const mountedViews: Array<{ dispose?: () => void }> = [];
 let closed = false;
 const routedClient = createClient();
 const disposeServers = mountServerControls(routedClient);
@@ -37,7 +37,8 @@ function close(): void {
   routedClient.dispose();
   providerConnection?.dispose();
   for (const key of sharedState.keys()) sharedState.delete(key);
-  mounted?.dispose?.();
+  for (const mounted of mountedViews) mounted.dispose?.();
+  mountedViews.splice(0);
   port.disconnect();
   status.textContent = 'Disconnected';
 }
@@ -61,21 +62,8 @@ const nativeContext = {
   }),
 };
 try {
-  mounted = await renderer({
-    entry: {
-      id: 'counter',
-      title: 'Counter',
-      icon: 'i-ph:plus',
-      type: 'json-render',
-      view: { stateKey: 'devframe:json-render:global:counter' },
-    },
-    container,
-    context: nativeContext,
-  });
-  if (closed) {
-    mounted.dispose?.();
-    throw new Error('The native connection closed during renderer startup');
-  }
+  await mountView('counter', container);
+  await mountView('management', document.querySelector<HTMLElement>('#management')!);
   providerConnection = await createRpcProviderConnection({
     rpc: { call: rpc.$call, client, events },
     providerId,
@@ -83,7 +71,6 @@ try {
   });
   if (closed) {
     providerConnection.dispose();
-    mounted.dispose?.();
     throw new Error('The native connection closed during startup');
   }
   routedClient.providers.attach({ connection: providerConnection });
@@ -97,6 +84,25 @@ try {
   close();
   if (!listeners.signal.aborted)
     result.textContent = error instanceof Error ? error.message : String(error);
+}
+
+async function mountView(id: string, target: HTMLElement): Promise<void> {
+  const mounted = await renderer({
+    entry: {
+      id,
+      title: id,
+      icon: 'i-ph:plus',
+      type: 'json-render',
+      view: { stateKey: `devframe:json-render:global:${id}` },
+    },
+    container: target,
+    context: nativeContext,
+  });
+  if (closed) {
+    mounted.dispose?.();
+    throw new Error('The native connection closed during renderer startup');
+  }
+  mountedViews.push(mounted);
 }
 
 async function run(operation: () => Promise<unknown>): Promise<void> {
@@ -156,5 +162,3 @@ onClick('#broadcast', () =>
     selection: [{ realm: realm.id }],
   }),
 );
-onClick('#disable-service', () => rpc.$call('probe:disable-service'));
-onClick('#enable-service', () => rpc.$call('probe:enable-service'));

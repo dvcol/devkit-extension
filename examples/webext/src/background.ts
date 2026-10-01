@@ -11,6 +11,7 @@ import { createRpcSharedStateServerHost } from 'devframe/rpc/shared-state';
 import { createSharedState } from 'devframe/utils/shared-state';
 import { createPortChannel } from '@devkit/webext';
 import { spec } from './spec';
+import { managementSpec } from './management-spec';
 import { createExampleProvider } from './provider';
 
 /** Initialize once during the native background entrypoint's synchronous startup. */
@@ -40,7 +41,9 @@ function createBackground() {
     },
     broadcast,
   });
-  const view = createJsonRenderView({ rpc: { sharedState } }, { id: 'counter', spec });
+  const context = { rpc: { sharedState } };
+  const view = createJsonRenderView(context, { id: 'counter', spec });
+  const management = createJsonRenderView(context, { id: 'management', spec: managementSpec });
   const provider = createExampleProvider({
     rpc: {
       register: collector.register.bind(collector),
@@ -49,9 +52,17 @@ function createBackground() {
     },
     view,
   });
-  void provider.catch((error: unknown) => {
-    console.error('Provider startup failed', error);
-  });
+  void provider.then(
+    ({ catalog }) => {
+      return catalog.subscribe((snapshot) => {
+        const status = snapshot.capabilities[0]?.status ?? 'unavailable';
+        management.patchState([{ op: 'replace', path: '/status', value: status }]);
+      });
+    },
+    (error: unknown) => {
+      console.error('Provider startup failed', error);
+    },
+  );
   return { collector, group, provider, sharedState };
 }
 

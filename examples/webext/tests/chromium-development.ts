@@ -168,6 +168,10 @@ async function checkModuleReplacement(first: Page, second: Page): Promise<void> 
     await expect(page.getByRole('button', { name: 'Increase counter', exact: true })).toHaveCount(
       1,
     );
+    await expect(page.locator('#management').getByRole('button')).toHaveCount(2);
+    await expect(
+      page.locator('#management').getByText('Counter service: active', { exact: true }),
+    ).toBeVisible();
     assert.equal(await page.locator('#provider').innerText(), provider);
   }
   assert.equal(await first.evaluate(() => performance.timeOrigin), timeOrigin);

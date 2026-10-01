@@ -25,6 +25,7 @@ async function checkNativeSurfaces(): Promise<string[]> {
     'real native popup has a usable width and renders the shared JSON view',
     'popup action updates the surviving options page exactly once',
     'catalog disable/enable reaches both native surfaces',
+    'native JSON management status and actions work in options and popup',
     'popup close destroys its window and pending action completes without replay',
     'reopened popup has a new caller, reset local form and retained native provider state',
   ];
@@ -47,13 +48,13 @@ async function checkLivePopup(popup: Window, provider: string): Promise<string> 
   increase(popup.document);
   await counter(document, 17);
   await counter(popup.document, 17);
-  click(document, '#disable-service');
+  manageService(document, 'Disable service');
   await catalog(popup, 'disabled');
   click(popup.document, '#routed');
   await waitFor('unavailable routed action', () =>
     text(popup.document, '#result').includes('No currently available provider'),
   );
-  click(document, '#enable-service');
+  manageService(popup.document, 'Enable service');
   await catalog(popup, 'active');
   click(popup.document, '#wait');
   await waitFor('pending popup action', () => text(popup.document, '#result') === 'Pending');
@@ -104,7 +105,13 @@ async function callerIdentity(page: Document): Promise<string> {
 
 async function catalog(popup: Window, status: string): Promise<void> {
   await waitFor(`catalog ${status}`, () =>
-    [document, popup.document].every((page) => text(page, '#catalog') === status),
+    [document, popup.document].every(
+      (page) =>
+        text(page, '#catalog') === status &&
+        page
+          .querySelector('#management')
+          ?.shadowRoot?.textContent?.includes(`Counter service: ${status}`) === true,
+    ),
   );
 }
 
@@ -171,6 +178,7 @@ export const nativeSurfaceScript = [
   popupClosed,
   callerIdentity,
   catalog,
+  manageService,
   executions,
   counter,
   increase,
@@ -182,3 +190,12 @@ export const nativeSurfaceScript = [
 ]
   .map((operation) => operation.toString())
   .join('\n');
+
+function manageService(page: Document, label: string): void {
+  const root = page.querySelector('#management')?.shadowRoot;
+  const buttons = [...(root?.querySelectorAll('button') ?? [])];
+  assert(buttons.length === 2, 'Management should have one mount with two actions');
+  const button = buttons.find((candidate) => candidate.textContent?.trim() === label);
+  assert(button !== undefined, `Missing JSON management action ${label}`);
+  button.click();
+}

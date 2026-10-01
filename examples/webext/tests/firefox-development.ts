@@ -51,6 +51,9 @@ try {
   manifestVersion = await checkConfigurationRestart(marionettePort);
   await checkFirefoxScriptReload(driver, fixture);
   await writeFile(`${artifactDirectory}/panel.png`, await driver.takeScreenshot(), 'base64');
+} catch (error) {
+  console.error(styleText('red', '❌ [webext/firefox-development]'), error);
+  throw error;
 } finally {
   const cleanup = [
     ...(await Promise.allSettled([server?.stop()])),
@@ -120,6 +123,12 @@ async function checkModuleUpdate(): Promise<void> {
     'Increase counter',
     'Increase matching domain',
   ]);
+  const management = await driver.findElement(By.id('management')).getShadowRoot();
+  assert.equal((await management.findElements(By.css('button'))).length, 2);
+  const managementContent = await management.findElement(
+    By.css('.devframes-json-render-scroll-root'),
+  );
+  assert.ok((await managementContent.getText()).includes('Counter service: active'));
   await click('#routed');
   await waitText('#result', '2');
   await increase();

@@ -138,12 +138,18 @@ async function checkFailures(
   devframe: ServerHost,
   devtools: ServerHost,
 ): Promise<void> {
-  await page.locator('#disable-service').click();
+  await page
+    .locator('#management')
+    .getByRole('button', { name: 'Disable service', exact: true })
+    .click();
   await expect(page.locator('#catalog')).toHaveText('disabled');
   await dispatch(page, 'all', 'deployed.example.test');
   await expect(page.locator('#json-result')).toContainText('rejected');
   await expect(page.locator('#json-result')).toContainText('not-applicable');
-  await page.locator('#enable-service').click();
+  await page
+    .locator('#management')
+    .getByRole('button', { name: 'Enable service', exact: true })
+    .click();
   await expect(page.locator('#catalog')).toHaveText('active');
   await devframe.close();
   await expect(page.locator('#providers')).toContainText('"status":"unknown"');

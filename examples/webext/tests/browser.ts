@@ -40,6 +40,10 @@ try {
     await expect(page.locator('#status')).toHaveText('Connected');
     await expect(page.getByText('Counter: 0', { exact: true })).toBeVisible();
     await expect(page.locator('#catalog')).toHaveText('active');
+    await expect(
+      page.locator('#management').getByText('Counter service: active', { exact: true }),
+    ).toBeVisible();
+    await expect(page.locator('#management').getByRole('button')).toHaveCount(2);
   }
   const providerIdentity = await first.locator('#provider').innerText();
   assert.equal(await second.locator('#provider').innerText(), providerIdentity);
@@ -64,16 +68,35 @@ try {
   await first.getByRole('button', { name: 'Start pending action' }).click();
   await second.getByRole('button', { name: 'Execution counts' }).click();
   await expect(second.locator('#result')).toHaveText('{"started":1,"completed":0}');
+  const detachedManagement = await first
+    .locator('#management')
+    .getByRole('button', { name: 'Disable service', exact: true })
+    .elementHandle();
   await first.getByRole('button', { name: 'Disconnect', exact: true }).click();
   await expect(first.locator('#status')).toHaveText('Disconnected');
   await expect(first.locator('#result')).toContainText('closed');
   await expect(first.getByRole('button', { name: 'Increase counter', exact: true })).toHaveCount(0);
+  await expect(first.locator('#management').getByRole('button')).toHaveCount(0);
+  await detachedManagement.evaluate((button) =>
+    button.dispatchEvent(new MouseEvent('click', { bubbles: true })),
+  );
+  await expect(second.locator('#catalog')).toHaveText('active');
+  await expect(
+    second.locator('#management').getByText('Counter service: active', { exact: true }),
+  ).toBeVisible();
   await second.getByRole('button', { name: 'Release pending action' }).click();
   await second.getByRole('button', { name: 'Execution counts' }).click();
   await expect(second.locator('#result')).toHaveText('{"started":1,"completed":1}');
   await first.reload();
   await expect(first.locator('#status')).toHaveText('Connected');
   await expect(first.getByText('Counter: 10', { exact: true })).toBeVisible();
+  await expect(first.locator('#management').getByRole('button')).toHaveCount(2);
+  await expect(
+    first.locator('#management').getByText('Counter service: active', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    first.locator('#management').getByText('Unable to disable the service.', { exact: true }),
+  ).toHaveCount(0);
   assert.equal(await first.locator('#provider').innerText(), providerIdentity);
   await first.getByRole('button', { name: 'Execution counts' }).click();
   await expect(first.locator('#result')).toHaveText('{"started":1,"completed":1}');
@@ -89,11 +112,21 @@ try {
   for (const page of [first, second])
     await expect(page.getByText('Counter: 13', { exact: true })).toBeVisible();
   await second.getByRole('button', { name: 'Disable service', exact: true }).click();
-  for (const page of [first, second]) await expect(page.locator('#catalog')).toHaveText('disabled');
+  for (const page of [first, second]) {
+    await expect(page.locator('#catalog')).toHaveText('disabled');
+    await expect(
+      page.locator('#management').getByText('Counter service: disabled', { exact: true }),
+    ).toBeVisible();
+  }
   await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
   await expect(first.locator('#result')).toContainText('No currently available provider');
   await second.getByRole('button', { name: 'Enable service', exact: true }).click();
-  for (const page of [first, second]) await expect(page.locator('#catalog')).toHaveText('active');
+  for (const page of [first, second]) {
+    await expect(page.locator('#catalog')).toHaveText('active');
+    await expect(
+      page.locator('#management').getByText('Counter service: active', { exact: true }),
+    ).toBeVisible();
+  }
   await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
   await expect(first.locator('#result')).toHaveText('14');
   await checkConfiguredServers(first, second);
@@ -132,6 +165,9 @@ try {
       'shared portable action and capability contracts',
       'explicit realm/provider routing and broadcast',
       'catalog disable/enable updates on both clients',
+      'native JSON management controls disable and reenable the service with authoritative status on both pages',
+      'management renderer unmounts on disconnect and remounts once with current state',
+      'detached management button cannot disable the service after disconnect',
       'provider incarnation retained across UI reconnect',
       'independent routed client survives peer disconnect',
       'native origin allowlist and rejected credentials',
@@ -144,6 +180,9 @@ try {
       ...hostChecks,
     ],
     pageErrors: errors,
+    limitations: [
+      'Retained detached native buttons can still invoke their handler; the closed RPC prevents backend dispatch and native JSON onError handles rejection',
+    ],
   };
   await writeFile('artifacts/receipt.json', JSON.stringify(receipt, null, 2));
   console.info(styleText('green', '✅ [webext]'), receipt);

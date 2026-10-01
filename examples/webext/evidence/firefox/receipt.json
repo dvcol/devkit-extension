@@ -12,6 +12,9 @@
     "provider incarnation survives page reconnect",
     "portable action, capability and explicit routing",
     "broadcast and catalog disable/enable reach both pages",
+    "native JSON management controls disable and reenable the service with authoritative status on both pages",
+    "management renderer unmounts on disconnect and remounts once with current state",
+    "detached management button cannot disable the service after disconnect",
     "denied packaged URL rejects and cleans up mount",
     "worker-initiated disconnect leaves peer usable",
     "native origin admission and authentication reject unauthorized connections",
@@ -36,6 +39,7 @@
     "real native popup has a usable width and renders the shared JSON view",
     "popup action updates the surviving options page exactly once",
     "catalog disable/enable reaches both native surfaces",
+    "native JSON management status and actions work in options and popup",
     "popup close destroys its window and pending action completes without replay",
     "reopened popup has a new caller, reset local form and retained native provider state",
     "native DevTools panel mounts the existing renderer and shares background state",
@@ -47,5 +51,8 @@
     "closing sidebar removes its document and pending action completes without replay",
     "reopened sidebar has a new caller, retained provider and working JSON action"
   ],
-  "limitations": ["No global page-error capture through WebDriver Classic"]
+  "limitations": [
+    "No global page-error capture through WebDriver Classic",
+    "Retained detached native buttons can still invoke their handler; the closed RPC prevents backend dispatch and native JSON onError handles rejection"
+  ]
 }

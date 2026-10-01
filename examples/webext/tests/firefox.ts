@@ -94,17 +94,25 @@ async function checkDisconnect(first: string, second: string, provider: string):
   await click('#executions');
   await waitText('#result', '{"started":1,"completed":0}');
   await driver.switchTo().window(first);
+  await driver.executeScript(
+    `window.detachedManagementButton = Array.from(document.querySelector('#management').shadowRoot.querySelectorAll('button')).find((button) => button.textContent.trim() === 'Disable service');`,
+  );
   await click('#disconnect');
   await waitText('#status', 'Disconnected');
   await contains('#result', 'closed');
   await driver.wait(
     () =>
       driver.executeScript<boolean>(
-        'return !document.querySelector("#renderer").shadowRoot?.querySelector("button")',
+        'return !document.querySelector("#renderer").shadowRoot?.querySelector("button") && !document.querySelector("#management").shadowRoot?.querySelector("button")',
       ),
     10_000,
   );
+  await driver.executeScript(
+    'window.detachedManagementButton.click(); delete window.detachedManagementButton;',
+  );
   await driver.switchTo().window(second);
+  await waitText('#catalog', 'active');
+  await managementStatus('active');
   await click('#release');
   await click('#executions');
   await waitText('#result', '{"started":1,"completed":1}');
@@ -112,6 +120,12 @@ async function checkDisconnect(first: string, second: string, provider: string):
   await driver.navigate().refresh();
   await connected(10);
   assert.equal(await text('#provider'), provider);
+  assert.equal(
+    await driver.executeScript<boolean>(
+      `return document.querySelector('#management').shadowRoot.textContent.includes('Unable to disable the service.');`,
+    ),
+    false,
+  );
   await click('#executions');
   await waitText('#result', '{"started":1,"completed":1}');
   await increase();
@@ -131,16 +145,20 @@ async function checkRouting(first: string, second: string): Promise<void> {
   await counter(13);
   await driver.switchTo().window(second);
   await counter(13);
-  await click('#disable-service');
+  await manageService('Disable service');
   await waitText('#catalog', 'disabled');
+  await managementStatus('disabled');
   await driver.switchTo().window(first);
   await waitText('#catalog', 'disabled');
+  await managementStatus('disabled');
   await click('#routed');
   await contains('#result', 'No currently available provider');
-  await click('#enable-service');
+  await manageService('Enable service');
   await waitText('#catalog', 'active');
+  await managementStatus('active');
   await driver.switchTo().window(second);
   await waitText('#catalog', 'active');
+  await managementStatus('active');
   await click('#routed');
   await waitText('#result', '14');
 }
@@ -162,6 +180,7 @@ async function checkDeniedPage(): Promise<void> {
 async function connected(value: number): Promise<void> {
   await waitText('#status', 'Connected');
   await waitText('#catalog', 'active');
+  await managementStatus('active');
   await counter(value);
 }
 
@@ -173,6 +192,26 @@ async function increase(): Promise<void> {
   const root = await driver.findElement(By.css('#renderer')).getShadowRoot();
   const button = await root.findElement(By.css('button'));
   await button.click();
+}
+
+async function manageService(label: string): Promise<void> {
+  const root = await driver.findElement(By.css('#management')).getShadowRoot();
+  const buttons = await root.findElements(By.css('button'));
+  assert.equal(buttons.length, 2);
+  for (const button of buttons) {
+    if ((await button.getText()) === label) {
+      await button.click();
+      return;
+    }
+  }
+  throw new Error(`Missing JSON management action ${label}`);
+}
+
+async function managementStatus(status: string): Promise<void> {
+  const root = await driver.findElement(By.css('#management')).getShadowRoot();
+  const content = await root.findElement(By.css('.devframes-json-render-scroll-root'));
+  await driver.wait(until.elementTextContains(content, `Counter service: ${status}`), 10_000);
+  assert.equal((await root.findElements(By.css('button'))).length, 2);
 }
 
 async function counter(value: number): Promise<void> {
@@ -214,6 +253,9 @@ async function saveEvidence(surfaceChecks: string[]): Promise<void> {
       'provider incarnation survives page reconnect',
       'portable action, capability and explicit routing',
       'broadcast and catalog disable/enable reach both pages',
+      'native JSON management controls disable and reenable the service with authoritative status on both pages',
+      'management renderer unmounts on disconnect and remounts once with current state',
+      'detached management button cannot disable the service after disconnect',
       'denied packaged URL rejects and cleans up mount',
       'worker-initiated disconnect leaves peer usable',
       'native origin admission and authentication reject unauthorized connections',
@@ -236,13 +278,13 @@ async function saveEvidence(surfaceChecks: string[]): Promise<void> {
       'native scripting permission rejects a tampered about:blank selection',
       ...surfaceChecks,
     ],
-    limitations: ['No global page-error capture through WebDriver Classic'],
+    limitations: [
+      'No global page-error capture through WebDriver Classic',
+      'Retained detached native buttons can still invoke their handler; the closed RPC prevents backend dispatch and native JSON onError handles rejection',
+    ],
   };
-  await writeFile(
-    'artifacts/firefox/native-port-proof.png',
-    await driver.takeScreenshot(),
-    'base64',
-  );
+  const screenshot = await driver.takeScreenshot();
+  await writeFile('artifacts/firefox/native-port-proof.png', screenshot, 'base64');
   await writeFile('artifacts/firefox/receipt.json', JSON.stringify(receipt, null, 2));
   console.info(styleText('green', '✅ [webext/firefox]'), receipt);
 }
