@@ -919,6 +919,7 @@
       "apis": [
         "@devkit/devframe/client:ProviderRpcClient.cacheManager",
         "@devkit/devframe/client:ProviderRpcClient.client",
+        "@devkit/devframe/client:ProviderRpcClient.connectionError",
         "@devkit/devframe/client:RpcProviderConnection.catalog",
         "@devkit/devframe/client:RpcProviderConnection.catalog.snapshot",
         "@devkit/devframe/client:RpcProviderConnection.catalog.subscribe",
@@ -937,6 +938,7 @@
         "@devkit/devframe/client:RpcProviderConnectionOptions.rpc",
         "@devkit/devframe/client:RpcProviderConnectionOptions.rpc.cacheManager",
         "@devkit/devframe/client:RpcProviderConnectionOptions.rpc.client",
+        "@devkit/devframe/client:RpcProviderConnectionOptions.rpc.connectionError",
         "@devkit/devframe/client:RpcProviderConnectionOptions.signal",
         "@devkit/devframe/client:createRpcProviderConnection"
       ],
@@ -1070,12 +1072,20 @@
           "fullName": "accepts raw native client members without inventing a full server client",
           "host": "devframe-rpc-client",
           "mode": "node-in-process"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-auth.test.ts",
+          "fullName": "preserves native trust revocation during a call and requires a fresh adapter after reauthentication",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
         }
       ],
       "gaps": [
         "Port fixtures use Node MessageChannel delivery with JSON or structured clone; they do not load a browser extension. Server cases use actual authenticated Devframe HTTP/WebSocket connections from Node through the maintained server wrapper.",
         "Catalog race, malformed metadata and cache rejection tests inject the specific boundary condition into an otherwise native connection. They establish adapter handling of that condition, not that every native server produces it.",
-        "Actual browser connection lifetime, runtime.Port disconnection, service-worker restart and native authentication UI require separately linked Chromium/Firefox receipts. Vite development/restart, production watch/preview and full DevTools host parity remain open."
+        "Actual browser connection lifetime, runtime.Port disconnection, service-worker restart and native authentication UI require separately linked Chromium/Firefox receipts. Vite development/restart, production watch/preview and full DevTools host parity remain open.",
+        "The native trust-revocation case verifies active-session revocation, exact native auth-error propagation and explicit adapter recreation after reauthentication. It does not prove persisted-token removal, browser authentication UI, DevTools parity or transport-error diagnostics beyond this native auth error."
       ]
     },
     {
@@ -1088,17 +1098,14 @@
         "@devkit/devframe/client:ActionBinding.action.routing.realm",
         "@devkit/devframe/client:ActionCallOptions",
         "@devkit/devframe/client:ProviderRpcClient",
-        "@devkit/devframe/client:ProviderRpcClient.connectionError",
         "@devkit/devframe/client:RpcProviderConnection",
-        "@devkit/devframe/client:RpcProviderConnectionOptions",
-        "@devkit/devframe/client:RpcProviderConnectionOptions.rpc.connectionError"
+        "@devkit/devframe/client:RpcProviderConnectionOptions"
       ],
       "examples": [],
       "evidence": [],
       "gaps": [
         "Exported type declarations still need exact positive and negative compile-time evidence; a runtime test or report does not establish their complete typing contracts.",
-        "ActionBinding.action.kind and contract-level default routing fields do not have directly linked binding tests. Explicit binding routing and selection are covered separately.",
-        "Optional native connectionError propagation is not directly asserted by the linked disconnect cases, which prove local cancellation and resource ownership only."
+        "ActionBinding.action.kind and contract-level default routing fields do not have directly linked binding tests. Explicit binding routing and selection are covered separately."
       ]
     },
     {

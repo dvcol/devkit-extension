@@ -66,6 +66,7 @@ export async function remoteHost(composition: ServerComposition = remoteComposit
     hub,
     provider,
     origin,
+    authToken: token,
     connect: (authToken: string = token) => connectNativeClient(origin, authToken),
   };
 }
