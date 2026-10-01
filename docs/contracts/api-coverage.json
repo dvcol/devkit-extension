@@ -2822,7 +2822,7 @@
       ],
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
-        "Worker termination/suspension, navigation, permission revocation and development/reload modes retain separate obligations. Already dispatched backend work is not cancelled by disconnect."
+        "Forced Chromium service-worker termination and explicit fresh connections are linked. Natural idle suspension, Firefox event-page lifetime, navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback."
       ],
       "browserEvidence": [
         {
@@ -2832,7 +2832,12 @@
           "checks": [
             "pending call rejects on disconnect",
             "worker-initiated disconnect",
-            "independent routed client survives peer disconnect"
+            "independent routed client survives peer disconnect",
+            "forced Chromium worker termination rejects the pending RPC and unmounts background views in both surviving documents",
+            "background loss preserves both independent server views, their actions and partial broadcast outcomes",
+            "explicit page disconnect disposes surviving server connections after background loss",
+            "explicit fresh page connections start a new provider incarnation with reset ephemeral state and no replay",
+            "reconnected pages mount one counter and management view and share one action effect"
           ],
           "host": "chromium-webext",
           "mode": "production-extension",
@@ -2862,9 +2867,52 @@
       "examples": [
         "examples/webext"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "accepts Chrome and WXT Port declarations through the built public exports",
+          "host": "typescript-chrome-wxt-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "rejects a Port without disconnect events at the public declaration boundary",
+          "host": "typescript-chrome-wxt-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "rejects a Port without message listener removal at the public declaration boundary",
+          "host": "typescript-chrome-wxt-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "rejects options without the owner disconnect callback at the public declaration boundary",
+          "host": "typescript-chrome-wxt-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "rejects a disconnect callback requiring a payload at the public declaration boundary",
+          "host": "typescript-chrome-wxt-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "rejects a channel without the native listener hook at the public declaration boundary",
+          "host": "typescript-chrome-wxt-consumer",
+          "mode": "declaration-compatibility"
+        }
+      ],
       "gaps": [
-        "These three exports are TypeScript-only declarations. Runtime tests instantiate structurally compatible fixtures, but they do not directly prove declaration compatibility. The package typecheck passes; dedicated executed positive/negative type-compatibility evidence against native Chrome and Firefox Port declarations is not linked here."
+        "The strict TypeScript consumer resolves the built public exports and installed Chrome/WXT declarations without path aliases. WXT generates Chrome-derived types; this does not establish compatibility with independent Firefox declaration sources or other browser/version combinations. Native Firefox execution remains separate runtime evidence."
       ]
     }
   ]

@@ -10,7 +10,7 @@
     "typecheck": "wxt prepare && tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src entrypoints tests vite.config.ts wxt.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
-    "test": "vitest run --root .",
+    "test": "vitest run --root . --reporter=default --reporter=json --outputFile=.conformance/vitest.json",
     "test:browser": "node tests/browser.ts",
     "test:firefox": "node tests/firefox.ts",
     "test:dev": "pnpm --workspace-concurrency=2 run \"/^test:dev:(chromium|firefox)$/\"",
