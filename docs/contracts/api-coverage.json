@@ -464,10 +464,8 @@
       ]
     },
     {
-      "id": "@devkit/devframe-unmapped",
+      "id": "devframe-native-provider-composition",
       "apis": [
-        "@devkit/devframe:ProviderRpc",
-        "@devkit/devframe:RpcProviderComposition",
         "@devkit/devframe:RpcProviderComposition.expose",
         "@devkit/devframe:RpcProviderComposition.expose.actions",
         "@devkit/devframe:RpcProviderComposition.expose.capabilities",
@@ -477,10 +475,8 @@
         "@devkit/devframe:RpcProviderComposition.report",
         "@devkit/devframe:RpcProviderComposition.services",
         "@devkit/devframe:RpcProviderComposition.strict",
-        "@devkit/devframe:RpcProviderExposure",
         "@devkit/devframe:RpcProviderExposure.actions",
         "@devkit/devframe:RpcProviderExposure.capabilities",
-        "@devkit/devframe:RpcProviderHandle",
         "@devkit/devframe:RpcProviderHandle.catalog",
         "@devkit/devframe:RpcProviderHandle.catalog.snapshot",
         "@devkit/devframe:RpcProviderHandle.catalog.subscribe",
@@ -501,7 +497,6 @@
         "@devkit/devframe:RpcProviderHandle.startup",
         "@devkit/devframe:RpcProviderHandle.startup.plugins",
         "@devkit/devframe:RpcProviderHandle.startup.services",
-        "@devkit/devframe:RpcProviderOptions",
         "@devkit/devframe:RpcProviderOptions.context",
         "@devkit/devframe:RpcProviderOptions.context.execution",
         "@devkit/devframe:RpcProviderOptions.context.execution.id",
@@ -521,42 +516,217 @@
         "@devkit/devframe:RpcProviderOptions.strict",
         "@devkit/devframe:createRpcProvider"
       ],
-      "examples": [],
-      "evidence": [],
+      "examples": [
+        "examples/webext",
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/devframe",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "uses the native collector for schemas, finite exposure and provider incarnation",
+          "host": "devframe-rpc-collector",
+          "mode": "node-in-process"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/exposure.test.ts",
+          "fullName": "host-owned native exposure starts services, plugins and exposed schemas in one native host call",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/exposure.test.ts",
+          "fullName": "host-owned native exposure keeps methods while implementation availability changes and reuses them on replacement",
+          "host": "devtools-kit",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/exposure.test.ts",
+          "fullName": "host-owned native exposure does not publish unlisted contracts or reactivate exposure when omitted on replacement",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/exposure.test.ts",
+          "fullName": "host-owned native exposure keeps declared methods unavailable until their implementations are installed",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration uses real hub state and cleans only owned registrations",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration exposes the actual layered kit context without inventing a Vite server",
+          "host": "devtools-kit",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration activates waiting actions after dynamic service admission and delegates replacement",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/integration.test.ts",
+          "fullName": "local server provider integration retains a failed setup handle and its cleanup ownership with local diagnostic causes",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/extensions.test.ts",
+          "fullName": "server contribution kinds and diagnostics runs an explicit kind installer against the real native host and owns its cleanup",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/extensions.test.ts",
+          "fullName": "server contribution kinds and diagnostics reports skipped startup definitions through the default local sink",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership guards concurrent installation across entry points and releases only after disposal",
+          "host": "devtools-kit-and-devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership releases a strict rejected startup without running any setup",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership keeps failed cleanup reserved and preserves its rejected disposal promise",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership rejects an empty configured identity before claiming a native context",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/ownership.test.ts",
+          "fullName": "native host ownership keeps an externally listening HTTP server alive after adapter disposal",
+          "host": "devframe-hub",
+          "mode": "headless-development"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection routes typed actions and capabilities through authenticated native RPC and follows availability",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        }
+      ],
       "gaps": [
-        "Existing evidence in CORE-API-MATRIX.md still needs exact executable mappings and explicit host/mode obligations. This group does not claim these APIs lack tests or that conformance is complete."
+        "The provider test invokes a real native collector in Node. Server integration tests call createRpcProvider through the maintained server factories and exercise local services, plugins, native access, exposure, strictness, diagnostics and cleanup. They do not prove browser worker lifetime, extension permissions, Vite HMR, production build or preview behavior.",
+        "Native runtime.Port and browser lifecycle receipts remain to be linked. Custom-kind, relaxed-admission and failed-setup cases execute on Devframe hub; shared implementation does not establish equivalent DevTools or WebExtension host coverage.",
+        "Default diagnostic logging from the raw createRpcProvider entry point is not directly asserted; server tests provide their own native diagnostic sink. Complete failure-case obligations remain open."
       ]
     },
     {
-      "id": "@devkit/devframe/client-unmapped",
+      "id": "devframe-provider-type-contracts-unmapped",
       "apis": [
-        "@devkit/devframe/client:ActionBinding",
+        "@devkit/devframe:ProviderRpc",
+        "@devkit/devframe:RpcProviderComposition",
+        "@devkit/devframe:RpcProviderExposure",
+        "@devkit/devframe:RpcProviderHandle",
+        "@devkit/devframe:RpcProviderOptions"
+      ],
+      "examples": [],
+      "evidence": [],
+      "gaps": [
+        "These exported type declarations participate in compiling maintained consumers, but exact positive and negative type-contract evidence is not linked by this Vitest runtime gate. Node behavior tests do not prove complete generic inference, strictness overloads or native collector compatibility."
+      ]
+    },
+    {
+      "id": "devframe-portable-action-call-binding",
+      "apis": [
         "@devkit/devframe/client:ActionBinding.action",
         "@devkit/devframe/client:ActionBinding.action.id",
-        "@devkit/devframe/client:ActionBinding.action.kind",
         "@devkit/devframe/client:ActionBinding.action.operation",
         "@devkit/devframe/client:ActionBinding.action.operation.input",
         "@devkit/devframe/client:ActionBinding.action.operation.output",
-        "@devkit/devframe/client:ActionBinding.action.routing",
-        "@devkit/devframe/client:ActionBinding.action.routing.provider",
-        "@devkit/devframe/client:ActionBinding.action.routing.realm",
         "@devkit/devframe/client:ActionBinding.action.version",
         "@devkit/devframe/client:ActionBinding.routing",
         "@devkit/devframe/client:ActionBinding.routing.provider",
         "@devkit/devframe/client:ActionBinding.routing.realm",
         "@devkit/devframe/client:ActionBinding.selection",
-        "@devkit/devframe/client:ActionCallOptions",
         "@devkit/devframe/client:ActionCallOptions.actions",
         "@devkit/devframe/client:ActionCallOptions.actions.broadcast",
         "@devkit/devframe/client:ActionCallOptions.actions.invoke",
         "@devkit/devframe/client:ActionCallOptions.bindings",
         "@devkit/devframe/client:ActionCallOptions.rpc",
         "@devkit/devframe/client:ActionCallOptions.signal",
-        "@devkit/devframe/client:ProviderRpcClient",
+        "@devkit/devframe/client:createActionCall"
+      ],
+      "examples": [
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/devframe",
+          "testFile": "tests/action-call.test.ts",
+          "fullName": "broadcasts through the router while each provider owns applicability and failures",
+          "host": "devframe-native-rpc-and-local-provider-runtime",
+          "mode": "node-messagechannel-and-in-process"
+        },
+        {
+          "workspace": "packages/devframe",
+          "testFile": "tests/action-call.test.ts",
+          "fullName": "preserves native calls and arguments while invoking a selected portable action",
+          "host": "devframe-native-rpc-and-local-provider-runtime",
+          "mode": "node-messagechannel-and-in-process"
+        },
+        {
+          "workspace": "packages/devframe",
+          "testFile": "tests/action-call.test.ts",
+          "fullName": "rejects duplicate IDs, wrong argument counts and unavailable contract versions",
+          "host": "devframe-native-rpc-and-local-provider-runtime",
+          "mode": "node-messagechannel-and-in-process"
+        },
+        {
+          "workspace": "packages/devframe",
+          "testFile": "tests/action-call.test.ts",
+          "fullName": "forwards unmount cancellation without replaying or owning native RPC",
+          "host": "devframe-native-rpc-and-local-provider-runtime",
+          "mode": "node-messagechannel-and-in-process"
+        }
+      ],
+      "gaps": [
+        "These tests use real native RPC over a Node MessageChannel for unbound calls and local provider lifecycles for bound action routing. They do not mount the JSON renderer, operate a browser view, or prove runtime.Port transport behavior.",
+        "Linked cases cover selection, per-provider outcomes, explicit routing, argument validation, duplicate action IDs, unavailable versions and view-signal cancellation. Binding contract routing defaults, native renderer built-ins and complete output-validation failures require separate exact evidence.",
+        "Maintained Chromium and Firefox example receipts for native renderer dispatch remain to be linked by the conformance gate."
+      ]
+    },
+    {
+      "id": "devframe-native-provider-connection",
+      "apis": [
         "@devkit/devframe/client:ProviderRpcClient.cacheManager",
         "@devkit/devframe/client:ProviderRpcClient.client",
-        "@devkit/devframe/client:ProviderRpcClient.connectionError",
-        "@devkit/devframe/client:RpcProviderConnection",
         "@devkit/devframe/client:RpcProviderConnection.catalog",
         "@devkit/devframe/client:RpcProviderConnection.catalog.snapshot",
         "@devkit/devframe/client:RpcProviderConnection.catalog.subscribe",
@@ -568,7 +738,6 @@
         "@devkit/devframe/client:RpcProviderConnection.provider.realm",
         "@devkit/devframe/client:RpcProviderConnection.provider.realm.id",
         "@devkit/devframe/client:RpcProviderConnection.resolve",
-        "@devkit/devframe/client:RpcProviderConnectionOptions",
         "@devkit/devframe/client:RpcProviderConnectionOptions.providerId",
         "@devkit/devframe/client:RpcProviderConnectionOptions.realm",
         "@devkit/devframe/client:RpcProviderConnectionOptions.realm.id",
@@ -576,76 +745,422 @@
         "@devkit/devframe/client:RpcProviderConnectionOptions.rpc",
         "@devkit/devframe/client:RpcProviderConnectionOptions.rpc.cacheManager",
         "@devkit/devframe/client:RpcProviderConnectionOptions.rpc.client",
-        "@devkit/devframe/client:RpcProviderConnectionOptions.rpc.connectionError",
         "@devkit/devframe/client:RpcProviderConnectionOptions.signal",
-        "@devkit/devframe/client:createActionCall",
         "@devkit/devframe/client:createRpcProviderConnection"
+      ],
+      "examples": [
+        "examples/webext",
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "portable provider through json Ports routes shared contracts, follows catalog lifecycle and retains independent client ownership",
+          "host": "devframe-rpc-over-node-messagechannel-json-port-fixture",
+          "mode": "node-integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "portable provider through json Ports rejects the wrong realm and invalidates old attachments on provider replacement",
+          "host": "devframe-rpc-over-node-messagechannel-json-port-fixture",
+          "mode": "node-integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "portable provider through clone Ports routes shared contracts, follows catalog lifecycle and retains independent client ownership",
+          "host": "devframe-rpc-over-node-messagechannel-clone-port-fixture",
+          "mode": "node-integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "portable provider through clone Ports rejects the wrong realm and invalidates old attachments on provider replacement",
+          "host": "devframe-rpc-over-node-messagechannel-clone-port-fixture",
+          "mode": "node-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection routes typed actions and capabilities through authenticated native RPC and follows availability",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection rejects unauthorized catalog reads without publishing provider identity",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection invalidates old connections on replacement and reuses the native client without accumulating methods",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-client.test.ts",
+          "fullName": "native remote provider connection disposes only adapter subscriptions and rejects native method caching",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-catalog.test.ts",
+          "fullName": "authoritative native catalog synchronization projects only exposed contracts and never stores its catalog in client-writable shared state",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-catalog.test.ts",
+          "fullName": "authoritative native catalog synchronization rereads after invalidation during an outstanding query instead of publishing stale availability",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-catalog.test.ts",
+          "fullName": "authoritative native catalog synchronization rejects malformed or mismatched catalog metadata before attachment",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-catalog.test.ts",
+          "fullName": "authoritative native catalog synchronization cancels startup and ignores its late native response",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary caller abort stops waiting while dispatched backend work can finish once",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary client disposal stops waiting while dispatched backend work can finish once",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary connection disposal stops waiting while dispatched backend work can finish once",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary native disconnect stops waiting while dispatched backend work can finish once",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/remote-cancellation.test.ts",
+          "fullName": "native cancellation boundary does not dispatch a call whose caller is already aborted",
+          "host": "devframe-hub",
+          "mode": "node-websocket-integration"
+        },
+        {
+          "workspace": "packages/devframe",
+          "testFile": "tests/provider.test.ts",
+          "fullName": "accepts raw native client members without inventing a full server client",
+          "host": "devframe-rpc-client",
+          "mode": "node-in-process"
+        }
+      ],
+      "gaps": [
+        "Port fixtures use Node MessageChannel delivery with JSON or structured clone; they do not load a browser extension. Server cases use actual authenticated Devframe HTTP/WebSocket connections from Node through the maintained server wrapper.",
+        "Catalog race, malformed metadata and cache rejection tests inject the specific boundary condition into an otherwise native connection. They establish adapter handling of that condition, not that every native server produces it.",
+        "Actual browser connection lifetime, runtime.Port disconnection, service-worker restart and native authentication UI require separately linked Chromium/Firefox receipts. Vite development/restart, production watch/preview and full DevTools host parity remain open."
+      ]
+    },
+    {
+      "id": "devframe-client-type-and-unmapped-contracts",
+      "apis": [
+        "@devkit/devframe/client:ActionBinding",
+        "@devkit/devframe/client:ActionBinding.action.kind",
+        "@devkit/devframe/client:ActionBinding.action.routing",
+        "@devkit/devframe/client:ActionBinding.action.routing.provider",
+        "@devkit/devframe/client:ActionBinding.action.routing.realm",
+        "@devkit/devframe/client:ActionCallOptions",
+        "@devkit/devframe/client:ProviderRpcClient",
+        "@devkit/devframe/client:ProviderRpcClient.connectionError",
+        "@devkit/devframe/client:RpcProviderConnection",
+        "@devkit/devframe/client:RpcProviderConnectionOptions",
+        "@devkit/devframe/client:RpcProviderConnectionOptions.rpc.connectionError"
       ],
       "examples": [],
       "evidence": [],
       "gaps": [
-        "Existing evidence in CORE-API-MATRIX.md still needs exact executable mappings and explicit host/mode obligations. This group does not claim these APIs lack tests or that conformance is complete."
+        "Exported type declarations still need exact positive and negative compile-time evidence; a runtime test or report does not establish their complete typing contracts.",
+        "ActionBinding.action.kind and contract-level default routing fields do not have directly linked binding tests. Explicit binding routing and selection are covered separately.",
+        "Optional native connectionError propagation is not directly asserted by the linked disconnect cases, which prove local cancellation and resource ownership only."
       ]
     },
     {
-      "id": "@devkit/runtime-unmapped",
+      "id": "runtime-activation-ownership",
       "apis": [
-        "@devkit/runtime:Activation",
         "@devkit/runtime:Activation.cancel",
         "@devkit/runtime:Activation.run",
         "@devkit/runtime:Activation.snapshot",
         "@devkit/runtime:Activation.start",
         "@devkit/runtime:Activation.stop",
-        "@devkit/runtime:ActivationSnapshot",
         "@devkit/runtime:ActivationSnapshot.cleanupFailure",
         "@devkit/runtime:ActivationSnapshot.setupFailure",
         "@devkit/runtime:ActivationSnapshot.status",
-        "@devkit/runtime:ActivationStatus",
-        "@devkit/runtime:Admission",
+        "@devkit/runtime:createActivation",
+        "@devkit/runtime:createActivationScope",
+        "@devkit/runtime:createActivationScope().cancel",
+        "@devkit/runtime:createActivationScope().dispose",
+        "@devkit/runtime:createActivationScope().scope",
+        "@devkit/runtime:createActivationScope().scope.onDispose",
+        "@devkit/runtime:createActivationScope().scope.signal"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation starts once, accepts work only while active, and preserves an undefined setup value",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation waits for cancelled setup and cleans resources acquired before and after cancellation",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation waits for all dispatched work before cleanup and discards results after cancellation",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation preserves an ordinary work failure without replay or deactivating the generation",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation retains setup failure and waits for its cleanup before settling start",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation aggregates setup and cleanup failures and keeps the same blocked cleanup attempt",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation reports cleanup blockage independently of successful setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation fences setup and work queued before their callbacks begin",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation.test.ts",
+          "fullName": "activation generation can stop before setup and keeps that unused generation terminal",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/activation-cancellation.test.ts",
+          "fullName": "activation cancellation cancels work without releasing resources needed by dependent teardown",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/scope.test.ts",
+          "fullName": "activation scope allows settling setup to register cleanup after cancellation and aborts only once",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/scope.test.ts",
+          "fullName": "activation scope aborts immediately and retains the completed disposal promise with no cleanups",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/scope.test.ts",
+          "fullName": "activation scope awaits cleanup in reverse acquisition order and keeps the pending attempt",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/scope.test.ts",
+          "fullName": "activation scope attempts every cleanup and retains all failures without retrying",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/scope.test.ts",
+          "fullName": "activation scope fences registration before synchronous abort listeners can reenter disposal",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
+        "The contribution example exercises these ownership helpers through createProviderLifecycle. It is not a standalone example of each lower-level helper. Exported type inference is not proved by these runtime assertions."
+      ]
+    },
+    {
+      "id": "runtime-atomic-admission",
+      "apis": [
         "@devkit/runtime:Admission.diagnostic",
         "@devkit/runtime:Admission.diagnostic.code",
-        "@devkit/runtime:Admission.diagnostic.contributionId",
-        "@devkit/runtime:Admission.diagnostic.message",
-        "@devkit/runtime:Admission.diagnostic.phase",
-        "@devkit/runtime:Admission.diagnostic.pluginId",
-        "@devkit/runtime:Admission.diagnostic.providerId",
         "@devkit/runtime:Admission.diagnostic.severity",
         "@devkit/runtime:Admission.reservation",
-        "@devkit/runtime:Admission.reservation.actions",
         "@devkit/runtime:Admission.reservation.contributions",
         "@devkit/runtime:Admission.reservation.diagnostics",
-        "@devkit/runtime:Admission.reservation.id",
-        "@devkit/runtime:Admission.reservation.kind",
         "@devkit/runtime:Admission.reservation.services",
         "@devkit/runtime:Admission.status",
-        "@devkit/runtime:LocalInvocationContext",
-        "@devkit/runtime:LocalInvocationContext.contributionId",
-        "@devkit/runtime:LocalInvocationContext.execution",
-        "@devkit/runtime:LocalInvocationContext.execution.id",
+        "@devkit/runtime:Reservation.contributions",
+        "@devkit/runtime:Reservation.diagnostics",
+        "@devkit/runtime:Reservation.services",
+        "@devkit/runtime:createAdmissionRegistry"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission rejects an entire startup batch before setup and keeps existing owners",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission snapshots structural declarations before their mutable aliases can change slots",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission rejects the same service instance twice without an identity exception",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission relaxed duplicate service has no ownership reservation",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission relaxed plugin keeps independent declarations and records skipped service",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission allows exact versions to coexist and releases only the selected owner",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission rejects a cycle introduced through an already waiting owner",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission rejects unknown custom kinds before reserving any preceding service",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/admission.test.ts",
+          "fullName": "atomic admission rejects duplicate contribution identity even in relaxed mode",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-admission-transactions.test.ts",
+          "fullName": "replacement reservation graph rejects an incoming batch that would break the retained graph if replacement aborts",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-admission-transactions.test.ts",
+          "fullName": "replacement reservation graph rejects incoming cycles in the successor graph while permitting disjoint admission",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-admission-transactions.test.ts",
+          "fullName": "replacement reservation graph allows an atomic plugin dependency reversal without combining incompatible graph generations",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
+        "These tests cover batch rejection, identity conflicts, relaxed skips, retained ownership, structural snapshots and replacement dependency graphs. They do not yet assert every exported diagnostic or reservation field. The example reaches admission through the provider lifecycle."
+      ]
+    },
+    {
+      "id": "runtime-local-invocation",
+      "apis": [
         "@devkit/runtime:LocalInvocationContext.native",
-        "@devkit/runtime:LocalInvocationContext.native.get",
-        "@devkit/runtime:LocalInvocationContext.pluginId",
-        "@devkit/runtime:LocalInvocationContext.provider",
-        "@devkit/runtime:LocalInvocationContext.provider.id",
-        "@devkit/runtime:LocalInvocationContext.provider.incarnation",
-        "@devkit/runtime:LocalInvocationContext.provider.realm",
-        "@devkit/runtime:LocalInvocationContext.provider.realm.id",
-        "@devkit/runtime:LocalInvocationOptions",
         "@devkit/runtime:LocalInvocationOptions.signal",
-        "@devkit/runtime:LocalInvocationRequest",
         "@devkit/runtime:LocalInvocationRequest.activationSignal",
         "@devkit/runtime:LocalInvocationRequest.context",
-        "@devkit/runtime:LocalInvocationRequest.context.contributionId",
-        "@devkit/runtime:LocalInvocationRequest.context.execution",
-        "@devkit/runtime:LocalInvocationRequest.context.execution.id",
         "@devkit/runtime:LocalInvocationRequest.context.native",
-        "@devkit/runtime:LocalInvocationRequest.context.native.get",
-        "@devkit/runtime:LocalInvocationRequest.context.pluginId",
-        "@devkit/runtime:LocalInvocationRequest.context.provider",
-        "@devkit/runtime:LocalInvocationRequest.context.provider.id",
-        "@devkit/runtime:LocalInvocationRequest.context.provider.incarnation",
-        "@devkit/runtime:LocalInvocationRequest.context.provider.realm",
-        "@devkit/runtime:LocalInvocationRequest.context.provider.realm.id",
         "@devkit/runtime:LocalInvocationRequest.handler",
         "@devkit/runtime:LocalInvocationRequest.input",
         "@devkit/runtime:LocalInvocationRequest.operation",
@@ -653,10 +1168,119 @@
         "@devkit/runtime:LocalInvocationRequest.operation.output",
         "@devkit/runtime:LocalInvocationRequest.options",
         "@devkit/runtime:LocalInvocationRequest.options.signal",
-        "@devkit/runtime:ProviderLifecycle",
-        "@devkit/runtime:ProviderLifecycle.catalog",
-        "@devkit/runtime:ProviderLifecycle.catalog.snapshot",
-        "@devkit/runtime:ProviderLifecycle.catalog.subscribe",
+        "@devkit/runtime:invokeLocalOperation"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation keeps original input and output when schemas transform them",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation rejects invalid input without dispatch",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation rejects invalid returns and keeps a native validator exception local",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation does not dispatch an already aborted invocation",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation rechecks cancellation after asynchronous validation before dispatch",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation waits for running work to finish after cancellation and discards its value",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation preserves supported portable errors and classifies other handler failures",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-requests.test.ts",
+          "fullName": "provider invocation requests keeps domain fields inside input and cancellation in the invocation context",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-requests.test.ts",
+          "fullName": "provider invocation requests rejects an already cancelled request without invoking the handler",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-requests.test.ts",
+          "fullName": "provider invocation requests forwards cancellation during a dispatched action without replaying it",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-cancellation.test.ts",
+          "fullName": "provider cancellation and resource ownership cancels service work before waiting for dependent actions that omitted signal forwarding",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-cancellation.test.ts",
+          "fullName": "provider cancellation and resource ownership waits for setup to finish, fences its late value and cleans resources on provider disposal",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-cancellation.test.ts",
+          "fullName": "provider cancellation and resource ownership finishes dependent cleanup before disposing the service resource",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-cancellation.test.ts",
+          "fullName": "provider cancellation and resource ownership publishes the stop attempt before synchronous abort listeners reenter disable",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
+        "The linked tests assert validation, original values, native-context object forwarding, cancellation before and after dispatch, classified failures and actual teardown settlement. They do not prove transport serialization, native-context getter behavior, host permission checks or UI status propagation."
+      ]
+    },
+    {
+      "id": "runtime-provider-composition",
+      "apis": [
         "@devkit/runtime:ProviderLifecycle.dispose",
         "@devkit/runtime:ProviderLifecycle.invoke",
         "@devkit/runtime:ProviderLifecycle.plugins",
@@ -667,47 +1291,414 @@
         "@devkit/runtime:ProviderLifecycle.services.install",
         "@devkit/runtime:ProviderLifecycle.services.replace",
         "@devkit/runtime:ProviderLifecycle.startup",
-        "@devkit/runtime:ProviderLifecycleOptions",
         "@devkit/runtime:ProviderLifecycleOptions.execution",
         "@devkit/runtime:ProviderLifecycleOptions.execution.id",
         "@devkit/runtime:ProviderLifecycleOptions.kinds",
-        "@devkit/runtime:ProviderLifecycleOptions.native",
-        "@devkit/runtime:ProviderLifecycleOptions.native.get",
+        "@devkit/runtime:ProviderLifecycleOptions.report",
+        "@devkit/runtime:ProviderLifecycleOptions.strict",
+        "@devkit/runtime:StartupComposition.plugins",
+        "@devkit/runtime:StartupComposition.services",
+        "@devkit/runtime:StartupInstallationResult.plugins",
+        "@devkit/runtime:StartupInstallationResult.services",
+        "@devkit/runtime:createProviderLifecycle"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-lifecycle.test.ts",
+          "fullName": "provider lifecycle composition reports the native setup cause locally without copying it into portable snapshots",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-lifecycle.test.ts",
+          "fullName": "provider lifecycle composition activates dependencies in order and exposes local bindings and action calls",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-lifecycle.test.ts",
+          "fullName": "provider lifecycle composition restores waiting dependents automatically but preserves explicit disable",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-lifecycle.test.ts",
+          "fullName": "provider lifecycle composition isolates setup failure and retries only after an explicit request",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-lifecycle.test.ts",
+          "fullName": "provider lifecycle composition delivers initial snapshots and isolates listener failures and unsubscribe",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-contracts.test.ts",
+          "fullName": "provider admission and invocation contracts rejects a complete startup batch before setup and returns relaxed duplicates explicitly",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-contracts.test.ts",
+          "fullName": "provider admission and invocation contracts reports exact-version mismatch, wrong execution and unsupported domain kinds",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-contracts.test.ts",
+          "fullName": "provider admission and invocation contracts validates custom payloads before any batch setup and owns custom cleanup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-contracts.test.ts",
+          "fullName": "provider admission and invocation contracts uses registered validators even when the caller supplies permissive schemas",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-contracts.test.ts",
+          "fullName": "provider admission and invocation contracts supports prototype-shaped operation names and requirement aliases as own properties",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-replacement.test.ts",
+          "fullName": "provider replacement keeps the old service active when relaxed replacement skips an already owned successor slot",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-replacement.test.ts",
+          "fullName": "provider replacement keeps a current installation active when replacement preflight rejects",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-replacement.test.ts",
+          "fullName": "provider replacement reserves successor identities while allowing unrelated installation during cleanup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-replacement.test.ts",
+          "fullName": "provider replacement retains old reservations after cleanup failure and does not repeat disposal",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-replacement.test.ts",
+          "fullName": "provider replacement rechecks a queued replacement handle after an earlier replacement disposed it",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-installation-results.test.ts",
+          "fullName": "installation results follow provider strictness returns strict startup and later handles directly, including replacement",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-installation-results.test.ts",
+          "fullName": "installation results follow provider strictness returns relaxed admission outcomes without inventing a skipped handle",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-installation-results.test.ts",
+          "fullName": "installation results follow provider strictness uses the selected mode when strictness comes from runtime configuration",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-cancellation.test.ts",
+          "fullName": "provider cancellation and resource ownership cancels service work before waiting for dependent actions that omitted signal forwarding",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-cancellation.test.ts",
+          "fullName": "provider cancellation and resource ownership waits for setup to finish, fences its late value and cleans resources on provider disposal",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-cancellation.test.ts",
+          "fullName": "provider cancellation and resource ownership finishes dependent cleanup before disposing the service resource",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-cancellation.test.ts",
+          "fullName": "provider cancellation and resource ownership publishes the stop attempt before synchronous abort listeners reenter disable",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
+        "Direct strict handles and relaxed admission envelopes have runtime evidence. Conditional return types remain a separate type-checking obligation. View, script and transform contributions are only asserted as unsupported; these tests do not implement their domain contracts."
+      ]
+    },
+    {
+      "id": "runtime-provider-identity",
+      "apis": [
+        "@devkit/runtime:LocalInvocationContext.provider",
+        "@devkit/runtime:LocalInvocationContext.provider.id",
+        "@devkit/runtime:LocalInvocationContext.provider.incarnation",
+        "@devkit/runtime:LocalInvocationContext.provider.realm",
+        "@devkit/runtime:LocalInvocationContext.provider.realm.id",
+        "@devkit/runtime:LocalInvocationRequest.context.provider",
+        "@devkit/runtime:LocalInvocationRequest.context.provider.id",
+        "@devkit/runtime:LocalInvocationRequest.context.provider.incarnation",
+        "@devkit/runtime:LocalInvocationRequest.context.provider.realm",
+        "@devkit/runtime:LocalInvocationRequest.context.provider.realm.id",
         "@devkit/runtime:ProviderLifecycleOptions.provider",
         "@devkit/runtime:ProviderLifecycleOptions.provider.id",
         "@devkit/runtime:ProviderLifecycleOptions.provider.incarnation",
         "@devkit/runtime:ProviderLifecycleOptions.provider.realm",
-        "@devkit/runtime:ProviderLifecycleOptions.provider.realm.id",
-        "@devkit/runtime:ProviderLifecycleOptions.report",
-        "@devkit/runtime:ProviderLifecycleOptions.strict",
+        "@devkit/runtime:ProviderLifecycleOptions.provider.realm.id"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects invalid provider ID undefined before setup or dispatch",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects invalid provider ID null before setup or dispatch",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects invalid provider ID 1 before setup or dispatch",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects invalid provider ID \"\" before setup or dispatch",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects invalid provider ID \"  \" before setup or dispatch",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects a missing or invalid incarnation undefined",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects a missing or invalid incarnation null",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects a missing or invalid incarnation 1",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects a missing or invalid incarnation \"\"",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity rejects a missing or invalid incarnation \"  \"",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity snapshots caller identity for setup, bindings and actions without rotating it on reactivation",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity keeps a binding on its original backend when another incarnation uses the same configured ID",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-identity.test.ts",
+          "fullName": "provider backend identity captures identity before asynchronous input validation",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
+        "Identity evidence covers local immutable snapshots, invalid IDs and incarnations, asynchronous validation and stale local bindings. It does not establish reconnect authentication, extension worker restart behavior or connection ownership across native transports."
+      ]
+    },
+    {
+      "id": "runtime-provider-catalog",
+      "apis": [
+        "@devkit/runtime:ProviderLifecycle.catalog",
+        "@devkit/runtime:ProviderLifecycle.catalog.snapshot",
+        "@devkit/runtime:ProviderLifecycle.catalog.subscribe"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-catalog.test.ts",
+          "fullName": "provider catalog starts with an authoritative empty snapshot and publishes final disposal",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-catalog.test.ts",
+          "fullName": "provider catalog retains exact versions and immutable portable metadata without implementation objects",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-catalog.test.ts",
+          "fullName": "provider catalog publishes dependency loss and restoration while retaining registered contracts",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-catalog.test.ts",
+          "fullName": "provider catalog publishes replacement without advertising both owners and ignores rejected admission",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-catalog.test.ts",
+          "fullName": "provider catalog reports subscriber failures without breaking lifecycle updates or sibling subscribers",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-catalog.test.ts",
+          "fullName": "provider catalog exposes pending setup and cleanup without claiming active or completed ownership",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-catalog.test.ts",
+          "fullName": "provider catalog keeps failed setup visible without advertising it as active",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
+        "The catalog assertions cover local publication, immutable metadata, subscriber isolation, dependency loss, replacement and final disposal. Native remote synchronization, reconnect and renderer consumption remain separate host obligations."
+      ]
+    },
+    {
+      "id": "runtime-types-and-unmapped-fields",
+      "apis": [
+        "@devkit/runtime:Activation",
+        "@devkit/runtime:ActivationSnapshot",
+        "@devkit/runtime:ActivationStatus",
+        "@devkit/runtime:Admission",
+        "@devkit/runtime:Admission.diagnostic.contributionId",
+        "@devkit/runtime:Admission.diagnostic.message",
+        "@devkit/runtime:Admission.diagnostic.phase",
+        "@devkit/runtime:Admission.diagnostic.pluginId",
+        "@devkit/runtime:Admission.diagnostic.providerId",
+        "@devkit/runtime:Admission.reservation.actions",
+        "@devkit/runtime:Admission.reservation.id",
+        "@devkit/runtime:Admission.reservation.kind",
+        "@devkit/runtime:LocalInvocationContext",
+        "@devkit/runtime:LocalInvocationContext.contributionId",
+        "@devkit/runtime:LocalInvocationContext.execution",
+        "@devkit/runtime:LocalInvocationContext.execution.id",
+        "@devkit/runtime:LocalInvocationContext.native.get",
+        "@devkit/runtime:LocalInvocationContext.pluginId",
+        "@devkit/runtime:LocalInvocationOptions",
+        "@devkit/runtime:LocalInvocationRequest",
+        "@devkit/runtime:LocalInvocationRequest.context.contributionId",
+        "@devkit/runtime:LocalInvocationRequest.context.execution",
+        "@devkit/runtime:LocalInvocationRequest.context.execution.id",
+        "@devkit/runtime:LocalInvocationRequest.context.native.get",
+        "@devkit/runtime:LocalInvocationRequest.context.pluginId",
+        "@devkit/runtime:ProviderLifecycle",
+        "@devkit/runtime:ProviderLifecycleOptions",
+        "@devkit/runtime:ProviderLifecycleOptions.native",
+        "@devkit/runtime:ProviderLifecycleOptions.native.get",
         "@devkit/runtime:Reservation",
         "@devkit/runtime:Reservation.actions",
-        "@devkit/runtime:Reservation.contributions",
-        "@devkit/runtime:Reservation.diagnostics",
         "@devkit/runtime:Reservation.id",
         "@devkit/runtime:Reservation.kind",
-        "@devkit/runtime:Reservation.services",
         "@devkit/runtime:StartupComposition",
-        "@devkit/runtime:StartupComposition.plugins",
-        "@devkit/runtime:StartupComposition.services",
-        "@devkit/runtime:StartupInstallationResult",
-        "@devkit/runtime:StartupInstallationResult.plugins",
-        "@devkit/runtime:StartupInstallationResult.services",
-        "@devkit/runtime:createActivation",
-        "@devkit/runtime:createActivationScope",
-        "@devkit/runtime:createActivationScope().cancel",
-        "@devkit/runtime:createActivationScope().dispose",
-        "@devkit/runtime:createActivationScope().scope",
-        "@devkit/runtime:createActivationScope().scope.onDispose",
-        "@devkit/runtime:createActivationScope().scope.signal",
-        "@devkit/runtime:createAdmissionRegistry",
-        "@devkit/runtime:createProviderLifecycle",
-        "@devkit/runtime:invokeLocalOperation"
+        "@devkit/runtime:StartupInstallationResult"
       ],
-      "examples": [],
+      "examples": [
+        "examples/contribution"
+      ],
       "evidence": [],
       "gaps": [
-        "Existing evidence in CORE-API-MATRIX.md still needs exact executable mappings and explicit host/mode obligations. This group does not claim these APIs lack tests or that conformance is complete."
+        "Standalone exported types, conditional result inference and the remaining context, diagnostic and reservation fields require targeted proof before receiving executable evidence links.",
+        "packages/runtime/tests/provider-results.type-test.ts participates in the package typecheck, but a native Vitest JSON result does not prove its compile-time assertions. No type-check result adapter is linked here.",
+        "A field remaining in this group does not imply its implementation is absent. This inventory deliberately distinguishes an existing code path from a directly checked behavior."
       ]
     },
     {
@@ -986,9 +1977,79 @@
       ]
     },
     {
-      "id": "client-local-broadcast",
+      "id": "client-action-broadcast",
       "apis": [
-        "@devkit/client:Client.actions.broadcast",
+        "@devkit/client:Client.actions.broadcast"
+      ],
+      "examples": [
+        "examples/server-contexts",
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/broadcast.test.ts",
+          "fullName": "broadcast recipient preflight reports every unmatched selector before any recipient runs",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/broadcast.test.ts",
+          "fullName": "broadcast recipient preflight deduplicates overlapping selectors and ignores ordinary routing defaults",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/broadcast.test.ts",
+          "fullName": "broadcast recipient preflight preserves successful siblings alongside known unavailability and handler failure",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/broadcast.test.ts",
+          "fullName": "broadcast recipient preflight rejects empty selection and pre-cancelled requests without side effects",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "Production-extension action broadcast is linked with native development server connections. Complete domain-applicability, error and lifecycle parity across browsers, production server preview and development/reload modes remains to be reconciled."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/json-actions.ts",
+          "receiptFile": "artifacts/json-actions.json",
+          "checks": [
+            "outgoing realm and explicit provider selection",
+            "provider-owned domain applicability across all three native hosts",
+            "unavailable provider preserves successful siblings",
+            "disconnected native server reports failure without rerouting"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension/native-development-servers",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox.ts",
+          "receiptFile": "artifacts/firefox/receipt.json",
+          "checks": [
+            "native JSON controls broadcast to selected devserver and all-realm recipients",
+            "native JSON broadcast preserves successful siblings after server disconnect"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension/native-development-servers",
+          "requirePageErrors": false
+        }
+      ]
+    },
+    {
+      "id": "client-capability-broadcast-and-selector-errors",
+      "apis": [
         "@devkit/client:Client.capabilities.broadcast",
         "@devkit/client:RoutingError.selectors"
       ],
@@ -1027,8 +2088,7 @@
         }
       ],
       "gaps": [
-        "Evidence covers local recipient preflight, unmatched selector reporting, deduplication, sibling outcomes and pre-dispatch cancellation. Provider-owned domain applicability is outside these fixtures.",
-        "Native Devframe, DevTools, Chromium and Firefox broadcast runs and their development/production modes still need exact executable mappings."
+        "Node fixtures prove capability broadcast and selector error behavior. Native action broadcast is classified separately; it does not prove capability broadcast on native hosts or its browser/server mode matrix."
       ]
     },
     {
@@ -1560,7 +2620,35 @@
         }
       ],
       "gaps": [
-        "These are Node MessageChannel fixtures with JSON or structured-clone delivery. Actual Chromium and Firefox runtime.Port, background, content-script, popup, options, DevTools and sidebar evidence across development and production modes is not linked by these references."
+        "Native Chromium and Firefox production Port composition is linked separately from the Node codec fixtures. Development/reload modes, worker suspension and complete content-script lifecycle obligations remain to be linked."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/browser.ts",
+          "receiptFile": "artifacts/receipt.json",
+          "checks": [
+            "two real Ports",
+            "Map/BigInt round trip",
+            "function rejection"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox.ts",
+          "receiptFile": "artifacts/firefox/receipt.json",
+          "checks": [
+            "two real Ports and distinct caller identities",
+            "native state write and Map/BigInt round trip",
+            "unsupported function rejects"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension",
+          "requirePageErrors": false
+        }
       ]
     },
     {
@@ -1648,8 +2736,35 @@
         }
       ],
       "gaps": [
-        "These are Node MessageChannel fixtures with JSON or structured-clone delivery. Actual Chromium and Firefox runtime.Port, background, content-script, popup, options, DevTools and sidebar evidence across development and production modes is not linked by these references.",
-        "Disconnection is triggered by the owned Node fixture. Browser suspension, worker termination, navigation and permission revocation require their separate native-host evidence; this group does not claim cancellation of already dispatched backend work."
+        "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
+        "Worker termination/suspension, navigation, permission revocation and development/reload modes retain separate obligations. Already dispatched backend work is not cancelled by disconnect."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/browser.ts",
+          "receiptFile": "artifacts/receipt.json",
+          "checks": [
+            "pending call rejects on disconnect",
+            "worker-initiated disconnect",
+            "independent routed client survives peer disconnect"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox.ts",
+          "receiptFile": "artifacts/firefox/receipt.json",
+          "checks": [
+            "pending call rejects on disconnect and renderer unmounts",
+            "worker-initiated disconnect leaves peer usable"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension",
+          "requirePageErrors": false
+        }
       ]
     },
     {

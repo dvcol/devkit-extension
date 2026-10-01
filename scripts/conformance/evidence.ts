@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import type { BrowserEvidenceReference } from './browser-evidence.ts';
 
 export interface EvidenceReference {
   readonly workspace: string;
@@ -13,6 +14,7 @@ export interface CoverageGroup {
   readonly apis: readonly string[];
   readonly examples: readonly string[];
   readonly evidence: readonly EvidenceReference[];
+  readonly browserEvidence?: readonly BrowserEvidenceReference[];
   readonly gaps: readonly string[];
 }
 
@@ -38,10 +40,12 @@ export function checkInventory(
   for (const group of groups) {
     assert.ok(group.apis.length > 0, `Empty API group: ${group.id}`);
     assert.ok(
-      group.evidence.length > 0 || group.gaps.length > 0,
+      group.evidence.length > 0 ||
+        (group.browserEvidence?.length ?? 0) > 0 ||
+        group.gaps.length > 0,
       `Unclassified API group: ${group.id}`,
     );
-    if (group.evidence.length > 0)
+    if (group.evidence.length > 0 || (group.browserEvidence?.length ?? 0) > 0)
       assert.ok(group.examples.length > 0, `Missing example: ${group.id}`);
   }
 }

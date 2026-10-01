@@ -17,16 +17,6 @@ jobs:
       - uses: ./.github/actions/install
       - name: Build, types, strict lint, format and tests
         run: pnpm run ci
-      - name: Retain API inventory and executed test evidence
-        if: always()
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: api-conformance
-          include-hidden-files: true
-          path: |
-            .conformance/report.json
-            packages/*/.conformance/vitest.json
-            examples/*/.conformance/vitest.json
       - name: Install Chromium for the extension example
         run: pnpm --filter @devkit/example-webext exec playwright install --with-deps chromium
       - name: Run the Chromium extension browser test
@@ -74,3 +64,18 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-webext test:dev
+      - name: Verify API evidence from executed native browser scenarios
+        run: pnpm run conformance:check --browser
+      - name: Retain API inventory and executed test evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: api-conformance
+          include-hidden-files: true
+          path: |
+            .conformance/report.json
+            packages/*/.conformance/vitest.json
+            examples/*/.conformance/vitest.json
+            examples/webext/artifacts/receipt.json
+            examples/webext/artifacts/firefox/receipt.json
+            examples/webext/artifacts/json-actions.json

@@ -22,7 +22,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
-    "test": "vitest run"
+    "test": "vitest run --reporter=default --reporter=json --outputFile=.conformance/vitest.json"
   },
   "dependencies": {
     "@devkit/client": "workspace:*",

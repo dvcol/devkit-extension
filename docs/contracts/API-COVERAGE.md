@@ -16,13 +16,16 @@ The TypeScript entry point is explicitly named `typescript/unstable/sync`. No pr
 | `apis` | Exact compiler-discovered names, without wildcard coverage |
 | `examples` | Maintained example directories with package manifests |
 | `evidence` | Workspace, test file, exact Vitest `fullName`, host and execution mode |
+| `browserEvidence` | Generated receipt, exact asserted scenarios, native browser/host/mode and required page-error capture |
 | `gaps` | Unfinished evidence or host/mode obligations; any remaining gap blocks the completion check |
 
-The linked groups currently associate 142 API paths with 74 distinct executed tests. They cover declaration factories, local provider routing and ownership, Port boundary composition, genuine Devframe/DevTools contexts and authenticated Devframe HTTP/WebSocket connections. JSON and structured-clone Port fixtures run through Node MessageChannel; they do not count as Chromium or Firefox acceptance. Headless server tests do not count as Vite, browser or production-preview evidence. Type-only contracts and remaining entries stay explicitly unmapped while existing evidence is reconciled. Unmapped does not mean untested.
+The linked groups currently associate 308 API paths with 159 distinct executed tests. They cover declaration factories, runtime activation/admission/invocation and provider lifecycle, local routing and ownership, native Devframe exposure/action bindings, Port composition, genuine Devframe/DevTools contexts and authenticated Devframe HTTP/WebSocket connections. JSON and structured-clone Port fixtures run through Node MessageChannel; they do not count as Chromium or Firefox acceptance. Headless server tests do not count as Vite, browser or production-preview evidence. Type-only contracts and remaining entries stay explicitly unmapped while existing evidence is reconciled. Unmapped does not mean untested.
 
 Vitest produces its normal JSON report through its built-in reporter. The checker requires the exact file and test name to appear once with `passed` status in a successful run. Missing, renamed, skipped, todo, failed or duplicated results cannot satisfy the entry. Example and test files must exist. Test authors still own meaningful assertions; matching a passed name alone cannot assess test quality.
 
-The generated `.conformance/report.json` records every API path, examples, host/mode, test result, native run timestamp and outstanding gap. CI creates it after workspace tests and retains it with the native reports as the `api-conformance` artifact. Turbo also caches the native report as a test output, so cached tests retain their original execution timestamp. Local checks read the latest generated reports; rerun the affected tests after changes rather than treating an old report as fresh execution.
+Browser references currently link 17 distinct scenarios from three generated Chromium/Firefox receipts. They prove production-extension Port composition/disconnect and action broadcast with native development-server connections. They do not prove capability broadcast, exact native listener counts, worker suspension or the complete development/preview matrix. The checker requires each exact scenario once, the tested browser version and no captured page errors. Firefox’s explicit lack of global page-error capture remains in the report. Other receipt formats, including debugger reports written before final assertions, are not accepted as evidence by this checker.
+
+The generated `.conformance/report.json` records every API path, examples, host/mode, test result and outstanding gap. Vitest references retain the native run timestamp. Browser references retain their receipt file modification time, which is not a test-run identity or freshness guarantee. CI runs the browser gate after its native browser commands and retains the report and generated receipts as the `api-conformance` artifact. Turbo also caches the native report as a test output, so cached tests retain their original execution timestamp. Local checks read generated reports; rerun affected tests after changes rather than treating old reports as fresh execution. For browser evidence, clear the named generated receipts first and require each command to succeed. The checker never uses committed `evidence/` snapshots. A failed gate removes the previous aggregate report before validation.
 
 ## Commands
 
@@ -31,6 +34,8 @@ Build affected package declarations before inventory checks. For the currently m
 ```sh
 pnpm --filter @devkit/core test
 pnpm --filter @devkit/example-contribution test
+pnpm --filter @devkit/runtime test
+pnpm --filter @devkit/devframe test
 pnpm --filter @devkit/client test
 pnpm --filter @devkit/webext test
 pnpm --filter @devkit/server test
@@ -38,6 +43,12 @@ pnpm run conformance:test
 pnpm run conformance:check
 ```
 
+The default check marks browser references `not-checked`; it cannot report completion with unchecked browser evidence. After successful current runs of `@devkit/example-webext` commands `test:browser`, `test:firefox` and `test:json-actions`, run:
+
+```sh
+pnpm run conformance:check --browser
+```
+
 `conformance:inventory` prints discovered names for review. It does not rewrite the matrix or automatically assign coverage. Move an API from an unmapped group only after linking concrete tests and retaining its remaining host/mode obligations.
 
-`conformance:release` applies the same checks and then rejects every group with remaining gaps. It currently fails deliberately. This is one required completion check, not the complete release policy: packed consumers, native-host/version receipts, unsupported outcomes, type-only contracts and full development/preview/release coverage remain obligations of [Release and conformance contract](https://github.com/dvcol/devkit-extension/issues/16).
+`conformance:release` requires browser evidence as well as Vitest results, then rejects every group with remaining gaps. It currently fails deliberately. This is one required completion check, not the complete release policy: packed consumers, native-host/version receipts, unsupported outcomes, type-only contracts and full development/preview/release coverage remain obligations of [Release and conformance contract](https://github.com/dvcol/devkit-extension/issues/16).
