@@ -20,9 +20,21 @@
   </head>
   <body>
     <h1>Devkit native Vite hosts</h1>
-    <p>The shared counter runs in the selected native host. The terminal demo exercises its API.</p>
+    <p>Enter the native authentication code printed by the running host when prompted.</p>
+    <p id="connection" role="status">Connecting…</p>
+    <output id="provider"></output>
+    <div>
+      <button id="mount" disabled>Mount counter</button>
+      <button id="unmount" disabled>Unmount counter</button>
+      <button id="read" disabled>Read counter capability</button>
+      <button id="disconnect" disabled>Disconnect</button>
+      <button id="reload">Reload to reconnect</button>
+    </div>
+    <output id="result"></output>
+    <section id="counter"></section>
     <p>
       First page-script observation: <output id="script-timing">Waiting for the document</output>
     </p>
+    <script type="module" src="./main.ts"></script>
   </body>
 </html>

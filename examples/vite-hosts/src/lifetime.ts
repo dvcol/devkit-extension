@@ -1,5 +1,8 @@
 import { styleText } from 'node:util';
 
+import { increaseCounterAction } from '@devkit/example-contribution';
+import { publishCounterView } from '@devkit/example-json-render';
+import type { CounterViewOptions } from '@devkit/example-json-render';
 import type { ServerProviderHandle } from '@devkit/server';
 import type { Plugin } from 'vite';
 
@@ -13,15 +16,24 @@ export class ProviderLifetime {
   private listening = false;
   private closed = false;
   private removeListener: (() => void) | undefined;
+  private cleanup: AsyncDisposableStack | undefined;
 
   constructor() {
     /** Callers may await readiness after Vite has already closed or failed. */
     void this.ready.catch(() => null);
   }
 
-  prepare(installer: () => Promise<ServerProviderHandle>) {
+  prepare(installer: () => Promise<ServerProviderHandle>, context: CounterViewOptions['context']) {
     if (this.install !== undefined) throw new Error('A native context was already supplied');
-    this.install = installer;
+    this.install = async () => {
+      await using startup = new AsyncDisposableStack();
+      const provider = await installer();
+      startup.defer(() => provider.dispose());
+      const view = await publishCounterView({ context, actionName: increaseCounterAction.id });
+      startup.defer(view.dispose);
+      this.cleanup = startup.move();
+      return provider;
+    };
     this.activate();
   }
 
@@ -47,8 +59,8 @@ export class ProviderLifetime {
       this.readiness.reject(new Error('Vite closed before provider activation'));
       return;
     }
-    const provider = await this.activation;
-    await provider.dispose();
+    await this.activation;
+    await this.cleanup?.disposeAsync();
   }
 
   plugin(): Plugin {

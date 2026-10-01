@@ -9,6 +9,8 @@ export default defineConfig({
         '@devframes/hub/initiate',
         '@devframes/vite/hub',
         '@devkit/example-server-contexts',
+        '@devkit/example-json-render',
+        '@devkit/example-contribution',
         '@devkit/server',
         '@vitejs/devtools',
         'vite',

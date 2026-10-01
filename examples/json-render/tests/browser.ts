@@ -161,7 +161,7 @@ async function checkUnsupported(
     'Mount failed: Error: Renderer unavailable: load-error',
   );
   await expect(page.locator('#view')).toBeEmpty();
-  example.view.update(counterSpec(4));
+  example.view.update(counterSpec({ value: 4 }));
   await page.getByRole('button', { name: 'Mount view', exact: true }).click();
   await counter(page, 4);
 }

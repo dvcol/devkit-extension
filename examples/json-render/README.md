@@ -29,12 +29,14 @@ flowchart LR
 ```
 
 - `src/spec.ts` contains the upstream JSON model and a native RPC type declaration. It imports no framework. The invalid-input button is deliberate test data.
-- `src/index.ts` starts the existing native host, registers the upstream renderer and publishes the counter view. It projects the contribution's counter into the view with native `patchState` and removes that projection listener on close.
+- `src/index.ts` starts the existing native host, registers the upstream renderer and publishes the counter view through `src/publish.ts`. The publisher projects the contribution's counter into the view with native `patchState` and removes that projection listener on disposal.
 - The native renderer sends one action params object. One example-owned RPC method uses the existing action's input/result schemas and calls the initial provider's typed action. It retains native authentication and does not silently adopt a replacement provider.
 - `browser/main.ts` creates an actual authenticated native client and runtime. It awaits the dock and renderer-manifest snapshots before immediate mounting. Each document owns its mount, runtime, event listeners and socket. Unmounting a view keeps the connection and backend state; closing the document or losing the connection disposes the owned resources.
 - The native hub serves the asset returned by `jsonRenderUiRenderer()`. No private browser-factory import, copied renderer or fabricated context is used. Its shadow root contains the upstream styles.
 
 Native dock and RPC registrations live until the example host closes. The installed dock registration API has no unregister handle; this example does not promise hot removal of backend view registrations. The explicit mount disposer handles browser view removal independently.
+
+`publishCounterView({ context, actionName? })` is also exported for examples that already own a native host. Pass the host's stable native context after installing the counter service, and dispose the returned handle before closing the host. It owns the native JSON view and counter-state subscription; the caller owns action binding and renderer mounting. The [Vite hosts example](../vite-hosts/README.md) supplies the portable counter action's ID as `actionName`, while this standalone example keeps its native RPC method name. This helper is example composition, not a portable view declaration API.
 
 ## Replace the renderer
 

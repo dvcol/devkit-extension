@@ -10,7 +10,7 @@ import { previewFixture } from './preview-fixture.js';
 
 describe.each(['devframe', 'devtools'] as const)('%s production preview', (host) => {
   it('serves a real build with live metadata, native context and counter actions', async () => {
-    expect.assertions(11);
+    expect.assertions(14);
     const current = await previewFixture(host);
     try {
       const provider = await providerFromVite(current.server);
@@ -25,6 +25,8 @@ describe.each(['devframe', 'devtools'] as const)('%s production preview', (host)
       const metadata = await fetch(`${current.origin}${current.metadataPath}`);
       expect(await metadata.json()).toMatchObject({ backend: 'websocket' });
       expect(hub).toBeDefined();
+      expect(hub?.host.resolveOrigin()).toBe(current.origin);
+      expect(hub?.rpc.sharedState.keys()).toContain('devframe:json-render:example:counter');
       expect(native.get(devToolsContext) === hub).toBe(host === 'devtools');
       expect(native.get(devToolsContext)?.viteServer).toBeUndefined();
       await expect(
@@ -32,6 +34,7 @@ describe.each(['devframe', 'devtools'] as const)('%s production preview', (host)
       ).resolves.toBe(4);
       await expect(api.read({})).resolves.toBe(4);
       await current.server.close();
+      expect(hub?.rpc.sharedState.keys()).not.toContain('devframe:json-render:example:counter');
       expect(hub?.commands.commands.has('example:read-server-counter')).toBe(false);
       expect(admitted(provider.startup.services[0]).snapshot().status).toBe('disposed');
     } finally {

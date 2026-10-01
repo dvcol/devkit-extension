@@ -1,6 +1,8 @@
 import { Server as HttpServer } from 'node:http';
 
 import { initHub } from '@devframes/hub/initiate';
+import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
+import { publishCounterView } from '@devkit/example-json-render';
 import { counterActionsPlugin, counterService } from '@devkit/example-server-contexts';
 import { createDevframeProvider, createDevToolsProvider } from '@devkit/server';
 import type { ServerProviderHandle } from '@devkit/server';
@@ -14,6 +16,7 @@ class PreviewLifetime {
   private provider: ServerProviderHandle | undefined;
   private closeHost: (() => Promise<void>) | undefined;
   private disposal: Promise<void> | undefined;
+  private disposeView: (() => void) | undefined;
 
   constructor() {
     void this.readiness.promise.catch(() => null);
@@ -21,6 +24,11 @@ class PreviewLifetime {
 
   private async dispose() {
     const failures: unknown[] = [];
+    try {
+      this.disposeView?.();
+    } catch (error) {
+      failures.push(error);
+    }
     try {
       await this.provider?.dispose();
     } catch (error) {
@@ -46,6 +54,7 @@ class PreviewLifetime {
       providerId: `example.${host}-preview`,
       services: [counterService],
       plugins: [counterActionsPlugin],
+      expose: { actions: [increaseCounterAction], capabilities: [counterCapability] },
     };
     if (host === 'devframe') {
       const nativeHost = initHub({
@@ -56,6 +65,9 @@ class PreviewLifetime {
         mcp: false,
         configure: async (context) => {
           this.provider = await createDevframeProvider({ context, ...composition });
+          this.disposeView = (
+            await publishCounterView({ context, actionName: increaseCounterAction.id })
+          ).dispose;
         },
       });
       this.closeHost = () => nativeHost.close();
@@ -64,6 +76,13 @@ class PreviewLifetime {
       return;
     }
     const context = await createDevToolsContext(server.config);
+    /** Native DevTools otherwise falls back to the development port when no ViteDevServer exists. */
+    context.host.resolveOrigin = () => {
+      const url = server.resolvedUrls?.local[0];
+      if (url === undefined)
+        throw new Error('The preview server origin is not available before listening');
+      return new URL(url).origin;
+    };
     const nativeHost = await createDevToolsHub({
       context,
       server: server.httpServer,
@@ -71,6 +90,9 @@ class PreviewLifetime {
     });
     this.closeHost = () => nativeHost.close();
     this.provider = await createDevToolsProvider({ context, ...composition });
+    this.disposeView = (
+      await publishCounterView({ context, actionName: increaseCounterAction.id })
+    ).dispose;
     server.middlewares.use(nativeHost.middleware);
   }
 

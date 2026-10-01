@@ -9,10 +9,14 @@ declare module 'devframe/types' {
 }
 
 /** Native JSON model only; authoring imports no frontend framework. */
-export function counterSpec(value: number): DevframeJsonRenderSpec {
+export function counterSpec(options: {
+  readonly value: number;
+  readonly actionName?: string;
+}): DevframeJsonRenderSpec {
+  const actionName = options.actionName ?? counterActionName;
   return {
     root: 'counter',
-    state: { value },
+    state: { value: options.value },
     elements: {
       counter: {
         type: 'Card',
@@ -28,12 +32,12 @@ export function counterSpec(value: number): DevframeJsonRenderSpec {
       increase: {
         type: 'Button',
         props: { label: 'Increase counter' },
-        on: { press: { action: counterActionName, params: { amount: 1 } } },
+        on: { press: { action: actionName, params: { amount: 1 } } },
       },
       invalid: {
         type: 'Button',
         props: { label: 'Try invalid input', variant: 'secondary' },
-        on: { press: { action: counterActionName, params: { amount: 'invalid' } } },
+        on: { press: { action: actionName, params: { amount: 'invalid' } } },
       },
     },
   };

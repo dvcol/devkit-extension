@@ -1,4 +1,5 @@
 import { viteDevframeHub } from '@devframes/vite/hub';
+import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
 import { counterActionsPlugin, counterService } from '@devkit/example-server-contexts';
 import { createDevframeProvider, createDevToolsProvider } from '@devkit/server';
 import type { ServerComposition, ServerProviderHandle } from '@devkit/server';
@@ -28,6 +29,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
     providerId: `example.${host}-vite`,
     services: [counterService],
     plugins: [counterActionsPlugin],
+    expose: { actions: [increaseCounterAction], capabilities: [counterCapability] },
   };
   if (host === 'devframe') {
     return [
@@ -38,7 +40,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
         mcp: false,
         register: false,
         configure(context) {
-          lifetime.prepare(() => createDevframeProvider({ context: context, ...composition }));
+          lifetime.prepare(() => createDevframeProvider({ context, ...composition }), context);
         },
       }),
     ];
@@ -48,7 +50,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
       ...lifetime.plugin(),
       devtools: {
         setup(context) {
-          lifetime.prepare(() => createDevToolsProvider({ context: context, ...composition }));
+          lifetime.prepare(() => createDevToolsProvider({ context, ...composition }), context);
         },
       },
     },

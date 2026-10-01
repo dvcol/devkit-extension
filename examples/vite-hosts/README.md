@@ -1,6 +1,6 @@
 # Native Vite host examples
 
-One counter capability, service and action run in both the released `@devframes/vite/hub` integration and the actual `@vitejs/devtools` Vite plugin. The recipes come from `examples/server-contexts`; this example adds native Vite lifecycle wiring. It does not implement a portable remote transport or a JSON counter view.
+One counter capability, service and action run in both the released `@devframes/vite/hub` integration and the actual `@vitejs/devtools` Vite plugin. The recipes come from `examples/server-contexts`; this example adds native Vite lifecycle wiring and a browser counter using the shared JSON spec from `examples/json-render`. The page imports the published native reference renderer and dispatches through the existing portable client over native RPC.
 
 From the repository root:
 
@@ -11,7 +11,7 @@ pnpm --filter @devkit/example-vite-hosts demo:devframe
 pnpm --filter @devkit/example-vite-hosts demo:devtools
 ```
 
-Each demo starts a real Vite server bound to `127.0.0.1`, invokes the shared counter action and prints its value and provider identity. The server stays running; press `q` then Enter to close it and dispose the provider. Vite owns config watching, client HMR and its normal restart shortcuts. The Devframe variant mounts a headless hub; the DevTools variant mounts its native shell with optional built-in integrations disabled. Native authentication remains enabled. The SDK counter currently runs through the local typed API, not through that shell's UI.
+Each demo starts a real Vite server bound to `127.0.0.1`, invokes the shared counter action and prints its value and provider identity. The server stays running; press `q` then Enter to close it and dispose the provider. Vite owns config watching, client HMR and its normal restart shortcuts. The Devframe variant mounts a headless hub; the DevTools variant mounts its native shell with optional built-in integrations disabled. Native authentication remains enabled. Open the application URL to use its JSON counter. Devframe consumes a terminal OTP link or prompts for the current terminal code; no token is compiled into the assets. The application page mounts its own imported native reference renderer. It does not mount inside the separate DevTools shell.
 
 `host.config.ts` calls `counterHostPlugins(mode)` inside a config factory. Every Vite config reload must create fresh native plugin instances. Reusing one inline plugin array across `server.restart()` is not the supported composition: upstream plugins capture mutable native host references in closures.
 
@@ -34,7 +34,7 @@ sequenceDiagram
 
 `providerFromVite(server)` returns the current plugin's readiness promise. Await it after `listen()` or `restart()` before calling the example backend. `listen()` itself does not await asynchronous contribution activation. A saved handle remains bound to its original incarnation. Call `providerFromVite` again to acquire the replacement after restart.
 
-The small `ProviderLifetime` class is private to this example. It neither watches files nor recreates servers. It removes its listening callback during disposal, handles closing before activation, and retains the original disposal promise. Cleanup failures reject `server.close()` and remain available in installation snapshots and diagnostics. The native host has already shut down by `closeServer`; contribution cleanup must not depend on an open native network connection.
+The small `ProviderLifetime` class is private to this example. It owns the native counter view and state projection alongside the provider. It neither watches files nor recreates servers. It removes its listening callback during disposal, handles closing before activation, and retains the original disposal promise. Cleanup failures reject `server.close()` and remain available in installation snapshots and diagnostics. The native host has already shut down by `closeServer`; contribution cleanup must not depend on an open native network connection.
 
 ## Verified behavior
 
@@ -69,9 +69,11 @@ pnpm --filter @devkit/example-vite-hosts preview:devframe
 pnpm --filter @devkit/example-vite-hosts preview:devtools
 ```
 
-Both commands serve the same Vite-built site and invoke the live counter action, printing `3` and the provider identity. Press `q` then Enter to close. These examples use a loopback HTTP/1 server without TLS. They do not mount the native DevTools UI in preview or render a JSON counter view.
+Both commands serve the same Vite-built site and invoke the live counter action, printing `3` and the provider identity. Press `q` then Enter to close. These examples use a loopback HTTP/1 server without TLS. The built application renders the same native JSON counter and calls the attached live backend. Its assets are independent of the selected backend: a site built in `devframe` mode also works with the DevTools preview host.
 
 `counterPreviewPlugin(host)` uses public `configurePreviewServer` and `closePreviewServer` hooks. It attaches the actual native backend to Vite's HTTP server and mounts live metadata before static assets. `providerFromVite(previewServer)` resolves its installed provider. The DevTools context has no `viteServer`, since preview does not have a development module graph. Native authentication remains enabled.
+
+The example supplies its owned DevTools context's public `host.resolveOrigin` callback from the actual preview server's resolved URL. Without this binding, the native DevTools host falls back to the development port when composing authentication links. The callback fails clearly before preview has a resolved listening URL; it does not guess an origin or change authentication.
 
 The example disposes portable contributions before closing its native backend. A contribution cleanup failure remains visible while native transport cleanup still runs. Repeated disposal shares the original promise. Startup failure also attempts owned cleanup and retains both errors if cleanup fails.
 
@@ -85,13 +87,13 @@ Six additional integration tests cover both hosts against freshly built browser 
 | Delayed cleanup            | Preview close waits for contribution cleanup and removes upgrade listeners                           |
 | Failed cleanup             | Close rejects, the installation stays `cleanup-blocked`, and native transports still close           |
 
-The maintained suite now has 24 tests covering native development/preview hosts, watched production retention and process exit. The watched workflow is documented below. Remote SDK dispatch, browser rendering and automatic production asset reload remain open.
+The maintained suite now has 24 tests covering native development/preview hosts, watched production retention and process exit. The watched workflow is documented below. The browser suite below now verifies remote SDK dispatch and rendering. Automatic production asset reload remains open.
 
 ## Remaining host contract work
 
 - Failed native setup and changes during activation need further real-host evidence. Failed-restart replacement cleanup is a documented Vite gap accepted by the owner; the [upstream source proposal](../../docs/probes/vite-failed-restart/source-validation/README.md) is separate and no Vite dependency patch is installed.
 - Development middleware mode is explicitly rejected. Bundled development and browser-side HMR delivery are not established by these tests.
-- Discovery, remote dispatch, authentication conformance, JSON rendering and extension hosts remain separate implementation work. The native connection-metadata request is not an SDK RPC transport test.
+- The browser composition uses native discovery over its two known same-origin metadata bases. General endpoint discovery and complete authentication/host conformance remain separate work. Extension hosts have their own maintained example and tests.
 
 These limits keep issues [6](https://github.com/dvcol/devkit-extension/issues/6), [13](https://github.com/dvcol/devkit-extension/issues/13) and [14](https://github.com/dvcol/devkit-extension/issues/14) open.
 
@@ -132,7 +134,7 @@ The exact combined command was also run on macOS: watcher and preview started co
 
 This maintained example covers a single HTML application with relative asset URLs on local HTTP/1. It retains generated directories until they are removed after stopping both scripts. The exclusive publisher lock is intentionally not stolen from another process; after an uncatchable termination such as SIGKILL, stop any remaining publisher before deleting the stale lock. Crash consistency, Windows filesystem behavior, multiple output layouts and generation pruning are not established by this example.
 
-Automatic browser refresh/HMR, a renderer-mounted failure view, remote portable SDK calls and state restoration after backend replacement remain separate implementation work. The current browser document does not update itself merely because a new generation is available.
+Automatic production browser refresh/HMR, a renderer-mounted build-failure view and state restoration after backend replacement remain separate implementation work. The current browser document does not update itself merely because a new generation is available.
 
 ## Native HTML bootstrap timing
 
@@ -150,7 +152,7 @@ flowchart LR
   Preview --> Browser
 ```
 
-The [real browser test](./tests/browser.ts) uses the maintained host configuration and actual native backends. It confirms the active provider identity in each mode before opening the page. Preview also serves exactly the built HTML and never invokes the test's HTML transform hook. The [recorded Chromium 153.0.8010.12 receipt](./evidence/html-timing.json) passed with zero observed page errors.
+The [real browser test](./tests/browser.ts) uses the maintained host configuration and actual native backends. It confirms the active provider identity and the native JSON counter in each mode. Preview also serves exactly the built HTML and never invokes the test's HTML transform hook. The [recorded Chromium 153.0.8010.12 receipt](./evidence/html-timing.json) passed with zero observed page errors.
 
 | Native host | Vite mode       | Bootstrap at first page script | Page readyState | Preview transform calls |
 | ----------- | --------------- | ------------------------------ | --------------- | ----------------------- |
@@ -164,8 +166,35 @@ pnpm exec turbo run build --filter=@devkit/example-vite-hosts --concurrency=1
 pnpm --filter @devkit/example-vite-hosts test:browser
 ```
 
-CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh results go to ignored `artifacts/html-timing.json`. The existing 24 host lifecycle tests remain separate from browser execution timing.
+CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh timing, counter and watched-preview results go to ignored `artifacts/html-timing.json`; screenshots use `artifacts/{devframe,devtools}-{development,preview}.png`. The existing 24 host lifecycle tests remain separate.
 
 This example uses a classic script because module scripts defer. `head-prepend` controls HTML placement; Vite hook `order` controls transformation processing, not browser scheduling. Preview does not reapply HTML hooks. The owned site has no CSP; applications with CSP must allow the script through their own policy, such as Vite's native `html.cspNonce`. This is not evidence of arbitrary HTTP response rewriting or execution on deployed pages. Firefox execution of this Vite fixture, CSP cases, runtime contribution enable/disable and the portable script declaration remain outside this slice.
 
 References: [Vite HTML hook](https://vite.dev/guide/api-plugin#transformindexhtml), [Vite CSP support](https://vite.dev/guide/features#content-security-policy-csp), [native script execution](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script).
+
+## Browser counter and live backend
+
+The application discovers `/__devframes/__connection.json` or `/__devtools/__connection.json` through native `connectDevframe`. It uses an isolated native connection, so each reload requests trust through that backend's OTP flow. The native metadata base identifies the example host; the presence of Vite's HMR client distinguishes development from built preview. Build-time mode does not select the live backend.
+
+The existing `createDevframeProviderConnection` supplies an authorized catalog to `createClient`. `createActionCall` binds the shared action descriptor to that client; the native reference renderer, state subscriptions and all other RPC methods retain native behavior. A diagnostic button also invokes the shared read capability. The UI has no new portable view declaration, action handler API or authentication implementation.
+
+```mermaid
+flowchart LR
+  View[Native JSON counter] --> Binding[Existing action binding]
+  Binding --> Client[Portable client]
+  Client --> RPC[Authenticated native RPC]
+  RPC --> Provider[Devframe or DevTools provider]
+  Provider --> State[Native shared counter state]
+  State --> Projection[Native view state projection]
+  Projection --> View
+```
+
+The maintained Chromium suite covers both hosts in development and in independently built preview. Two pages authenticate with native single-use OTPs, and the fragment is removed. Actual JSON buttons update both pages; remote capability reads agree. Unmounting one renderer leaves backend state available to its peer; remounting sees that current state and one click has one effect. Explicit Disconnect closes that page's connection. The actual Reload to reconnect button creates a fresh document and uses the native authentication prompt. Closing the backend unmounts both pages and disables their controls. This establishes explicit reconnect, not automatic recovery.
+
+Both watched-preview cases start the backend before assets exist, then build the maintained site with Vite's actual watcher. A source HTML edit publishes a second generation while the first page and provider stay alive. Opening the new generation sees the same counter; actions still update both documents, and the old generated HTML remains available. No browser reload controller is added. These cases do not replace the separate failed-build retention tests.
+
+Pagehide and Vite module disposal release the browser's renderer, adapter, router and native connection. Host teardown releases the view projection and native view alongside the provider. The native JSON model and renderer remain framework-neutral at their authoring boundary; the reference renderer's internal framework is unchanged. Firefox execution of this Vite fixture and full authentication/HMR failure coverage remain unproved here.
+
+An in-app Chromium 154 confirmation also ran the actual `demo:devframe` command: a native terminal OTP link authenticated the page, the JSON action changed the counter from 3 to 4, the capability read returned 4, and unmount/remount retained 4. A source edit triggered Vite's native page reload; a fresh native OTP link restored the view with the same provider incarnation and value. Explicit Disconnect removed the renderer and disabled its controls. This manual confirmation used the native OTP link, not automated interaction with a prompt dialog.
+
+The in-app confirmation then ran `build:site` in `devframe` mode and `preview:devtools`. The built page connected as `example.devtools-preview`, increased 3 to 4, and read 4 through the capability. Closing that backend removed the view and disabled the controls. This run exposed the incorrect native preview authentication-link origin corrected by the callback above.

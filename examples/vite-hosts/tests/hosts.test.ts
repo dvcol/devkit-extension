@@ -9,7 +9,7 @@ import { admitted, bindingFor, connectionMetadata, fixture } from './fixtures.js
 
 describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
   it('serves the native host and runs the shared action with genuine native contexts', async () => {
-    expect.assertions(8);
+    expect.assertions(10);
     const current = await fixture(host);
     try {
       await current.server.listen();
@@ -17,6 +17,7 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       const binding = await bindingFor(provider);
       const hub = binding.native.get(devframeHubContext);
       expect(hub).toBeDefined();
+      expect(hub?.rpc.sharedState.keys()).toContain('devframe:json-render:example:counter');
       expect(binding.native.get(devToolsContext) === hub).toBe(host === 'devtools');
       await expect(
         provider.invoke({ action: increaseCounterAction, input: { amount: 3 } }),
@@ -26,6 +27,7 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       const response = await connectionMetadata(current.server, host);
       expect(response.status).toBe(200);
       await current.server.close();
+      expect(hub?.rpc.sharedState.keys()).not.toContain('devframe:json-render:example:counter');
       expect(hub?.commands.commands.has('example:read-server-counter')).toBe(false);
       expect(admitted(provider.startup.services[0]).snapshot().status).toBe('disposed');
     } finally {

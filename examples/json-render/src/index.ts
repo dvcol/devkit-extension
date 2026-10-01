@@ -1,28 +1,21 @@
 import { toJsonRenderDockEntry } from '@devframes/json-render/hub';
-import { createJsonRenderView } from '@devframes/json-render/node';
 import { jsonRenderUiRenderer } from '@devframes/json-render-ui/hub';
 import { increaseCounterAction } from '@devkit/example-contribution';
-import { counterStateKey, createRemoteHost } from '@devkit/example-server-contexts';
-import { counterActionName, counterSpec } from './spec.js';
+import { createRemoteHost } from '@devkit/example-server-contexts';
+import { publishCounterView } from './publish.js';
+import { counterActionName } from './spec.js';
+
+export { publishCounterView } from './publish.js';
+export type { CounterViewOptions } from './publish.js';
 
 /** Native view and RPC publication in the same genuine host used by the other examples. */
 export async function createJsonRenderExample(mode: 'devframe' | 'devtools') {
   await using cleanup = new AsyncDisposableStack();
   const host = await createRemoteHost(mode, { renderers: [jsonRenderUiRenderer()] });
   cleanup.defer(host.close);
-  const state = await host.context.rpc.sharedState.get<{ value: number }>(counterStateKey);
-  const view = createJsonRenderView(host.context, {
-    id: 'counter',
-    scope: 'example',
-    title: 'Shared counter',
-    spec: counterSpec(state.value().value),
-  });
-  cleanup.defer(view.dispose);
-  cleanup.defer(
-    state.on('updated', (value) => {
-      view.patchState([{ op: 'replace', path: '/value', value: value.value }]);
-    }),
-  );
+  const published = await publishCounterView({ context: host.context });
+  cleanup.defer(published.dispose);
+  const { view } = published;
   const entry = toJsonRenderDockEntry(view, {
     id: 'example:counter',
     title: 'Shared counter',

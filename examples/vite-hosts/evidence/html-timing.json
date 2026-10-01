@@ -8,6 +8,17 @@
       "snapshot": {
         "bootstrapReadyState": "loading",
         "pageReadyState": "loading"
+      },
+      "counter": {
+        "authenticatedPages": 3,
+        "nativeJsonActions": 6,
+        "finalValue": 6,
+        "nativeOtpConsumed": true,
+        "nativePromptOnReload": true,
+        "sharedStateAndCapability": true,
+        "unmountRemount": true,
+        "explicitDisconnectAndReconnect": true,
+        "backendCloseUnmountsBoth": true
       }
     },
     {
@@ -18,6 +29,17 @@
         "bootstrapReadyState": "loading",
         "pageReadyState": "loading"
       },
+      "counter": {
+        "authenticatedPages": 3,
+        "nativeJsonActions": 6,
+        "finalValue": 6,
+        "nativeOtpConsumed": true,
+        "nativePromptOnReload": true,
+        "sharedStateAndCapability": true,
+        "unmountRemount": true,
+        "explicitDisconnectAndReconnect": true,
+        "backendCloseUnmountsBoth": true
+      },
       "previewTransforms": 0
     },
     {
@@ -27,6 +49,17 @@
       "snapshot": {
         "bootstrapReadyState": "loading",
         "pageReadyState": "loading"
+      },
+      "counter": {
+        "authenticatedPages": 3,
+        "nativeJsonActions": 6,
+        "finalValue": 6,
+        "nativeOtpConsumed": true,
+        "nativePromptOnReload": true,
+        "sharedStateAndCapability": true,
+        "unmountRemount": true,
+        "explicitDisconnectAndReconnect": true,
+        "backendCloseUnmountsBoth": true
       }
     },
     {
@@ -37,7 +70,38 @@
         "bootstrapReadyState": "loading",
         "pageReadyState": "loading"
       },
+      "counter": {
+        "authenticatedPages": 3,
+        "nativeJsonActions": 6,
+        "finalValue": 6,
+        "nativeOtpConsumed": true,
+        "nativePromptOnReload": true,
+        "sharedStateAndCapability": true,
+        "unmountRemount": true,
+        "explicitDisconnectAndReconnect": true,
+        "backendCloseUnmountsBoth": true
+      },
       "previewTransforms": 0
+    }
+  ],
+  "watched": [
+    {
+      "host": "devframe",
+      "mode": "watched-preview",
+      "generations": 2,
+      "finalValue": 2,
+      "providerRetained": true,
+      "originalDocumentRetained": true,
+      "oldAssetsRetained": true
+    },
+    {
+      "host": "devtools",
+      "mode": "watched-preview",
+      "generations": 2,
+      "finalValue": 2,
+      "providerRetained": true,
+      "originalDocumentRetained": true,
+      "oldAssetsRetained": true
     }
   ],
   "pageErrors": []

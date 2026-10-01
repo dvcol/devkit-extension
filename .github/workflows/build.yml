@@ -27,7 +27,7 @@ jobs:
         run: pnpm --filter @devkit/example-webext test:json-views
       - name: Reject untrusted extension callers and stale browser documents
         run: pnpm --filter @devkit/example-webext test:trust:chromium
-      - name: Run native Vite HTML timing in development and preview
+      - name: Run native Vite browser actions, state and HTML timing
         run: pnpm --filter @devkit/example-vite-hosts test:browser
       - name: Run custom and reference renderers on both native backends
         run: pnpm --filter @devkit/example-json-render test:browser
@@ -76,6 +76,8 @@ jobs:
             .conformance/report.json
             packages/*/.conformance/vitest.json
             examples/*/.conformance/vitest.json
+            examples/vite-hosts/artifacts/*.json
+            examples/vite-hosts/artifacts/*.png
             examples/webext/artifacts/receipt.json
             examples/webext/artifacts/firefox/receipt.json
             examples/webext/artifacts/json-actions.json
