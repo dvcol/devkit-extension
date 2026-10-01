@@ -58,6 +58,8 @@ pnpm --filter @devkit/example-vite-hosts test
 
 Tests require permission to bind ephemeral loopback ports. Watched cases enable Vite HMR because Vite's config-restart handling runs through that path. The fixture waits for the watcher’s public `ready` event and uses filesystem polling. macOS can deliver delayed creation events for an unchanged temporary config after `ready`, which otherwise causes unrelated restarts during client-edit tests. Polling still observes real file changes through Vite; tests do not simulate watcher events or replace native hosts with mocks. This setting is confined to temporary test fixtures.
 
+Two [startup-failure tests](./tests/startup-failure.test.ts) use an independent plugin's public `devtools.setup` hook to register the same native view before the example publishes its counter. Both development and preview reject readiness with the native duplicate-view error after installing and rolling back the new provider. Native command events confirm service registration and removal; the catalog becomes unavailable, and retained action and capability RPC methods reject as unavailable. In development, native HTTP metadata still responds and the foreign view remains editable. Preview rejects startup and removes its native transport's upgrade listeners. This proves rollback after provider installation in the DevTools composition; it does not establish failures during native host setup or cancellation during activation.
+
 ## Built assets with a live preview backend
 
 After building the example's dependency graph:
@@ -87,7 +89,7 @@ Six additional integration tests cover both hosts against freshly built browser 
 | Delayed cleanup            | Preview close waits for contribution cleanup and removes upgrade listeners                           |
 | Failed cleanup             | Close rejects, the installation stays `cleanup-blocked`, and native transports still close           |
 
-The maintained suite now has 24 tests covering native development/preview hosts, watched production retention and process exit. The watched workflow is documented below. The browser suite below now verifies remote SDK dispatch and rendering. Automatic production asset reload remains open.
+The maintained suite now has 26 tests covering native development/preview hosts, view-publication rollback, watched production retention and process exit. The watched workflow is documented below. The browser suite below now verifies remote SDK dispatch and rendering. Automatic production asset reload remains open.
 
 ## Remaining host contract work
 
@@ -166,7 +168,7 @@ pnpm exec turbo run build --filter=@devkit/example-vite-hosts --concurrency=1
 pnpm --filter @devkit/example-vite-hosts test:browser
 ```
 
-CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh timing, counter and watched-preview results go to ignored `artifacts/html-timing.json`; screenshots use `artifacts/{devframe,devtools}-{development,preview}.png`. The existing 24 host lifecycle tests remain separate.
+CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh timing, counter and watched-preview results go to ignored `artifacts/html-timing.json`; screenshots use `artifacts/{devframe,devtools}-{development,preview}.png`. The 26 host lifecycle tests remain separate.
 
 This example uses a classic script because module scripts defer. `head-prepend` controls HTML placement; Vite hook `order` controls transformation processing, not browser scheduling. Preview does not reapply HTML hooks. The owned site has no CSP; applications with CSP must allow the script through their own policy, such as Vite's native `html.cspNonce`. This is not evidence of arbitrary HTTP response rewriting or execution on deployed pages. Firefox execution of this Vite fixture, CSP cases, runtime contribution enable/disable and the portable script declaration remain outside this slice.
 
