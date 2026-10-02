@@ -3742,7 +3742,7 @@
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
         "Forced Chromium service-worker termination and explicit fresh connections are linked. Natural idle suspension, Firefox event-page lifetime, navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
-        "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination or native Firefox extension reload following a confirmed write. It does not prove natural suspension, interrupted-write durability, browser restart or Firefox quota behavior. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
+        "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. It does not prove natural suspension, interrupted-write durability or Firefox quota behavior. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
       ],
       "browserEvidence": [
         {
@@ -3797,6 +3797,22 @@
           ],
           "host": "firefox-webext",
           "mode": "production-extension-opt-in-storage",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-browser-restart.ts",
+          "receiptFile": "artifacts/persistence/firefox-browser-restart.json",
+          "checks": [
+            "two Firefox clients share action and native-state changes confirmed in native storage.local",
+            "the first Firefox process exits before a new session starts in the same native profile",
+            "explicit temporary fixture loading retains the extension ID, UUID and confirmed saved counter",
+            "fresh documents and native callers mount one counter and management view under a new provider incarnation",
+            "one rendered action updates both restored clients and native storage exactly once",
+            "an independent native storage key survives while diagnostic execution state resets"
+          ],
+          "host": "stable-firefox-webext",
+          "mode": "production-extension-opt-in-storage-clean-browser-restart-explicit-fixture",
           "requirePageErrors": false
         }
       ]

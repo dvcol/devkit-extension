@@ -1,0 +1,112 @@
+{
+  "browser": "157.0",
+  "storageKey": "example.persisted-counter",
+  "lifecycle": "clean driver.quit() and a new Firefox session using the same native profile",
+  "installation": "explicit native temporary add-on installation in each browser session",
+  "previous": {
+    "browser": {
+      "version": "157.0",
+      "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-counter-restart-LsvMQ9",
+      "processId": 11546,
+      "sessionId": "65458000-d94f-4635-bcee-d06ae4c844fc"
+    },
+    "extensionId": "devkit-native-port@example.invalid",
+    "origin": "moz-extension://1c276ac1-4c1e-49fe-934c-0ae87c7211cd",
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "fbe20590-035c-4bb8-8645-b2087f3d2471",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "documents": [
+      {
+        "handle": "2646c12d-f1f0-402d-9e30-d537ed52130f",
+        "timeOrigin": 1790916705481
+      },
+      {
+        "handle": "beca56ae-c908-46d1-ba45-df2b2c92f3f2",
+        "timeOrigin": 1790916705893
+      }
+    ],
+    "callers": [
+      {
+        "id": 0,
+        "url": "moz-extension://1c276ac1-4c1e-49fe-934c-0ae87c7211cd/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "moz-extension://1c276ac1-4c1e-49fe-934c-0ae87c7211cd/panel.html"
+      }
+    ],
+    "confirmedBeforeShutdown": {
+      "value": 10
+    },
+    "executions": {
+      "started": 1,
+      "completed": 1
+    }
+  },
+  "replacement": {
+    "browser": {
+      "version": "157.0",
+      "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-counter-restart-LsvMQ9",
+      "processId": 11659,
+      "sessionId": "27d96e90-9e47-4b9c-b18f-fd931904c38c"
+    },
+    "extensionId": "devkit-native-port@example.invalid",
+    "origin": "moz-extension://1c276ac1-4c1e-49fe-934c-0ae87c7211cd",
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "76904b41-979e-416c-9b11-7f8e576006c0",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "documents": [
+      {
+        "handle": "b2f9c759-a5f5-4e48-a3d8-d3031c356616",
+        "timeOrigin": 1790916708175
+      },
+      {
+        "handle": "3e441dd3-8745-4037-af21-3f69d7ca85fe",
+        "timeOrigin": 1790916708638
+      }
+    ],
+    "callers": [
+      {
+        "id": 0,
+        "url": "moz-extension://1c276ac1-4c1e-49fe-934c-0ae87c7211cd/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "moz-extension://1c276ac1-4c1e-49fe-934c-0ae87c7211cd/panel.html"
+      }
+    ],
+    "restored": 10,
+    "nextValue": {
+      "value": 11
+    },
+    "independentValue": {
+      "value": 44
+    },
+    "executions": {
+      "started": 0,
+      "completed": 0
+    }
+  },
+  "checks": [
+    "two Firefox clients share action and native-state changes confirmed in native storage.local",
+    "the first Firefox process exits before a new session starts in the same native profile",
+    "explicit temporary fixture loading retains the extension ID, UUID and confirmed saved counter",
+    "fresh documents and native callers mount one counter and management view under a new provider incarnation",
+    "one rendered action updates both restored clients and native storage exactly once",
+    "an independent native storage key survives while diagnostic execution state resets"
+  ],
+  "limitations": [
+    "Explicit temporary fixture installation after restart, not permanent installation or automatic extension availability",
+    "Clean browser shutdown after confirmed writes, not natural event-page suspension, crashes or interrupted writes",
+    "Native writes remain asynchronous; action completion is not durable storage acknowledgement",
+    "Firefox quota behavior and global page-error capture through WebDriver Classic are not exercised"
+  ]
+}
