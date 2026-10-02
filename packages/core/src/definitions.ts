@@ -4,7 +4,6 @@ import {
   snapshotAction,
   snapshotActionContribution,
   snapshotCapability,
-  snapshotContribution,
   snapshotExecution,
   snapshotExtension,
   snapshotKind,
@@ -32,17 +31,12 @@ import type {
   RealmDescriptor,
   ServiceDefinition,
   ServiceDeclaration,
-  ScriptDeclaration,
-  ScriptDefinition,
   SetupContext,
-  ViewDeclaration,
-  ViewDefinition,
 } from './types.js';
 import {
   assertAction,
   assertActionContribution,
   assertCapability,
-  assertContribution,
   assertExtension,
   assertIdentifier,
   assertIdentityDescriptor,
@@ -53,6 +47,7 @@ import {
   assertRequirements,
   assertService,
   assertScript,
+  assertTransform,
   assertView,
 } from './validation.js';
 
@@ -173,50 +168,6 @@ export function defineContributionKind<const Kind extends ContributionKindDescri
   return snapshotKind(definition);
 }
 
-export function defineView<
-  const Requirements extends CapabilityRequirements = Record<never, never>,
->(definition: {
-  readonly id: string;
-  readonly execution: ExecutionDescriptor;
-  readonly requires?: Requirements;
-  setup(context: SetupContext<NoInfer<Requirements>>): Awaitable<void>;
-}): ViewDefinition<Requirements>;
-export function defineView(
-  definition: Omit<ViewDeclaration, 'kind' | 'requires'> & {
-    readonly requires?: CapabilityRequirements;
-  },
-): ViewDeclaration {
-  assertRecord(definition, 'view');
-  assertKeys(definition, ['id', 'execution', 'requires', 'setup'], 'view');
-  if (Object.hasOwn(definition, 'requires'))
-    assertRequirements(definition.requires, 'view.requires');
-  const view = { ...definition, kind: 'view' as const, requires: definition.requires ?? {} };
-  assertView(view, 'view');
-  return snapshotSetup(view);
-}
-
-export function defineScript<
-  const Requirements extends CapabilityRequirements = Record<never, never>,
->(definition: {
-  readonly id: string;
-  readonly execution: ExecutionDescriptor;
-  readonly requires?: Requirements;
-  setup(context: SetupContext<NoInfer<Requirements>>): Awaitable<void>;
-}): ScriptDefinition<Requirements>;
-export function defineScript(
-  definition: Omit<ScriptDeclaration, 'kind' | 'requires'> & {
-    readonly requires?: CapabilityRequirements;
-  },
-): ScriptDeclaration {
-  assertRecord(definition, 'script');
-  assertKeys(definition, ['id', 'execution', 'requires', 'setup'], 'script');
-  if (Object.hasOwn(definition, 'requires'))
-    assertRequirements(definition.requires, 'script.requires');
-  const script = { ...definition, kind: 'script' as const, requires: definition.requires ?? {} };
-  assertScript(script, 'script');
-  return snapshotSetup(script);
-}
-
 export function defineExtension<const Kind extends ContributionKindDescriptor>(definition: {
   readonly descriptor: Kind;
   readonly id: string;
@@ -260,13 +211,12 @@ function snapshotPluginEntry(value: unknown, kind: string, label: string): Contr
     assertScript(value, label);
     return snapshotSetup(value);
   }
-  if (kind === 'extension') {
-    assertExtension(value, label);
-    return snapshotExtension(value);
+  if (kind === 'transform') {
+    assertTransform(value, label);
+    return snapshotSetup(value);
   }
-  /** Domain adapters validate transform fields beyond this common envelope. */
-  assertContribution(value, kind, label);
-  return snapshotContribution(value);
+  assertExtension(value, label);
+  return snapshotExtension(value);
 }
 
 export function definePlugin<const Input extends PluginInput>(

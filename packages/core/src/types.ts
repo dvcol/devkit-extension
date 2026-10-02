@@ -173,6 +173,19 @@ export interface ScriptDefinition<
   setup(context: SetupContext<Requirements>): Awaitable<void>;
 }
 
+export interface TransformDeclaration extends ContributionDeclaration<'transform'> {
+  readonly requires: CapabilityRequirements;
+  readonly setup: (...setupArguments: never[]) => unknown;
+}
+
+/** Setup owns native transformation through its scope; native APIs define stages and options. */
+export interface TransformDefinition<
+  Requirements extends CapabilityRequirements,
+> extends TransformDeclaration {
+  readonly requires: Requirements;
+  setup(context: SetupContext<Requirements>): Awaitable<void>;
+}
+
 export interface ActionDescriptor<Operation extends OperationDefinition = OperationDefinition> {
   readonly kind: 'action-contract';
   readonly id: string;
@@ -221,7 +234,7 @@ export interface PluginInput {
   readonly services?: readonly ServiceDeclaration[];
   readonly actions?: readonly ActionDeclaration[];
   readonly views?: readonly ViewDeclaration[];
-  readonly transforms?: readonly ContributionDeclaration<'transform'>[];
+  readonly transforms?: readonly TransformDeclaration[];
   readonly scripts?: readonly ScriptDeclaration[];
   readonly extensions?: readonly ExtensionDefinition[];
 }

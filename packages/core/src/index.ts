@@ -10,9 +10,8 @@ export {
   definePlugin,
   defineRealm,
   defineService,
-  defineScript,
-  defineView,
 } from './definitions.js';
+export { defineScript, defineTransform, defineView } from './setup-definitions.js';
 export { isOperationError } from './errors.js';
 export type * from './types.js';
 export type * from './runtime-types.js';

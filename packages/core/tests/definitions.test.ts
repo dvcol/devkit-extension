@@ -15,6 +15,7 @@ import {
   defineRealm,
   defineService,
   defineScript,
+  defineTransform,
   defineView,
 } from '../src/index.js';
 
@@ -120,7 +121,7 @@ describe('portable definitions', () => {
         defineAction({ contract: action, id: 'example.handler', execution, handler: () => '' }),
       ],
       views: [defineView({ id: 'example.view', execution, setup() {} })],
-      transforms: [{ id: 'example.transform', kind: 'transform', execution }],
+      transforms: [defineTransform({ id: 'example.transform', execution, setup() {} })],
       scripts: [defineScript({ id: 'example.script', execution, setup() {} })],
       extensions: [],
     });

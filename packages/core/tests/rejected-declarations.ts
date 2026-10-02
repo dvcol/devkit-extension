@@ -1,7 +1,9 @@
 import { rejectedScriptConsumers } from './rejected-scripts.js';
+import { rejectedTransformConsumers } from './rejected-transforms.js';
 
 export const rejectedConsumers = [
   ...rejectedScriptConsumers,
+  ...rejectedTransformConsumers,
   {
     name: 'an undeclared requirement in view setup',
     source: `

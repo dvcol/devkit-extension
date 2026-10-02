@@ -5,7 +5,6 @@ import type {
   CapabilityDescriptor,
   CapabilityResolution,
   CapabilityResolutionRequest,
-  ContributionDeclaration,
   ContributionKindDescriptor,
   ContributionKindInstaller,
   ContributionSnapshot,
@@ -23,6 +22,7 @@ import type {
   RuntimeDiagnostic,
   ServiceDeclaration,
   ScriptDeclaration,
+  TransformDeclaration,
   ViewDeclaration,
 } from '@devkit/core';
 
@@ -65,7 +65,7 @@ export type ExecutableContribution =
   | ViewDeclaration
   | ScriptDeclaration
   | ExtensionDefinition
-  | ContributionDeclaration<'transform'>;
+  | TransformDeclaration;
 
 export interface OwnedContribution {
   readonly definition: ExecutableContribution;
@@ -114,7 +114,8 @@ export function extensionDeclaration(
 
 export function setupDeclaration(
   definition: ExecutableContribution,
-): ViewDeclaration | ScriptDeclaration | undefined {
-  if (definition.kind === 'view' || definition.kind === 'script') return definition;
+): ViewDeclaration | ScriptDeclaration | TransformDeclaration | undefined {
+  if (definition.kind === 'view' || definition.kind === 'script' || definition.kind === 'transform')
+    return definition;
   return undefined;
 }

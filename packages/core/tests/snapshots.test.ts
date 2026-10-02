@@ -12,6 +12,7 @@ import {
 
 const setup = () => ({ echo: (value: string) => value });
 const handler = () => 'result';
+const setupRecipe = (): void => {};
 
 function mutableDeclarations() {
   const operation = { input: z.string(), output: z.string() };
@@ -181,11 +182,16 @@ describe('declaration ownership', () => {
     expect(extension.payload.message).toBe('still author owned');
   });
 
-  it('copies domain contribution envelopes while leaving domain-owned values intact', () => {
+  it('copies setup contribution envelopes while retaining their recipe identity', () => {
     expect.assertions(5);
     const execution = { id: 'example.server' };
-    const content = { title: 'domain owned' };
-    const transform = { kind: 'transform' as const, id: 'example.transform', execution, content };
+    const transform = {
+      kind: 'transform' as const,
+      id: 'example.transform',
+      execution,
+      requires: {},
+      setup: setupRecipe,
+    };
     const script = {
       kind: 'script' as const,
       id: 'example.script',
@@ -207,6 +213,6 @@ describe('declaration ownership', () => {
     expect(plugin.scripts[0]?.id).toBe('example.script');
     expect(plugin.transforms[0]?.execution.id).toBe('example.server');
     expect(plugin.scripts[0]?.execution.id).toBe('example.server');
-    expect(plugin.transforms[0]?.content).toBe(content);
+    expect(plugin.transforms[0]?.setup).toBe(setupRecipe);
   });
 });

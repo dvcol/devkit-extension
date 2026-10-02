@@ -4,6 +4,7 @@ import {
   counterHostPlugins,
   counterPreviewPlugin,
   htmlBootstrapPlugin,
+  htmlTransformPlugins,
 } from '@devkit/example-vite-hosts';
 import { defineConfig } from 'vite';
 import type { Plugin } from 'vite';
@@ -14,7 +15,7 @@ export default defineConfig(async ({ command, mode, isPreview }) => {
   let plugins: Plugin[] = [];
   if (isPreview === true) plugins = [counterPreviewPlugin(mode)];
   else if (command === 'serve') plugins = await counterHostPlugins(mode);
-  if (command === 'build') plugins.push(htmlBootstrapPlugin());
+  if (command === 'build') plugins.push(htmlBootstrapPlugin(), ...htmlTransformPlugins());
   return {
     root: fileURLToPath(new URL('./site', import.meta.url)),
     plugins,

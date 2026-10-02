@@ -175,6 +175,27 @@ This example uses a classic script because module scripts defer. `head-prepend` 
 
 References: [Vite HTML hook](https://vite.dev/guide/api-plugin#transformindexhtml), [Vite CSP support](https://vite.dev/guide/features#content-security-policy-csp), [native script execution](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script).
 
+## Independently owned native HTML transforms
+
+[The transform recipes](./src/html-transforms.ts) use `defineTransform({ id, execution, setup })` in both actual development providers. Each recipe enables one configured native `transformIndexHtml` hook and registers its own disable callback with `scope.onDispose`. The host config installs the hooks. The portable runtime owns contribution admission and cleanup; Vite owns HTML processing, order and request errors.
+
+The fixed `example.html-first` hook sets the application's `data-native-transforms` marker to `first`. The `example.html-second` hook appends `second`. Configuration deliberately lists the second hook first, while native `order: 'pre'` and `order: 'post'` produce `first,second`. The first page script freezes that marker, and the page displays the observed sequence. These are two separate plugin installations, so disabling or disposing either one preserves the other hook.
+
+```mermaid
+flowchart LR
+  Source[Application HTML] --> First[Native pre hook]
+  First --> Second[Native post hook]
+  Second --> Browser[First page script observes received marker]
+  FirstRecipe[First transform setup and cleanup] --> First
+  SecondRecipe[Second transform setup and cleanup] --> Second
+```
+
+The maintained `test:browser` command verifies actual HTTP response markers and first-script observations on Devframe and DevTools. Its named receipt checks cover native hook order, independent disable, fresh activations on enable, disposal, retained old-document effects and failure recovery. Visiting `/?transform-error` makes the active second hook throw a fixed fixture error. Vite returns HTTP 500; a later normal request succeeds with both effects and the same provider incarnation. The contribution remains active because this is a native request-handler error, rather than a setup failure.
+
+Independent builds use exported `htmlTransformPlugins()` directly. Preview serves exactly that emitted HTML, including both markers, without a live transform contribution or another HTML hook invocation. Disabling a live development recipe affects future development HTML responses. It does not alter an already parsed document or rewrite a completed build.
+
+This slice advertises the owned root HTML entry only. It does not transform arbitrary HTTP bodies, provide a common priority registry, intercept browser traffic or define a fallback response policy. Native Vite errors remain native errors. Streaming, binary/compressed bodies, redirects/cache, response cancellation, frames/CSP and other interception mechanisms require their own evidence. Firefox execution of this server fixture remains unverified. [The transform contract](../../ARCHITECTURE.md#contracts-contributions-and-plugins) and [issue #11](https://github.com/dvcol/devkit-extension/issues/11) retain the broader stage obligations.
+
 ## Browser counter and live backend
 
 The application discovers `/__devframes/__connection.json` or `/__devtools/__connection.json` through native `connectDevframe`. It uses an isolated native connection, so each reload requests trust through that backend's OTP flow. The native metadata base identifies the example host; the presence of Vite's HMR client distinguishes development from built preview. Build-time mode does not select the live backend.

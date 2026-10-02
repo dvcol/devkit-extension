@@ -7,6 +7,7 @@ import {
   defineOperation,
   definePlugin,
   defineService,
+  defineTransform,
 } from '@devkit/core';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
@@ -46,7 +47,7 @@ describe('provider admission and invocation contracts', () => {
     await relaxed.dispose();
   });
 
-  it('reports exact-version mismatch, wrong execution and unsupported domain kinds', async () => {
+  it('reports exact-version mismatch and wrong execution without running foreign transform setup', async () => {
     expect.assertions(5);
     const { runtime, diagnostics } = provider({ strict: false });
     await runtime.services.install(echoService());
@@ -99,13 +100,21 @@ describe('provider admission and invocation contracts', () => {
       await runtime.plugins.install(
         definePlugin({
           id: 'domain',
-          transforms: [{ id: 'transform', kind: 'transform', execution }],
+          transforms: [
+            defineTransform({
+              id: 'transform',
+              execution: defineExecution({ id: 'another.execution' }),
+              setup() {
+                throw new Error('foreign transform must not activate');
+              },
+            }),
+          ],
         }),
       ),
     );
     expect(domain.snapshot().contributions[0]).toMatchObject({
       status: 'waiting',
-      reason: 'unsupported',
+      reason: 'wrong-execution',
     });
     await runtime.dispose();
   });

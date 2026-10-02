@@ -12,6 +12,7 @@ import type {
   ExtensionDefinition,
   ServiceDeclaration,
   ScriptDeclaration,
+  TransformDeclaration,
   ViewDeclaration,
 } from './types.js';
 
@@ -177,7 +178,7 @@ export function assertActionContribution(
     throw new TypeError(`${label}.handler must be a function`);
 }
 
-function assertSetup(value: unknown, kind: 'view' | 'script', label: string): void {
+function assertSetup(value: unknown, kind: 'view' | 'script' | 'transform', label: string): void {
   assertRecord(value, label);
   assertKeys(value, ['kind', 'id', 'execution', 'requires', 'setup'], label);
   assertContribution(value, kind, label);
@@ -191,6 +192,13 @@ export function assertView(value: unknown, label: string): asserts value is View
 
 export function assertScript(value: unknown, label: string): asserts value is ScriptDeclaration {
   assertSetup(value, 'script', label);
+}
+
+export function assertTransform(
+  value: unknown,
+  label: string,
+): asserts value is TransformDeclaration {
+  assertSetup(value, 'transform', label);
 }
 
 export function assertExtension(

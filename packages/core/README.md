@@ -24,6 +24,7 @@ export const title = defineCapability({
 | `defineActionContract({ id, version, operation, routing? })` | `defineAction({ contract, id, execution, requires?, handler })`  | `actions`       |
 | Native JSON, state and renderer APIs                         | `defineView({ id, execution, requires?, setup })`                | `views`         |
 | Native script declarations and registration APIs             | `defineScript({ id, execution, requires?, setup })`              | `scripts`       |
+| Native Vite hooks and browser interception APIs              | `defineTransform({ id, execution, requires?, setup })`           | `transforms`    |
 | `defineContributionKind({ id, schema })`                     | `defineExtension({ descriptor, id, execution, payload })`        | `extensions`    |
 
 Each helper takes one object. Contracts preserve inference for handler input, result and named dependencies. `defineAction` now defines the handler; the former contract helper is named `defineActionContract`.
@@ -36,7 +37,7 @@ Definition creation does not run setup, handlers or schema validators. The provi
 
 `defineScript` uses the same setup contract, typed requirements and scope in `plugin.scripts`. `ScriptDeclaration` is the erased plugin boundary and `ScriptDefinition<Requirements>` preserves inference. Native Vite/WXT/Devframe configuration packages or serves code; setup registers the feature in its actual realm. Native timing, world and permission options stay in their native APIs. Cleanup does not undo executed page code or rewrite built HTML. [Decision and examples](../../docs/planning/011-portable-script-declaration.md).
 
-Transforms currently have only their agreed common declaration envelope. Their domain adapters own exact fields, validation and activation. `definePlugin` checks their common ID, kind and execution while preserving those domain fields. Duplicate admission, lifecycle, routing and schema execution belong to runtime/adapters, not this package.
+`defineTransform` declares native transformation setup in `plugin.transforms`. `TransformDeclaration` requires setup and requirements at the erased plugin boundary; `TransformDefinition<Requirements>` preserves the typed setup context. Setup returns `void` or `Promise<void>` and registers cleanup explicitly with `scope.onDispose`. The author uses native APIs for callbacks, stages, options and error behavior. Core transports none of those values and defines no common HTTP pipeline. Duplicate admission, lifecycle, routing and schema execution belong to runtime/adapters.
 
 Provider descriptors carry a stable configured `id` and a mandatory opaque `incarnation` issued once by the adapter for each backend lifetime. Client reconnects and updates within that lifetime keep the same incarnation. A newly created backend receives a fresh one.
 
@@ -52,7 +53,7 @@ pnpm --filter @devkit/core test
 
 `tests/core.type-test.ts` compiles against the implementation and checks negative declaration fixtures. `tests/requests.type-test.ts` adds 12 negative request fixtures, including dynamic operation/input correlation and rejection of the removed positional calls. `tests/routing.type-test.ts` adds seven negative selector/default fixtures. Runtime tests exercise inertness, shape validation, collection ownership and portable errors. These package checks do not establish provider or browser conformance.
 
-`tests/declarations.test.ts` additionally compiles seven accepted consumers and 27 isolated rejected consumers through the built `@devkit/core` package export. Run the build first. Strict TypeScript 7 checks operation/payload/result correlation, broadcast selection and outcomes, guard-only schema transforms, named requirements, view/script setup and local/remote native context access. Each rejected consumer must produce its expected single diagnostic, without `@ts-expect-error` or source aliases. This complements the existing packed-package checks; it does not claim every exported type member is covered.
+`tests/declarations.test.ts` additionally compiles eight accepted consumers and 32 isolated rejected consumers through the built `@devkit/core` package export. Run the build first. Strict TypeScript 7 checks operation/payload/result correlation, broadcast selection and outcomes, guard-only schema transforms, named requirements, view/script/transform setup and local/remote native context access. Transform consumers also reject returned resources, incomplete envelopes and pipeline options outside setup. Each rejected consumer must produce its expected single diagnostic, without `@ts-expect-error` or source aliases. This complements the existing packed-package checks; it does not claim every exported type member is covered.
 
 ## Invocation requests
 

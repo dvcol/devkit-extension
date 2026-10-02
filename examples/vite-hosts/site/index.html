@@ -1,16 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-native-transforms="">
   <head>
     <script>
       document.documentElement.dataset.firstScript = JSON.stringify({
         bootstrapReadyState: Reflect.get(globalThis, 'exampleHtmlBootstrap') ?? null,
         pageReadyState: document.readyState,
       });
+      document.documentElement.dataset.firstNativeTransforms = JSON.stringify(
+        document.documentElement.dataset.nativeTransforms.split(',').filter(Boolean),
+      );
       document.addEventListener(
         'DOMContentLoaded',
         () => {
           document.querySelector('#script-timing').textContent =
             document.documentElement.dataset.firstScript;
+          document.querySelector('#transform-order').textContent =
+            document.documentElement.dataset.firstNativeTransforms;
         },
         { once: true },
       );
@@ -34,6 +39,10 @@
     <section id="counter"></section>
     <p>
       First page-script observation: <output id="script-timing">Waiting for the document</output>
+    </p>
+    <p>
+      Native HTML transforms at the first page script:
+      <output id="transform-order">Waiting for the document</output>
     </p>
     <script type="module" src="./main.ts"></script>
   </body>

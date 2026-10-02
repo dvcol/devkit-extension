@@ -32,6 +32,27 @@ export const transformedAction = defineActionContract({
 
 export const acceptedConsumers = [
   {
+    name: 'transform setup requirements native context and explicit scope cleanup',
+    source: `
+import { definePlugin, defineTransform } from '@devkit/core';
+import type { TransformDeclaration, TransformDefinition } from '@devkit/core';
+import { capability, execution, nativeContext } from './contracts.js';
+
+export const transform: TransformDefinition<{ readonly records: typeof capability }> = defineTransform({
+  id: 'example.transform', execution, requires: { records: capability },
+  async setup({ services, native, scope }) {
+    (await services.records.api.read({ prefix: '' })) satisfies string;
+    native.get(nativeContext)?.title satisfies string | undefined;
+    scope.signal satisfies AbortSignal;
+    scope.onDispose(() => Promise.resolve());
+  },
+});
+export const declaration: TransformDeclaration = transform;
+export const plugin = definePlugin({ id: 'example.transform-plugin', transforms: [transform] });
+export const independent = defineTransform({ id: 'example.independent', execution, setup() {} });
+`,
+  },
+  {
     name: 'script setup requirements native context and explicit scope cleanup',
     source: `
 import { definePlugin, defineScript } from '@devkit/core';

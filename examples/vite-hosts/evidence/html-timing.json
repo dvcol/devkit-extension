@@ -41,6 +41,49 @@
           "diagnostics": []
         }
       },
+      "transforms": {
+        "independent": {
+          "initial": {
+            "receivedMarker": "data-native-transforms=\"first,second\"",
+            "firstPageScript": ["first", "second"]
+          },
+          "disabledFirst": {
+            "receivedMarker": "data-native-transforms=\"second\"",
+            "firstPageScript": ["second"]
+          },
+          "enabledFirst": {
+            "receivedMarker": "data-native-transforms=\"first,second\"",
+            "firstPageScript": ["first", "second"]
+          },
+          "disabledSecond": {
+            "receivedMarker": "data-native-transforms=\"first\"",
+            "firstPageScript": ["first"]
+          },
+          "enabledSecond": {
+            "receivedMarker": "data-native-transforms=\"first,second\"",
+            "firstPageScript": ["first", "second"]
+          }
+        },
+        "failure": {
+          "status": 500,
+          "recovered": {
+            "receivedMarker": "data-native-transforms=\"first,second\"",
+            "firstPageScript": ["first", "second"]
+          },
+          "contributionRemainsActive": true
+        },
+        "disposal": {
+          "disposedFirst": {
+            "receivedMarker": "data-native-transforms=\"second\"",
+            "firstPageScript": ["second"]
+          },
+          "disposedBoth": {
+            "receivedMarker": "data-native-transforms=\"\"",
+            "firstPageScript": []
+          },
+          "existingDocumentsRetainEffects": true
+        }
+      },
       "counter": {
         "authenticatedPages": 3,
         "nativeJsonActions": 7,
@@ -69,6 +112,7 @@
         "bootstrapReadyState": "loading",
         "pageReadyState": "loading"
       },
+      "transforms": ["first", "second"],
       "counter": {
         "authenticatedPages": 3,
         "nativeJsonActions": 7,
@@ -130,6 +174,49 @@
           "diagnostics": []
         }
       },
+      "transforms": {
+        "independent": {
+          "initial": {
+            "receivedMarker": "data-native-transforms=\"first,second\"",
+            "firstPageScript": ["first", "second"]
+          },
+          "disabledFirst": {
+            "receivedMarker": "data-native-transforms=\"second\"",
+            "firstPageScript": ["second"]
+          },
+          "enabledFirst": {
+            "receivedMarker": "data-native-transforms=\"first,second\"",
+            "firstPageScript": ["first", "second"]
+          },
+          "disabledSecond": {
+            "receivedMarker": "data-native-transforms=\"first\"",
+            "firstPageScript": ["first"]
+          },
+          "enabledSecond": {
+            "receivedMarker": "data-native-transforms=\"first,second\"",
+            "firstPageScript": ["first", "second"]
+          }
+        },
+        "failure": {
+          "status": 500,
+          "recovered": {
+            "receivedMarker": "data-native-transforms=\"first,second\"",
+            "firstPageScript": ["first", "second"]
+          },
+          "contributionRemainsActive": true
+        },
+        "disposal": {
+          "disposedFirst": {
+            "receivedMarker": "data-native-transforms=\"second\"",
+            "firstPageScript": ["second"]
+          },
+          "disposedBoth": {
+            "receivedMarker": "data-native-transforms=\"\"",
+            "firstPageScript": []
+          },
+          "existingDocumentsRetainEffects": true
+        }
+      },
       "counter": {
         "authenticatedPages": 3,
         "nativeJsonActions": 7,
@@ -158,6 +245,7 @@
         "bootstrapReadyState": "loading",
         "pageReadyState": "loading"
       },
+      "transforms": ["first", "second"],
       "counter": {
         "authenticatedPages": 3,
         "nativeJsonActions": 7,
@@ -202,7 +290,21 @@
   ],
   "checks": [
     "devframe: script contribution disable removes future HTML bootstrap and enable starts a fresh generation",
-    "devtools: script contribution disable removes future HTML bootstrap and enable starts a fresh generation"
+    "devtools: script contribution disable removes future HTML bootstrap and enable starts a fresh generation",
+    "devframe: native HTML transform hooks run pre then post despite reversed plugin configuration",
+    "devframe: disabling first HTML transform preserves second on received HTML and first page script",
+    "devframe: disabling second HTML transform preserves first on received HTML and first page script",
+    "devframe: HTML transform enable creates fresh activations and restores both native effects",
+    "devframe: disposed HTML transforms affect only future responses and preserve a surviving hook",
+    "devframe: native HTML transform failure returns HTTP 500 and next request recovers with the same provider",
+    "devframe: preview serves built HTML transform effects without executing live HTML hooks",
+    "devtools: native HTML transform hooks run pre then post despite reversed plugin configuration",
+    "devtools: disabling first HTML transform preserves second on received HTML and first page script",
+    "devtools: disabling second HTML transform preserves first on received HTML and first page script",
+    "devtools: HTML transform enable creates fresh activations and restores both native effects",
+    "devtools: disposed HTML transforms affect only future responses and preserve a surviving hook",
+    "devtools: native HTML transform failure returns HTTP 500 and next request recovers with the same provider",
+    "devtools: preview serves built HTML transform effects without executing live HTML hooks"
   ],
   "pageErrors": []
 }

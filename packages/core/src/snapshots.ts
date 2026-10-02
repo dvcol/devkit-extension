@@ -151,13 +151,3 @@ export function snapshotExtension<Extension extends ExtensionDefinition>(
     descriptor: snapshotKind(extension.descriptor),
   });
 }
-
-export function snapshotContribution<Contribution extends ContributionDeclaration>(
-  contribution: Contribution,
-): Contribution {
-  return Object.freeze({
-    ...contribution,
-    id: contribution.id,
-    execution: snapshotExecution(contribution.execution),
-  });
-}

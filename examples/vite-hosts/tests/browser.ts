@@ -10,6 +10,11 @@ import { build, createServer, preview } from 'vite';
 import type { PreviewServer, ViteDevServer } from 'vite';
 import { checkCounterPages, connectPage } from './browser-counter.ts';
 import { checkWatchedPreview } from './browser-watched.ts';
+import {
+  checkTransformLifecycle,
+  nativeTransformChecks,
+  pageNativeTransforms,
+} from './browser-transforms.ts';
 
 const configFile = fileURLToPath(new URL('../host.config.ts', import.meta.url));
 const artifacts = fileURLToPath(new URL('../artifacts/', import.meta.url));
@@ -39,6 +44,8 @@ const receipt = {
   checks: [
     'devframe: script contribution disable removes future HTML bootstrap and enable starts a fresh generation',
     'devtools: script contribution disable removes future HTML bootstrap and enable starts a fresh generation',
+    ...nativeTransformChecks('devframe'),
+    ...nativeTransformChecks('devtools'),
   ],
   pageErrors: errors,
 };
@@ -64,6 +71,8 @@ async function checkDevelopment(page: Page, second: Page, host: ExampleHost) {
   await connectPage(page, origin, provider.provider);
   const snapshot = await firstScript(page);
   const script = await checkScriptLifecycle({ page, origin, provider });
+  const transforms = await checkTransformLifecycle({ page, origin, provider });
+  assert.deepEqual((await providerFromVite(server)).provider, provider.provider);
   const counter = await checkCounterPages({
     first: page,
     second,
@@ -71,7 +80,15 @@ async function checkDevelopment(page: Page, second: Page, host: ExampleHost) {
     provider,
     close: () => captureAndClose(page, `${host}-development`, server),
   });
-  return { host, mode: 'development', providerId: provider.provider.id, snapshot, script, counter };
+  return {
+    host,
+    mode: 'development',
+    providerId: provider.provider.id,
+    snapshot,
+    script,
+    transforms,
+    counter,
+  };
 }
 
 async function checkScriptLifecycle({
@@ -111,6 +128,46 @@ async function checkPreview(page: Page, second: Page, host: ExampleHost) {
   /** The same assets must work with either live preview backend after an independent build. */
   await build({ configFile, mode: 'devframe', logLevel: 'silent', build: { outDir: output } });
   const builtHtml = await readFile(`${output}/index.html`, 'utf8');
+  const { server, previewTransformCount } = await createObservedPreview(host, output);
+  lifetime.defer(() => server.close());
+  const provider = await providerFromVite(server);
+  assert.equal(provider.provider.id, `example.${host}-preview`);
+  const address = server.httpServer.address();
+  if (address === null || typeof address === 'string')
+    throw new Error('Preview server did not expose a TCP address');
+  const origin = `http://127.0.0.1:${address.port}`;
+  assert.equal(await (await fetch(origin)).text(), builtHtml);
+  await connectPage(page, origin, provider.provider);
+  const snapshot = await firstScript(page);
+  const transforms = await pageNativeTransforms(page, ['first', 'second']);
+  assert.equal(
+    provider.startup.plugins.some((installation) =>
+      installation
+        .snapshot()
+        .contributions.some((contribution) => contribution.kind === 'transform'),
+    ),
+    false,
+  );
+  const counter = await checkCounterPages({
+    first: page,
+    second,
+    origin,
+    provider,
+    close: () => captureAndClose(page, `${host}-preview`, server),
+  });
+  assert.equal(previewTransformCount(), 0);
+  return {
+    host,
+    mode: 'build-preview',
+    providerId: provider.provider.id,
+    snapshot,
+    transforms,
+    counter,
+    previewTransforms: previewTransformCount(),
+  };
+}
+
+async function createObservedPreview(host: ExampleHost, output: string) {
   let previewTransforms = 0;
   const server = await preview({
     configFile,
@@ -127,32 +184,7 @@ async function checkPreview(page: Page, second: Page, host: ExampleHost) {
       },
     ],
   });
-  lifetime.defer(() => server.close());
-  const provider = await providerFromVite(server);
-  assert.equal(provider.provider.id, `example.${host}-preview`);
-  const address = server.httpServer.address();
-  if (address === null || typeof address === 'string')
-    throw new Error('Preview server did not expose a TCP address');
-  const origin = `http://127.0.0.1:${address.port}`;
-  assert.equal(await (await fetch(origin)).text(), builtHtml);
-  await connectPage(page, origin, provider.provider);
-  const snapshot = await firstScript(page);
-  const counter = await checkCounterPages({
-    first: page,
-    second,
-    origin,
-    provider,
-    close: () => captureAndClose(page, `${host}-preview`, server),
-  });
-  assert.equal(previewTransforms, 0);
-  return {
-    host,
-    mode: 'build-preview',
-    providerId: provider.provider.id,
-    snapshot,
-    counter,
-    previewTransforms,
-  };
+  return { server, previewTransformCount: () => previewTransforms };
 }
 
 async function firstScript(page: Page) {

@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-02",
+  "browser": "Codex in-app browser, Chrome 154",
+  "source": "manual live confirmation of actual Vite hosts and ordinary contribution handles",
+  "devframe": {
+    "providerId": "example.devframe-vite",
+    "incarnation": "0dbbe678-9f1c-4011-9465-b04b712c86ad",
+    "initial": ["first", "second"],
+    "existingDocumentAfterFirstDisabled": ["first", "second"],
+    "freshDocumentAfterFirstDisabled": ["second"],
+    "freshDocumentAfterFirstEnabled": ["first", "second"],
+    "reenabledGeneration": 2,
+    "connectedAfterNativeAuthentication": true
+  },
+  "devtools": {
+    "providerId": "example.devtools-vite",
+    "incarnation": "384ff69e-ae7a-4531-9831-414f895b4fb8",
+    "initial": ["first", "second"],
+    "existingDocumentAfterSecondDisabled": ["first", "second"],
+    "freshDocumentAfterSecondDisabled": ["first"],
+    "freshDocumentAfterSecondEnabled": ["first", "second"],
+    "reenabledGeneration": 2,
+    "connectedAfterNativeAuthentication": true
+  },
+  "limits": [
+    "This confirms the existing counter client and earliest page-script transform marker on both native Vite hosts; it does not prove the separate DevTools dock login. Its dock displayed Unauthorized.",
+    "Lifecycle operations used the actual provider installation handles through a temporary local runner. Automated received-byte, failure, disposal and build-preview assertions are recorded separately in html-timing.json.",
+    "No authentication code is retained. No native extension, HTTP body or cross-browser transform claim is made."
+  ]
+}

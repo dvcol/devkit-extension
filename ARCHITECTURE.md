@@ -51,7 +51,7 @@ Last-successful-build publication concerns asset availability. It does not resto
 | Service           | Capability descriptor plus execution assignment, requirements and setup recipe     | Constructs an owned implementation of exactly that contract                         |
 | Action            | Shared versioned descriptor plus a separate handler contribution                   | An invocable use case that can consume capabilities                                 |
 | View contribution | Execution assignment, requirements and setup recipe                                | Owns native publication and subscriptions through its activation scope              |
-| Transform         | Kind-specific transform definition                                                 | Owned interception or transformation behavior                                       |
+| Transform         | Execution assignment, requirements and native registration setup recipe            | Owns native transformation registration through its activation scope                |
 | Script            | Execution assignment, requirements and native registration setup recipe            | Owns registration through its activation scope; native tooling packages page code   |
 | Plugin            | Named lists of services, actions, views, transforms, scripts and custom extensions | Installed and controlled together, with independent contribution activation/failure |
 | Custom kind       | Imported kind descriptor, payload schema and explicitly installed kind handler     | Allows new kinds without arbitrary plugin fields or a closed core switch            |
@@ -72,6 +72,7 @@ Every declaration helper takes one object. Contracts can be imported by a UI wit
 | `defineAction`         | `{ contract, id, execution, requires?, handler }` | Implementation in `plugin.actions`         |
 | `defineView`           | `{ id, execution, requires?, setup }`             | Native setup recipe in `plugin.views`      |
 | `defineScript`         | `{ id, execution, requires?, setup }`             | Native setup recipe in `plugin.scripts`    |
+| `defineTransform`      | `{ id, execution, requires?, setup }`             | Native setup recipe in `plugin.transforms` |
 | `defineExtension`      | `{ descriptor, id, execution, payload }`          | Custom contribution in `plugin.extensions` |
 
 An operation describes one callable input/result pair. A capability names several operations; an action contract describes one invocable use case. “Contribution” remains the shared terminology and typing for owned additions. It does not require a generic `defineContribution` factory. `defineActionContract` replaces the former contract helper named `defineAction`; `defineAction` replaces `defineActionContribution`.
@@ -93,6 +94,14 @@ The owner accepted native declarations plus contribution setup on 2026-10-02, pr
 The declared execution owns registration, not necessarily the injected code's execution. A background recipe can register a native MAIN-world content script. The browser owns document matching, permissions, timing and world semantics. A server recipe can own whether an installed native Vite HTML hook contributes a script to future HTML responses. Native declaration/build configuration packages or serves executable code and remains separate from runtime activation.
 
 Devframe host-page imports, Vite application HTML transformation and browser content-script registration retain their actual stages. Unregistration does not undo effects in existing documents. Built HTML remains built HTML in preview; disabling a live backend does not rewrite it. No common declaration promises an unsupported timing or rollback guarantee. Arbitrary HTTP/response transform contracts remain issue #11 work.
+
+### Portable transform contributions
+
+`defineTransform({ id, execution, requires?, setup })` applies the accepted native setup pattern to `plugin.transforms`. Its typed `SetupContext<Requirements>`, activation scope and explicit cleanup match view/script recipes. Definitions remain inert; dependency loss, disable, retry and replacement use the existing contribution lifecycle. Returned resources are not adopted. [Implementation contract and native limits](./docs/planning/011-portable-transform-declaration.md).
+
+The recipe registers transformation through the actual native host or capability. Native APIs retain their stages, matching, ordering and failure behavior. The SDK adds no callback pipeline, priority model, response buffering, paused-request controller or cross-realm order guarantee. Capability implementations can compose handlers when their native mechanism needs a single resource owner.
+
+The Vite example installs two native HTML hooks in reversed configuration order and uses native `pre`/`post` processing. Contributions own whether those hooks act on future development responses. Independent builds use native configuration, and preview serves their completed output. Native response-transform capability implementations and the full permissions, frames, streaming and failure matrix remain issue #11 work.
 
 ## Dependency and execution diagrams
 
@@ -383,7 +392,7 @@ if (admission.status === 'admitted') {
 
 `createBrowserPageImplementation` is application/adapter code returning operations satisfying `pageCapability` and an asynchronous cleanup function. It resolves/authorizes target references through the browser adapter before native work. This is not a claim that a browser API accepts the generic target reference directly. A server implementation supplies a different recipe for the same contract and receives its actual native server contexts.
 
-Transforms retain their common envelope and an unsupported runtime outcome until their domain contract is implemented. Scripts use the native setup recipe described above. A script's registration recipe runs in its declared execution; packaged page code receives only its actual page/world APIs. A transform-only plugin will own its interception registration through its activation scope. Exact transform operations and remaining script-stage guarantees belong to [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
+Transforms and scripts use the native setup recipes described above. Registration runs in the declared execution; packaged page code receives only its actual page/world APIs. A transform-only plugin owns native registration through its activation scope, while its native host or capability owns the actual transformation. Exact response-transform operations and remaining script-stage guarantees belong to [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
 
 A custom kind uses `defineContributionKind({ id, schema })`, `defineExtension({ descriptor: kind, id, execution, payload })` and `plugin.extensions`. The host explicitly supplies a `ContributionKindInstaller` for that descriptor. Its `activate` receives the validated definition and owned local setup scope. An unknown kind is an admission error; no arbitrary plugin key is treated as an extension. The renderer needs no change merely because another non-UI kind exists.
 

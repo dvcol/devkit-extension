@@ -221,7 +221,7 @@
       ],
       "gaps": [
         "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Full surface placement, catalog compatibility, view-module HMR and every supported browser/preview failure case remain separate obligations.",
-        "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform declarations remain unsupported; their domain contract is separate work. Script registration now has its own native setup contract and evidence group."
+        "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform registration uses the same native setup contract; complete native transformation mechanisms and failure cases remain separate work. Script registration now has its own native setup contract and evidence group."
       ],
       "browserEvidence": [
         {
@@ -414,7 +414,7 @@
       ],
       "gaps": [
         "The common API owns native setup and cleanup. Full stage coverage, frame/CSP cases, permission failure, browser restart, dependency loss during real native registration and cleanup failure remain issue #11 obligations.",
-        "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP transforms remain unsupported and separate."
+        "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP response implementations remain separate native work."
       ],
       "browserEvidence": [
         {
@@ -453,6 +453,175 @@
           "mode": "production",
           "requirePageErrors": false
         }
+      ]
+    },
+    {
+      "id": "portable-transform-declaration-and-lifecycle",
+      "apis": [
+        "@devkit/core:PluginDefinition.transforms",
+        "@devkit/core:PluginInput.transforms",
+        "@devkit/core:TransformDeclaration",
+        "@devkit/core:TransformDeclaration.execution",
+        "@devkit/core:TransformDeclaration.execution.id",
+        "@devkit/core:TransformDeclaration.id",
+        "@devkit/core:TransformDeclaration.kind",
+        "@devkit/core:TransformDeclaration.requires",
+        "@devkit/core:TransformDeclaration.setup",
+        "@devkit/core:TransformDefinition",
+        "@devkit/core:TransformDefinition.execution",
+        "@devkit/core:TransformDefinition.execution.id",
+        "@devkit/core:TransformDefinition.id",
+        "@devkit/core:TransformDefinition.kind",
+        "@devkit/core:TransformDefinition.requires",
+        "@devkit/core:TransformDefinition.setup",
+        "@devkit/core:defineTransform"
+      ],
+      "examples": [
+        "examples/vite-hosts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/transforms.test.ts",
+          "fullName": "transform definitions keeps setup inert and snapshots structural requirements without freezing author code",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/transforms.test.ts",
+          "fullName": "transform definitions rejects missing setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/transforms.test.ts",
+          "fullName": "transform definitions rejects non-callable setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/transforms.test.ts",
+          "fullName": "transform definitions rejects undefined requirements before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/transforms.test.ts",
+          "fullName": "transform definitions rejects native callback outside setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/transforms.test.ts",
+          "fullName": "transform definitions rejects common pipeline order before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/transforms.test.ts",
+          "fullName": "transform definitions rejects an incomplete structural transform in a plugin",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts transform setup requirements native context and explicit scope cleanup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an undeclared requirement in transform setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a wrong capability payload in transform setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a resource returned from typed transform setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a transform envelope without requirements and setup in a plugin",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects native transform options outside setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-transforms.test.ts",
+          "fullName": "provider transform lifecycle binds required services and native context only while active and releases before its service",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-transforms.test.ts",
+          "fullName": "provider transform lifecycle cleans failed setup, requires explicit retry and owns only cleanup registered with its scope",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-transforms.test.ts",
+          "fullName": "provider transform lifecycle retains the replacement barrier while native cleanup is pending and after it fails",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/browser-transforms.ts",
+          "receiptFile": "artifacts/html-timing.json",
+          "checks": [
+            "devframe: native HTML transform hooks run pre then post despite reversed plugin configuration",
+            "devframe: disabling first HTML transform preserves second on received HTML and first page script",
+            "devframe: disabling second HTML transform preserves first on received HTML and first page script",
+            "devframe: HTML transform enable creates fresh activations and restores both native effects",
+            "devframe: disposed HTML transforms affect only future responses and preserve a surviving hook",
+            "devframe: native HTML transform failure returns HTTP 500 and next request recovers with the same provider",
+            "devframe: preview serves built HTML transform effects without executing live HTML hooks",
+            "devtools: native HTML transform hooks run pre then post despite reversed plugin configuration",
+            "devtools: disabling first HTML transform preserves second on received HTML and first page script",
+            "devtools: disabling second HTML transform preserves first on received HTML and first page script",
+            "devtools: HTML transform enable creates fresh activations and restores both native effects",
+            "devtools: disposed HTML transforms affect only future responses and preserve a surviving hook",
+            "devtools: native HTML transform failure returns HTTP 500 and next request recovers with the same provider",
+            "devtools: preview serves built HTML transform effects without executing live HTML hooks"
+          ],
+          "host": "native-devframe-and-devtools-chromium",
+          "mode": "development-and-build-preview",
+          "requirePageErrors": true
+        }
+      ],
+      "gaps": [
+        "The common API owns native registration and cleanup. The bounded Vite example proves native HTML order, independent lifecycle, native request failure/recovery and completed preview output; browser-native header/redirect and body recipes remain unimplemented.",
+        "Firefox server execution, frames/CSP, permissions, native setup/cleanup failures, in-flight disposal, response encoding/streaming and every supported host/mode still require exact native evidence. Native mechanisms retain their own order and failure behavior; no common HTTP pipeline is claimed."
       ]
     },
     {
@@ -1067,13 +1236,11 @@
         "@devkit/core:PluginDefinition.id",
         "@devkit/core:PluginDefinition.kind",
         "@devkit/core:PluginDefinition.services",
-        "@devkit/core:PluginDefinition.transforms",
         "@devkit/core:PluginInput",
         "@devkit/core:PluginInput.actions",
         "@devkit/core:PluginInput.extensions",
         "@devkit/core:PluginInput.id",
         "@devkit/core:PluginInput.services",
-        "@devkit/core:PluginInput.transforms",
         "@devkit/core:ProviderCatalog",
         "@devkit/core:ProviderCatalog.snapshot",
         "@devkit/core:ProviderCatalog.subscribe",
@@ -2120,7 +2287,7 @@
         {
           "workspace": "packages/runtime",
           "testFile": "tests/provider-contracts.test.ts",
-          "fullName": "provider admission and invocation contracts reports exact-version mismatch, wrong execution and unsupported domain kinds",
+          "fullName": "provider admission and invocation contracts reports exact-version mismatch and wrong execution without running foreign transform setup",
           "host": "node",
           "mode": "unit"
         },
