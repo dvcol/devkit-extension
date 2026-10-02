@@ -7,13 +7,12 @@ export default defineConfig(({ mode }) => {
   const firefox = mode === 'firefox';
   const storageKey = process.env.VITE_COUNTER_STORAGE_KEY ?? '';
   const directory = firefox ? 'dist/firefox' : 'dist/chromium';
-  const outDir = resolve(
-    import.meta.dirname,
-    storageKey === '' ? directory : `${directory}-persistent`,
-  );
+  const outDir = resolve(import.meta.dirname, directory + (storageKey === '' ? '' : '-persistent'));
   return {
     root: resolve(import.meta.dirname, 'entrypoints'),
     base: './',
+    /** Keep one native publisher/index owner across the workspace's peer dependency graphs. */
+    resolve: { dedupe: ['@devframes/json-render'] },
     define: {
       'import.meta.env.VITE_COUNTER_STORAGE_KEY': JSON.stringify(storageKey),
     },

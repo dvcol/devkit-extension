@@ -37,9 +37,12 @@ it.each([
 ])(
   'bundles native RPC and rendering for $browser',
   async ({ mode, background, browserSettings }) => {
-    expect.assertions(7);
+    expect.assertions(8);
     const { modules, imports, files, manifest, timingScript } = await inspectBundle(mode);
     expect(modules.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
+    expect(
+      modules.filter((id) => id.endsWith('@devframes/json-render/dist/view.mjs')),
+    ).toHaveLength(1);
     expect(imports.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
     expect(files).toEqual(
       expect.arrayContaining([

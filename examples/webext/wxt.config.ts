@@ -10,6 +10,8 @@ export default defineConfig({
   manifestVersion: 3,
   manifest: ({ browser }) => createManifest(browser === 'firefox'),
   vite: ({ browser }) => ({
+    /** Keep one native publisher/index owner across the workspace's peer dependency graphs. */
+    resolve: { dedupe: ['@devframes/json-render'] },
     /** Concurrent browser servers must not overwrite each other's optimized modules. */
     cacheDir: resolve(import.meta.dirname, '.wxt', 'vite', browser),
     define: {
