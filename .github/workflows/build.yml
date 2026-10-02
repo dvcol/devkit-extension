@@ -121,12 +121,11 @@ jobs:
             examples/json-render/artifacts/*.json
             examples/vite-hosts/artifacts/*.json
             examples/vite-hosts/artifacts/*.png
-            examples/webext/artifacts/receipt.json
-            examples/webext/artifacts/firefox/receipt.json
-            examples/webext/artifacts/json-actions.json
-            examples/webext/artifacts/json-views.json
-            examples/webext/artifacts/worker-recovery.json
-            examples/webext/artifacts/worker-recovery.png
+            examples/webext/artifacts/*.json
+            examples/webext/artifacts/*.png
+            examples/webext/artifacts/firefox/*.json
+            examples/webext/artifacts/firefox/*.png
+            examples/webext/artifacts/trust/*.json
             examples/webext/artifacts/persistence/*.json
             examples/webext/artifacts/persistence/*.png
             examples/webext/artifacts/*-development/*.json
