@@ -1,0 +1,553 @@
+{
+  "passed": true,
+  "extensionId": "devkit-native-port@example.invalid",
+  "origin": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d",
+  "storageKey": "example.persisted-counter",
+  "artifactHash": "40353d1bf35133e0fd074588722e6b7051d5e66c97e3d3c7402c14591f3c40e7",
+  "samples": [
+    {
+      "bytes": 32768,
+      "filler": {
+        "writes": 41,
+        "rejected": {
+          "key": "example.persisted-counter.quota.40",
+          "accepted": false,
+          "message": "QuotaExceededError: storage.local API call exceeded its quota limitations.",
+          "name": "Error"
+        }
+      },
+      "previousSaved": {
+        "value": 9
+      },
+      "attempt": {
+        "independent": {
+          "value": 44
+        },
+        "liveValue": 10,
+        "failed": false,
+        "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 10",
+        "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 10",
+        "saved": {
+          "value": 10
+        }
+      },
+      "nativeQuota": {
+        "diagnostics": [],
+        "preference": {
+          "defaultValue": -1,
+          "hasUserValue": true,
+          "value": 2048
+        },
+        "principal": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d^userContextId=4294967295",
+        "quota": {
+          "limit": 2097152,
+          "usage": 2080368
+        },
+        "userContextId": 4294967295
+      }
+    },
+    {
+      "bytes": 8192,
+      "filler": {
+        "writes": 1,
+        "rejected": {
+          "key": "example.persisted-counter.quota.41",
+          "accepted": false,
+          "message": "An unexpected error occurred",
+          "name": "Error"
+        }
+      },
+      "previousSaved": {
+        "value": 10
+      },
+      "attempt": {
+        "independent": {
+          "value": 44
+        },
+        "liveValue": 11,
+        "failed": false,
+        "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 11",
+        "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 11",
+        "saved": {
+          "value": 11
+        }
+      },
+      "nativeQuota": {
+        "diagnostics": [
+          {
+            "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+            "sourceName": ""
+          }
+        ],
+        "preference": {
+          "defaultValue": -1,
+          "hasUserValue": true,
+          "value": 2048
+        },
+        "principal": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d^userContextId=4294967295",
+        "quota": {
+          "limit": 2097152,
+          "usage": 1380408
+        },
+        "userContextId": 4294967295
+      }
+    },
+    {
+      "bytes": 2048,
+      "filler": {
+        "writes": 34,
+        "rejected": {
+          "key": "example.persisted-counter.quota.75",
+          "accepted": false,
+          "message": "QuotaExceededError: storage.local API call exceeded its quota limitations.",
+          "name": "Error"
+        }
+      },
+      "previousSaved": {
+        "value": 11
+      },
+      "attempt": {
+        "independent": {
+          "value": 44
+        },
+        "liveValue": 12,
+        "failed": true,
+        "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+        "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+        "saved": {
+          "value": 11
+        }
+      },
+      "nativeQuota": {
+        "diagnostics": [
+          {
+            "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+            "sourceName": ""
+          }
+        ],
+        "preference": {
+          "defaultValue": -1,
+          "hasUserValue": true,
+          "value": 2048
+        },
+        "principal": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d^userContextId=4294967295",
+        "quota": {
+          "limit": 2097152,
+          "usage": 2076712
+        },
+        "userContextId": 4294967295
+      }
+    }
+  ],
+  "checks": [
+    "real native reduced quota rejects the rendered counter save while both live peers advance and both status views expose QuotaExceededError",
+    "the previous saved counter and an independent key remain unchanged after rejected writes",
+    "removing only accepted test filler keys lowers actual native estimated usage",
+    "the first explicit post-removal action fails visibly while a second explicit action saves with unchanged provider and client identities",
+    "public native extension reload closes old panels; fresh panels restore the confirmed counter and their next explicit action saves",
+    "the owned Firefox process exits and its disposable profile is removed"
+  ],
+  "limitations": [
+    "The disposable profile explicitly reduces native temporary-storage quota to 2 MiB; default-size quotas are not measured",
+    "This acceptance asserts the reproduced Firefox 157.0 sequence; native behavior in other versions may differ and is not an SDK retry policy",
+    "Every counter action is explicitly clicked; no automatic retry, rollback, storage API replacement or SDK recovery mechanism is added",
+    "The fixture is a native temporary add-on; permanent installation, interrupted physical I/O and browser-crash recovery are not exercised",
+    "Native quota diagnostics are captured; WebDriver Classic does not provide global page-error capture here"
+  ],
+  "browser": "157.0",
+  "processId": 42516,
+  "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-native-idle-xYjyp7",
+  "sessionId": "4ec55097-24a3-4ce6-b3f2-25c2ad7413f1",
+  "before": {
+    "diagnostics": [],
+    "preference": {
+      "defaultValue": -1,
+      "hasUserValue": true,
+      "value": 2048
+    },
+    "principal": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d^userContextId=4294967295",
+    "quota": {
+      "limit": 2097152,
+      "usage": 98624
+    },
+    "userContextId": 4294967295
+  },
+  "confirmedBefore": {
+    "value": 9
+  },
+  "pressure": {
+    "bytes": 2048,
+    "filler": {
+      "writes": 34,
+      "rejected": {
+        "key": "example.persisted-counter.quota.75",
+        "accepted": false,
+        "message": "QuotaExceededError: storage.local API call exceeded its quota limitations.",
+        "name": "Error"
+      }
+    },
+    "previousSaved": {
+      "value": 11
+    },
+    "attempt": {
+      "independent": {
+        "value": 44
+      },
+      "liveValue": 12,
+      "failed": true,
+      "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+      "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+      "saved": {
+        "value": 11
+      }
+    },
+    "nativeQuota": {
+      "diagnostics": [
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        }
+      ],
+      "preference": {
+        "defaultValue": -1,
+        "hasUserValue": true,
+        "value": 2048
+      },
+      "principal": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d^userContextId=4294967295",
+      "quota": {
+        "limit": 2097152,
+        "usage": 2076712
+      },
+      "userContextId": 4294967295
+    },
+    "identities": [
+      {
+        "handle": "16fe4ab7-bf41-4049-91d1-74b5c5b5e46a",
+        "timeOrigin": 1790932845239,
+        "caller": {
+          "id": 0,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      },
+      {
+        "handle": "9b36bd0b-1abe-4f73-a04d-da34becd76aa",
+        "timeOrigin": 1790932845622,
+        "caller": {
+          "id": 1,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      }
+    ]
+  },
+  "quotaFailureProved": true,
+  "relief": {
+    "fillerRemoved": true,
+    "afterRemoval": {
+      "diagnostics": [
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        }
+      ],
+      "preference": {
+        "defaultValue": -1,
+        "hasUserValue": true,
+        "value": 2048
+      },
+      "principal": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d^userContextId=4294967295",
+      "quota": {
+        "limit": 2097152,
+        "usage": 49152
+      },
+      "userContextId": 4294967295
+    },
+    "explicitNext": {
+      "independent": {
+        "value": 44
+      },
+      "liveValue": 13,
+      "failed": true,
+      "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 13: An unexpected error occurred",
+      "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 13: An unexpected error occurred",
+      "saved": {
+        "value": 11
+      }
+    },
+    "identities": [
+      {
+        "handle": "16fe4ab7-bf41-4049-91d1-74b5c5b5e46a",
+        "timeOrigin": 1790932845239,
+        "caller": {
+          "id": 0,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      },
+      {
+        "handle": "9b36bd0b-1abe-4f73-a04d-da34becd76aa",
+        "timeOrigin": 1790932845622,
+        "caller": {
+          "id": 1,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      }
+    ],
+    "identitiesAfter": [
+      {
+        "handle": "16fe4ab7-bf41-4049-91d1-74b5c5b5e46a",
+        "timeOrigin": 1790932845239,
+        "caller": {
+          "id": 0,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      },
+      {
+        "handle": "9b36bd0b-1abe-4f73-a04d-da34becd76aa",
+        "timeOrigin": 1790932845622,
+        "caller": {
+          "id": 1,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      }
+    ],
+    "nativeQuota": {
+      "diagnostics": [
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        },
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        }
+      ],
+      "preference": {
+        "defaultValue": -1,
+        "hasUserValue": true,
+        "value": 2048
+      },
+      "principal": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d^userContextId=4294967295",
+      "quota": {
+        "limit": 2097152,
+        "usage": 49152
+      },
+      "userContextId": 4294967295
+    }
+  },
+  "immediateReliefPassed": false,
+  "recovery": {
+    "independent": {
+      "value": 44
+    },
+    "liveValue": 14,
+    "failed": false,
+    "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 14",
+    "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 14",
+    "saved": {
+      "value": 14
+    },
+    "identities": [
+      {
+        "handle": "16fe4ab7-bf41-4049-91d1-74b5c5b5e46a",
+        "timeOrigin": 1790932845239,
+        "caller": {
+          "id": 0,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      },
+      {
+        "handle": "9b36bd0b-1abe-4f73-a04d-da34becd76aa",
+        "timeOrigin": 1790932845622,
+        "caller": {
+          "id": 1,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      }
+    ],
+    "identitiesAfter": [
+      {
+        "handle": "16fe4ab7-bf41-4049-91d1-74b5c5b5e46a",
+        "timeOrigin": 1790932845239,
+        "caller": {
+          "id": 0,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      },
+      {
+        "handle": "9b36bd0b-1abe-4f73-a04d-da34becd76aa",
+        "timeOrigin": 1790932845622,
+        "caller": {
+          "id": 1,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      }
+    ],
+    "nativeQuota": {
+      "diagnostics": [
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        },
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        }
+      ],
+      "preference": {
+        "defaultValue": -1,
+        "hasUserValue": true,
+        "value": 2048
+      },
+      "principal": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d^userContextId=4294967295",
+      "quota": {
+        "limit": 2097152,
+        "usage": 53304
+      },
+      "userContextId": 4294967295
+    }
+  },
+  "replacement": {
+    "lifecycle": "chrome.runtime.reload()",
+    "restored": {
+      "value": 14
+    },
+    "next": {
+      "independent": {
+        "value": 44
+      },
+      "liveValue": 15,
+      "failed": false,
+      "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 15",
+      "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 15",
+      "saved": {
+        "value": 15
+      }
+    },
+    "identities": [
+      {
+        "handle": "ad254b67-9014-43c2-bf67-84b9a137af49",
+        "timeOrigin": 1790932848595,
+        "caller": {
+          "id": 0,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "5ac4fe91-0f41-4248-a09d-006bfee9928b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      },
+      {
+        "handle": "c00cd4ae-4eef-4e15-bd88-ed9111b77ef0",
+        "timeOrigin": 1790932848909,
+        "caller": {
+          "id": 1,
+          "url": "moz-extension://7ef1052e-3c8c-4c32-aaee-abc2efb20c9d/panel.html"
+        },
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "5ac4fe91-0f41-4248-a09d-006bfee9928b",
+          "realm": {
+            "id": "webext"
+          }
+        }
+      }
+    ],
+    "providerBefore": {
+      "id": "example.extension",
+      "incarnation": "9de729a0-72f8-4975-b103-79df77b86f4b",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "providerAfter": {
+      "id": "example.extension",
+      "incarnation": "5ac4fe91-0f41-4248-a09d-006bfee9928b",
+      "realm": {
+        "id": "webext"
+      }
+    }
+  },
+  "artifactHashAfter": "40353d1bf35133e0fd074588722e6b7051d5e66c97e3d3c7402c14591f3c40e7",
+  "bounds": {
+    "maximumAttempts": 256,
+    "maximumAttemptedBytes": 8388608,
+    "fillerAttempts": 76,
+    "attemptedBytes": 1421312,
+    "acceptedFillerKeys": 73,
+    "pressureCounterAttempts": 3
+  },
+  "processExited": true,
+  "profileRemoved": true
+}

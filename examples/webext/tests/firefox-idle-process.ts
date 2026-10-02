@@ -6,7 +6,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
 
-export async function startSession(extensionUuid: string) {
+export async function startSession(
+  extensionUuid: string,
+  nativePreferences: Readonly<Record<string, string | number | boolean>> = {},
+) {
   const profile = await mkdtemp(join(tmpdir(), 'firefox-native-idle-'));
   const options = new Options().addArguments('-headless', '-profile', profile).setPreference(
     'extensions.webextensions.uuids',
@@ -14,6 +17,8 @@ export async function startSession(extensionUuid: string) {
       'devkit-native-port@example.invalid': extensionUuid,
     }),
   );
+  for (const [preferenceName, value] of Object.entries(nativePreferences))
+    options.setPreference(preferenceName, value);
   if (process.env.FIREFOX_BINARY !== undefined) options.setBinary(process.env.FIREFOX_BINARY);
   const service = new ServiceBuilder()
     .addArguments(

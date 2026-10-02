@@ -3937,7 +3937,7 @@
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
         "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet native Ports, and explicit fresh connections are linked. Navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
-        "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium/Firefox idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. It does not prove interrupted-write durability or Firefox quota behavior. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
+        "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium/Firefox idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. Reduced native Firefox quota now has exact visible-failure, retained-record, same-client explicit recovery and native-reload evidence. Default-size Firefox quota and interrupted-write durability remain unproved. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
       ],
       "browserEvidence": [
         {
@@ -4039,6 +4039,22 @@
           ],
           "host": "stable-firefox-webext",
           "mode": "production-extension-opt-in-storage-natural-event-page-idle-explicit-fresh-clients",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-quota.ts",
+          "receiptFile": "artifacts/persistence/firefox-quota.json",
+          "checks": [
+            "real native reduced quota rejects the rendered counter save while both live peers advance and both status views expose QuotaExceededError",
+            "the previous saved counter and an independent key remain unchanged after rejected writes",
+            "removing only accepted test filler keys lowers actual native estimated usage",
+            "the first explicit post-removal action fails visibly while a second explicit action saves with unchanged provider and client identities",
+            "public native extension reload closes old panels; fresh panels restore the confirmed counter and their next explicit action saves",
+            "the owned Firefox process exits and its disposable profile is removed"
+          ],
+          "host": "stable-firefox-webext",
+          "mode": "production-extension-opt-in-storage-reduced-native-quota-explicit-recovery",
           "requirePageErrors": false
         }
       ]

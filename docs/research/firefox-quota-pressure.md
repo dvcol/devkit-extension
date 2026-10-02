@@ -32,10 +32,29 @@ Only afterward, the test invoked public `chrome.runtime.reload()`. Old extension
 
 Mozilla's inspected source marks a database connection after [quota failure](https://searchfox.org/firefox-main/rev/084057e952e7dbf376f6c3765ad242aec3785dc6/dom/indexedDB/IDBTransaction.cpp#802), converts its next read/write transaction to [cleanup mode and clears the flag](https://searchfox.org/firefox-main/rev/084057e952e7dbf376f6c3765ad242aec3785dc6/dom/indexedDB/IDBDatabase.cpp#568), and [rejects record writes in that mode](https://searchfox.org/firefox-main/rev/084057e952e7dbf376f6c3765ad242aec3785dc6/dom/indexedDB/IDBObjectStore.cpp#918). The matching sequence suggests the panel's deletion used a different connection while the background's next write consumed its cleanup transaction. That attribution is an inference from source and observed outcomes, not direct instrumentation of Firefox's internal flag.
 
-The successful same-client action rules out a permanently unusable database in this observed case. These facts do not justify a new SDK retry or persistence policy. A complete native quota matrix, a portable maintained runner and interrupted/crash evidence remain separate work.
+The successful same-client action rules out a permanently unusable database in this observed case. These facts do not justify a new SDK retry or persistence policy. The maintained reduced-limit runner below now passes. Default-quota, interrupted-write and crash evidence remain separate work.
 
 ## Reproduction outline
 
 Build the existing Firefox example with `VITE_COUNTER_STORAGE_KEY=example.persisted-counter`, then launch that immutable artifact in an owned native Firefox profile with the reduced preference above. Confirm the native quota principal and saved value before adding pressure. Fill only test-owned keys within the stated bounds, invoke the existing rendered action after each rejected filler batch, and compare both live peers, both status views and actual `storage.local` records. Remove only accepted filler keys, verify the actual quota usage falls, and issue one explicit next action. Retain failure results instead of translating a successful runner exit into acceptance.
 
-The original command was `node /private/tmp/firefox-quota-pilot-fYg75o/pilot.mjs`; the follow-up was `node /private/tmp/firefox-quota-recovery-bzo47fe6/pilot.mjs`. These local investigation scripts are not maintained workspace commands. Promoting them requires a portable fixture and exact native failure/recovery assertions. WebDriver Classic does not provide global page-error capture here. This experiment establishes neither interrupted physical I/O nor browser-crash recovery.
+The original command was `node /private/tmp/firefox-quota-pilot-fYg75o/pilot.mjs`; the follow-up was `node /private/tmp/firefox-quota-recovery-bzo47fe6/pilot.mjs`. These original investigation scripts are historical evidence. The maintained command below now executes the bounded fixture with exact native failure/recovery assertions. WebDriver Classic does not provide global page-error capture here. This experiment establishes neither interrupted physical I/O nor browser-crash recovery.
+
+## Maintained native command
+
+The [quota runner](../../examples/webext/tests/firefox-quota.ts) reuses the existing native Firefox launcher, counter action and panel helpers. The launcher accepts a native preference record for this disposable test profile. Its existing default-idle path retains the unchanged 30,000 ms native timer and passes again.
+
+Build the opted-in fixture, then run the maintained test:
+
+```sh
+VITE_COUNTER_STORAGE_KEY=example.persisted-counter pnpm --filter @devkit/example-webext build
+VITE_COUNTER_STORAGE_KEY=example.persisted-counter pnpm --filter @devkit/example-webext exec node tests/firefox-quota.ts
+```
+
+Set `FIREFOX_BINARY` when the installed executable is outside the driver's search path. CI runs the same command on pinned Firefox 157.0 after the existing persistent build. No package script or production startup hook is required.
+
+The [maintained receipt](../../examples/webext/evidence/persistence/firefox-quota.json) records the actual 2 MiB native principal, the normalized filler rejection and the rendered counter failure separately. The same run proves live12/saved11, failed explicit13, successful explicit14 with unchanged callers, and native reload restoring14 before saving15. It preserves `immediateReliefPassed: false` while passing the expected native sequence. Both the bounded filler and the counter use actual `storage.local` APIs.
+
+The recorded artifact hash is `40353d1bf35133e0fd074588722e6b7051d5e66c97e3d3c7402c14591f3c40e7` before and after. The final run accepted 73 filler keys in 76 attempts and attempted 1,421,312 bytes, below its 256-attempt/8 MiB bounds. Process exit and removal of the disposable profile are asserted before a passing receipt is written. All four screenshots were inspected: [quota failure](../../examples/webext/evidence/persistence/firefox-quota-failure.png), [first post-relief failure](../../examples/webext/evidence/persistence/firefox-quota-relief-failure.png), [same-client recovery](../../examples/webext/evidence/persistence/firefox-quota-explicit-recovery.png), and [saved value after native reload](../../examples/webext/evidence/persistence/firefox-quota.png).
+
+The original failed investigation and its separate follow-up stay unchanged. The maintained receipt covers reduced quota and the recorded native Firefox sequence. It does not establish default-size quotas, permanent installation, interrupted physical I/O, crash recovery or global page-error capture.
