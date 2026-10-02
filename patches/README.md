@@ -36,6 +36,12 @@ The added browser module is generated from those upstream factories, with `devfr
 
 The maintained WebExtension tests exercise native subscriptions across two Port peers, state writes, disconnect isolation and rejection during initial fetch. The existing 48 native-server tests also pass with the patch, including auth, catalog synchronization, cancellation boundaries and connection isolation. The root patch remains private-workspace installation policy; published consumers do not receive it automatically.
 
+## Native inbound shared-state echo
+
+The `devframe@1.0.0` patch also suppresses a received server snapshot/patch's redundant echo while preserving ordinary client writes, nested user writes and writes to another key using the received synchronization ID. A delayed echo otherwise overwrites a deleted/recreated native state with its old value. The [source diagnosis and review candidate](../docs/research/native-state-echo.md) record the native boundary, exact regression and CI attribution limit.
+
+Both existing client factory entry files receive the same private receive-scope correction. No declarations, serializer, state-key format, renderer or SDK state engine change. The maintained native adapter tests first reproduce 6→5 on the previous installed package and pass with this correction. Remove it when an unpatched native release passes those public-API and affected browser checks. Upstream publication remains pending owner approval, and the workspace patch still does not automatically reach published consumers.
+
 ## Native JSON view and renderer exports
 
 The exact-version patches for `@devframes/json-render@1.0.0` and `@devframes/json-render-ui@1.0.0` backport [draft 411](https://github.com/devframes/devframe/pull/411) at `f6c36c33`. `@devframes/json-render/view` re-exports the existing view factory, preserving its registry and index identity with the node entry. Its declarations accept native shared state directly. Default custom-renderer declarations retain the full client context.

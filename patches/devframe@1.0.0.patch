@@ -46,7 +46,7 @@ index 8db367b73d7aabfa28a93cb8641ab3010f1b8650..eb945956c69c3f9c9fff1ee6917ddb8a
    };
    /** Streaming host scoped to this namespace. */
 diff --git a/dist/client/index.mjs b/dist/client/index.mjs
-index a26af04daee8a1d93897225fa8efa43b9b1efb32..42957be4e0723750019aa4ef905c7b2e978d3460 100644
+index a26af04daee8a1d93897225fa8efa43b9b1efb32..68095aa6b2e47de29041ab70093869aa9b4ab497 100644
 --- a/dist/client/index.mjs
 +++ b/dist/client/index.mjs
 @@ -481,31 +481,29 @@ function getDevframeConnection() {
@@ -125,7 +125,55 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..42957be4e0723750019aa4ef905c7b2e
  		} catch (error) {
  			errors.push(error);
  		}
-@@ -733,7 +730,7 @@ function createRpcSharedStateClientHost(rpc) {
+@@ -651,7 +648,18 @@ function createRpcSharedStateClientHost(rpc) {
+ 	const stateDisposers = /* @__PURE__ */ new Map();
+ 	const initialValues = /* @__PURE__ */ new Map();
+ 	const keyAddedListeners = /* @__PURE__ */ new Set();
++	/** Suppress the received change while preserving new writes from update listeners. */
++	let receivedServerChange;
+ 	const isStaticBackend = rpc.connectionMeta.backend === "static";
++	function applyServerChange(state, syncId, applyChange) {
++		const previousChange = receivedServerChange;
++		receivedServerChange = { state, syncId };
++		try {
++			applyChange();
++		} finally {
++			receivedServerChange = previousChange;
++		}
++	}
+ 	function mergeWithInitialValue(key, serverState) {
+ 		const initial = initialValues.get(key);
+ 		if (initial && typeof initial === "object" && !Array.isArray(initial) && typeof serverState === "object" && !Array.isArray(serverState)) return {
+@@ -666,7 +674,9 @@ function createRpcSharedStateClientHost(rpc) {
+ 		handler: (key, fullState, syncId) => {
+ 			const state = sharedState.get(key);
+ 			if (!state || state.syncIds.has(syncId)) return;
+-			state.mutate(() => mergeWithInitialValue(key, fullState), syncId);
++			applyServerChange(state, syncId, () => {
++				state.mutate(() => mergeWithInitialValue(key, fullState), syncId);
++			});
+ 		}
+ 	});
+ 	rpc.client.register({
+@@ -675,13 +685,15 @@ function createRpcSharedStateClientHost(rpc) {
+ 		handler: (key, patches, syncId) => {
+ 			const state = sharedState.get(key);
+ 			if (!state || state.syncIds.has(syncId)) return;
+-			state.patch(patches, syncId);
++			applyServerChange(state, syncId, () => {
++				state.patch(patches, syncId);
++			});
+ 		}
+ 	});
+ 	function registerSharedState(key, state) {
+ 		const offs = [];
+ 		offs.push(state.on("updated", (fullState, patches, syncId) => {
+-			if (isStaticBackend) return;
++			if (isStaticBackend || (receivedServerChange?.state === state && receivedServerChange.syncId === syncId)) return;
+ 			if (patches) rpc.callEvent("devframe:rpc:server-state:patch", key, patches, syncId);
+ 			else rpc.callEvent("devframe:rpc:server-state:set", key, fullState, syncId);
+ 		}));
+@@ -733,7 +745,7 @@ function createRpcSharedStateClientHost(rpc) {
  					return state;
  				}
  			}
@@ -134,7 +182,7 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..42957be4e0723750019aa4ef905c7b2e
  				if (!rpc.isTrusted) {
  					resolve(state);
  					let initialized = false;
-@@ -743,7 +740,7 @@ function createRpcSharedStateClientHost(rpc) {
+@@ -743,7 +755,7 @@ function createRpcSharedStateClientHost(rpc) {
  							initSharedState();
  						}
  					});
@@ -143,7 +191,7 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..42957be4e0723750019aa4ef905c7b2e
  			});
  		}
  	};
-@@ -1864,9 +1861,17 @@ async function getDevframeRpcClient(options = {}) {
+@@ -1864,9 +1876,17 @@ async function getDevframeRpcClient(options = {}) {
  		wsOptions: options.wsOptions
  	});
  	let authChannel;
@@ -162,7 +210,7 @@ index a26af04daee8a1d93897225fa8efa43b9b1efb32..42957be4e0723750019aa4ef905c7b2e
  	let bootstrapAuthPromise;
  	let bootstrapAuthSettled = false;
  	function gateOnBootstrapAuth(fn) {
-@@ -1910,21 +1915,13 @@ async function getDevframeRpcClient(options = {}) {
+@@ -1910,21 +1930,13 @@ async function getDevframeRpcClient(options = {}) {
  		ensureTrusted: mode.ensureTrusted,
  		requestTrust: mode.requestTrust,
  		requestTrustWithToken: async (token) => {
@@ -248,10 +296,10 @@ index 0000000000000000000000000000000000000000..e87bca08f32eed08db6839413bbe43fa
 \ No newline at end of file
 diff --git a/dist/rpc/shared-state.mjs b/dist/rpc/shared-state.mjs
 new file mode 100644
-index 0000000000000000000000000000000000000000..59c250a7496f0fabda81408d6af73db762072250
+index 0000000000000000000000000000000000000000..cda66f2c3f427144204d25dcc73763c74d5c7e1c
 --- /dev/null
 +++ b/dist/rpc/shared-state.mjs
-@@ -0,0 +1,779 @@
+@@ -0,0 +1,794 @@
 +import { createSharedState } from "devframe/utils/shared-state";
 +import { defineDiagnostics } from "devframe/utils/nostics";
 +//#region packages/devframe/src/events.ts
@@ -339,7 +387,18 @@ index 0000000000000000000000000000000000000000..59c250a7496f0fabda81408d6af73db7
 +	const stateDisposers = /* @__PURE__ */ new Map();
 +	const initialValues = /* @__PURE__ */ new Map();
 +	const keyAddedListeners = /* @__PURE__ */ new Set();
++	/** Suppress the received change while preserving new writes from update listeners. */
++	let receivedServerChange;
 +	const isStaticBackend = rpc.connectionMeta.backend === "static";
++	function applyServerChange(state, syncId, applyChange) {
++		const previousChange = receivedServerChange;
++		receivedServerChange = { state, syncId };
++		try {
++			applyChange();
++		} finally {
++			receivedServerChange = previousChange;
++		}
++	}
 +	function mergeWithInitialValue(key, serverState) {
 +		const initial = initialValues.get(key);
 +		if (initial && typeof initial === "object" && !Array.isArray(initial) && typeof serverState === "object" && !Array.isArray(serverState)) return {
@@ -354,7 +413,9 @@ index 0000000000000000000000000000000000000000..59c250a7496f0fabda81408d6af73db7
 +		handler: (key, fullState, syncId) => {
 +			const state = sharedState.get(key);
 +			if (!state || state.syncIds.has(syncId)) return;
-+			state.mutate(() => mergeWithInitialValue(key, fullState), syncId);
++			applyServerChange(state, syncId, () => {
++				state.mutate(() => mergeWithInitialValue(key, fullState), syncId);
++			});
 +		}
 +	});
 +	rpc.client.register({
@@ -363,13 +424,15 @@ index 0000000000000000000000000000000000000000..59c250a7496f0fabda81408d6af73db7
 +		handler: (key, patches, syncId) => {
 +			const state = sharedState.get(key);
 +			if (!state || state.syncIds.has(syncId)) return;
-+			state.patch(patches, syncId);
++			applyServerChange(state, syncId, () => {
++				state.patch(patches, syncId);
++			});
 +		}
 +	});
 +	function registerSharedState(key, state) {
 +		const offs = [];
 +		offs.push(state.on("updated", (fullState, patches, syncId) => {
-+			if (isStaticBackend) return;
++			if (isStaticBackend || (receivedServerChange?.state === state && receivedServerChange.syncId === syncId)) return;
 +			if (patches) rpc.callEvent("devframe:rpc:server-state:patch", key, patches, syncId);
 +			else rpc.callEvent("devframe:rpc:server-state:set", key, fullState, syncId);
 +		}));
@@ -1227,7 +1290,7 @@ index fdf74c88dedd9524ed5018350530193644f89717..81053a5ca782be1810cf43d8196412c4
  import { Buffer } from "node:buffer";
  import { IncomingMessage, Server } from "node:http";
 diff --git a/package.json b/package.json
-index 66be82db51896b0e7985b12d7c38ecb48d0928e1..4fea9c9807a56af4a5dab2632e9343e18bb6de90 100644
+index 66be82db51896b0e7985b12d7c38ecb48d0928e1..051e94248f6b315ddd290241b263739d08c25e76 100644
 --- a/package.json
 +++ b/package.json
 @@ -65,7 +65,8 @@
