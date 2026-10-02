@@ -1,0 +1,192 @@
+{
+  "browser": "157.0",
+  "checks": [
+    "native Firefox filters prefix the owned response bytes and leave unmatched bytes unchanged",
+    "disable removes future response admissions and enable registers a fresh activation",
+    "native HTTP redirection reports the StreamFilter error while unmatched redirected bytes and later responses remain correct",
+    "native output arrives before the input stream finishes, preserving split UTF-8 bytes",
+    "disposal removes future admissions while an admitted native stream completes normally"
+  ],
+  "observation": {
+    "checks": [
+      "native Firefox filters prefix the owned response bytes and leave unmatched bytes unchanged",
+      "disable removes future response admissions and enable registers a fresh activation",
+      "native HTTP redirection reports the StreamFilter error while unmatched redirected bytes and later responses remain correct",
+      "native output arrives before the input stream finishes, preserving split UTF-8 bytes",
+      "disposal removes future admissions while an admitted native stream completes normally"
+    ],
+    "original": {
+      "status": 200,
+      "text": "original-世界"
+    },
+    "transformed": {
+      "status": 200,
+      "text": "native:original-世界"
+    },
+    "unmatched": {
+      "status": 200,
+      "text": "original-世界"
+    },
+    "installed": {
+      "filteringMethodPresent": true,
+      "installation": {
+        "id": "example.response-body",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.response-body",
+            "kind": "transform",
+            "generation": 1,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "admitted": 0,
+      "chunks": 0,
+      "completed": 0,
+      "errors": []
+    },
+    "disabled": {
+      "filteringMethodPresent": true,
+      "installation": {
+        "id": "example.response-body",
+        "status": "inactive",
+        "contributions": [
+          {
+            "id": "example.response-body",
+            "kind": "transform",
+            "generation": 1,
+            "enabled": false,
+            "status": "disabled",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "admitted": 1,
+      "chunks": 1,
+      "completed": 1,
+      "errors": []
+    },
+    "enabled": {
+      "filteringMethodPresent": true,
+      "installation": {
+        "id": "example.response-body",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.response-body",
+            "kind": "transform",
+            "generation": 2,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "admitted": 1,
+      "chunks": 1,
+      "completed": 1,
+      "errors": []
+    },
+    "redirected": {
+      "status": 200,
+      "text": "original-世界"
+    },
+    "nativeError": {
+      "filteringMethodPresent": true,
+      "installation": {
+        "id": "example.response-body",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.response-body",
+            "kind": "transform",
+            "generation": 2,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "admitted": 3,
+      "chunks": 2,
+      "completed": 2,
+      "errors": ["Channel redirected"]
+    },
+    "firstBytes": {
+      "status": 200,
+      "text": "native:first-caf"
+    },
+    "disposed": {
+      "filteringMethodPresent": true,
+      "installation": {
+        "id": "example.response-body",
+        "status": "disposed",
+        "contributions": [
+          {
+            "id": "example.response-body",
+            "kind": "transform",
+            "generation": 2,
+            "enabled": false,
+            "status": "disposed",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "admitted": 5,
+      "chunks": 4,
+      "completed": 3,
+      "errors": ["Channel redirected"]
+    },
+    "completed": {
+      "error": null,
+      "text": "native:first-café-second-世界"
+    },
+    "final": {
+      "filteringMethodPresent": true,
+      "installation": {
+        "id": "example.response-body",
+        "status": "disposed",
+        "contributions": [
+          {
+            "id": "example.response-body",
+            "kind": "transform",
+            "generation": 2,
+            "enabled": false,
+            "status": "disposed",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "admitted": 5,
+      "chunks": 5,
+      "completed": 4,
+      "errors": ["Channel redirected"]
+    }
+  },
+  "permissions": {
+    "data_collection": [],
+    "origins": ["http://127.0.0.1/*"],
+    "permissions": [
+      "scripting",
+      "declarativeNetRequestWithHostAccess",
+      "webRequest",
+      "webRequestBlocking",
+      "webRequestFilterResponse",
+      "devtools"
+    ]
+  },
+  "providerRetained": true,
+  "limitations": [
+    "Running background only; idle wakeup is unproved",
+    "No global page-error capture through WebDriver Classic"
+  ]
+}

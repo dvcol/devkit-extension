@@ -64,6 +64,26 @@ export const unchangedNativeChannel: PortChannel = nativeChannel;
 
 const rejectedConsumers = [
   {
+    name: 'a numeric native Firefox response request id',
+    source: `
+import type { WebRequest } from 'webextension-polyfill';
+declare const requests: Pick<WebRequest.Static, 'filterResponseData'>;
+requests.filterResponseData(1);
+`,
+    diagnostic: "Argument of type 'number' is not assignable to parameter of type 'string'",
+    code: 'TS2345',
+  },
+  {
+    name: 'string output for a native Firefox response filter',
+    source: `
+import type { WebRequest } from 'webextension-polyfill';
+declare const response: WebRequest.StreamFilter;
+response.write('body');
+`,
+    diagnostic: "Argument of type 'string' is not assignable to parameter of type",
+    code: 'TS2345',
+  },
+  {
     name: 'a Port without disconnect events',
     source: `
 import type { RuntimePort } from '@devkit/webext';
@@ -117,6 +137,40 @@ export const channel: PortChannel = incompleteChannel;
     code: 'TS2741',
   },
 ];
+
+it('accepts native Firefox response declarations beside Chrome and WXT through built setup exports', async () => {
+  expect.assertions(2);
+  const result = await compileConsumer(`
+import { defineExecution, defineTransform } from '@devkit/core';
+import { browser } from '@wxt-dev/browser';
+import type { Browser } from '@wxt-dev/browser';
+import type { WebRequest } from 'webextension-polyfill';
+
+type FirefoxFiltering = Pick<WebRequest.Static, 'filterResponseData'>;
+function supportsFiltering(value: unknown): value is FirefoxFiltering {
+  return typeof value === 'object' && value !== null &&
+    'filterResponseData' in value && typeof value.filterResponseData === 'function';
+}
+export const contribution = defineTransform({
+  id: 'consumer.response',
+  execution: defineExecution({ id: 'background' }),
+  setup({ scope }) {
+    const requests = browser.webRequest;
+    if (!supportsFiltering(requests)) return;
+    const listener = (details: Browser.webRequest.OnBeforeRequestDetails) => {
+      const filter: WebRequest.StreamFilter = requests.filterResponseData(details.requestId);
+      filter.ondata = (event) => filter.write(event.data);
+      filter.onstop = () => filter.close();
+      return undefined;
+    };
+    requests.onBeforeRequest.addListener(listener, { urls: ['http://127.0.0.1/*'] }, ['blocking']);
+    scope.onDispose(() => requests.onBeforeRequest.removeListener(listener));
+  },
+});
+`);
+  expect(result.error).toBeUndefined();
+  expect({ status: result.status, output: result.output }).toEqual({ status: 0, output: '' });
+});
 
 for (const { name, source, diagnostic, code } of rejectedConsumers) {
   it(`rejects ${name} at the public declaration boundary`, async () => {

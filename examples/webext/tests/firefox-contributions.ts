@@ -1,3 +1,4 @@
+import { checkFirefoxResponseBody } from './firefox-response-body.ts';
 import type { Driver } from 'selenium-webdriver/firefox.js';
 import { checkFirefoxScriptTiming } from './firefox-script-timing.ts';
 import { checkFirefoxHeaderRules } from './firefox-header-rules.ts';
@@ -8,4 +9,5 @@ export async function checkFirefoxContributions(driver: Driver, artifactDirector
   await checkFirefoxScriptTiming(driver, artifactDirectory);
   await checkFirefoxHeaderRules(driver, artifactDirectory);
   await checkFirefoxRedirectRules(driver, artifactDirectory);
+  await checkFirefoxResponseBody(driver, artifactDirectory);
 }

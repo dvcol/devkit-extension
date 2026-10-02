@@ -440,6 +440,9 @@ importers:
       '@types/selenium-webdriver':
         specifier: 4.35.7
         version: 4.35.7
+      '@types/webextension-polyfill':
+        specifier: 0.12.6
+        version: 0.12.6
       '@wxt-dev/browser':
         specifier: 0.3.0
         version: 0.3.0(patch_hash=819d3a884a0033ec173cc6e8165f070d0922d58f997ea948460108a048ed7220)
@@ -1570,6 +1573,9 @@ packages:
 
   '@types/selenium-webdriver@4.35.7':
     resolution: {integrity: sha512-TVduvRhQrIdjPWEC6YJLxwZWegWLD3uDOsqMuWk2U9+TiXw6wAH9RlKEtuHO8kioZkJ5MWGC9pQDY0nXvgi0nA==}
+
+  '@types/webextension-polyfill@0.12.6':
+    resolution: {integrity: sha512-XTNQSGiQaipt1iocbpHSjYHd+Ujcya+K5H4H2uH7JwycReTFixoYqGWIKih2Ec072NuEW2lAyXRDYmlEx00+cw==}
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
@@ -4386,6 +4392,8 @@ snapshots:
     dependencies:
       '@types/node': 26.6.1
       '@types/ws': 8.18.1
+
+  '@types/webextension-polyfill@0.12.6': {}
 
   '@types/ws@8.18.1':
     dependencies:

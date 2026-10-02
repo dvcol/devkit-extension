@@ -264,3 +264,6 @@ onClick('#broadcast', () =>
     selection: [{ realm: realm.id }],
   }),
 );
+
+for (const operation of ['install', 'disable', 'enable', 'dispose', 'snapshot'] as const)
+  onClick(`#response-${operation}`, () => rpc.$call('example:response:control', operation));

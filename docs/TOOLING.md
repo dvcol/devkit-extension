@@ -44,6 +44,8 @@ The debugger example's embedded and authenticated-native test controllers each h
 
 The selected-page example has one inline `typescript/no-unsafe-type-assertion` exception at the browser read of `DevframeConnection`. Devframe exports that type but no runtime validator. The example checks the same envelope as its upstream external viewer, preserves native metadata for the native client, and keeps backend authentication separate. This exception does not claim complete metadata validation. Real Chromium checks cover absence, malformed envelopes, browser permission rejection and native authentication; the SDK adds no duplicate native metadata schema.
 
+The Firefox response-body recipe has one inline `unicorn/prefer-add-event-listener` exception at `StreamFilter.onerror`. The pinned public StreamFilter declarations omit the inherited `addEventListener` member, while the native `onerror` property is typed. The recipe uses that native property without copied declarations or a type assertion. Real Firefox redirect assertions exercise the handler; the rule remains enabled elsewhere.
+
 ## Preserved research evidence
 
 `docs/probes/**` and `docs/contracts/**` are preserved research artifacts, not maintained workspace packages. Their exact executed files have their own recorded validation and are excluded from the new lint and formatting gates. `docs/planning/**` retains historical review formatting. Canonical architecture and glossary documents, new maintained documentation, packages and examples use Oxfmt.

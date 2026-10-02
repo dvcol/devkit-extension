@@ -354,7 +354,27 @@ All four existing browser commands run this scenario: `test:browser`, `test:fire
 
 During validation, Chromium completed the header assertions but stalled in fixture teardown. Native browser preconnection had left an owned socket open without sending any requests. Both owned HTTP fixtures now call `closeAllConnections()` after initiating `server.close()`. [Two real TCP regression cases](./tests/loopback-fixture.test.ts) establish an accepted unused peer and bound teardown to one second; removing only that cleanup makes both cases fail. This affects test fixture cleanup only.
 
-This proves same-origin redirects on the granted loopback fixture. Cross-origin redirects, response-body streaming, permission revocation, native rule limits, other extensions and rule survival after abrupt background loss remain separate acceptance work. Native references: [Chrome redirect rules and evaluation](https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest) and [atomic native rule updates](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/updateSessionRules).
+This proves same-origin redirects on the granted loopback fixture. Cross-origin redirects, permission revocation, native rule limits, other extensions and rule survival after abrupt background loss remain separate acceptance work. The separate response-body recipe below uses Firefox's native stream filter. Native references: [Chrome redirect rules and evaluation](https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest) and [atomic native rule updates](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/updateSessionRules).
+
+## Native response-body streaming
+
+The background-owned [response contribution](./src/response-contribution.ts) uses the existing `defineTransform({ id, execution, setup })` lifecycle to register Firefox's native `webRequest.onBeforeRequest` listener. It matches only the owned loopback `/transform-response/*` XMLHTTPREQUEST fixture. Each admitted request receives a native `filterResponseData` stream. The recipe writes the fixed UTF-8 prefix `native:` on start, forwards each original byte chunk immediately and closes the filter on stop. It adds no decoder, whole-response buffer, HTTP pipeline or SDK response contract.
+
+The Firefox manifest declares `webRequest`, `webRequestBlocking` and `webRequestFilterResponse` in addition to its existing loopback host grant. The Chromium manifest retains its own native permissions. The example imports the already-used WXT browser API; `@types/webextension-polyfill@0.12.6` supplies only the missing native Firefox stream declarations. Bundle tests reject a runtime polyfill import and assert one native JSON publisher module.
+
+The native method is absent on Chromium. Installing this recipe there produces the existing contribution setup-failure diagnostic, admits no requests and leaves the original bytes unchanged. The snapshot's `filteringMethodPresent` flag checks method presence, not permission or target eligibility. Native permissions and filtering errors remain browser-owned.
+
+[Maintained assertions](./tests/response-body.ts) prove the following in both production and native WXT development:
+
+- Matching responses receive the prefix; unmatched responses retain their exact body.
+- Disable removes future admissions, and enable registers a fresh activation.
+- A real HTTP redirect replaces the filtered channel and reports `Channel redirected`; the unmatched destination and a later matching response retain their expected bytes. Native `StreamFilter.onerror` does not report network errors.
+- Output reaches the document while the server still holds the remaining input open. A UTF-8 code point split across input chunks remains intact in `native:first-café-second-世界`.
+- Disposal removes only the listener. An admitted stream finishes normally, while later requests receive their original bytes. The provider incarnation remains unchanged.
+
+All four existing browser commands run this scenario: `test:browser`, `test:firefox`, `test:dev:chromium` and `test:dev:firefox`. Each writes `response-body.json` in its existing artifact directory. [Four retained receipts](./evidence/response-body) record Chromium 153.0.8010.12 and Firefox 157.0. Chromium records zero fixture/extension page errors; Firefox's WebDriver Classic runner does not capture all uncaught page errors.
+
+This recipe installs its listener during contribution setup in a running background. It does not establish persistent event registration or wakeup after background idle. Compressed or other encoded bodies, fixed Content-Length responses, permission revocation, cancellation, background loss and broader frame/CSP cases remain separate acceptance work. Native references: [Firefox response filtering and permissions](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/filterResponseData) and [native filter error behavior](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/StreamFilter/onerror).
 
 ## Packaged script changes during development
 

@@ -64,6 +64,7 @@ export function createManifest(firefox: boolean): UserManifest {
     };
   return {
     ...manifest,
+    permissions: [...permissions, 'webRequest', 'webRequestBlocking', 'webRequestFilterResponse'],
     sidebar_action: {
       default_panel: 'panel.html',
       default_title: 'Devkit',

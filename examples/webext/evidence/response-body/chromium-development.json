@@ -1,0 +1,96 @@
+{
+  "browser": "153.0.8010.12",
+  "checks": [
+    "native Firefox response filtering is explicitly unavailable on Chromium and leaves received bytes unchanged"
+  ],
+  "original": {
+    "status": 200,
+    "text": "original-世界"
+  },
+  "rejected": {
+    "filteringMethodPresent": false,
+    "installation": {
+      "id": "example.response-body",
+      "status": "partial",
+      "contributions": [
+        {
+          "id": "example.response-body",
+          "kind": "transform",
+          "generation": 1,
+          "enabled": true,
+          "status": "failed",
+          "diagnostics": [
+            {
+              "code": "setup-failure",
+              "message": "Contribution setup failed",
+              "phase": "setup",
+              "severity": "error",
+              "providerId": "example.extension",
+              "pluginId": "example.response-body",
+              "contributionId": "example.response-body"
+            }
+          ]
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "setup-failure",
+          "message": "Contribution setup failed",
+          "phase": "setup",
+          "severity": "error",
+          "providerId": "example.extension",
+          "pluginId": "example.response-body",
+          "contributionId": "example.response-body"
+        }
+      ]
+    },
+    "admitted": 0,
+    "chunks": 0,
+    "completed": 0,
+    "errors": []
+  },
+  "disposed": {
+    "filteringMethodPresent": false,
+    "installation": {
+      "id": "example.response-body",
+      "status": "disposed",
+      "contributions": [
+        {
+          "id": "example.response-body",
+          "kind": "transform",
+          "generation": 1,
+          "enabled": false,
+          "status": "disposed",
+          "diagnostics": [
+            {
+              "code": "setup-failure",
+              "message": "Contribution setup failed",
+              "phase": "setup",
+              "severity": "error",
+              "providerId": "example.extension",
+              "pluginId": "example.response-body",
+              "contributionId": "example.response-body"
+            }
+          ]
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "setup-failure",
+          "message": "Contribution setup failed",
+          "phase": "setup",
+          "severity": "error",
+          "providerId": "example.extension",
+          "pluginId": "example.response-body",
+          "contributionId": "example.response-body"
+        }
+      ]
+    },
+    "admitted": 0,
+    "chunks": 0,
+    "completed": 0,
+    "errors": []
+  },
+  "providerRetained": true,
+  "pageErrors": []
+}

@@ -21,6 +21,13 @@ it.each([
     mode: 'firefox',
     background: { scripts: ['background.js'], type: 'module' },
     browserSettings: {
+      permissions: [
+        'scripting',
+        'declarativeNetRequestWithHostAccess',
+        'webRequest',
+        'webRequestBlocking',
+        'webRequestFilterResponse',
+      ],
       sidebar_action: {
         default_panel: 'panel.html',
         default_title: 'Devkit',
@@ -37,9 +44,10 @@ it.each([
 ])(
   'bundles native RPC and rendering for $browser',
   async ({ mode, background, browserSettings }) => {
-    expect.assertions(8);
+    expect.assertions(9);
     const { modules, imports, files, manifest, timingScript } = await inspectBundle(mode);
     expect(modules.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
+    expect(modules.filter((id) => id.includes('webextension-polyfill'))).toEqual([]);
     expect(
       modules.filter((id) => id.endsWith('@devframes/json-render/dist/view.mjs')),
     ).toHaveLength(1);
@@ -67,7 +75,6 @@ it.each([
       devtools_page: 'devtools.html',
       host_permissions: ['http://127.0.0.1/*'],
       optional_host_permissions: ['http://localhost/*'],
-      permissions: ['scripting', 'declarativeNetRequestWithHostAccess'],
       content_security_policy: {
         extension_pages:
           "script-src 'self'; object-src 'none'; connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:*",
