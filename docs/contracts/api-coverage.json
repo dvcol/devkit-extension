@@ -3758,7 +3758,7 @@
       ]
     },
     {
-      "id": "server-type-contracts-unmapped",
+      "id": "server-built-declaration-contracts",
       "apis": [
         "@devkit/server:DevToolsProviderOptions",
         "@devkit/server:DevframeProviderOptions",
@@ -3774,10 +3774,37 @@
       "examples": [
         "examples/server-contexts"
       ],
-      "evidence": [],
-      "gaps": [
-        "Native-context brand types, option/handle interfaces and client aliases have existing compiler fixtures; the inventory does not yet link an executed type-check receipt."
-      ]
+      "evidence": [
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public server declarations preserves the positive and negative contracts in provider.type-test.ts",
+          "host": "typescript-7-public-package-consumer",
+          "mode": "declaration-contract"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public server declarations preserves the positive and negative contracts in remote-client.type-test.ts",
+          "host": "typescript-7-public-package-consumer",
+          "mode": "declaration-contract"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public server declarations preserves the positive and negative contracts in native-context.type-test.ts",
+          "host": "typescript-7-public-package-consumer",
+          "mode": "declaration-contract"
+        },
+        {
+          "workspace": "packages/server",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public server declarations preserves the positive and negative contracts in connection-isolation.type-test.ts",
+          "host": "typescript-7-public-package-consumer",
+          "mode": "declaration-contract"
+        }
+      ],
+      "gaps": []
     },
     {
       "id": "webext-port-rpc-composition",

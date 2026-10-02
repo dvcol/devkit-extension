@@ -2,6 +2,8 @@
 
 Private Node adapter for starting portable services and plugins into an existing Devframe hub or Vite DevTools kit context. It delegates admission, activation, calls and cleanup to `@devkit/runtime`. The native host remains responsible for its RPC, shared state, HTTP server and reload lifecycle.
 
+`pnpm --filter @devkit/server test` also compiles the maintained declaration fixtures against built public exports with strict TypeScript 7. These checks preserve strict/relaxed installation returns, native context types, action inference, remote context boundaries and connection configuration, including rejected declarations. They validate the published types; the separate real-host and browser tests establish runtime behavior.
+
 ## Start a provider in a real native context
 
 This example uses public package imports. The embedding application supplies the actual context created by `createHubContext`, `createKitContext`, or an upstream host setup callback. Zod supplies the operation's Standard Schema validators; the SDK does not require Zod specifically.

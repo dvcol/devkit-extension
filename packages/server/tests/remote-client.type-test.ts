@@ -2,13 +2,18 @@ import type { DevframeRpcClient } from 'devframe/client';
 import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client';
 import { createClient } from '@devkit/client';
 import { createDevframeProviderConnection } from '../src/client/index.js';
+import type {
+  DevframeProviderConnection,
+  DevframeProviderConnectionOptions,
+} from '../src/client/index.js';
 import { counterCapability, incrementAction } from './fixtures.js';
 
 export async function remoteClientTypes(
   rpc: DevframeRpcClient,
   devtools: DevToolsRpcClient,
 ): Promise<void> {
-  const connection = await createDevframeProviderConnection({ rpc, providerId: 'example' });
+  const options: DevframeProviderConnectionOptions = { rpc, providerId: 'example' };
+  const connection: DevframeProviderConnection = await createDevframeProviderConnection(options);
   const nativeDevTools = await createDevframeProviderConnection({
     rpc: devtools,
     providerId: 'example',
