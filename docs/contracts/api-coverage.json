@@ -3003,6 +3003,57 @@
       ]
     },
     {
+      "id": "runtime-installation-result-declarations",
+      "apis": [
+        "@devkit/runtime:ProviderLifecycle",
+        "@devkit/runtime:StartupInstallationResult"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public runtime declarations preserves strict relaxed and configured installation result contracts",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        }
+      ],
+      "gaps": [
+        "Strict built-declaration evidence covers default/explicit strict, relaxed and boolean service/plugin install, replace and startup results. It does not establish every ProviderLifecycle member, native transport execution or host lifecycle; other options/metadata fields remain separately unmapped.",
+        "These fixtures resolve manifest-built exports under pinned TypeScript 7 with Bundler resolution and skipLibCheck false. Packed NodeNext consumers and other compiler/resolution versions remain separate evidence."
+      ]
+    },
+    {
+      "id": "runtime-native-context-declarations",
+      "apis": [
+        "@devkit/runtime:LocalInvocationContext",
+        "@devkit/runtime:LocalInvocationContext.native.get",
+        "@devkit/runtime:LocalInvocationRequest",
+        "@devkit/runtime:LocalInvocationRequest.context.native.get",
+        "@devkit/runtime:ProviderLifecycleOptions",
+        "@devkit/runtime:ProviderLifecycleOptions.native",
+        "@devkit/runtime:ProviderLifecycleOptions.native.get"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public runtime declarations preserves native context descriptor types and optional lookup results",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        }
+      ],
+      "gaps": [
+        "Strict built-declaration evidence covers native descriptor result inference and optional lookup through provider options, local invocation context and invocation requests. It does not establish actual native context availability, host permission checks, transport behavior or every option/context member; the other 26 runtime paths remain separately unmapped.",
+        "These fixtures resolve manifest-built exports under pinned TypeScript 7 with Bundler resolution and skipLibCheck false. Packed NodeNext consumers and other compiler/resolution versions remain separate evidence."
+      ]
+    },
+    {
       "id": "runtime-types-and-unmapped-fields",
       "apis": [
         "@devkit/runtime:Activation",
@@ -3017,29 +3068,20 @@
         "@devkit/runtime:Admission.reservation.actions",
         "@devkit/runtime:Admission.reservation.id",
         "@devkit/runtime:Admission.reservation.kind",
-        "@devkit/runtime:LocalInvocationContext",
         "@devkit/runtime:LocalInvocationContext.contributionId",
         "@devkit/runtime:LocalInvocationContext.execution",
         "@devkit/runtime:LocalInvocationContext.execution.id",
-        "@devkit/runtime:LocalInvocationContext.native.get",
         "@devkit/runtime:LocalInvocationContext.pluginId",
         "@devkit/runtime:LocalInvocationOptions",
-        "@devkit/runtime:LocalInvocationRequest",
         "@devkit/runtime:LocalInvocationRequest.context.contributionId",
         "@devkit/runtime:LocalInvocationRequest.context.execution",
         "@devkit/runtime:LocalInvocationRequest.context.execution.id",
-        "@devkit/runtime:LocalInvocationRequest.context.native.get",
         "@devkit/runtime:LocalInvocationRequest.context.pluginId",
-        "@devkit/runtime:ProviderLifecycle",
-        "@devkit/runtime:ProviderLifecycleOptions",
-        "@devkit/runtime:ProviderLifecycleOptions.native",
-        "@devkit/runtime:ProviderLifecycleOptions.native.get",
         "@devkit/runtime:Reservation",
         "@devkit/runtime:Reservation.actions",
         "@devkit/runtime:Reservation.id",
         "@devkit/runtime:Reservation.kind",
-        "@devkit/runtime:StartupComposition",
-        "@devkit/runtime:StartupInstallationResult"
+        "@devkit/runtime:StartupComposition"
       ],
       "examples": [
         "examples/contribution"
@@ -3047,7 +3089,6 @@
       "evidence": [],
       "gaps": [
         "Standalone exported types, conditional result inference and the remaining context, diagnostic and reservation fields require targeted proof before receiving executable evidence links.",
-        "packages/runtime/tests/provider-results.type-test.ts participates in the package typecheck, but a native Vitest JSON result does not prove its compile-time assertions. No type-check result adapter is linked here.",
         "A field remaining in this group does not imply its implementation is absent. This inventory deliberately distinguishes an existing code path from a directly checked behavior."
       ]
     },
