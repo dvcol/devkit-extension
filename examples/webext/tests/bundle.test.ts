@@ -12,7 +12,7 @@ it.each([
     mode: 'production',
     background: { service_worker: 'background.js', type: 'module' },
     browserSettings: {
-      permissions: ['scripting', 'sidePanel'],
+      permissions: ['scripting', 'declarativeNetRequestWithHostAccess', 'sidePanel'],
       side_panel: { default_path: 'panel.html' },
     },
   },
@@ -64,7 +64,7 @@ it.each([
       devtools_page: 'devtools.html',
       host_permissions: ['http://127.0.0.1/*'],
       optional_host_permissions: ['http://localhost/*'],
-      permissions: ['scripting'],
+      permissions: ['scripting', 'declarativeNetRequestWithHostAccess'],
       content_security_policy: {
         extension_pages:
           "script-src 'self'; object-src 'none'; connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:*",

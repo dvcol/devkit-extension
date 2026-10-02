@@ -305,6 +305,38 @@ This proves top-level loopback documents registered before navigation. It does n
 
 Native references: [Chrome content script timing](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts), [registered-script fields](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/RegisteredContentScript), and [Mozilla's API compatibility data](https://raw.githubusercontent.com/mdn/browser-compat-data/main/webextensions/api/scripting.json). The latter records programmatic `world` support from Firefox 128; the actual Firefox run above confirms the maintained version.
 
+## Native request and response header transforms
+
+The background-owned [header contributions](./src/header-contribution.ts) use `defineTransform` with native `declarativeNetRequest.updateSessionRules`. The manifest grants `declarativeNetRequestWithHostAccess`; the existing loopback host permission covers both the fixture request and its initiator. Each contribution supplies its own native rule and registers cleanup only after native registration succeeds:
+
+```ts
+defineTransform({
+  id: 'example.headers-lower',
+  execution: defineExecution({ id: 'example.background' }),
+  async setup({ scope }) {
+    await chrome.declarativeNetRequest.updateSessionRules({ addRules: [rule] });
+    scope.onDispose(() =>
+      chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: [rule.id] }),
+    );
+  },
+});
+```
+
+The two compiled rules match only `xmlhttprequest` requests to `http://127.0.0.1:*/transform-headers`. Both set `X-Devkit-Request` and `X-Devkit-Response` using native declarative configuration:
+
+| Contribution             | Native session rule ID | Native priority | Header value |
+| ------------------------ | ---------------------- | --------------- | ------------ |
+| `example.headers-lower`  | 1101                   | 1               | `lower`      |
+| `example.headers-higher` | 1102                   | 2               | `higher`     |
+
+The browser applies the higher-priority `set` operation when both rules match. Packaged controls install, disable, enable and dispose each contribution through the existing admitted native RPC connection. Removing either rule preserves its sibling. The example does not allocate rule IDs, resolve collisions or introduce an HTTP pipeline; the rule owners choose native IDs and priorities.
+
+[Maintained assertions](./tests/header-rules.ts) fetch from a real loopback document. The server records and returns the received request header; the document reads the actual response header. The same observation verifies an unmatched URL remains unchanged. Duplicate rule ID 1102 rejects the competing contribution's setup without acquiring cleanup ownership. An invalid rule ID 0 rejects an atomic update that also requests removal of rule 1101, preserving both existing rules. These are actual native API failures, recorded as ordinary contribution setup diagnostics.
+
+The existing `test:browser`, `test:firefox`, `test:dev:chromium` and `test:dev:firefox` commands all run this scenario. Each writes `header-rules.json` in its existing artifact directory (`artifacts`, `artifacts/firefox`, `artifacts/chromium-development` or `artifacts/firefox-development`), including exact checks, installation snapshots, native rules, client observations and server requests. Both production and native WXT development exercise explicit install, disable, reenable and disposal. [Four retained native receipts](./evidence/header-rules). Chromium captures zero fixture/extension page errors; Firefox retains its WebDriver limitation. One parallel Chromium attempt stalled in later native-host checks; an independent rerun passed without code changes.
+
+This slice implements request and response headers. It does not establish redirect/body transformation, rule-limit exhaustion, interactions with other extensions, worker-loss cleanup, restart/reload restoration or permission-revocation behavior. Native session rules are cleared at browser shutdown and extension version updates; they are not a persistent SDK registration. Firefox's WebDriver Classic runner has no global page-error capture. Native references: [Chrome DNR permissions, rule evaluation and session lifetime](https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest) and [atomic session-rule updates](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/updateSessionRules).
+
 ## Packaged script changes during development
 
 WXT treats a changed unlisted script as an extension reload. The maintained Chromium and Firefox development suites edit the temporary fixture's imported `src/script-timing.ts`, leaving the repository source untouched. The tests use normal file watching and native extension reload; no mock reload event, page reinjection or registration recovery is added.

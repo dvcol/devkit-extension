@@ -13,6 +13,7 @@ import { createMatchingCounterPlugin } from '@devkit/example-contribution/provid
 import { createCounterView } from '@devkit/example-json-render/view';
 import { spec } from './spec';
 import { registerScriptControls } from './script-contribution';
+import { registerHeaderControls } from './header-contribution';
 import {
   counterCapability,
   counterStateKey,
@@ -91,5 +92,6 @@ export function createExampleProvider(options: {
     },
   });
   registerScriptControls({ rpc: options.rpc, provider });
+  registerHeaderControls({ rpc: options.rpc, provider });
   return provider;
 }

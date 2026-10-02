@@ -617,11 +617,79 @@
           "host": "native-devframe-and-devtools-chromium",
           "mode": "development-and-build-preview",
           "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-header-rules.ts",
+          "receiptFile": "artifacts/header-rules.json",
+          "checks": [
+            "native session header rules change server-observed request and page-observed response headers",
+            "native higher rule priority controls overlapping request and response header sets",
+            "unmatched requests retain original request and response headers",
+            "duplicate native session rule rejects setup without changing either active rule",
+            "invalid native session rule rejects its atomic update without removing the existing rule",
+            "disabling and reenabling each header contribution preserves its sibling and native precedence",
+            "disposing one header contribution preserves its sibling and disposing both restores original headers"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-header-rules.ts",
+          "receiptFile": "artifacts/firefox/header-rules.json",
+          "checks": [
+            "native session header rules change server-observed request and page-observed response headers",
+            "native higher rule priority controls overlapping request and response header sets",
+            "unmatched requests retain original request and response headers",
+            "duplicate native session rule rejects setup without changing either active rule",
+            "invalid native session rule rejects its atomic update without removing the existing rule",
+            "disabling and reenabling each header contribution preserves its sibling and native precedence",
+            "disposing one header contribution preserves its sibling and disposing both restores original headers"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-header-rules.ts",
+          "receiptFile": "artifacts/chromium-development/header-rules.json",
+          "checks": [
+            "native session header rules change server-observed request and page-observed response headers",
+            "native higher rule priority controls overlapping request and response header sets",
+            "unmatched requests retain original request and response headers",
+            "duplicate native session rule rejects setup without changing either active rule",
+            "invalid native session rule rejects its atomic update without removing the existing rule",
+            "disabling and reenabling each header contribution preserves its sibling and native precedence",
+            "disposing one header contribution preserves its sibling and disposing both restores original headers"
+          ],
+          "host": "chromium-webext",
+          "mode": "native-wxt-development",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-header-rules.ts",
+          "receiptFile": "artifacts/firefox-development/header-rules.json",
+          "checks": [
+            "native session header rules change server-observed request and page-observed response headers",
+            "native higher rule priority controls overlapping request and response header sets",
+            "unmatched requests retain original request and response headers",
+            "duplicate native session rule rejects setup without changing either active rule",
+            "invalid native session rule rejects its atomic update without removing the existing rule",
+            "disabling and reenabling each header contribution preserves its sibling and native precedence",
+            "disposing one header contribution preserves its sibling and disposing both restores original headers"
+          ],
+          "host": "firefox-webext",
+          "mode": "native-wxt-development",
+          "requirePageErrors": false
         }
       ],
       "gaps": [
-        "The common API owns native registration and cleanup. The bounded Vite example proves native HTML order, independent lifecycle, native request failure/recovery and completed preview output; browser-native header/redirect and body recipes remain unimplemented.",
-        "Firefox server execution, frames/CSP, permissions, native setup/cleanup failures, in-flight disposal, response encoding/streaming and every supported host/mode still require exact native evidence. Native mechanisms retain their own order and failure behavior; no common HTTP pipeline is claimed."
+        "The common API owns native registration and cleanup. Bounded Vite HTML and native Chromium/Firefox DNR header examples establish their own ordering, independent lifecycle and native failures in supported development/production modes. Redirect and response-body recipes remain unimplemented; no common response pipeline or cross-mechanism order is claimed.",
+        "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, in-flight disposal, response encoding/streaming and the broader host/mode matrix still need exact native evidence. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes."
       ]
     },
     {

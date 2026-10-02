@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { styleText } from 'node:util';
 import { By, until } from 'selenium-webdriver';
 import { Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
-import { checkFirefoxScriptTiming } from './firefox-script-timing.ts';
+import { checkFirefoxContributions } from './firefox-contributions.ts';
 import { checkFirefoxServers } from './firefox-servers.ts';
 import { checkFirefoxSelectedPage } from './firefox-selected-page.ts';
 import {
@@ -71,7 +71,7 @@ try {
   await driver.switchTo().window(first);
   await checkFirefoxServers(driver);
   await checkFirefoxSelectedPage(driver);
-  await checkFirefoxScriptTiming(driver, 'artifacts/firefox');
+  await checkFirefoxContributions(driver, 'artifacts/firefox');
   await checkFirefoxDeniedPage(driver, origin);
   await driver.switchTo().window(second);
   await click('#remote-close');

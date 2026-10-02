@@ -101,7 +101,7 @@ Devframe host-page imports, Vite application HTML transformation and browser con
 
 The recipe registers transformation through the actual native host or capability. Native APIs retain their stages, matching, ordering and failure behavior. The SDK adds no callback pipeline, priority model, response buffering, paused-request controller or cross-realm order guarantee. Capability implementations can compose handlers when their native mechanism needs a single resource owner.
 
-The Vite example installs two native HTML hooks in reversed configuration order and uses native `pre`/`post` processing. Contributions own whether those hooks act on future development responses. Independent builds use native configuration, and preview serves their completed output. Native response-transform capability implementations and the full permissions, frames, streaming and failure matrix remain issue #11 work.
+The Vite example installs two native HTML hooks in reversed configuration order and uses native `pre`/`post` processing. Contributions own whether those hooks act on future development responses. Independent builds use native configuration, and preview serves their completed output. The WebExtension example registers two native DNR session header rules with explicit IDs/priorities and independent cleanup on both browsers. Native rejection and atomicity remain visible as setup outcomes. Redirect/body capability implementations and the full permissions, frames, streaming and failure matrix remain issue #11 work.
 
 ## Dependency and execution diagrams
 

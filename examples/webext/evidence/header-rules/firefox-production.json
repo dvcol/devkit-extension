@@ -1,0 +1,1220 @@
+{
+  "browser": "157.0",
+  "checks": [
+    "native session header rules change server-observed request and page-observed response headers",
+    "native higher rule priority controls overlapping request and response header sets",
+    "unmatched requests retain original request and response headers",
+    "duplicate native session rule rejects setup without changing either active rule",
+    "invalid native session rule rejects its atomic update without removing the existing rule",
+    "disabling and reenabling each header contribution preserves its sibling and native precedence",
+    "disposing one header contribution preserves its sibling and disposing both restores original headers"
+  ],
+  "observation": {
+    "original": {
+      "matched": {
+        "received": {
+          "requestHeader": null
+        },
+        "responseHeader": "original"
+      },
+      "unmatched": {
+        "received": {
+          "requestHeader": null
+        },
+        "responseHeader": "original"
+      }
+    },
+    "lower": {
+      "lower": {
+        "id": "example.headers-lower",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.headers-lower",
+            "kind": "transform",
+            "generation": 1,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "higher": null,
+      "rules": [
+        {
+          "id": 1101,
+          "priority": 1,
+          "condition": {
+            "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+            "regexFilter": null,
+            "isUrlFilterCaseSensitive": null,
+            "initiatorDomains": null,
+            "excludedInitiatorDomains": null,
+            "requestDomains": null,
+            "excludedRequestDomains": null,
+            "resourceTypes": ["xmlhttprequest"],
+            "excludedResourceTypes": null,
+            "requestMethods": null,
+            "excludedRequestMethods": null,
+            "domainType": null,
+            "tabIds": null,
+            "excludedTabIds": null
+          },
+          "action": {
+            "redirect": null,
+            "requestHeaders": [
+              {
+                "header": "X-Devkit-Request",
+                "operation": "set",
+                "value": "lower"
+              }
+            ],
+            "responseHeaders": [
+              {
+                "header": "X-Devkit-Response",
+                "operation": "set",
+                "value": "lower"
+              }
+            ],
+            "type": "modifyHeaders"
+          }
+        }
+      ]
+    },
+    "lowerOnly": {
+      "matched": {
+        "received": {
+          "requestHeader": "lower"
+        },
+        "responseHeader": "lower"
+      },
+      "unmatched": {
+        "received": {
+          "requestHeader": null
+        },
+        "responseHeader": "original"
+      }
+    },
+    "higher": {
+      "lower": {
+        "id": "example.headers-lower",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.headers-lower",
+            "kind": "transform",
+            "generation": 1,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "higher": {
+        "id": "example.headers-higher",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.headers-higher",
+            "kind": "transform",
+            "generation": 1,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "rules": [
+        {
+          "id": 1101,
+          "priority": 1,
+          "condition": {
+            "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+            "regexFilter": null,
+            "isUrlFilterCaseSensitive": null,
+            "initiatorDomains": null,
+            "excludedInitiatorDomains": null,
+            "requestDomains": null,
+            "excludedRequestDomains": null,
+            "resourceTypes": ["xmlhttprequest"],
+            "excludedResourceTypes": null,
+            "requestMethods": null,
+            "excludedRequestMethods": null,
+            "domainType": null,
+            "tabIds": null,
+            "excludedTabIds": null
+          },
+          "action": {
+            "redirect": null,
+            "requestHeaders": [
+              {
+                "header": "X-Devkit-Request",
+                "operation": "set",
+                "value": "lower"
+              }
+            ],
+            "responseHeaders": [
+              {
+                "header": "X-Devkit-Response",
+                "operation": "set",
+                "value": "lower"
+              }
+            ],
+            "type": "modifyHeaders"
+          }
+        },
+        {
+          "id": 1102,
+          "priority": 2,
+          "condition": {
+            "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+            "regexFilter": null,
+            "isUrlFilterCaseSensitive": null,
+            "initiatorDomains": null,
+            "excludedInitiatorDomains": null,
+            "requestDomains": null,
+            "excludedRequestDomains": null,
+            "resourceTypes": ["xmlhttprequest"],
+            "excludedResourceTypes": null,
+            "requestMethods": null,
+            "excludedRequestMethods": null,
+            "domainType": null,
+            "tabIds": null,
+            "excludedTabIds": null
+          },
+          "action": {
+            "redirect": null,
+            "requestHeaders": [
+              {
+                "header": "X-Devkit-Request",
+                "operation": "set",
+                "value": "higher"
+              }
+            ],
+            "responseHeaders": [
+              {
+                "header": "X-Devkit-Response",
+                "operation": "set",
+                "value": "higher"
+              }
+            ],
+            "type": "modifyHeaders"
+          }
+        }
+      ]
+    },
+    "overlapping": {
+      "matched": {
+        "received": {
+          "requestHeader": "higher"
+        },
+        "responseHeader": "higher"
+      },
+      "unmatched": {
+        "received": {
+          "requestHeader": null
+        },
+        "responseHeader": "original"
+      }
+    },
+    "failures": [
+      {
+        "kind": "duplicate",
+        "failure": {
+          "failure": {
+            "id": "example.headers-duplicate",
+            "status": "partial",
+            "contributions": [
+              {
+                "id": "example.headers-duplicate",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": true,
+                "status": "failed",
+                "diagnostics": [
+                  {
+                    "code": "setup-failure",
+                    "message": "Contribution setup failed",
+                    "phase": "setup",
+                    "severity": "error",
+                    "providerId": "example.extension",
+                    "pluginId": "example.headers-duplicate",
+                    "contributionId": "example.headers-duplicate"
+                  }
+                ]
+              }
+            ],
+            "diagnostics": [
+              {
+                "code": "setup-failure",
+                "message": "Contribution setup failed",
+                "phase": "setup",
+                "severity": "error",
+                "providerId": "example.extension",
+                "pluginId": "example.headers-duplicate",
+                "contributionId": "example.headers-duplicate"
+              }
+            ]
+          },
+          "current": {
+            "lower": {
+              "id": "example.headers-lower",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.headers-lower",
+                  "kind": "transform",
+                  "generation": 1,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "higher": {
+              "id": "example.headers-higher",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.headers-higher",
+                  "kind": "transform",
+                  "generation": 1,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "rules": [
+              {
+                "id": 1101,
+                "priority": 1,
+                "condition": {
+                  "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                  "regexFilter": null,
+                  "isUrlFilterCaseSensitive": null,
+                  "initiatorDomains": null,
+                  "excludedInitiatorDomains": null,
+                  "requestDomains": null,
+                  "excludedRequestDomains": null,
+                  "resourceTypes": ["xmlhttprequest"],
+                  "excludedResourceTypes": null,
+                  "requestMethods": null,
+                  "excludedRequestMethods": null,
+                  "domainType": null,
+                  "tabIds": null,
+                  "excludedTabIds": null
+                },
+                "action": {
+                  "redirect": null,
+                  "requestHeaders": [
+                    {
+                      "header": "X-Devkit-Request",
+                      "operation": "set",
+                      "value": "lower"
+                    }
+                  ],
+                  "responseHeaders": [
+                    {
+                      "header": "X-Devkit-Response",
+                      "operation": "set",
+                      "value": "lower"
+                    }
+                  ],
+                  "type": "modifyHeaders"
+                }
+              },
+              {
+                "id": 1102,
+                "priority": 2,
+                "condition": {
+                  "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                  "regexFilter": null,
+                  "isUrlFilterCaseSensitive": null,
+                  "initiatorDomains": null,
+                  "excludedInitiatorDomains": null,
+                  "requestDomains": null,
+                  "excludedRequestDomains": null,
+                  "resourceTypes": ["xmlhttprequest"],
+                  "excludedResourceTypes": null,
+                  "requestMethods": null,
+                  "excludedRequestMethods": null,
+                  "domainType": null,
+                  "tabIds": null,
+                  "excludedTabIds": null
+                },
+                "action": {
+                  "redirect": null,
+                  "requestHeaders": [
+                    {
+                      "header": "X-Devkit-Request",
+                      "operation": "set",
+                      "value": "higher"
+                    }
+                  ],
+                  "responseHeaders": [
+                    {
+                      "header": "X-Devkit-Response",
+                      "operation": "set",
+                      "value": "higher"
+                    }
+                  ],
+                  "type": "modifyHeaders"
+                }
+              }
+            ]
+          }
+        },
+        "observed": {
+          "matched": {
+            "received": {
+              "requestHeader": "higher"
+            },
+            "responseHeader": "higher"
+          },
+          "unmatched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          }
+        }
+      },
+      {
+        "kind": "invalid",
+        "failure": {
+          "failure": {
+            "id": "example.headers-invalid",
+            "status": "partial",
+            "contributions": [
+              {
+                "id": "example.headers-invalid",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": true,
+                "status": "failed",
+                "diagnostics": [
+                  {
+                    "code": "setup-failure",
+                    "message": "Contribution setup failed",
+                    "phase": "setup",
+                    "severity": "error",
+                    "providerId": "example.extension",
+                    "pluginId": "example.headers-invalid",
+                    "contributionId": "example.headers-invalid"
+                  }
+                ]
+              }
+            ],
+            "diagnostics": [
+              {
+                "code": "setup-failure",
+                "message": "Contribution setup failed",
+                "phase": "setup",
+                "severity": "error",
+                "providerId": "example.extension",
+                "pluginId": "example.headers-invalid",
+                "contributionId": "example.headers-invalid"
+              }
+            ]
+          },
+          "current": {
+            "lower": {
+              "id": "example.headers-lower",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.headers-lower",
+                  "kind": "transform",
+                  "generation": 1,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "higher": {
+              "id": "example.headers-higher",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.headers-higher",
+                  "kind": "transform",
+                  "generation": 1,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "rules": [
+              {
+                "id": 1101,
+                "priority": 1,
+                "condition": {
+                  "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                  "regexFilter": null,
+                  "isUrlFilterCaseSensitive": null,
+                  "initiatorDomains": null,
+                  "excludedInitiatorDomains": null,
+                  "requestDomains": null,
+                  "excludedRequestDomains": null,
+                  "resourceTypes": ["xmlhttprequest"],
+                  "excludedResourceTypes": null,
+                  "requestMethods": null,
+                  "excludedRequestMethods": null,
+                  "domainType": null,
+                  "tabIds": null,
+                  "excludedTabIds": null
+                },
+                "action": {
+                  "redirect": null,
+                  "requestHeaders": [
+                    {
+                      "header": "X-Devkit-Request",
+                      "operation": "set",
+                      "value": "lower"
+                    }
+                  ],
+                  "responseHeaders": [
+                    {
+                      "header": "X-Devkit-Response",
+                      "operation": "set",
+                      "value": "lower"
+                    }
+                  ],
+                  "type": "modifyHeaders"
+                }
+              },
+              {
+                "id": 1102,
+                "priority": 2,
+                "condition": {
+                  "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                  "regexFilter": null,
+                  "isUrlFilterCaseSensitive": null,
+                  "initiatorDomains": null,
+                  "excludedInitiatorDomains": null,
+                  "requestDomains": null,
+                  "excludedRequestDomains": null,
+                  "resourceTypes": ["xmlhttprequest"],
+                  "excludedResourceTypes": null,
+                  "requestMethods": null,
+                  "excludedRequestMethods": null,
+                  "domainType": null,
+                  "tabIds": null,
+                  "excludedTabIds": null
+                },
+                "action": {
+                  "redirect": null,
+                  "requestHeaders": [
+                    {
+                      "header": "X-Devkit-Request",
+                      "operation": "set",
+                      "value": "higher"
+                    }
+                  ],
+                  "responseHeaders": [
+                    {
+                      "header": "X-Devkit-Response",
+                      "operation": "set",
+                      "value": "higher"
+                    }
+                  ],
+                  "type": "modifyHeaders"
+                }
+              }
+            ]
+          }
+        },
+        "observed": {
+          "matched": {
+            "received": {
+              "requestHeader": "higher"
+            },
+            "responseHeader": "higher"
+          },
+          "unmatched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          }
+        }
+      }
+    ],
+    "lifecycle": {
+      "lower": {
+        "disabled": {
+          "lower": {
+            "id": "example.headers-lower",
+            "status": "inactive",
+            "contributions": [
+              {
+                "id": "example.headers-lower",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": false,
+                "status": "disabled",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.headers-higher",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.headers-higher",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1102,
+              "priority": 2,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": null,
+                "requestHeaders": [
+                  {
+                    "header": "X-Devkit-Request",
+                    "operation": "set",
+                    "value": "higher"
+                  }
+                ],
+                "responseHeaders": [
+                  {
+                    "header": "X-Devkit-Response",
+                    "operation": "set",
+                    "value": "higher"
+                  }
+                ],
+                "type": "modifyHeaders"
+              }
+            }
+          ]
+        },
+        "absent": {
+          "matched": {
+            "received": {
+              "requestHeader": "higher"
+            },
+            "responseHeader": "higher"
+          },
+          "unmatched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          }
+        },
+        "enabled": {
+          "lower": {
+            "id": "example.headers-lower",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.headers-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.headers-higher",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.headers-higher",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1102,
+              "priority": 2,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": null,
+                "requestHeaders": [
+                  {
+                    "header": "X-Devkit-Request",
+                    "operation": "set",
+                    "value": "higher"
+                  }
+                ],
+                "responseHeaders": [
+                  {
+                    "header": "X-Devkit-Response",
+                    "operation": "set",
+                    "value": "higher"
+                  }
+                ],
+                "type": "modifyHeaders"
+              }
+            },
+            {
+              "id": 1101,
+              "priority": 1,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": null,
+                "requestHeaders": [
+                  {
+                    "header": "X-Devkit-Request",
+                    "operation": "set",
+                    "value": "lower"
+                  }
+                ],
+                "responseHeaders": [
+                  {
+                    "header": "X-Devkit-Response",
+                    "operation": "set",
+                    "value": "lower"
+                  }
+                ],
+                "type": "modifyHeaders"
+              }
+            }
+          ]
+        },
+        "restored": {
+          "matched": {
+            "received": {
+              "requestHeader": "higher"
+            },
+            "responseHeader": "higher"
+          },
+          "unmatched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          }
+        }
+      },
+      "higher": {
+        "disabled": {
+          "lower": {
+            "id": "example.headers-lower",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.headers-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.headers-higher",
+            "status": "inactive",
+            "contributions": [
+              {
+                "id": "example.headers-higher",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": false,
+                "status": "disabled",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1101,
+              "priority": 1,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": null,
+                "requestHeaders": [
+                  {
+                    "header": "X-Devkit-Request",
+                    "operation": "set",
+                    "value": "lower"
+                  }
+                ],
+                "responseHeaders": [
+                  {
+                    "header": "X-Devkit-Response",
+                    "operation": "set",
+                    "value": "lower"
+                  }
+                ],
+                "type": "modifyHeaders"
+              }
+            }
+          ]
+        },
+        "absent": {
+          "matched": {
+            "received": {
+              "requestHeader": "lower"
+            },
+            "responseHeader": "lower"
+          },
+          "unmatched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          }
+        },
+        "enabled": {
+          "lower": {
+            "id": "example.headers-lower",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.headers-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.headers-higher",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.headers-higher",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1101,
+              "priority": 1,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": null,
+                "requestHeaders": [
+                  {
+                    "header": "X-Devkit-Request",
+                    "operation": "set",
+                    "value": "lower"
+                  }
+                ],
+                "responseHeaders": [
+                  {
+                    "header": "X-Devkit-Response",
+                    "operation": "set",
+                    "value": "lower"
+                  }
+                ],
+                "type": "modifyHeaders"
+              }
+            },
+            {
+              "id": 1102,
+              "priority": 2,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": null,
+                "requestHeaders": [
+                  {
+                    "header": "X-Devkit-Request",
+                    "operation": "set",
+                    "value": "higher"
+                  }
+                ],
+                "responseHeaders": [
+                  {
+                    "header": "X-Devkit-Response",
+                    "operation": "set",
+                    "value": "higher"
+                  }
+                ],
+                "type": "modifyHeaders"
+              }
+            }
+          ]
+        },
+        "restored": {
+          "matched": {
+            "received": {
+              "requestHeader": "higher"
+            },
+            "responseHeader": "higher"
+          },
+          "unmatched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          }
+        }
+      },
+      "disposal": {
+        "disposedLower": {
+          "lower": {
+            "id": "example.headers-lower",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.headers-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.headers-higher",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.headers-higher",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1102,
+              "priority": 2,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-headers|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": null,
+                "requestHeaders": [
+                  {
+                    "header": "X-Devkit-Request",
+                    "operation": "set",
+                    "value": "higher"
+                  }
+                ],
+                "responseHeaders": [
+                  {
+                    "header": "X-Devkit-Response",
+                    "operation": "set",
+                    "value": "higher"
+                  }
+                ],
+                "type": "modifyHeaders"
+              }
+            }
+          ]
+        },
+        "lowerDisposed": {
+          "matched": {
+            "received": {
+              "requestHeader": "higher"
+            },
+            "responseHeader": "higher"
+          },
+          "unmatched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          }
+        },
+        "disposedHigher": {
+          "lower": {
+            "id": "example.headers-lower",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.headers-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.headers-higher",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.headers-higher",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": []
+        },
+        "bothDisposed": {
+          "matched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          },
+          "unmatched": {
+            "received": {
+              "requestHeader": null
+            },
+            "responseHeader": "original"
+          }
+        }
+      }
+    },
+    "checks": [
+      "native session header rules change server-observed request and page-observed response headers",
+      "native higher rule priority controls overlapping request and response header sets",
+      "unmatched requests retain original request and response headers",
+      "duplicate native session rule rejects setup without changing either active rule",
+      "invalid native session rule rejects its atomic update without removing the existing rule",
+      "disabling and reenabling each header contribution preserves its sibling and native precedence",
+      "disposing one header contribution preserves its sibling and disposing both restores original headers"
+    ]
+  },
+  "serverRequests": [
+    {
+      "path": "/favicon.ico",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "lower"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "higher"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "higher"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "higher"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "higher"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "higher"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "lower"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "higher"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": "higher"
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/transform-headers",
+      "requestHeader": null
+    },
+    {
+      "path": "/unmatched-headers",
+      "requestHeader": null
+    }
+  ],
+  "providerRetained": true,
+  "limitations": ["No global page-error capture through WebDriver Classic"]
+}

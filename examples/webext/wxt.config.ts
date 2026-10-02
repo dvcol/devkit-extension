@@ -34,7 +34,10 @@ export default defineConfig({
 
 /** Shared application permissions and page URLs for native development and production builds. */
 export function createManifest(firefox: boolean): UserManifest {
-  const permissions: NonNullable<UserManifest['permissions']> = ['scripting'];
+  const permissions: NonNullable<UserManifest['permissions']> = [
+    'scripting',
+    'declarativeNetRequestWithHostAccess',
+  ];
   if ((process.env.VITE_COUNTER_STORAGE_KEY ?? '') !== '') permissions.push('storage');
   const manifest = {
     name: 'Devkit native Port example',

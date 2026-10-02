@@ -223,6 +223,13 @@ onClick('#script-isolated', () => rpc.$call('example:scripts:install', 'ISOLATED
 onClick('#script-disable', () => rpc.$call('example:scripts:disable'));
 onClick('#script-enable', () => rpc.$call('example:scripts:enable'));
 onClick('#script-dispose', () => rpc.$call('example:scripts:dispose'));
+for (const name of ['lower', 'higher'] as const)
+  for (const operation of ['install', 'disable', 'enable', 'dispose'] as const)
+    onClick(`#headers-${name}-${operation}`, () =>
+      rpc.$call('example:headers:control', name, operation),
+    );
+onClick('#headers-duplicate', () => rpc.$call('example:headers:failure', 'duplicate'));
+onClick('#headers-invalid', () => rpc.$call('example:headers:failure', 'invalid'));
 onClick('#routed', () =>
   routedClient.actions.invoke({
     action: increaseCounterAction,

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { styleText } from 'node:util';
 import { chromium, expect } from '@playwright/test';
-import { checkScriptTiming } from './chromium-script-timing.ts';
+import { checkChromiumContributions } from './chromium-contributions.ts';
 import { checkConfiguredServers } from './configured-servers.ts';
 import { checkSelectedPage } from './selected-page.ts';
 import { checkChromiumHosts } from './chromium-hosts.ts';
@@ -149,7 +149,7 @@ try {
   }
   await checkConfiguredServers(first, second);
   await checkSelectedPage(first);
-  await checkScriptTiming(first, 'artifacts');
+  await checkChromiumContributions(first, 'artifacts');
   const denied = await browser.newPage();
   await denied.goto(`chrome-extension://${extensionId}/denied.html`);
   await expect(denied.locator('#status')).toHaveText('Disconnected');

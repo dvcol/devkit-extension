@@ -3,7 +3,7 @@ import { appendFile, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect } from '@playwright/test';
 import type { CDPSession, Page } from '@playwright/test';
-import { checkScriptTiming } from './chromium-script-timing.ts';
+import { checkChromiumContributions } from './chromium-contributions.ts';
 import { checkChromiumScriptReload } from './chromium-script-reload.ts';
 import { checkChromiumPopupDevelopment } from './chromium-popup-development.ts';
 import {
@@ -29,7 +29,7 @@ type DevelopmentHost = {
 
 /** Keep native hosts open while WXT replaces their module and reloads their HTML. */
 export async function checkChromiumHostDevelopment(options: Page, fixture: string): Promise<Page> {
-  await checkScriptTiming(options, 'artifacts/chromium-development');
+  await checkChromiumContributions(options, 'artifacts/chromium-development');
   await checkChromiumPopupDevelopment(options, fixture);
   await checkDevtools(options, fixture);
   await checkSidebar(options, fixture);
