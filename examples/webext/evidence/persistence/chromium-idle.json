@@ -1,0 +1,233 @@
+{
+  "browser": "Chrome/153.0.8010.12",
+  "browserDetails": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/153.0.8010.12",
+    "revision": "@971a7443b0c9b0a9b2860529b33331b76077ec62",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+    "jsVersion": "15.3.76.4"
+  },
+  "pageErrors": [],
+  "storageKey": "example.persisted-counter",
+  "previous": {
+    "panels": [
+      {
+        "targetId": "5D5CF4B812E842D6D67D5478ABA219D0",
+        "sessionId": "157BC7E749B80184361F65BCA13CD329"
+      },
+      {
+        "targetId": "CECD076BF3EEB2717ACFFBC97AF0DBEB",
+        "sessionId": "C60DE2F818E3E1DA0142877202DF961B"
+      }
+    ],
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "e9246a0d-dec0-4ad1-818f-0dc15f3d4371",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "callers": [
+      {
+        "id": 0,
+        "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/panel.html"
+      }
+    ],
+    "documents": [1790921147526.4, 1790921147677.5],
+    "confirmedCounter": {
+      "value": 10
+    },
+    "independentCounter": {
+      "value": 44
+    },
+    "executions": {
+      "started": 1,
+      "completed": 1
+    },
+    "worker": {
+      "targetId": "18B102E586936B74E3053B44F0472A5E",
+      "type": "service_worker",
+      "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+      "attached": false
+    }
+  },
+  "replacement": {
+    "panels": [
+      {
+        "targetId": "DF5B2D381FB0A0A1821ACF326DBEF87A",
+        "sessionId": "C2CB08F9D1900B53AC15F252F2FC60C8"
+      },
+      {
+        "targetId": "49AA04F411FA5026BCF4BAD54B898A94",
+        "sessionId": "7DED9BE72CDA2750DBB1537EF6244416"
+      }
+    ],
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "50838997-cd3d-4311-9a05-3e30c320a740",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "callers": [
+      {
+        "id": 0,
+        "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/panel.html"
+      }
+    ],
+    "documents": [1790921177977.1, 1790921178125.9],
+    "restored": 10,
+    "savedCounter": {
+      "value": 11
+    },
+    "independentCounter": {
+      "value": 44
+    },
+    "executions": {
+      "started": 0,
+      "completed": 0
+    },
+    "worker": {
+      "targetId": "67864CD0697368C6EB8E05E0E6F62DF0",
+      "type": "service_worker",
+      "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+      "attached": false
+    }
+  },
+  "idle": {
+    "idleStartedAt": 1790921147907,
+    "idleStoppedAt": 1790921177918,
+    "elapsedMilliseconds": 30011,
+    "versions": [
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "starting",
+        "targetId": "18B102E586936B74E3053B44F0472A5E",
+        "observedAt": 1790921147480
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "starting",
+        "targetId": "18B102E586936B74E3053B44F0472A5E",
+        "observedAt": 1790921147565
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "running",
+        "targetId": "18B102E586936B74E3053B44F0472A5E",
+        "observedAt": 1790921147565
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "running",
+        "targetId": "18B102E586936B74E3053B44F0472A5E",
+        "observedAt": 1790921147565
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "running",
+        "targetId": "18B102E586936B74E3053B44F0472A5E",
+        "observedAt": 1790921147565
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "running",
+        "targetId": "18B102E586936B74E3053B44F0472A5E",
+        "observedAt": 1790921147565
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "running",
+        "targetId": "18B102E586936B74E3053B44F0472A5E",
+        "observedAt": 1790921147678
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "stopping",
+        "targetId": "18B102E586936B74E3053B44F0472A5E",
+        "observedAt": 1790921177912
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "stopped",
+        "observedAt": 1790921177919
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "stopped",
+        "observedAt": 1790921177978
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "starting",
+        "observedAt": 1790921177999
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "starting",
+        "targetId": "67864CD0697368C6EB8E05E0E6F62DF0",
+        "observedAt": 1790921177999
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "starting",
+        "targetId": "67864CD0697368C6EB8E05E0E6F62DF0",
+        "observedAt": 1790921177999
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "running",
+        "targetId": "67864CD0697368C6EB8E05E0E6F62DF0",
+        "observedAt": 1790921178017
+      },
+      {
+        "versionId": "0",
+        "scriptURL": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+        "runningStatus": "running",
+        "targetId": "67864CD0697368C6EB8E05E0E6F62DF0",
+        "observedAt": 1790921178127
+      }
+    ],
+    "attachedWorkers": []
+  },
+  "checks": [
+    "an unattached Chromium extension worker naturally disappears while two native Port clients are idle",
+    "native stopped status and target destruction agree; old documents disconnect and dispose both mounted views",
+    "explicit fresh callers restore confirmed counter state under a new native worker and provider incarnation",
+    "fresh clients mount each view once, discard ephemeral UI/execution state and apply one rendered action exactly once",
+    "an independent native storage key is preserved and completed diagnostic actions are not replayed"
+  ],
+  "limitations": [
+    "Natural idle after confirmed writes; no interrupted native write or browser crash is exercised",
+    "Explicit fresh clients perform recovery; the fixture adds no automatic reconnect or replay",
+    "Completed operations precede idle; a pending RPC may affect native keepalive and is tested separately by forced-worker acceptance",
+    "Page sessions observe native Runtime.exceptionThrown; no DevTools session attaches to the worker"
+  ],
+  "executable": "/Users/dinh-van.colomban/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/chromium-native-idle-wVidl8",
+  "processId": 55359,
+  "processStart": 1790921146799,
+  "artifactHash": "7b22280f81d8fb3cf2ab1eb36f87f14a3ed39780e9cf65638955f1858878c500"
+}

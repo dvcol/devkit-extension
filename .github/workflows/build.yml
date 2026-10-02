@@ -27,6 +27,10 @@ jobs:
         run: |
           pnpm --filter @devkit/example-webext build
           pnpm --filter @devkit/example-webext exec node tests/chromium-persistence.ts
+      - name: Verify natural Chromium worker idle and explicit state recovery
+        env:
+          VITE_COUNTER_STORAGE_KEY: example.persisted-counter
+        run: pnpm --filter @devkit/example-webext test:persistence:chromium:idle
       - name: Run native JSON actions across extension and server providers
         run: pnpm --filter @devkit/example-webext test:json-actions
       - name: Discover native provider views in the extension
