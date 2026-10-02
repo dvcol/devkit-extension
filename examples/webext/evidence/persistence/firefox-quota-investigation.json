@@ -1,0 +1,319 @@
+{
+  "snapshot": {
+    "directory": "/tmp/firefox-quota-pilot-fYg75o",
+    "snapshot": "/tmp/firefox-quota-pilot-fYg75o/extension",
+    "source": "/Users/dinh-van.colomban/Workspace/private/devkit-extension/examples/webext/dist/firefox-persistent",
+    "artifactHash": "afb30dd60980f8cce183b86e40d97ec31ea09ad855df935f6e4b0ba6bfda46ff",
+    "copiedAt": 1790925526515
+  },
+  "profile": "/private/tmp/firefox-quota-pilot-fYg75o/profile-LqE7Vd",
+  "origin": "moz-extension://70e914f0-cc68-44ab-ac85-d33f00113fe6",
+  "storageKey": "example.persisted-counter",
+  "samples": [
+    {
+      "bytes": 32768,
+      "pressure": {
+        "writes": 41,
+        "rejected": {
+          "key": "example.persisted-counter.quota.40",
+          "accepted": false,
+          "message": "QuotaExceededError: storage.local API call exceeded its quota limitations.",
+          "name": "Error"
+        }
+      },
+      "previousSaved": {
+        "value": 9
+      },
+      "attempt": {
+        "liveValue": 10,
+        "failed": false,
+        "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 10",
+        "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 10",
+        "saved": {
+          "value": 10
+        }
+      },
+      "nativeQuota": {
+        "diagnostics": [],
+        "preference": {
+          "defaultValue": -1,
+          "hasUserValue": true,
+          "value": 2048
+        },
+        "principal": "moz-extension://70e914f0-cc68-44ab-ac85-d33f00113fe6^userContextId=4294967295",
+        "quota": {
+          "limit": 2097152,
+          "usage": 2080368
+        },
+        "userContextId": 4294967295
+      }
+    },
+    {
+      "bytes": 8192,
+      "pressure": {
+        "writes": 1,
+        "rejected": {
+          "key": "example.persisted-counter.quota.41",
+          "accepted": false,
+          "message": "An unexpected error occurred",
+          "name": "Error"
+        }
+      },
+      "previousSaved": {
+        "value": 10
+      },
+      "attempt": {
+        "liveValue": 11,
+        "failed": false,
+        "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 11",
+        "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Wrote counter 11",
+        "saved": {
+          "value": 11
+        }
+      },
+      "nativeQuota": {
+        "diagnostics": [
+          {
+            "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+            "sourceName": ""
+          }
+        ],
+        "preference": {
+          "defaultValue": -1,
+          "hasUserValue": true,
+          "value": 2048
+        },
+        "principal": "moz-extension://70e914f0-cc68-44ab-ac85-d33f00113fe6^userContextId=4294967295",
+        "quota": {
+          "limit": 2097152,
+          "usage": 1380408
+        },
+        "userContextId": 4294967295
+      }
+    },
+    {
+      "bytes": 2048,
+      "pressure": {
+        "writes": 34,
+        "rejected": {
+          "key": "example.persisted-counter.quota.75",
+          "accepted": false,
+          "message": "QuotaExceededError: storage.local API call exceeded its quota limitations.",
+          "name": "Error"
+        }
+      },
+      "previousSaved": {
+        "value": 11
+      },
+      "attempt": {
+        "liveValue": 12,
+        "failed": true,
+        "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+        "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+        "saved": {
+          "value": 11
+        }
+      },
+      "nativeQuota": {
+        "diagnostics": [
+          {
+            "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+            "sourceName": ""
+          }
+        ],
+        "preference": {
+          "defaultValue": -1,
+          "hasUserValue": true,
+          "value": 2048
+        },
+        "principal": "moz-extension://70e914f0-cc68-44ab-ac85-d33f00113fe6^userContextId=4294967295",
+        "quota": {
+          "limit": 2097152,
+          "usage": 2076712
+        },
+        "userContextId": 4294967295
+      }
+    }
+  ],
+  "limitations": [
+    "The disposable profile overrides the native global temporary-storage limit to 2 MiB; this does not measure the default Firefox quota.",
+    "Filler is written only through native storage.local; no storage API, browser backend or production signature is replaced.",
+    "Global page-error capture is absent under WebDriver Classic; native diagnostics are retained in geckodriver.log.",
+    "This is quota pressure, not interrupted native I/O or browser crash evidence."
+  ],
+  "browser": "157.0",
+  "processId": 87018,
+  "sessionId": "9f18d558-3013-4de0-8c0b-d849868213b4",
+  "extensionId": "devkit-native-port@example.invalid",
+  "panels": [
+    {
+      "handle": "e9dc5ab2-ccac-45bd-8d0e-4cc9f8752dda",
+      "timeOrigin": 1790926305709
+    },
+    {
+      "handle": "56d49e07-75c0-4d88-8cc0-3139af1e5b5c",
+      "timeOrigin": 1790926306065
+    }
+  ],
+  "provider": {
+    "id": "example.extension",
+    "incarnation": "c04b30b5-e97e-4807-bbb9-10abdd917928",
+    "realm": {
+      "id": "webext"
+    }
+  },
+  "before": {
+    "diagnostics": [],
+    "preference": {
+      "defaultValue": -1,
+      "hasUserValue": true,
+      "value": 2048
+    },
+    "principal": "moz-extension://70e914f0-cc68-44ab-ac85-d33f00113fe6^userContextId=4294967295",
+    "quota": {
+      "limit": 2097152,
+      "usage": 98624
+    },
+    "userContextId": 4294967295
+  },
+  "confirmedBefore": {
+    "value": 9
+  },
+  "visibleNativeWriteFailure": {
+    "bytes": 2048,
+    "pressure": {
+      "writes": 34,
+      "rejected": {
+        "key": "example.persisted-counter.quota.75",
+        "accepted": false,
+        "message": "QuotaExceededError: storage.local API call exceeded its quota limitations.",
+        "name": "Error"
+      }
+    },
+    "previousSaved": {
+      "value": 11
+    },
+    "attempt": {
+      "liveValue": 12,
+      "failed": true,
+      "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+      "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+      "saved": {
+        "value": 11
+      }
+    },
+    "nativeQuota": {
+      "diagnostics": [
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        }
+      ],
+      "preference": {
+        "defaultValue": -1,
+        "hasUserValue": true,
+        "value": 2048
+      },
+      "principal": "moz-extension://70e914f0-cc68-44ab-ac85-d33f00113fe6^userContextId=4294967295",
+      "quota": {
+        "limit": 2097152,
+        "usage": 2076712
+      },
+      "userContextId": 4294967295
+    }
+  },
+  "acceptedFailure": {
+    "bytes": 2048,
+    "pressure": {
+      "writes": 34,
+      "rejected": {
+        "key": "example.persisted-counter.quota.75",
+        "accepted": false,
+        "message": "QuotaExceededError: storage.local API call exceeded its quota limitations.",
+        "name": "Error"
+      }
+    },
+    "previousSaved": {
+      "value": 11
+    },
+    "attempt": {
+      "liveValue": 12,
+      "failed": true,
+      "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+      "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 12: QuotaExceededError: storage.local API call exceeded its quota limitations.",
+      "saved": {
+        "value": 11
+      }
+    },
+    "nativeQuota": {
+      "diagnostics": [
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        }
+      ],
+      "preference": {
+        "defaultValue": -1,
+        "hasUserValue": true,
+        "value": 2048
+      },
+      "principal": "moz-extension://70e914f0-cc68-44ab-ac85-d33f00113fe6^userContextId=4294967295",
+      "quota": {
+        "limit": 2097152,
+        "usage": 2076712
+      },
+      "userContextId": 4294967295
+    }
+  },
+  "bounds": {
+    "maximumAttempts": 256,
+    "maximumAttemptedBytes": 8388608,
+    "fillerAttempts": 76,
+    "attemptedBytes": 1421312,
+    "acceptedFillerKeys": 73,
+    "counterAttempts": 3
+  },
+  "relief": {
+    "completed": false,
+    "fillerRemoved": true,
+    "afterRemoval": {
+      "value": 11
+    },
+    "explicitNext": {
+      "liveValue": 13,
+      "failed": true,
+      "message": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 13: An unexpected error occurred",
+      "peerMessage": "Contribution management\n\nCounter service: active\n\nDisable service\nEnable service\n\nCounter storage: Write failed for counter 13: An unexpected error occurred",
+      "saved": {
+        "value": 11
+      }
+    },
+    "nativeQuota": {
+      "diagnostics": [
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        },
+        {
+          "message": "[JavaScript Error: \"InvalidStateError: A mutation operation was attempted on a database that did not allow mutations.\"]\nwrapMethods/cls.prototype[method]@resource://gre/modules/IndexedDB.sys.mjs:93:46\nset@resource://gre/modules/ExtensionStorageIDB.sys.mjs:356:27\n",
+          "sourceName": ""
+        }
+      ],
+      "preference": {
+        "defaultValue": -1,
+        "hasUserValue": true,
+        "value": 2048
+      },
+      "principal": "moz-extension://70e914f0-cc68-44ab-ac85-d33f00113fe6^userContextId=4294967295",
+      "quota": {
+        "limit": 2097152,
+        "usage": 49152
+      },
+      "userContextId": 4294967295
+    }
+  },
+  "quotaFailureProved": true,
+  "passed": false,
+  "processExited": true,
+  "profileRemoved": true
+}
