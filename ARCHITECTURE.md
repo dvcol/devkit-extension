@@ -325,7 +325,7 @@ The [optional server persistence example](./examples/server-contexts/README.md#o
 
 The [opt-in extension example](./examples/webext/PERSISTENCE.md) restores one counter record through native `storage.local`. Its native RPC resolver waits for background initialization, and native shared-state changes trigger asynchronous writes. Actual Chromium tests cover restoration after a confirmed write and forced worker termination, visible quota failure without rollback, and invalid saved data without overwrite. Firefox verifies explicit native extension reload closes the old pages and fresh pages restore the confirmed saved value under a new provider incarnation. The default example remains ephemeral.
 
-The [state contract](https://github.com/dvcol/devkit-extension/issues/8) tracks remaining host integration evidence. Natural background suspension, browser restart and interrupted writes still need direct evidence. Those gaps do not justify a generic recovery or enforcement layer.
+The [state contract](https://github.com/dvcol/devkit-extension/issues/8) tracks remaining host integration evidence. Native receipts now cover confirmed-write restoration after Chromium browser restart, Firefox restart with explicit temporary fixture loading, and natural Chromium/Firefox background idle. Fresh clients perform recovery explicitly; these checks do not establish automatic reconnect or replay. Interrupted writes, crashes and broader native failure cases remain open. Those gaps do not justify a generic recovery or enforcement layer.
 
 ## Representative shared and native declarations
 
