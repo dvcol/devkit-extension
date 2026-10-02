@@ -158,6 +158,55 @@ it('preserves native calls and arguments while invoking a selected portable acti
   await expect(callUnknown(call, 'missing:method', {})).rejects.toThrow(/not found/u);
 });
 
+it('uses contract routing defaults, binding overrides and independent broadcast selection', async () => {
+  expect.assertions(5);
+  const extensionFirst = await backend('first', 'webext', (input) => `webext:first:${input}`);
+  const extensionSecond = await backend('second', 'webext', (input) => `webext:second:${input}`);
+  const serverFirst = await backend('first', 'devserver', (input) => `devserver:first:${input}`);
+  const serverSecond = await backend('second', 'devserver', (input) => `devserver:second:${input}`);
+  const client = createClient({
+    connections: [extensionFirst, extensionSecond, serverFirst, serverSecond],
+    routing: { realm: 'devserver', provider: 'second' },
+  });
+  cleanup.push(() => {
+    client.dispose();
+  });
+  const routed = defineActionContract({
+    id: action.id,
+    version: action.version,
+    operation: action.operation,
+    routing: { realm: 'webext', provider: 'first' },
+  });
+  const options = { rpc: nativeRpc(), actions: client.actions };
+  const defaultCall = createActionCall({ ...options, bindings: [{ action: routed }] });
+  await expect(callUnknown(defaultCall, action.id, 'default')).resolves.toBe(
+    'webext:first:default',
+  );
+  await expect(callUnknown(defaultCall, 'test:native', 'native', 42)).resolves.toBe('native:42');
+  const overrideCall = createActionCall({
+    ...options,
+    bindings: [{ action: routed, routing: { realm: 'devserver', provider: 'second' } }],
+  });
+  await expect(callUnknown(overrideCall, action.id, 'override')).resolves.toBe(
+    'devserver:second:override',
+  );
+  const broadcastCall = createActionCall({
+    ...options,
+    bindings: [{ action: routed, selection: [{ realm: 'devserver' }] }],
+  });
+  await expect(callUnknown(broadcastCall, action.id, 'broadcast')).resolves.toMatchObject([
+    { provider: { id: 'first' }, status: 'fulfilled', value: 'devserver:first:broadcast' },
+    { provider: { id: 'second' }, status: 'fulfilled', value: 'devserver:second:broadcast' },
+  ]);
+  const unavailableCall = createActionCall({
+    ...options,
+    bindings: [{ action: routed, routing: { realm: 'webext', provider: 'missing' } }],
+  });
+  await expect(callUnknown(unavailableCall, action.id, 'unavailable')).rejects.toMatchObject({
+    code: 'unavailable-provider',
+  });
+});
+
 it('rejects duplicate IDs, wrong argument counts and unavailable contract versions', async () => {
   expect.assertions(5);
   const connection = await backend('only', 'webext', (input) => input);

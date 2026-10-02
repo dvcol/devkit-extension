@@ -2006,6 +2006,9 @@
         "@devkit/devframe/client:ActionBinding.action.operation",
         "@devkit/devframe/client:ActionBinding.action.operation.input",
         "@devkit/devframe/client:ActionBinding.action.operation.output",
+        "@devkit/devframe/client:ActionBinding.action.routing",
+        "@devkit/devframe/client:ActionBinding.action.routing.provider",
+        "@devkit/devframe/client:ActionBinding.action.routing.realm",
         "@devkit/devframe/client:ActionBinding.action.version",
         "@devkit/devframe/client:ActionBinding.routing",
         "@devkit/devframe/client:ActionBinding.routing.provider",
@@ -2050,11 +2053,18 @@
           "fullName": "forwards unmount cancellation without replaying or owning native RPC",
           "host": "devframe-native-rpc-and-local-provider-runtime",
           "mode": "node-messagechannel-and-in-process"
+        },
+        {
+          "workspace": "packages/devframe",
+          "testFile": "tests/action-call.test.ts",
+          "fullName": "uses contract routing defaults, binding overrides and independent broadcast selection",
+          "host": "devframe-native-rpc-and-local-provider-runtime",
+          "mode": "node-messagechannel-and-in-process"
         }
       ],
       "gaps": [
-        "Node tests cover native passthrough and argument preservation, duplicate IDs, unavailable versions and cancellation. Browser references separately prove native renderer dispatch through actual Ports and authenticated native server connections; neither establishes all host/mode cells.",
-        "Linked browser assertions cover explicit routing, broadcast selection, provider-owned applicability, partial failures, absence of backend effects from detached buttons and native input/success/error callbacks. Contract routing defaults, complete renderer built-ins, duplicate/malformed bindings in browser hosts and output-validation failure parity still require exact evidence.",
+        "Node tests cover native passthrough and argument preservation, duplicate IDs, unavailable versions, cancellation, contract realm/provider defaults over client defaults, explicit binding overrides and independent broadcast selection. Browser references separately prove native renderer dispatch through actual Ports and authenticated native server connections; neither establishes all host/mode cells or other routing-policy forms at this binding boundary.",
+        "Linked browser assertions cover explicit routing, broadcast selection, provider-owned applicability, partial failures, absence of backend effects from detached buttons and native input/success/error callbacks. Browser contract routing defaults, complete renderer built-ins, duplicate/malformed bindings in browser hosts and output-validation failure parity still require exact evidence.",
         "Firefox does not yet retain a detached domain-action button across unmount as the Chromium matrix does. Mixed-backend development HMR and production-server preview remain separate obligations."
       ],
       "browserEvidence": [
@@ -2289,9 +2299,6 @@
       "apis": [
         "@devkit/devframe/client:ActionBinding",
         "@devkit/devframe/client:ActionBinding.action.kind",
-        "@devkit/devframe/client:ActionBinding.action.routing",
-        "@devkit/devframe/client:ActionBinding.action.routing.provider",
-        "@devkit/devframe/client:ActionBinding.action.routing.realm",
         "@devkit/devframe/client:ActionCallOptions",
         "@devkit/devframe/client:ProviderRpcClient",
         "@devkit/devframe/client:RpcProviderConnection",
@@ -2301,7 +2308,7 @@
       "evidence": [],
       "gaps": [
         "Exported type declarations still need exact positive and negative compile-time evidence; a runtime test or report does not establish their complete typing contracts.",
-        "ActionBinding.action.kind and contract-level default routing fields do not have directly linked binding tests. Explicit binding routing and selection are covered separately."
+        "ActionBinding.action.kind still lacks a directly linked binding/type assertion. Contract realm/provider defaults and explicit binding routing/selection now have local binding evidence; their native browser-host defaults and remaining policy forms remain separate obligations."
       ]
     },
     {
