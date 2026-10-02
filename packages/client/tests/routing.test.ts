@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { RoutingError } from '../src/index.js';
 import { action, backend, capability, client, requireBinding } from './fixtures.js';
 
 describe('ordinary provider routing', () => {
@@ -45,7 +46,7 @@ describe('ordinary provider routing', () => {
   });
 
   it('uses ordered fallback at dispatch and stops on ambiguous preferred groups', async () => {
-    expect.assertions(5);
+    expect.assertions(10);
     const first = await backend({ id: 'A' });
     const second = await backend({ id: 'B', realm: 'webext' });
     const instance = client({ connections: [first.connection, second.connection] });
@@ -60,11 +61,35 @@ describe('ordinary provider routing', () => {
     );
     const third = await backend({ id: 'C' });
     instance.providers.attach({ connection: third.connection });
+    const error = requireRoutingError(
+      await instance.actions
+        .invoke({ action, input: 'ambiguous', routing })
+        .catch((failure: unknown) => failure),
+    );
+    expect(error).toBeInstanceOf(RoutingError);
+    expect(error).toMatchObject({
+      name: 'RoutingError',
+      code: 'ambiguous-provider',
+      message: expect.stringContaining('retry with a realm and provider discriminant') as unknown,
+      candidates: [
+        { provider: first.connection.provider, availability: { status: 'available' } },
+        { provider: third.connection.provider, availability: { status: 'available' } },
+      ],
+    });
+    expect(Object.isFrozen(error.candidates)).toBe(true);
+    await first.service.disable();
+    expect(error.candidates[0]?.availability).toEqual({ status: 'available' });
+    const selected = error.candidates[1]!.provider;
     await expect(
-      instance.actions.invoke({ action, input: 'ambiguous', routing }),
-    ).rejects.toMatchObject({ code: 'ambiguous-provider' });
+      instance.actions.invoke({
+        action,
+        input: 'picked',
+        routing: { realm: selected.realm.id, provider: selected.id },
+      }),
+    ).resolves.toBe('C:picked');
+    expect(first.calls).toEqual(['restored']);
     expect(second.calls).toEqual(['fallback']);
-    expect(third.calls).toEqual([]);
+    expect(third.calls).toEqual(['picked']);
   });
 
   it('never retries a dispatched failure on a fallback provider', async () => {
@@ -108,3 +133,8 @@ describe('ordinary provider routing', () => {
     expect(first.calls).toEqual([]);
   });
 });
+
+function requireRoutingError(value: unknown): RoutingError {
+  if (value instanceof RoutingError) return value;
+  throw new Error('Expected the public routing error');
+}

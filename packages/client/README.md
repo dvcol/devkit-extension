@@ -43,6 +43,8 @@ Per-call `routing` replaces the action contract default, which replaces the clie
 
 An ordered list is pre-dispatch fallback. Each group considers open providers with a synchronized catalog, the exact contract version and an active contribution. Zero eligible providers advances to the next group; multiple eligible providers reject with `ambiguous-provider`, requiring the caller to select one. There is no discovery-order tie-breaker or implicit wait. An active catalog entry does not establish target authorization or permission.
 
+An ambiguous call rejects with the exported `RoutingError` class. Its `candidates` list identifies the available providers in the preferred group, so a picker can start a new call with `{ realm: selected.realm.id, provider: selected.id }`. Those diagnostics retain the failed call's availability snapshot; the new call checks current availability again.
+
 Local routing callbacks support a picker or application policy:
 
 ```ts

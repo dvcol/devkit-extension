@@ -3308,16 +3308,27 @@
       ]
     },
     {
-      "id": "client-error-construction-unmapped",
+      "id": "client-routing-error-diagnostics",
       "apis": [
         "@devkit/client:RoutingError",
         "@devkit/client:RoutingError.candidates",
         "@devkit/client:RoutingError.name"
       ],
-      "examples": [],
-      "evidence": [],
+      "examples": [
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/client",
+          "testFile": "tests/routing.test.ts",
+          "fullName": "ordinary provider routing uses ordered fallback at dispatch and stops on ambiguous preferred groups",
+          "host": "custom-local-provider",
+          "mode": "unit"
+        }
+      ],
       "gaps": [
-        "The local client tests inspect error codes and unmatched selectors, but do not assert RoutingError class identity, name or candidate metadata. The routing example performs an instanceof guard, but no exact executed example result is linked for that check yet."
+        "The local provider scenario proves public RoutingError identity, name, preferred-route candidate metadata, a frozen candidate list, retained availability diagnostics and a successful explicit retry using a reported provider discriminant. Complete error variants, causes and selector immutability remain separate obligations.",
+        "Native host/browser presentation, transport boundaries and safe diagnostic disclosure to untrusted recipients are not established by this local routing scenario."
       ]
     },
     {
