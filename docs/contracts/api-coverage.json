@@ -476,7 +476,7 @@
         }
       ],
       "gaps": [
-        "The common API owns native setup and cleanup. Full stage coverage, frame/CSP cases, permission failure, browser restart, dependency loss during real native registration and cleanup failure remain issue #11 obligations.",
+        "The common API owns native setup and cleanup. Native document_start now covers MAIN/ISOLATED, top/same-origin/cross-origin child frames, an ungranted matching child and the tested nonce CSP in production/development. Other injection stages, blank/blob/sandboxed frames, origin fallback, broader CSP operations, permission transitions, browser restart, dependency loss during real native registration and cleanup failure remain issue #11 obligations.",
         "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP response implementations remain separate native work."
       ],
       "browserEvidence": [
@@ -514,6 +514,102 @@
           ],
           "host": "firefox",
           "mode": "production",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-script-contexts.ts",
+          "receiptFile": "artifacts/script-contexts.json",
+          "checks": [
+            "MAIN: allFrames=false strictCsp=false native frame matching and host permissions",
+            "MAIN: allFrames=false strictCsp=true native frame matching and host permissions",
+            "MAIN: allFrames=false disposed registration leaves fresh documents uninjected",
+            "MAIN: allFrames=true strictCsp=false native frame matching and host permissions",
+            "MAIN: allFrames=true strictCsp=true native frame matching and host permissions",
+            "MAIN: native child-frame registration disable and enable under page CSP",
+            "MAIN: allFrames=true disposed registration leaves fresh documents uninjected",
+            "ISOLATED: allFrames=false strictCsp=false native frame matching and host permissions",
+            "ISOLATED: allFrames=false strictCsp=true native frame matching and host permissions",
+            "ISOLATED: allFrames=false disposed registration leaves fresh documents uninjected",
+            "ISOLATED: allFrames=true strictCsp=false native frame matching and host permissions",
+            "ISOLATED: allFrames=true strictCsp=true native frame matching and host permissions",
+            "ISOLATED: native child-frame registration disable and enable under page CSP",
+            "ISOLATED: allFrames=true disposed registration leaves fresh documents uninjected"
+          ],
+          "host": "chromium",
+          "mode": "production",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-script-contexts.ts",
+          "receiptFile": "artifacts/firefox/script-contexts.json",
+          "checks": [
+            "MAIN: allFrames=false strictCsp=false native frame matching and host permissions",
+            "MAIN: allFrames=false strictCsp=true native frame matching and host permissions",
+            "MAIN: allFrames=false disposed registration leaves fresh documents uninjected",
+            "MAIN: allFrames=true strictCsp=false native frame matching and host permissions",
+            "MAIN: allFrames=true strictCsp=true native frame matching and host permissions",
+            "MAIN: native child-frame registration disable and enable under page CSP",
+            "MAIN: allFrames=true disposed registration leaves fresh documents uninjected",
+            "ISOLATED: allFrames=false strictCsp=false native frame matching and host permissions",
+            "ISOLATED: allFrames=false strictCsp=true native frame matching and host permissions",
+            "ISOLATED: allFrames=false disposed registration leaves fresh documents uninjected",
+            "ISOLATED: allFrames=true strictCsp=false native frame matching and host permissions",
+            "ISOLATED: allFrames=true strictCsp=true native frame matching and host permissions",
+            "ISOLATED: native child-frame registration disable and enable under page CSP",
+            "ISOLATED: allFrames=true disposed registration leaves fresh documents uninjected"
+          ],
+          "host": "firefox",
+          "mode": "production",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-script-contexts.ts",
+          "receiptFile": "artifacts/chromium-development/script-contexts.json",
+          "checks": [
+            "MAIN: allFrames=false strictCsp=false native frame matching and host permissions",
+            "MAIN: allFrames=false strictCsp=true native frame matching and host permissions",
+            "MAIN: allFrames=false disposed registration leaves fresh documents uninjected",
+            "MAIN: allFrames=true strictCsp=false native frame matching and host permissions",
+            "MAIN: allFrames=true strictCsp=true native frame matching and host permissions",
+            "MAIN: native child-frame registration disable and enable under page CSP",
+            "MAIN: allFrames=true disposed registration leaves fresh documents uninjected",
+            "ISOLATED: allFrames=false strictCsp=false native frame matching and host permissions",
+            "ISOLATED: allFrames=false strictCsp=true native frame matching and host permissions",
+            "ISOLATED: allFrames=false disposed registration leaves fresh documents uninjected",
+            "ISOLATED: allFrames=true strictCsp=false native frame matching and host permissions",
+            "ISOLATED: allFrames=true strictCsp=true native frame matching and host permissions",
+            "ISOLATED: native child-frame registration disable and enable under page CSP",
+            "ISOLATED: allFrames=true disposed registration leaves fresh documents uninjected"
+          ],
+          "host": "chromium",
+          "mode": "development",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-script-contexts.ts",
+          "receiptFile": "artifacts/firefox-development/script-contexts.json",
+          "checks": [
+            "MAIN: allFrames=false strictCsp=false native frame matching and host permissions",
+            "MAIN: allFrames=false strictCsp=true native frame matching and host permissions",
+            "MAIN: allFrames=false disposed registration leaves fresh documents uninjected",
+            "MAIN: allFrames=true strictCsp=false native frame matching and host permissions",
+            "MAIN: allFrames=true strictCsp=true native frame matching and host permissions",
+            "MAIN: native child-frame registration disable and enable under page CSP",
+            "MAIN: allFrames=true disposed registration leaves fresh documents uninjected",
+            "ISOLATED: allFrames=false strictCsp=false native frame matching and host permissions",
+            "ISOLATED: allFrames=false strictCsp=true native frame matching and host permissions",
+            "ISOLATED: allFrames=false disposed registration leaves fresh documents uninjected",
+            "ISOLATED: allFrames=true strictCsp=false native frame matching and host permissions",
+            "ISOLATED: allFrames=true strictCsp=true native frame matching and host permissions",
+            "ISOLATED: native child-frame registration disable and enable under page CSP",
+            "ISOLATED: allFrames=true disposed registration leaves fresh documents uninjected"
+          ],
+          "host": "firefox",
+          "mode": "development",
           "requirePageErrors": false
         }
       ]

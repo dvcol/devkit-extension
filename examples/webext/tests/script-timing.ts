@@ -26,7 +26,12 @@ export async function registerTimingScript(world: `${Browser.scripting.Execution
     {
       id: 'example-script-timing',
       js: ['script-timing.js'],
-      matches: ['http://127.0.0.1/index.html'],
+      matches: [
+        'http://127.0.0.1/index.html',
+        'http://localhost/index.html',
+        'http://127.0.0.1/frame.html',
+        'http://localhost/frame.html',
+      ],
       runAt: 'document_start',
       world,
       allFrames: false,
@@ -87,6 +92,7 @@ export function checkTimingSnapshot(
 export function checkTimingRegistration(
   registrations: Browser.scripting.RegisteredContentScript[],
   world: `${Browser.scripting.ExecutionWorld}`,
+  allFrames = false,
 ): void {
   assert.equal(registrations.length, 1);
   const registration = registrations[0];
@@ -94,10 +100,15 @@ export function checkTimingRegistration(
   assert.equal(registration.id, 'example-script-timing');
   assert.equal(registration.world, world);
   assert.equal(registration.runAt, 'document_start');
-  assert.equal(registration.allFrames, false);
+  assert.equal(registration.allFrames, allFrames);
   assert.equal(registration.persistAcrossSessions, false);
   assert.deepEqual(registration.js, ['script-timing.js']);
-  assert.deepEqual(registration.matches, ['http://127.0.0.1/index.html']);
+  assert.deepEqual(registration.matches?.toSorted(), [
+    'http://127.0.0.1/frame.html',
+    'http://127.0.0.1/index.html',
+    'http://localhost/frame.html',
+    'http://localhost/index.html',
+  ]);
 }
 
 export function readUnmatchedMarkers() {

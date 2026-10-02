@@ -2,11 +2,14 @@ import { defineExecution, definePlugin, defineScript } from '@devkit/core';
 import type { InstallationHandle } from '@devkit/core';
 import type { ProviderRpc, RpcProviderHandle } from '@devkit/devframe';
 
+interface ScriptOptions {
+  readonly world: `${chrome.scripting.ExecutionWorld}`;
+  readonly allFrames?: boolean;
+}
+
 declare module 'devframe/types' {
   interface DevframeRpcServerFunctions {
-    'example:scripts:install': (
-      world: `${chrome.scripting.ExecutionWorld}`,
-    ) => ReturnType<typeof scriptSnapshot>;
+    'example:scripts:install': (options: ScriptOptions) => ReturnType<typeof scriptSnapshot>;
     'example:scripts:disable': () => ReturnType<typeof scriptSnapshot>;
     'example:scripts:enable': () => ReturnType<typeof scriptSnapshot>;
     'example:scripts:dispose': () => ReturnType<typeof scriptSnapshot>;
@@ -14,7 +17,7 @@ declare module 'devframe/types' {
 }
 
 /** Packaged code stays in the native Vite/WXT graph; this recipe owns browser registration. */
-function timingScript(world: `${chrome.scripting.ExecutionWorld}`) {
+function timingScript({ world, allFrames = false }: ScriptOptions) {
   return defineScript({
     id: 'example.bootstrap',
     execution: defineExecution({ id: 'example.background' }),
@@ -23,10 +26,15 @@ function timingScript(world: `${chrome.scripting.ExecutionWorld}`) {
         {
           id: 'example-script-timing',
           js: ['script-timing.js'],
-          matches: ['http://127.0.0.1/index.html'],
+          matches: [
+            'http://127.0.0.1/index.html',
+            'http://localhost/index.html',
+            'http://127.0.0.1/frame.html',
+            'http://localhost/frame.html',
+          ],
           runAt: 'document_start',
           world,
-          allFrames: false,
+          allFrames,
           persistAcrossSessions: false,
         },
       ]);
@@ -61,12 +69,13 @@ export function registerScriptControls(options: {
   options.rpc.register({
     name: 'example:scripts:install',
     type: 'action',
-    async handler(world: string) {
+    async handler(scriptOptions: ScriptOptions) {
+      const { world } = scriptOptions;
       if (world !== 'MAIN' && world !== 'ISOLATED')
         throw new TypeError('Script world must be MAIN or ISOLATED');
       const provider = await options.provider;
       installation = await provider.plugins.install(
-        definePlugin({ id: 'example.bootstrap', scripts: [timingScript(world)] }),
+        definePlugin({ id: 'example.bootstrap', scripts: [timingScript(scriptOptions)] }),
       );
       return scriptSnapshot(installation);
     },
