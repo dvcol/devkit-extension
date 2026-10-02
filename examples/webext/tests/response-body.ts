@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import type { Server, ServerResponse } from 'node:http';
+import { checkNativeResponseEncodings, writeEncodedResponse } from './response-encoding.ts';
 
 export const responseBodyChecks = [
   'native Firefox filters prefix the owned response bytes and leave unmatched bytes unchanged',
+  'native decoding preserves gzip and deflate body bytes for fixed-length and chunked responses while original encoded headers remain visible',
   'disable removes future response admissions and enable registers a fresh activation',
   'native HTTP redirection reports the StreamFilter error while unmatched redirected bytes and later responses remain correct',
   'native output arrives before the input stream finishes, preserving split UTF-8 bytes',
@@ -23,6 +25,7 @@ export async function startResponseServer() {
       return;
     }
     response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    if (writeEncodedResponse(path, response)) return;
     if (path === '/transform-response/stream') {
       streaming = response;
       response.write(Buffer.concat([Buffer.from('first-caf'), Buffer.from([0xc3])]));
@@ -118,6 +121,7 @@ export async function finishNativeResponse() {
 interface ResponseBrowser {
   control(operation: 'install' | 'disable' | 'enable' | 'dispose' | 'snapshot'): Promise<unknown>;
   read(path: string): Promise<unknown>;
+  readEncoded(path: string): Promise<unknown>;
   start(path: string, expected: string): Promise<unknown>;
   finish(): Promise<unknown>;
   waitForError(): Promise<unknown>;
@@ -153,18 +157,20 @@ export async function checkFirefoxResponseBody(
   assert.deepEqual(await browser.read('/transform-response/plain'), transformed);
   const failure = await checkRedirectedResponse(browser, original);
   assert.deepEqual(await browser.read('/transform-response/plain'), transformed);
+  const encodings = await checkNativeResponseEncodings(browser);
   const firstBytes = await browser.start('/transform-response/stream', 'native:first-caf');
   assert.deepEqual(firstBytes, { status: 200, text: 'native:first-caf' });
   const disposed = await browser.control('dispose');
   installation(disposed, 'disposed', 2);
-  assert.partialDeepStrictEqual(disposed, { admitted: 5, completed: 3 });
+  assert.partialDeepStrictEqual(disposed, { admitted: 10, completed: 8 });
   assert.deepEqual(await browser.read('/transform-response/plain'), original);
   fixture.releaseStream();
   const completed = await browser.finish();
   assert.deepEqual(completed, { text: 'native:first-café-second-世界', error: null });
   const final = await browser.control('snapshot');
   installation(final, 'disposed', 2);
-  assert.partialDeepStrictEqual(final, { admitted: 5, completed: 4 });
+  assert.partialDeepStrictEqual(final, { errors: ['Channel redirected'] });
+  assert.partialDeepStrictEqual(final, { admitted: 10, completed: 9 });
   return {
     checks: responseBodyChecks,
     original,
@@ -174,6 +180,7 @@ export async function checkFirefoxResponseBody(
     disabled,
     enabled,
     ...failure,
+    encodings,
     firstBytes,
     disposed,
     completed,

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { By } from 'selenium-webdriver';
 import type { Driver } from 'selenium-webdriver/firefox.js';
+import { readNativeEncodedResponse } from './response-encoding.ts';
 import {
   checkFirefoxResponseBody as checkNativeFirefoxResponseBody,
   finishNativeResponse,
@@ -72,6 +73,10 @@ function createResponseBrowser(driver: Driver, extension: string, source: string
     read: async (path: string) => {
       await driver.switchTo().window(source);
       return driver.executeScript(readNativeResponse, path);
+    },
+    readEncoded: async (path: string) => {
+      await driver.switchTo().window(source);
+      return driver.executeScript(readNativeEncodedResponse, path);
     },
     start: async (path: string, expected: string) => {
       await driver.switchTo().window(source);

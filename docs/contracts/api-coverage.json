@@ -776,6 +776,7 @@
           "receiptFile": "artifacts/firefox/response-body.json",
           "checks": [
             "native Firefox filters prefix the owned response bytes and leave unmatched bytes unchanged",
+            "native decoding preserves gzip and deflate body bytes for fixed-length and chunked responses while original encoded headers remain visible",
             "disable removes future response admissions and enable registers a fresh activation",
             "native HTTP redirection reports the StreamFilter error while unmatched redirected bytes and later responses remain correct",
             "native output arrives before the input stream finishes, preserving split UTF-8 bytes",
@@ -802,6 +803,7 @@
           "receiptFile": "artifacts/firefox-development/response-body.json",
           "checks": [
             "native Firefox filters prefix the owned response bytes and leave unmatched bytes unchanged",
+            "native decoding preserves gzip and deflate body bytes for fixed-length and chunked responses while original encoded headers remain visible",
             "disable removes future response admissions and enable registers a fresh activation",
             "native HTTP redirection reports the StreamFilter error while unmatched redirected bytes and later responses remain correct",
             "native output arrives before the input stream finishes, preserving split UTF-8 bytes",
@@ -814,7 +816,7 @@
       ],
       "gaps": [
         "The common API owns native registration and cleanup. Bounded Vite HTML, native Chromium/Firefox DNR header and same-origin redirect examples, and Firefox byte-stream filtering establish their own timing, independent lifecycle and native failures in supported development/production modes. Chromium explicitly rejects the unavailable Firefox filtering method. No common response pipeline or cross-mechanism order is claimed.",
-        "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, persistent response-listener wakeup and broader response encodings/Content-Length/cancellation still need exact native evidence. Admitted Firefox stream completion after disposal is covered. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes."
+        "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, persistent response-listener wakeup and brotli/zstd, malformed/truncated encodings, range responses, caching, HTTP/2/3 and cancellation still need exact native evidence. Admitted Firefox stream completion after disposal is covered. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes. Valid gzip/deflate with fixed-length and chunked framing now have exact delivered-byte/header evidence in both Firefox modes; original encoded headers remain visible, with no SDK header-normalization promise."
       ]
     },
     {
