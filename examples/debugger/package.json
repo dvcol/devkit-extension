@@ -11,7 +11,8 @@
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
     "test:firefox": "node tests/firefox.ts",
-    "test:devframe": "node tests/devframe.ts && node tests/child-sessions.ts"
+    "test:devframe": "node tests/devframe.ts && node tests/child-sessions.ts",
+    "test:devtools": "node tests/devtools.ts"
   },
   "dependencies": {
     "@devkit/client": "workspace:*",
@@ -21,6 +22,7 @@
     "@dvcol/cdb": "0.3.0",
     "@dvcol/cdb-devframe": "0.3.0",
     "@dvcol/cdb-extension": "0.3.0",
+    "@vitejs/devtools": "0.7.5",
     "cac": "7.0.0",
     "devframe": "1.0.0",
     "zod": "4.6.5"

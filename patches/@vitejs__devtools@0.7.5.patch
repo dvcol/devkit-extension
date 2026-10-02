@@ -1,0 +1,36 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index e5135be..30818bb 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -1,6 +1,6 @@
+ import { c as ViteDevToolsUiOptions, r as ResolvedDevToolsConfig, s as DevToolsOptions } from "./config-JXcKb0oH.js";
+ import { ConnectionMeta, DevToolsDockEntry, DevToolsDocksUserSettings, DevToolsMessageEntry, DevToolsServerCommandEntry, DockRendererRegistration, RpcDefinitionsToFunctions, ViteDevToolsNodeContext } from "@vitejs/devtools-kit";
+-import { HubInstance } from "@devframes/hub/initiate";
++import { HubInstance, InitHubOptions } from "@devframes/hub/initiate";
+ import "@devframes/hub-ui";
+ import { DevframeInternalContext as DevToolsInternalContext, InternalAnonymousAuthStorage } from "devframe/node/hub-internals";
+ import { Plugin, ResolvedConfig, ViteDevServer } from "vite";
+@@ -57,6 +57,10 @@ interface CreateDevToolsHubOptions {
+   host?: string;
+   /** Pin the side-car WS port (standalone); auto-allocated when omitted. */
+   wsPort?: number;
++  /** Called after a native RPC connection's session is created. */
++  onPeerConnect?: InitHubOptions['onPeerConnect'];
++  /** Called after a native RPC connection closes. */
++  onPeerDisconnect?: InitHubOptions['onPeerDisconnect'];
+ }
+ interface DevToolsHub {
+   hub: HubInstance;
+diff --git a/dist/server-BIAKwFxh.js b/dist/server-BIAKwFxh.js
+index 4594ef0..e62d760 100644
+--- a/dist/server-BIAKwFxh.js
++++ b/dist/server-BIAKwFxh.js
+@@ -143,6 +143,8 @@ async function createDevToolsHub(options) {
+ 		renderers: resolveDockRendererRegistrations(options.renderers),
+ 		...context.viteServer ? { clientModuleResolution: "/@id/{specifier}" } : {},
+ 		auth: authDisabled ? false : getAuthHandler(context),
++		onPeerConnect: options.onPeerConnect,
++		onPeerDisconnect: options.onPeerDisconnect,
+ 		...allowedOrigins ? { allowedOrigins } : {},
+ 		...mcp !== void 0 ? { mcp } : {},
+ 		...options.server ? { server: options.server } : { ws: options.wsPort != null ? { port: options.wsPort } : { sidecar: true } },

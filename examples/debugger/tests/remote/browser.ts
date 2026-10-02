@@ -36,10 +36,7 @@ export async function createNativeBrowser(host: NativeHost) {
 async function createControl(browser: BrowserContext, host: NativeHost): Promise<Page> {
   const worker = browser.serviceWorkers()[0] ?? (await browser.waitForEvent('serviceworker'));
   const extensionOrigin = `chrome-extension://${new URL(worker.url()).host}`;
-  const registration = new URL(`${host.baseURL}__connection.json`);
-  registration.searchParams.set('devframe_viewer_origin', extensionOrigin);
-  registration.searchParams.set('devframe_viewer_origin_token', host.allowedOrigins.token);
-  host.allowedOrigins.registerFromUrl(registration.href);
+  host.allowExtensionOrigin(extensionOrigin);
   const control = await browser.newPage();
   await control.goto(`${extensionOrigin}/control.html`);
   return control;

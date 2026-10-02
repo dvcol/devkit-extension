@@ -45,18 +45,23 @@ export async function createNativeHost() {
     baseURL: `${origin}/__cdb/`,
     fixtureUrl: `${origin}/owned-target`,
     titleReads,
-    allowedOrigins,
     service,
     provider: fixture.requireProvider(),
     diagnostics: fixture.diagnostics,
     sessions: peers.sessions,
     errors: peers.errors,
     settled: peers.settled,
+    allowExtensionOrigin(extensionOrigin: string) {
+      const registration = new URL(`${origin}/__cdb/__connection.json`);
+      registration.searchParams.set('devframe_viewer_origin', extensionOrigin);
+      registration.searchParams.set('devframe_viewer_origin_token', allowedOrigins.token);
+      allowedOrigins.registerFromUrl(registration.href);
+    },
     close: () => lifetime.disposeAsync(),
   };
 }
 
-function createPeerLifecycle(service: () => CdbDevframeService) {
+export function createPeerLifecycle(service: () => CdbDevframeService) {
   const sessions = new Set<number>();
   const disconnects = new Set<Promise<void>>();
   const errors: string[] = [];
@@ -83,7 +88,9 @@ function createPeerLifecycle(service: () => CdbDevframeService) {
   };
 }
 
-function createPageServer(getNative: () => DevframeInstance | undefined) {
+export function createPageServer(
+  getNative: () => Pick<DevframeInstance, 'nodeMiddleware'> | undefined,
+) {
   const held = new Set<ServerResponse>();
   const server = createServer((request, response) => {
     if (request.url === '/hold-title') {
@@ -118,7 +125,7 @@ function createPageServer(getNative: () => DevframeInstance | undefined) {
   };
 }
 
-async function listen(server: Server): Promise<string> {
+export async function listen(server: Server): Promise<string> {
   await new Promise<void>((resolve, reject) => {
     server.once('error', reject);
     server.listen(0, '127.0.0.1', () => {
@@ -131,7 +138,7 @@ async function listen(server: Server): Promise<string> {
   return `http://127.0.0.1:${address.port}`;
 }
 
-async function closeServer(server: Server): Promise<void> {
+export async function closeServer(server: Server): Promise<void> {
   if (!server.listening) return;
   server.closeAllConnections();
   await new Promise<void>((resolve, reject) => {

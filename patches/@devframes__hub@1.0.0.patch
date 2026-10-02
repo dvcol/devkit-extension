@@ -1,0 +1,35 @@
+diff --git a/dist/node/initiate.d.mts b/dist/node/initiate.d.mts
+index ce3dc80..d647ba4 100644
+--- a/dist/node/initiate.d.mts
++++ b/dist/node/initiate.d.mts
+@@ -1,5 +1,6 @@
+ import { a as InstallDevframeOptions, n as DevframeHubContext, t as CreateHubContextOptions } from "../context-DaUV_lYb.mjs";
+ import { r as DEVFRAMES_HUB_BASE } from "../constants-29tNOFia.mjs";
++import { InitDevframeOptions } from "devframe/initiate";
+ import { DevframeInstanceRecord } from "devframe/internal";
+ import { Buffer } from "node:buffer";
+ import { AuthBannerFunction } from "devframe/recipes/interactive-auth";
+@@ -254,6 +255,10 @@ export interface InitHubOptions {
+   allowedOrigins?: readonly string[] | WsOriginRegistry | false;
+   /** Destroy off-route upgrades on a shared `server` devframe's adapter owns outright. */
+   destroyUnmatchedUpgrades?: boolean;
++  /** Called after a native RPC connection's session is created. */
++  onPeerConnect?: InitDevframeOptions['onPeerConnect'];
++  /** Called after a native RPC connection closes. */
++  onPeerDisconnect?: InitDevframeOptions['onPeerDisconnect'];
+ }
+ export interface HubInstance {
+   /**
+diff --git a/dist/node/initiate.mjs b/dist/node/initiate.mjs
+index 058319b..71b1cce 100644
+--- a/dist/node/initiate.mjs
++++ b/dist/node/initiate.mjs
+@@ -95,6 +95,8 @@ function initHub(options) {
+ 		sse: options.sse,
+ 		allowedOrigins: options.allowedOrigins,
+ 		destroyUnmatchedUpgrades: options.destroyUnmatchedUpgrades,
++		onPeerConnect: options.onPeerConnect,
++		onPeerDisconnect: options.onPeerDisconnect,
+ 		register: resolveInstanceRegister(options.register, {
+ 			id: options.name ?? "devframes-hub",
+ 			...options.name !== void 0 ? { name: options.name } : {},
