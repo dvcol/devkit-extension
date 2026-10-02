@@ -337,6 +337,25 @@ The existing `test:browser`, `test:firefox`, `test:dev:chromium` and `test:dev:f
 
 This slice implements request and response headers. It does not establish redirect/body transformation, rule-limit exhaustion, interactions with other extensions, worker-loss cleanup, restart/reload restoration or permission-revocation behavior. Native session rules are cleared at browser shutdown and extension version updates; they are not a persistent SDK registration. Firefox's WebDriver Classic runner has no global page-error capture. Native references: [Chrome DNR permissions, rule evaluation and session lifetime](https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest) and [atomic session-rule updates](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/updateSessionRules).
 
+## Native redirect transforms
+
+The background-owned [redirect contributions](./src/redirect-contribution.ts) use the same `defineTransform` recipe and native `declarativeNetRequest.updateSessionRules` as the header example. Each compiled rule redirects only the path of `http://127.0.0.1:*/transform-redirect` XMLHTTPREQUEST traffic. The granted origin and port remain unchanged:
+
+| Contribution               | Native session rule ID | Native priority | Destination path   |
+| -------------------------- | ---------------------- | --------------- | ------------------ |
+| `example.redirects-lower`  | 1201                   | 1               | `/redirect-lower`  |
+| `example.redirects-higher` | 1202                   | 2               | `/redirect-higher` |
+
+The native browser chooses the higher-priority destination when both rules match. Packaged controls install, disable, reenable and dispose each contribution independently. Setup registers cleanup only after its native rule update succeeds. The example adds no SDK redirect configuration, rule-ID allocator or HTTP pipeline.
+
+[Maintained assertions](./tests/redirect-rules.ts) fetch from a real loopback document. The server records the received destination path and returns its own body; the document records the actual response URL, status and Fetch redirect metadata. Active rules prevent the original matching path from reaching the server. Unmatched requests retain their original path and body. Duplicate rule ID 1202 rejects setup without changing either owner. An invalid rule ID 0 rejects the entire native update, including its requested removal of rule 1201. Disabling or disposing one contribution preserves its sibling; disposing both restores the original request.
+
+All four existing browser commands run this scenario: `test:browser`, `test:firefox`, `test:dev:chromium` and `test:dev:firefox`. Each writes `redirect-rules.json` in its existing artifact directory. [Four retained native receipts](./evidence/redirect-rules) record Chromium 153.0.8010.12 and Firefox 157.0 in production and native WXT development. Both browsers reported `redirected: true` for the redirected response and `false` for the original/unmatched responses. Chromium captured zero fixture/extension page errors; Firefox retains its WebDriver Classic limitation.
+
+During validation, Chromium completed the header assertions but stalled in fixture teardown. Native browser preconnection had left an owned socket open without sending any requests. Both owned HTTP fixtures now call `closeAllConnections()` after initiating `server.close()`. [Two real TCP regression cases](./tests/loopback-fixture.test.ts) establish an accepted unused peer and bound teardown to one second; removing only that cleanup makes both cases fail. This affects test fixture cleanup only.
+
+This proves same-origin redirects on the granted loopback fixture. Cross-origin redirects, response-body streaming, permission revocation, native rule limits, other extensions and rule survival after abrupt background loss remain separate acceptance work. Native references: [Chrome redirect rules and evaluation](https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest) and [atomic native rule updates](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/updateSessionRules).
+
 ## Packaged script changes during development
 
 WXT treats a changed unlisted script as an extension reload. The maintained Chromium and Firefox development suites edit the temporary fixture's imported `src/script-timing.ts`, leaving the repository source untouched. The tests use normal file watching and native extension reload; no mock reload event, page reinjection or registration recovery is added.

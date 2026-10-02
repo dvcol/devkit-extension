@@ -1,0 +1,1251 @@
+{
+  "browser": "157.0",
+  "checks": [
+    "native redirect session rules change the actual server path and received body before the original request is sent",
+    "native higher redirect priority selects one same-origin destination",
+    "unmatched requests retain their original server path and received body",
+    "native redirect response URLs preserve the granted loopback origin and expose measured redirect metadata",
+    "duplicate native redirect rule rejects setup without changing either active redirect",
+    "invalid native redirect rule rejects its atomic update without removing the existing redirect",
+    "disabling and reenabling each redirect contribution preserves its sibling and native precedence",
+    "disposing one redirect contribution preserves its sibling and disposing both restores the original request"
+  ],
+  "observation": {
+    "original": {
+      "responses": [
+        {
+          "body": "{\"path\":\"/transform-redirect\",\"value\":\"original\"}",
+          "redirected": false,
+          "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+          "responseUrl": "http://127.0.0.1:63078/transform-redirect",
+          "status": 200
+        },
+        {
+          "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+          "redirected": false,
+          "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+          "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+          "status": 200
+        }
+      ],
+      "serverPaths": ["/transform-redirect", "/unmatched-redirect"]
+    },
+    "lower": {
+      "lower": {
+        "id": "example.redirects-lower",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.redirects-lower",
+            "kind": "transform",
+            "generation": 1,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "higher": null,
+      "rules": [
+        {
+          "id": 1201,
+          "priority": 1,
+          "condition": {
+            "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+            "regexFilter": null,
+            "isUrlFilterCaseSensitive": null,
+            "initiatorDomains": null,
+            "excludedInitiatorDomains": null,
+            "requestDomains": null,
+            "excludedRequestDomains": null,
+            "resourceTypes": ["xmlhttprequest"],
+            "excludedResourceTypes": null,
+            "requestMethods": null,
+            "excludedRequestMethods": null,
+            "domainType": null,
+            "tabIds": null,
+            "excludedTabIds": null
+          },
+          "action": {
+            "redirect": {
+              "extensionPath": null,
+              "regexSubstitution": null,
+              "transform": {
+                "fragment": null,
+                "host": null,
+                "password": null,
+                "path": "/redirect-lower",
+                "port": null,
+                "query": null,
+                "queryTransform": null,
+                "scheme": null,
+                "username": null
+              },
+              "url": null
+            },
+            "requestHeaders": null,
+            "responseHeaders": null,
+            "type": "redirect"
+          }
+        }
+      ]
+    },
+    "lowerOnly": {
+      "responses": [
+        {
+          "body": "{\"path\":\"/redirect-lower\",\"value\":\"lower\"}",
+          "redirected": true,
+          "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+          "responseUrl": "http://127.0.0.1:63078/redirect-lower",
+          "status": 200
+        },
+        {
+          "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+          "redirected": false,
+          "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+          "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+          "status": 200
+        }
+      ],
+      "serverPaths": ["/redirect-lower", "/unmatched-redirect"]
+    },
+    "higher": {
+      "lower": {
+        "id": "example.redirects-lower",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.redirects-lower",
+            "kind": "transform",
+            "generation": 1,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "higher": {
+        "id": "example.redirects-higher",
+        "status": "ready",
+        "contributions": [
+          {
+            "id": "example.redirects-higher",
+            "kind": "transform",
+            "generation": 1,
+            "enabled": true,
+            "status": "active",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "rules": [
+        {
+          "id": 1201,
+          "priority": 1,
+          "condition": {
+            "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+            "regexFilter": null,
+            "isUrlFilterCaseSensitive": null,
+            "initiatorDomains": null,
+            "excludedInitiatorDomains": null,
+            "requestDomains": null,
+            "excludedRequestDomains": null,
+            "resourceTypes": ["xmlhttprequest"],
+            "excludedResourceTypes": null,
+            "requestMethods": null,
+            "excludedRequestMethods": null,
+            "domainType": null,
+            "tabIds": null,
+            "excludedTabIds": null
+          },
+          "action": {
+            "redirect": {
+              "extensionPath": null,
+              "regexSubstitution": null,
+              "transform": {
+                "fragment": null,
+                "host": null,
+                "password": null,
+                "path": "/redirect-lower",
+                "port": null,
+                "query": null,
+                "queryTransform": null,
+                "scheme": null,
+                "username": null
+              },
+              "url": null
+            },
+            "requestHeaders": null,
+            "responseHeaders": null,
+            "type": "redirect"
+          }
+        },
+        {
+          "id": 1202,
+          "priority": 2,
+          "condition": {
+            "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+            "regexFilter": null,
+            "isUrlFilterCaseSensitive": null,
+            "initiatorDomains": null,
+            "excludedInitiatorDomains": null,
+            "requestDomains": null,
+            "excludedRequestDomains": null,
+            "resourceTypes": ["xmlhttprequest"],
+            "excludedResourceTypes": null,
+            "requestMethods": null,
+            "excludedRequestMethods": null,
+            "domainType": null,
+            "tabIds": null,
+            "excludedTabIds": null
+          },
+          "action": {
+            "redirect": {
+              "extensionPath": null,
+              "regexSubstitution": null,
+              "transform": {
+                "fragment": null,
+                "host": null,
+                "password": null,
+                "path": "/redirect-higher",
+                "port": null,
+                "query": null,
+                "queryTransform": null,
+                "scheme": null,
+                "username": null
+              },
+              "url": null
+            },
+            "requestHeaders": null,
+            "responseHeaders": null,
+            "type": "redirect"
+          }
+        }
+      ]
+    },
+    "overlapping": {
+      "responses": [
+        {
+          "body": "{\"path\":\"/redirect-higher\",\"value\":\"higher\"}",
+          "redirected": true,
+          "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+          "responseUrl": "http://127.0.0.1:63078/redirect-higher",
+          "status": 200
+        },
+        {
+          "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+          "redirected": false,
+          "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+          "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+          "status": 200
+        }
+      ],
+      "serverPaths": ["/redirect-higher", "/unmatched-redirect"]
+    },
+    "failures": [
+      {
+        "kind": "duplicate",
+        "failure": {
+          "failure": {
+            "id": "example.redirects-duplicate",
+            "status": "partial",
+            "contributions": [
+              {
+                "id": "example.redirects-duplicate",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": true,
+                "status": "failed",
+                "diagnostics": [
+                  {
+                    "code": "setup-failure",
+                    "message": "Contribution setup failed",
+                    "phase": "setup",
+                    "severity": "error",
+                    "providerId": "example.extension",
+                    "pluginId": "example.redirects-duplicate",
+                    "contributionId": "example.redirects-duplicate"
+                  }
+                ]
+              }
+            ],
+            "diagnostics": [
+              {
+                "code": "setup-failure",
+                "message": "Contribution setup failed",
+                "phase": "setup",
+                "severity": "error",
+                "providerId": "example.extension",
+                "pluginId": "example.redirects-duplicate",
+                "contributionId": "example.redirects-duplicate"
+              }
+            ]
+          },
+          "current": {
+            "lower": {
+              "id": "example.redirects-lower",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.redirects-lower",
+                  "kind": "transform",
+                  "generation": 1,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "higher": {
+              "id": "example.redirects-higher",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.redirects-higher",
+                  "kind": "transform",
+                  "generation": 1,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "rules": [
+              {
+                "id": 1201,
+                "priority": 1,
+                "condition": {
+                  "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                  "regexFilter": null,
+                  "isUrlFilterCaseSensitive": null,
+                  "initiatorDomains": null,
+                  "excludedInitiatorDomains": null,
+                  "requestDomains": null,
+                  "excludedRequestDomains": null,
+                  "resourceTypes": ["xmlhttprequest"],
+                  "excludedResourceTypes": null,
+                  "requestMethods": null,
+                  "excludedRequestMethods": null,
+                  "domainType": null,
+                  "tabIds": null,
+                  "excludedTabIds": null
+                },
+                "action": {
+                  "redirect": {
+                    "extensionPath": null,
+                    "regexSubstitution": null,
+                    "transform": {
+                      "fragment": null,
+                      "host": null,
+                      "password": null,
+                      "path": "/redirect-lower",
+                      "port": null,
+                      "query": null,
+                      "queryTransform": null,
+                      "scheme": null,
+                      "username": null
+                    },
+                    "url": null
+                  },
+                  "requestHeaders": null,
+                  "responseHeaders": null,
+                  "type": "redirect"
+                }
+              },
+              {
+                "id": 1202,
+                "priority": 2,
+                "condition": {
+                  "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                  "regexFilter": null,
+                  "isUrlFilterCaseSensitive": null,
+                  "initiatorDomains": null,
+                  "excludedInitiatorDomains": null,
+                  "requestDomains": null,
+                  "excludedRequestDomains": null,
+                  "resourceTypes": ["xmlhttprequest"],
+                  "excludedResourceTypes": null,
+                  "requestMethods": null,
+                  "excludedRequestMethods": null,
+                  "domainType": null,
+                  "tabIds": null,
+                  "excludedTabIds": null
+                },
+                "action": {
+                  "redirect": {
+                    "extensionPath": null,
+                    "regexSubstitution": null,
+                    "transform": {
+                      "fragment": null,
+                      "host": null,
+                      "password": null,
+                      "path": "/redirect-higher",
+                      "port": null,
+                      "query": null,
+                      "queryTransform": null,
+                      "scheme": null,
+                      "username": null
+                    },
+                    "url": null
+                  },
+                  "requestHeaders": null,
+                  "responseHeaders": null,
+                  "type": "redirect"
+                }
+              }
+            ]
+          }
+        },
+        "observed": {
+          "responses": [
+            {
+              "body": "{\"path\":\"/redirect-higher\",\"value\":\"higher\"}",
+              "redirected": true,
+              "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+              "responseUrl": "http://127.0.0.1:63078/redirect-higher",
+              "status": 200
+            },
+            {
+              "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "status": 200
+            }
+          ],
+          "serverPaths": ["/redirect-higher", "/unmatched-redirect"]
+        }
+      },
+      {
+        "kind": "invalid",
+        "failure": {
+          "failure": {
+            "id": "example.redirects-invalid",
+            "status": "partial",
+            "contributions": [
+              {
+                "id": "example.redirects-invalid",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": true,
+                "status": "failed",
+                "diagnostics": [
+                  {
+                    "code": "setup-failure",
+                    "message": "Contribution setup failed",
+                    "phase": "setup",
+                    "severity": "error",
+                    "providerId": "example.extension",
+                    "pluginId": "example.redirects-invalid",
+                    "contributionId": "example.redirects-invalid"
+                  }
+                ]
+              }
+            ],
+            "diagnostics": [
+              {
+                "code": "setup-failure",
+                "message": "Contribution setup failed",
+                "phase": "setup",
+                "severity": "error",
+                "providerId": "example.extension",
+                "pluginId": "example.redirects-invalid",
+                "contributionId": "example.redirects-invalid"
+              }
+            ]
+          },
+          "current": {
+            "lower": {
+              "id": "example.redirects-lower",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.redirects-lower",
+                  "kind": "transform",
+                  "generation": 1,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "higher": {
+              "id": "example.redirects-higher",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.redirects-higher",
+                  "kind": "transform",
+                  "generation": 1,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "rules": [
+              {
+                "id": 1201,
+                "priority": 1,
+                "condition": {
+                  "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                  "regexFilter": null,
+                  "isUrlFilterCaseSensitive": null,
+                  "initiatorDomains": null,
+                  "excludedInitiatorDomains": null,
+                  "requestDomains": null,
+                  "excludedRequestDomains": null,
+                  "resourceTypes": ["xmlhttprequest"],
+                  "excludedResourceTypes": null,
+                  "requestMethods": null,
+                  "excludedRequestMethods": null,
+                  "domainType": null,
+                  "tabIds": null,
+                  "excludedTabIds": null
+                },
+                "action": {
+                  "redirect": {
+                    "extensionPath": null,
+                    "regexSubstitution": null,
+                    "transform": {
+                      "fragment": null,
+                      "host": null,
+                      "password": null,
+                      "path": "/redirect-lower",
+                      "port": null,
+                      "query": null,
+                      "queryTransform": null,
+                      "scheme": null,
+                      "username": null
+                    },
+                    "url": null
+                  },
+                  "requestHeaders": null,
+                  "responseHeaders": null,
+                  "type": "redirect"
+                }
+              },
+              {
+                "id": 1202,
+                "priority": 2,
+                "condition": {
+                  "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                  "regexFilter": null,
+                  "isUrlFilterCaseSensitive": null,
+                  "initiatorDomains": null,
+                  "excludedInitiatorDomains": null,
+                  "requestDomains": null,
+                  "excludedRequestDomains": null,
+                  "resourceTypes": ["xmlhttprequest"],
+                  "excludedResourceTypes": null,
+                  "requestMethods": null,
+                  "excludedRequestMethods": null,
+                  "domainType": null,
+                  "tabIds": null,
+                  "excludedTabIds": null
+                },
+                "action": {
+                  "redirect": {
+                    "extensionPath": null,
+                    "regexSubstitution": null,
+                    "transform": {
+                      "fragment": null,
+                      "host": null,
+                      "password": null,
+                      "path": "/redirect-higher",
+                      "port": null,
+                      "query": null,
+                      "queryTransform": null,
+                      "scheme": null,
+                      "username": null
+                    },
+                    "url": null
+                  },
+                  "requestHeaders": null,
+                  "responseHeaders": null,
+                  "type": "redirect"
+                }
+              }
+            ]
+          }
+        },
+        "observed": {
+          "responses": [
+            {
+              "body": "{\"path\":\"/redirect-higher\",\"value\":\"higher\"}",
+              "redirected": true,
+              "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+              "responseUrl": "http://127.0.0.1:63078/redirect-higher",
+              "status": 200
+            },
+            {
+              "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "status": 200
+            }
+          ],
+          "serverPaths": ["/redirect-higher", "/unmatched-redirect"]
+        }
+      }
+    ],
+    "lifecycle": {
+      "lower": {
+        "disabled": {
+          "lower": {
+            "id": "example.redirects-lower",
+            "status": "inactive",
+            "contributions": [
+              {
+                "id": "example.redirects-lower",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": false,
+                "status": "disabled",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.redirects-higher",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.redirects-higher",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1202,
+              "priority": 2,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": {
+                  "extensionPath": null,
+                  "regexSubstitution": null,
+                  "transform": {
+                    "fragment": null,
+                    "host": null,
+                    "password": null,
+                    "path": "/redirect-higher",
+                    "port": null,
+                    "query": null,
+                    "queryTransform": null,
+                    "scheme": null,
+                    "username": null
+                  },
+                  "url": null
+                },
+                "requestHeaders": null,
+                "responseHeaders": null,
+                "type": "redirect"
+              }
+            }
+          ]
+        },
+        "absent": {
+          "responses": [
+            {
+              "body": "{\"path\":\"/redirect-higher\",\"value\":\"higher\"}",
+              "redirected": true,
+              "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+              "responseUrl": "http://127.0.0.1:63078/redirect-higher",
+              "status": 200
+            },
+            {
+              "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "status": 200
+            }
+          ],
+          "serverPaths": ["/redirect-higher", "/unmatched-redirect"]
+        },
+        "enabled": {
+          "lower": {
+            "id": "example.redirects-lower",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.redirects-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.redirects-higher",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.redirects-higher",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1202,
+              "priority": 2,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": {
+                  "extensionPath": null,
+                  "regexSubstitution": null,
+                  "transform": {
+                    "fragment": null,
+                    "host": null,
+                    "password": null,
+                    "path": "/redirect-higher",
+                    "port": null,
+                    "query": null,
+                    "queryTransform": null,
+                    "scheme": null,
+                    "username": null
+                  },
+                  "url": null
+                },
+                "requestHeaders": null,
+                "responseHeaders": null,
+                "type": "redirect"
+              }
+            },
+            {
+              "id": 1201,
+              "priority": 1,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": {
+                  "extensionPath": null,
+                  "regexSubstitution": null,
+                  "transform": {
+                    "fragment": null,
+                    "host": null,
+                    "password": null,
+                    "path": "/redirect-lower",
+                    "port": null,
+                    "query": null,
+                    "queryTransform": null,
+                    "scheme": null,
+                    "username": null
+                  },
+                  "url": null
+                },
+                "requestHeaders": null,
+                "responseHeaders": null,
+                "type": "redirect"
+              }
+            }
+          ]
+        },
+        "restored": {
+          "responses": [
+            {
+              "body": "{\"path\":\"/redirect-higher\",\"value\":\"higher\"}",
+              "redirected": true,
+              "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+              "responseUrl": "http://127.0.0.1:63078/redirect-higher",
+              "status": 200
+            },
+            {
+              "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "status": 200
+            }
+          ],
+          "serverPaths": ["/redirect-higher", "/unmatched-redirect"]
+        }
+      },
+      "higher": {
+        "disabled": {
+          "lower": {
+            "id": "example.redirects-lower",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.redirects-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.redirects-higher",
+            "status": "inactive",
+            "contributions": [
+              {
+                "id": "example.redirects-higher",
+                "kind": "transform",
+                "generation": 1,
+                "enabled": false,
+                "status": "disabled",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1201,
+              "priority": 1,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": {
+                  "extensionPath": null,
+                  "regexSubstitution": null,
+                  "transform": {
+                    "fragment": null,
+                    "host": null,
+                    "password": null,
+                    "path": "/redirect-lower",
+                    "port": null,
+                    "query": null,
+                    "queryTransform": null,
+                    "scheme": null,
+                    "username": null
+                  },
+                  "url": null
+                },
+                "requestHeaders": null,
+                "responseHeaders": null,
+                "type": "redirect"
+              }
+            }
+          ]
+        },
+        "absent": {
+          "responses": [
+            {
+              "body": "{\"path\":\"/redirect-lower\",\"value\":\"lower\"}",
+              "redirected": true,
+              "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+              "responseUrl": "http://127.0.0.1:63078/redirect-lower",
+              "status": 200
+            },
+            {
+              "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "status": 200
+            }
+          ],
+          "serverPaths": ["/redirect-lower", "/unmatched-redirect"]
+        },
+        "enabled": {
+          "lower": {
+            "id": "example.redirects-lower",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.redirects-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.redirects-higher",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.redirects-higher",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1201,
+              "priority": 1,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": {
+                  "extensionPath": null,
+                  "regexSubstitution": null,
+                  "transform": {
+                    "fragment": null,
+                    "host": null,
+                    "password": null,
+                    "path": "/redirect-lower",
+                    "port": null,
+                    "query": null,
+                    "queryTransform": null,
+                    "scheme": null,
+                    "username": null
+                  },
+                  "url": null
+                },
+                "requestHeaders": null,
+                "responseHeaders": null,
+                "type": "redirect"
+              }
+            },
+            {
+              "id": 1202,
+              "priority": 2,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": {
+                  "extensionPath": null,
+                  "regexSubstitution": null,
+                  "transform": {
+                    "fragment": null,
+                    "host": null,
+                    "password": null,
+                    "path": "/redirect-higher",
+                    "port": null,
+                    "query": null,
+                    "queryTransform": null,
+                    "scheme": null,
+                    "username": null
+                  },
+                  "url": null
+                },
+                "requestHeaders": null,
+                "responseHeaders": null,
+                "type": "redirect"
+              }
+            }
+          ]
+        },
+        "restored": {
+          "responses": [
+            {
+              "body": "{\"path\":\"/redirect-higher\",\"value\":\"higher\"}",
+              "redirected": true,
+              "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+              "responseUrl": "http://127.0.0.1:63078/redirect-higher",
+              "status": 200
+            },
+            {
+              "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "status": 200
+            }
+          ],
+          "serverPaths": ["/redirect-higher", "/unmatched-redirect"]
+        }
+      },
+      "disposal": {
+        "disposedLower": {
+          "lower": {
+            "id": "example.redirects-lower",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.redirects-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.redirects-higher",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.redirects-higher",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": [
+            {
+              "id": 1202,
+              "priority": 2,
+              "condition": {
+                "urlFilter": "|http://127.0.0.1:*/transform-redirect|",
+                "regexFilter": null,
+                "isUrlFilterCaseSensitive": null,
+                "initiatorDomains": null,
+                "excludedInitiatorDomains": null,
+                "requestDomains": null,
+                "excludedRequestDomains": null,
+                "resourceTypes": ["xmlhttprequest"],
+                "excludedResourceTypes": null,
+                "requestMethods": null,
+                "excludedRequestMethods": null,
+                "domainType": null,
+                "tabIds": null,
+                "excludedTabIds": null
+              },
+              "action": {
+                "redirect": {
+                  "extensionPath": null,
+                  "regexSubstitution": null,
+                  "transform": {
+                    "fragment": null,
+                    "host": null,
+                    "password": null,
+                    "path": "/redirect-higher",
+                    "port": null,
+                    "query": null,
+                    "queryTransform": null,
+                    "scheme": null,
+                    "username": null
+                  },
+                  "url": null
+                },
+                "requestHeaders": null,
+                "responseHeaders": null,
+                "type": "redirect"
+              }
+            }
+          ]
+        },
+        "lowerDisposed": {
+          "responses": [
+            {
+              "body": "{\"path\":\"/redirect-higher\",\"value\":\"higher\"}",
+              "redirected": true,
+              "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+              "responseUrl": "http://127.0.0.1:63078/redirect-higher",
+              "status": 200
+            },
+            {
+              "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "status": 200
+            }
+          ],
+          "serverPaths": ["/redirect-higher", "/unmatched-redirect"]
+        },
+        "disposedHigher": {
+          "lower": {
+            "id": "example.redirects-lower",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.redirects-lower",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "higher": {
+            "id": "example.redirects-higher",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.redirects-higher",
+                "kind": "transform",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "rules": []
+        },
+        "bothDisposed": {
+          "responses": [
+            {
+              "body": "{\"path\":\"/transform-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/transform-redirect",
+              "responseUrl": "http://127.0.0.1:63078/transform-redirect",
+              "status": 200
+            },
+            {
+              "body": "{\"path\":\"/unmatched-redirect\",\"value\":\"original\"}",
+              "redirected": false,
+              "requestedUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "responseUrl": "http://127.0.0.1:63078/unmatched-redirect",
+              "status": 200
+            }
+          ],
+          "serverPaths": ["/transform-redirect", "/unmatched-redirect"]
+        }
+      }
+    },
+    "checks": [
+      "native redirect session rules change the actual server path and received body before the original request is sent",
+      "native higher redirect priority selects one same-origin destination",
+      "unmatched requests retain their original server path and received body",
+      "native redirect response URLs preserve the granted loopback origin and expose measured redirect metadata",
+      "duplicate native redirect rule rejects setup without changing either active redirect",
+      "invalid native redirect rule rejects its atomic update without removing the existing redirect",
+      "disabling and reenabling each redirect contribution preserves its sibling and native precedence",
+      "disposing one redirect contribution preserves its sibling and disposing both restores the original request"
+    ]
+  },
+  "serverRequests": [
+    "/",
+    "/favicon.ico",
+    "/transform-redirect",
+    "/unmatched-redirect",
+    "/redirect-lower",
+    "/unmatched-redirect",
+    "/redirect-higher",
+    "/unmatched-redirect",
+    "/redirect-higher",
+    "/unmatched-redirect",
+    "/redirect-higher",
+    "/unmatched-redirect",
+    "/redirect-higher",
+    "/unmatched-redirect",
+    "/redirect-higher",
+    "/unmatched-redirect",
+    "/redirect-lower",
+    "/unmatched-redirect",
+    "/redirect-higher",
+    "/unmatched-redirect",
+    "/redirect-higher",
+    "/unmatched-redirect",
+    "/transform-redirect",
+    "/unmatched-redirect"
+  ],
+  "providerRetained": true,
+  "limitations": ["No global page-error capture through WebDriver Classic"]
+}

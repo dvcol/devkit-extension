@@ -45,6 +45,8 @@ export async function startHeaderServer() {
           if (error) reject(error);
           else resolve();
         });
+        /** Close browser preconnections that never sent a request and survive page teardown. */
+        server.closeAllConnections();
       }),
   };
 }

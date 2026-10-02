@@ -685,10 +685,82 @@
           "host": "firefox-webext",
           "mode": "native-wxt-development",
           "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-redirect-rules.ts",
+          "receiptFile": "artifacts/redirect-rules.json",
+          "checks": [
+            "native redirect session rules change the actual server path and received body before the original request is sent",
+            "native higher redirect priority selects one same-origin destination",
+            "unmatched requests retain their original server path and received body",
+            "native redirect response URLs preserve the granted loopback origin and expose measured redirect metadata",
+            "duplicate native redirect rule rejects setup without changing either active redirect",
+            "invalid native redirect rule rejects its atomic update without removing the existing redirect",
+            "disabling and reenabling each redirect contribution preserves its sibling and native precedence",
+            "disposing one redirect contribution preserves its sibling and disposing both restores the original request"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-redirect-rules.ts",
+          "receiptFile": "artifacts/firefox/redirect-rules.json",
+          "checks": [
+            "native redirect session rules change the actual server path and received body before the original request is sent",
+            "native higher redirect priority selects one same-origin destination",
+            "unmatched requests retain their original server path and received body",
+            "native redirect response URLs preserve the granted loopback origin and expose measured redirect metadata",
+            "duplicate native redirect rule rejects setup without changing either active redirect",
+            "invalid native redirect rule rejects its atomic update without removing the existing redirect",
+            "disabling and reenabling each redirect contribution preserves its sibling and native precedence",
+            "disposing one redirect contribution preserves its sibling and disposing both restores the original request"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-redirect-rules.ts",
+          "receiptFile": "artifacts/chromium-development/redirect-rules.json",
+          "checks": [
+            "native redirect session rules change the actual server path and received body before the original request is sent",
+            "native higher redirect priority selects one same-origin destination",
+            "unmatched requests retain their original server path and received body",
+            "native redirect response URLs preserve the granted loopback origin and expose measured redirect metadata",
+            "duplicate native redirect rule rejects setup without changing either active redirect",
+            "invalid native redirect rule rejects its atomic update without removing the existing redirect",
+            "disabling and reenabling each redirect contribution preserves its sibling and native precedence",
+            "disposing one redirect contribution preserves its sibling and disposing both restores the original request"
+          ],
+          "host": "chromium-webext",
+          "mode": "native-wxt-development",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-redirect-rules.ts",
+          "receiptFile": "artifacts/firefox-development/redirect-rules.json",
+          "checks": [
+            "native redirect session rules change the actual server path and received body before the original request is sent",
+            "native higher redirect priority selects one same-origin destination",
+            "unmatched requests retain their original server path and received body",
+            "native redirect response URLs preserve the granted loopback origin and expose measured redirect metadata",
+            "duplicate native redirect rule rejects setup without changing either active redirect",
+            "invalid native redirect rule rejects its atomic update without removing the existing redirect",
+            "disabling and reenabling each redirect contribution preserves its sibling and native precedence",
+            "disposing one redirect contribution preserves its sibling and disposing both restores the original request"
+          ],
+          "host": "firefox-webext",
+          "mode": "native-wxt-development",
+          "requirePageErrors": false
         }
       ],
       "gaps": [
-        "The common API owns native registration and cleanup. Bounded Vite HTML and native Chromium/Firefox DNR header examples establish their own ordering, independent lifecycle and native failures in supported development/production modes. Redirect and response-body recipes remain unimplemented; no common response pipeline or cross-mechanism order is claimed.",
+        "The common API owns native registration and cleanup. Bounded Vite HTML and native Chromium/Firefox DNR header and same-origin redirect examples establish their own ordering, independent lifecycle and native failures in supported development/production modes. Response-body recipes remain unimplemented; no common response pipeline or cross-mechanism order is claimed.",
         "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, in-flight disposal, response encoding/streaming and the broader host/mode matrix still need exact native evidence. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes."
       ]
     },
@@ -2502,7 +2574,7 @@
       ],
       "gaps": [
         "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
-        "Direct strict handles and relaxed admission envelopes have runtime evidence. Conditional return types remain a separate type-checking obligation. View setup now uses the existing requirements, activation scope, dependency-loss teardown/restart and replacement barriers; its native host/rendering evidence remains separate. Script and transform contributions remain unsupported."
+        "Direct strict handles and relaxed admission envelopes have runtime evidence. Conditional return types remain a separate type-checking obligation. View setup now uses the existing requirements, activation scope, dependency-loss teardown/restart and replacement barriers; its native host/rendering evidence remains separate. Script and transform setup recipes are implemented and have separate declaration/lifecycle evidence groups; their broader native host/mode acceptance remains open."
       ]
     },
     {
