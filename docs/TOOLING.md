@@ -82,7 +82,7 @@ Both Bundler and NodeNext consumers compile with strict TypeScript 7 and `skipLi
 
 The private server integration uses the independently reviewed public `devframe@1.0.0`, `@devframes/hub@1.0.0` and `@vitejs/devtools-kit@0.7.5` releases. Registry verification on 2026-09-23 at 03:35 UTC confirmed they were still the latest releases and that their peer requirements matched this graph. The kit also requires `@devframes/json-render@1.0.0`.
 
-Four exact-version release-age exceptions allow this researched graph to install while the releases are less than two hours short of the existing 168-hour threshold. The global seven-day rule and `trustPolicy: no-downgrade` remain enabled. These exceptions contain neither wildcard ranges nor latest tags, so they do not exempt future releases.
+Four exact-version release-age exceptions initially allowed this researched graph to install while the releases were less than two hours short of the existing 168-hour threshold. Registry verification on 2026-10-02 confirmed that all four releases were more than 388 hours old, so the exceptions have been removed. The global seven-day rule and `trustPolicy: no-downgrade` remain enabled, with no release-age exclusions.
 
 | Exact release                  | Published UTC           | Reaches seven days UTC  |
 | ------------------------------ | ----------------------- | ----------------------- |
@@ -91,6 +91,6 @@ Four exact-version release-age exceptions allow this researched graph to install
 | `@devframes/json-render@1.0.0` | 2026-09-16 04:23:06.350 | 2026-09-23 04:23:06.350 |
 | `@vitejs/devtools-kit@0.7.5`   | 2026-09-16 05:04:00.797 | 2026-09-23 05:04:00.797 |
 
-Remove these four exceptions after their age thresholds are met. The preceding release-age check rejected exactly this cohort; unrelated releases remain subject to the normal policy.
+The preceding release-age check rejected exactly this cohort. The recorded dates explain the temporary exceptions; all releases now remain subject to the normal policy.
 
 [Versioned declaration patches](../patches/README.md), a missing whenexpr dependency correction and the server's explicit cac dependency retain strict TypeScript 7 declaration checking. Devframe marks cac as an optional peer but imports its types unconditionally; adding it through a dependency extension did not install that peer. These fixes change no runtime JavaScript and adopt no experimental connection-isolation behavior. The server package must continue to use `skipLibCheck: false`. These repository-level patches support the private workspace integration; distributing a standalone adapter still requires verified upstream fixes or an explicit consumer patch policy.
