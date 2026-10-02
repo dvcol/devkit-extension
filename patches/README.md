@@ -40,7 +40,7 @@ The maintained WebExtension tests exercise native subscriptions across two Port 
 
 The `devframe@1.0.0` patch also suppresses a received server snapshot/patch's redundant echo while preserving ordinary client writes, nested user writes and writes to another key using the received synchronization ID. A delayed echo otherwise overwrites a deleted/recreated native state with its old value. The [source diagnosis and review candidate](../docs/research/native-state-echo.md) record the native boundary, exact regression and CI attribution limit.
 
-Both existing client factory entry files receive the same private receive-scope correction. No declarations, serializer, state-key format, renderer or SDK state engine change. The maintained native adapter tests first reproduce 6→5 on the previous installed package and pass with this correction. Remove it when an unpatched native release passes those public-API and affected browser checks. Upstream publication remains pending owner approval, and the workspace patch still does not automatically reach published consumers.
+Both existing client factory entry files receive the same private receive-scope correction. No declarations, serializer, state-key format, renderer or SDK state engine change. The maintained native adapter tests first reproduce 6→5 on the previous installed package and pass with this correction. Remove it when an unpatched native release passes those public-API and affected browser checks. The owner-approved [upstream draft #422](https://github.com/devframes/devframe/pull/422) contains the native source correction at `de9c518f` and reproducible baseline/fixed commands. The workspace patch still does not automatically reach published consumers.
 
 ## Native JSON view and renderer exports
 
