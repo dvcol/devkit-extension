@@ -4,6 +4,12 @@
     {
       "id": "portable-declaration-factories",
       "apis": [
+        "@devkit/core:ActionDescriptor.operation",
+        "@devkit/core:ActionDescriptor.operation.input",
+        "@devkit/core:ActionDescriptor.operation.output",
+        "@devkit/core:CapabilityDescriptor.operations",
+        "@devkit/core:OperationDefinition.input",
+        "@devkit/core:OperationDefinition.output",
         "@devkit/core:defineAction",
         "@devkit/core:defineActionContract",
         "@devkit/core:defineCapability",
@@ -59,10 +65,67 @@
           "fullName": "UI-free contribution example executes its action and capability through a real provider, then removes its subscription",
           "host": "custom-local-provider",
           "mode": "integration"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/snapshots.test.ts",
+          "fullName": "declaration ownership snapshots capability and action operation envelopes while retaining schema identity",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/invalid-definitions.test.ts",
+          "fullName": "invalid declarations rejects missing output schema",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/invalid-definitions.test.ts",
+          "fullName": "invalid declarations rejects unsupported schema protocol",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/invalid-definitions.test.ts",
+          "fullName": "invalid declarations rejects schema missing validator",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/invalid-definitions.test.ts",
+          "fullName": "invalid declarations rejects schema missing vendor",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation keeps original input and output when schemas transform them",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation rejects invalid input without dispatch",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/invocation.test.ts",
+          "fullName": "guarded local invocation rejects invalid returns and keeps a native validator exception local",
+          "host": "node",
+          "mode": "unit"
         }
       ],
       "gaps": [
-        "Only local declarations and one local-provider scenario are linked. Native Devframe, DevTools, Chromium and Firefox host/mode evidence remains to be reconciled under Examples and API coverage contract."
+        "Only local declarations and one local-provider scenario are linked. Native Devframe, DevTools, Chromium and Firefox host/mode evidence remains to be reconciled under Examples and API coverage contract.",
+        "Schema-envelope evidence checks direct schema identity, copied/frozen maps and envelopes, mandatory Standard Schema shape and local guard-only invocation. Async schema identity alone does not prove every asynchronous validation outcome; native transport serialization, browser behavior and type-only aliases remain separate obligations."
       ]
     },
     {
@@ -1218,9 +1281,6 @@
         "@devkit/core:ActionDescriptor",
         "@devkit/core:ActionDescriptor.id",
         "@devkit/core:ActionDescriptor.kind",
-        "@devkit/core:ActionDescriptor.operation",
-        "@devkit/core:ActionDescriptor.operation.input",
-        "@devkit/core:ActionDescriptor.operation.output",
         "@devkit/core:ActionDescriptor.routing",
         "@devkit/core:ActionDescriptor.routing.provider",
         "@devkit/core:ActionDescriptor.routing.realm",
@@ -1278,7 +1338,6 @@
         "@devkit/core:CapabilityDescriptor",
         "@devkit/core:CapabilityDescriptor.id",
         "@devkit/core:CapabilityDescriptor.kind",
-        "@devkit/core:CapabilityDescriptor.operations",
         "@devkit/core:CapabilityDescriptor.version",
         "@devkit/core:CapabilityInvocationRequest.capability",
         "@devkit/core:CapabilityInvocationRequest.capability.id",
@@ -1415,8 +1474,6 @@
         "@devkit/core:OperationContext.provider.realm.id",
         "@devkit/core:OperationContext.signal",
         "@devkit/core:OperationDefinition",
-        "@devkit/core:OperationDefinition.input",
-        "@devkit/core:OperationDefinition.output",
         "@devkit/core:OperationError",
         "@devkit/core:OperationError.code",
         "@devkit/core:OperationError.diagnostic",
