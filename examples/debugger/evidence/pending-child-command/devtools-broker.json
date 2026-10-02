@@ -1,0 +1,81 @@
+{
+  "mode": "broker",
+  "backend": "devtools",
+  "version": "153.0.8010.12",
+  "startedAt": "2026-10-02T11:48:43.482Z",
+  "startedMarker": "started",
+  "childIds": {
+    "broker": "4aaeaa51-52cf-4075-b2ec-e7a717b85955",
+    "chrome": "BA48EEF1EB418638C77D5804DCFB6B15"
+  },
+  "pendingBeforeRemoval": true,
+  "leaseBeforeRemoval": 1,
+  "detachedObserved": true,
+  "nativeEvents": {
+    "attached": [
+      {
+        "sessionId": "BA48EEF1EB418638C77D5804DCFB6B15",
+        "targetInfo": {
+          "attached": true,
+          "browserContextId": "D0CDB97C857956277370FFD8A12E3DEE",
+          "canAccessOpener": false,
+          "parentFrameId": "2580C1715A7D0C23243CB26A4D8284CF",
+          "parentId": "2580C1715A7D0C23243CB26A4D8284CF",
+          "targetId": "FC51557EA78FAB57EE6ECB8FF37ABBF9",
+          "title": "",
+          "type": "iframe",
+          "url": ""
+        },
+        "waitingForDebugger": true
+      }
+    ],
+    "detached": [
+      {
+        "sessionId": "BA48EEF1EB418638C77D5804DCFB6B15",
+        "targetId": "FC51557EA78FAB57EE6ECB8FF37ABBF9"
+      }
+    ]
+  },
+  "observationMilliseconds": 1005.985083,
+  "outcomeAfterChildDetach": {
+    "status": "pending"
+  },
+  "leaseAfterObservation": 1,
+  "rootAfterRemoval": {
+    "result": {
+      "type": "string",
+      "value": "Owned remote debugger target"
+    }
+  },
+  "stopProvider": {
+    "status": "connected",
+    "isTrusted": true,
+    "isolated": true,
+    "targetTabId": 478977632,
+    "pairingConfirmations": 1,
+    "providerDisposed": true,
+    "clientDisposed": false,
+    "closed": false,
+    "approvals": [
+      {
+        "requestId": "c5b7a465-7eb9-4694-8716-fc65fd67bd77",
+        "selector": {
+          "kind": "explicit-tabs",
+          "tabIds": [478977632]
+        },
+        "accepted": true,
+        "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
+      }
+    ],
+    "errors": []
+  },
+  "outcomeAfterRootCleanup": {
+    "status": "rejected",
+    "code": "REQUEST_CANCELLED",
+    "message": "The requested target operation is not available.",
+    "elapsedMilliseconds": 1075.393
+  },
+  "leasesAfterCleanup": 0,
+  "hostErrors": [],
+  "pageErrors": []
+}

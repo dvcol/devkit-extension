@@ -1,0 +1,50 @@
+{
+  "mode": "raw",
+  "backend": "devframe",
+  "version": "153.0.8010.12",
+  "startedAt": "2026-10-02T11:43:54.013Z",
+  "pendingBeforeRemoval": true,
+  "leaseBeforeRemoval": 1,
+  "detachedObserved": true,
+  "observationMilliseconds": 1009.3993750000004,
+  "outcomeAfterChildDetach": {
+    "status": "pending"
+  },
+  "leaseAfterObservation": 1,
+  "rootAfterRemoval": {
+    "result": {
+      "type": "string",
+      "value": "Owned remote debugger target"
+    }
+  },
+  "stopProvider": {
+    "status": "connected",
+    "isTrusted": true,
+    "isolated": true,
+    "targetTabId": 1879073165,
+    "pairingConfirmations": 1,
+    "providerDisposed": true,
+    "clientDisposed": false,
+    "closed": false,
+    "approvals": [
+      {
+        "requestId": "176f8cd0-d9bc-44c8-9829-7cbd1cb89257",
+        "selector": {
+          "kind": "explicit-tabs",
+          "tabIds": [1879073165]
+        },
+        "accepted": true,
+        "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
+      }
+    ],
+    "errors": []
+  },
+  "outcomeAfterRootCleanup": {
+    "status": "rejected",
+    "message": "Error: Detached while handling command.",
+    "elapsedMilliseconds": 1059.5999999046326
+  },
+  "leasesAfterCleanup": 0,
+  "hostErrors": [],
+  "pageErrors": []
+}

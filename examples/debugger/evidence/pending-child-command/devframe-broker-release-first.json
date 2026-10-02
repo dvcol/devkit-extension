@@ -1,0 +1,85 @@
+{
+  "mode": "broker",
+  "backend": "devframe",
+  "version": "153.0.8010.12",
+  "startedAt": "2026-10-02T11:50:49.947Z",
+  "startedMarker": "started",
+  "childIds": {
+    "broker": "6a310a19-d5bb-4570-8283-b05e35d175bf",
+    "chrome": "66D2CEEFC0E590D5CB70C9FF63EDBB4F"
+  },
+  "pendingBeforeRemoval": true,
+  "leaseBeforeRemoval": 1,
+  "detachedObserved": true,
+  "nativeEvents": {
+    "attached": [
+      {
+        "sessionId": "66D2CEEFC0E590D5CB70C9FF63EDBB4F",
+        "targetInfo": {
+          "attached": true,
+          "browserContextId": "41A471992B81A1DD8804A3E7406A819B",
+          "canAccessOpener": false,
+          "parentFrameId": "3981746540DD46EA434B99586D9D9C13",
+          "parentId": "3981746540DD46EA434B99586D9D9C13",
+          "targetId": "574D4F6634A81D748F72755DB58685B6",
+          "title": "",
+          "type": "iframe",
+          "url": ""
+        },
+        "waitingForDebugger": true
+      }
+    ],
+    "detached": [
+      {
+        "sessionId": "66D2CEEFC0E590D5CB70C9FF63EDBB4F",
+        "targetId": "574D4F6634A81D748F72755DB58685B6"
+      }
+    ]
+  },
+  "observationMilliseconds": 1012.8837919999999,
+  "outcomeAfterChildDetach": {
+    "status": "pending"
+  },
+  "leaseAfterObservation": 1,
+  "rootAfterRemoval": {
+    "result": {
+      "type": "string",
+      "value": "Owned remote debugger target"
+    }
+  },
+  "leasesAfterRelease": 0,
+  "outcomeAfterRelease": {
+    "status": "pending"
+  },
+  "stopProvider": {
+    "status": "connected",
+    "isTrusted": true,
+    "isolated": true,
+    "targetTabId": 1788721714,
+    "pairingConfirmations": 1,
+    "providerDisposed": true,
+    "clientDisposed": false,
+    "closed": false,
+    "approvals": [
+      {
+        "requestId": "b2752ef7-7753-4d3a-8647-5c3ebc78e92d",
+        "selector": {
+          "kind": "explicit-tabs",
+          "tabIds": [1788721714]
+        },
+        "accepted": true,
+        "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
+      }
+    ],
+    "errors": []
+  },
+  "outcomeAfterRootCleanup": {
+    "status": "rejected",
+    "code": "REQUEST_CANCELLED",
+    "message": "The requested target operation is not available.",
+    "elapsedMilliseconds": 1080.092833
+  },
+  "leasesAfterCleanup": 0,
+  "hostErrors": [],
+  "pageErrors": []
+}

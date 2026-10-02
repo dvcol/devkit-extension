@@ -17,7 +17,7 @@
           "status": "connected",
           "isTrusted": true,
           "isolated": true,
-          "targetTabId": 218445754,
+          "targetTabId": 557840259,
           "pairingConfirmations": 0,
           "providerDisposed": false,
           "clientDisposed": false,
@@ -38,10 +38,10 @@
       "name": "The actual extension control approves only the owned fixture tab",
       "details": [
         {
-          "requestId": "2c9ae9cd-38c2-44eb-9ddb-d12536d4a2e3",
+          "requestId": "6a08063c-787a-4380-9c8d-bf8a5f9ad0aa",
           "selector": {
             "kind": "explicit-tabs",
-            "tabIds": [218445754]
+            "tabIds": [557840259]
           },
           "accepted": true,
           "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
@@ -103,7 +103,7 @@
       "name": "Host broker operation changes the real page through native RPC",
       "details": {
         "result": {
-          "operationId": "9542f16b-25a1-4708-907c-e5b440062ee9",
+          "operationId": "a2634c6a-01aa-447f-8010-562976e52d3a",
           "value": {
             "result": {
               "type": "string",
@@ -149,15 +149,19 @@
   "hostErrors": [],
   "childSessions": {
     "browserVersion": "153.0.8010.12",
+    "pendingAfterChildRemoval": {
+      "status": "pending",
+      "observationMilliseconds": 1012.9204170000003
+    },
     "child": {
       "type": "iframe",
       "generation": 1,
       "title": "Owned child debugger frame",
-      "origin": "http://localhost:53977"
+      "origin": "http://localhost:61079"
     },
     "root": {
       "title": "Owned remote debugger target",
-      "origin": "http://127.0.0.1:53977"
+      "origin": "http://127.0.0.1:61079"
     },
     "event": {
       "method": "Runtime.consoleAPICalled",
@@ -168,6 +172,12 @@
     "childRemoved": true,
     "staleChild": "CDP_COMMAND_FAILED",
     "rootPreserved": true,
+    "pendingCommandCleanup": {
+      "status": "rejected",
+      "code": "REQUEST_CANCELLED",
+      "message": "The requested target operation is not available.",
+      "elapsedMilliseconds": 1081.1479999999997
+    },
     "ownership": {
       "ownsAttachment": false,
       "error": "native-not-attached"

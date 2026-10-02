@@ -1,0 +1,87 @@
+{
+  "mode": "raw",
+  "backend": "devtools",
+  "version": "153.0.8010.12",
+  "startedAt": "2026-10-02T11:55:01.476Z",
+  "chromiumVersion": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/153.0.8010.12",
+    "revision": "@971a7443b0c9b0a9b2860529b33331b76077ec62",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+    "jsVersion": "15.3.76.4"
+  },
+  "startedMarker": "started",
+  "childIds": {
+    "broker": "bb0de78c-61ec-458d-b10e-a1e9edb427f7",
+    "chrome": "D92FB88E2A42FB65FA84109041690FB7"
+  },
+  "pendingBeforeRemoval": true,
+  "leaseBeforeRemoval": 1,
+  "detachedObserved": true,
+  "nativeEvents": {
+    "attached": [
+      {
+        "sessionId": "D92FB88E2A42FB65FA84109041690FB7",
+        "targetInfo": {
+          "attached": true,
+          "browserContextId": "6087B530877B7BC0A71C73907E50F71F",
+          "canAccessOpener": false,
+          "parentFrameId": "86889357DF653385933A7B433A924CBC",
+          "parentId": "86889357DF653385933A7B433A924CBC",
+          "targetId": "D043E3FDAB9861F7DFC5C5879CB32C7C",
+          "title": "",
+          "type": "iframe",
+          "url": ""
+        },
+        "waitingForDebugger": true
+      }
+    ],
+    "detached": [
+      {
+        "sessionId": "D92FB88E2A42FB65FA84109041690FB7",
+        "targetId": "D043E3FDAB9861F7DFC5C5879CB32C7C"
+      }
+    ]
+  },
+  "observationMilliseconds": 1016.230458,
+  "outcomeAfterChildDetach": {
+    "status": "pending"
+  },
+  "leaseAfterObservation": 1,
+  "rootAfterRemoval": {
+    "result": {
+      "type": "string",
+      "value": "Owned remote debugger target"
+    }
+  },
+  "stopProvider": {
+    "status": "connected",
+    "isTrusted": true,
+    "isolated": true,
+    "targetTabId": 1335014548,
+    "pairingConfirmations": 1,
+    "providerDisposed": true,
+    "clientDisposed": false,
+    "closed": false,
+    "approvals": [
+      {
+        "requestId": "bfe126fa-aeab-4bee-867b-55404281f9e3",
+        "selector": {
+          "kind": "explicit-tabs",
+          "tabIds": [1335014548]
+        },
+        "accepted": true,
+        "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
+      }
+    ],
+    "errors": []
+  },
+  "outcomeAfterRootCleanup": {
+    "status": "rejected",
+    "message": "Error: Detached while handling command.",
+    "elapsedMilliseconds": 1095.8999998569489
+  },
+  "leasesAfterCleanup": 0,
+  "hostErrors": [],
+  "pageErrors": []
+}

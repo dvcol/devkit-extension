@@ -1,14 +1,18 @@
 {
   "browserVersion": "153.0.8010.12",
+  "pendingAfterChildRemoval": {
+    "status": "pending",
+    "observationMilliseconds": 1017.569416
+  },
   "child": {
     "type": "iframe",
     "generation": 1,
     "title": "Owned child debugger frame",
-    "origin": "http://localhost:50341"
+    "origin": "http://localhost:61036"
   },
   "root": {
     "title": "Owned remote debugger target",
-    "origin": "http://127.0.0.1:50341"
+    "origin": "http://127.0.0.1:61036"
   },
   "event": {
     "method": "Runtime.consoleAPICalled",
@@ -19,6 +23,12 @@
   "childRemoved": true,
   "staleChild": "CDP_COMMAND_FAILED",
   "rootPreserved": true,
+  "pendingCommandCleanup": {
+    "status": "rejected",
+    "code": "REQUEST_CANCELLED",
+    "message": "The requested target operation is not available.",
+    "elapsedMilliseconds": 1088.042209
+  },
   "ownership": {
     "ownsAttachment": false,
     "error": "native-not-attached"

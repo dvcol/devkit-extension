@@ -1,10 +1,17 @@
 import assert from 'node:assert/strict';
 import { leaseSchema } from '@dvcol/cdb';
-import type { JsonObject, ReleaseLeaseRequest } from '@dvcol/cdb';
+import type { ReleaseLeaseRequest } from '@dvcol/cdb';
 import { z } from 'zod';
 import { agent, approveTarget, checkTrust } from './authentication.ts';
 import { createNativeBrowser } from './browser.ts';
 import { poll, send } from './driver.ts';
+import { command, evaluateChild, readRoot } from './child-commands.ts';
+import type { CommandFixture } from './child-commands.ts';
+import {
+  startPendingChildCommand,
+  observePendingChildCommand,
+  readChildCommandCleanup,
+} from './pending-child-command.ts';
 import type { createNativeHost } from './host.ts';
 import {
   attachmentOwnershipResponseSchema,
@@ -21,20 +28,10 @@ const childSchema = z.object({
   type: z.literal('iframe'),
 });
 const sessionsSchema = z.object({ value: z.object({ sessions: z.array(childSchema) }) });
-const evaluationSchema = z.object({
-  value: z.object({
-    result: z.object({ value: z.object({ title: z.string(), origin: z.string() }) }),
-  }),
-});
 const eventSchema = z.object({
   method: z.literal('Runtime.consoleAPICalled'),
   parameters: z.object({ args: z.array(z.object({ value: z.string() })) }),
 });
-
-interface CommandFixture {
-  host: NativeHost;
-  reference: ReleaseLeaseRequest;
-}
 
 interface SessionFixture extends CommandFixture {
   browser: NativeBrowser;
@@ -64,7 +61,12 @@ export async function checkChildSessions(host: NativeHost) {
   leases.defer(async () => {
     await host.service.broker.invoke(agent, 'browser.release', reference);
   });
-  const result = await exerciseChildSession({ host, browser, targetRef, reference });
+  const { pending, ...result } = await exerciseChildSession({
+    host,
+    browser,
+    targetRef,
+    reference,
+  });
   await leases.disposeAsync();
   assert.equal(host.service.broker.snapshot().leases.length, 0);
   const stopped = await send(
@@ -83,6 +85,7 @@ export async function checkChildSessions(host: NativeHost) {
   return {
     browserVersion: browser.version,
     ...result,
+    pendingCommandCleanup: await readChildCommandCleanup(pending),
     ownership,
     leasesAfterDisposal: 0,
     hostErrors: host.errors,
@@ -108,6 +111,7 @@ async function exerciseChildSession({ host, browser, targetRef, reference }: Ses
     title: 'Owned remote debugger target',
     origin: new URL(host.fixtureUrl).origin,
   });
+  const pending = await startPendingChildCommand({ ...fixture, browser, sessionId: child.id });
   await browser.target.locator('#owned-child').evaluate((frame) => {
     frame.remove();
   });
@@ -125,7 +129,11 @@ async function exerciseChildSession({ host, browser, targetRef, reference }: Ses
     { code: 'CDP_COMMAND_FAILED', message: 'The requested child session is not available.' },
   );
   assert.deepEqual(await readRoot(fixture), root);
+  const pendingAfterChildRemoval = await observePendingChildCommand(pending);
+  assert.equal(host.service.broker.snapshot().leases.length, 1);
   return {
+    pending,
+    pendingAfterChildRemoval,
     child: { type: child.type, generation: child.generation, ...result },
     root,
     event,
@@ -145,20 +153,6 @@ async function createChildFrame({ host, browser }: { host: NativeHost; browser: 
     document.body.append(frame);
   }, childUrl.href);
   return childUrl;
-}
-
-async function evaluateChild(fixture: CommandFixture, sessionId: string) {
-  return evaluationSchema.parse(
-    await command(fixture, {
-      method: 'Runtime.evaluate',
-      sessionId,
-      parameters: {
-        expression:
-          'document.title="Owned child debugger frame";({title:document.title,origin:location.origin})',
-        returnByValue: true,
-      },
-    }),
-  ).value.result.value;
 }
 
 async function acquireLease(host: NativeHost): Promise<ReleaseLeaseRequest> {
@@ -186,32 +180,9 @@ async function acquireLease(host: NativeHost): Promise<ReleaseLeaseRequest> {
   return { ...authority, leaseId: lease.value.id };
 }
 
-function command(
-  { host, reference }: CommandFixture,
-  request: { method: string; sessionId?: string; parameters?: JsonObject },
-) {
-  return host.service.broker.invoke(agent, 'browser.raw_cdp', {
-    ...reference,
-    parameters: {},
-    ...request,
-  });
-}
-
 async function listChildren(fixture: CommandFixture) {
   return sessionsSchema.parse(await command(fixture, { method: 'Bridge.listChildSessions' })).value
     .sessions;
-}
-
-async function readRoot(fixture: CommandFixture) {
-  return evaluationSchema.parse(
-    await command(fixture, {
-      method: 'Runtime.evaluate',
-      parameters: {
-        expression: '({title:document.title,origin:location.origin})',
-        returnByValue: true,
-      },
-    }),
-  ).value.result.value;
 }
 
 async function checkChildEvent({
