@@ -2,6 +2,7 @@ import { checkFirefoxResponseBody } from './firefox-response-body.ts';
 import type { Driver } from 'selenium-webdriver/firefox.js';
 import { checkFirefoxScriptTiming } from './firefox-script-timing.ts';
 import { checkFirefoxScriptContexts } from './firefox-script-contexts.ts';
+import { checkFirefoxScriptStages } from './firefox-script-stages.ts';
 import { checkFirefoxHeaderRules } from './firefox-header-rules.ts';
 import { checkFirefoxRedirectRules } from './firefox-redirect-rules.ts';
 
@@ -9,6 +10,7 @@ import { checkFirefoxRedirectRules } from './firefox-redirect-rules.ts';
 export async function checkFirefoxContributions(driver: Driver, artifactDirectory: string) {
   await checkFirefoxScriptTiming(driver, artifactDirectory);
   await checkFirefoxScriptContexts(driver, artifactDirectory);
+  await checkFirefoxScriptStages(driver, artifactDirectory);
   await checkFirefoxHeaderRules(driver, artifactDirectory);
   await checkFirefoxRedirectRules(driver, artifactDirectory);
   await checkFirefoxResponseBody(driver, artifactDirectory);

@@ -84,7 +84,7 @@ async function checkRegistration(driver: Driver, options: ContextRegistration) {
   if ((await checkbox.isSelected()) !== allFrames) await checkbox.click();
   const installed = await control(driver, pages, `script-${world.toLowerCase()}`, 'ready', 1);
   try {
-    checkTimingRegistration(installed.registrations, world, allFrames);
+    checkTimingRegistration(installed.registrations, world, { allFrames });
     for (const strictCsp of [false, true]) {
       fixture.setStrictCsp(strictCsp);
       await driver.switchTo().window(pages.source);
@@ -167,7 +167,7 @@ async function checkLifecycle(
   await driver.navigate().refresh();
   const inactive = await readFrames(driver, { ...options, active: false });
   const enabled = await control(driver, pages, 'script-enable', 'ready', 2);
-  checkTimingRegistration(enabled.registrations, world, true);
+  checkTimingRegistration(enabled.registrations, world, { allFrames: true });
   await driver.switchTo().window(pages.source);
   await driver.navigate().refresh();
   const restored = await readFrames(driver, options);

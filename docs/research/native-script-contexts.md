@@ -79,4 +79,4 @@ Retained observations are in [Chromium production](../../examples/webext/evidenc
 
 ## Remaining scope
 
-This slice does not establish injection into blank/blob/sandboxed frames, origin fallback, frame replacement, later injection stages, permission-revocation rollback, browser restart, dependency loss during registration or native cleanup failure. It does not promise to undo existing page effects. Those obligations remain with the native contribution recipes and their owning tickets, rather than a generic SDK enforcement layer.
+This frame/CSP slice covers document_start. The separate [native stage proof](./native-script-stages.md) verifies all three stages in top-level MAIN/ISOLATED documents; their full cross-product with frames/CSP remains open. This slice does not establish injection into blank/blob/sandboxed frames, origin fallback, frame replacement, permission-revocation rollback, browser restart, dependency loss during registration or native cleanup failure. It does not promise to undo existing page effects. Those obligations remain with the native contribution recipes and their owning tickets, rather than a generic SDK enforcement layer.

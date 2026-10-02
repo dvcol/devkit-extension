@@ -218,11 +218,18 @@ onClick('#rich', async () => {
 });
 onClick('#unsupported', () => rpc.$call('probe:echo', { callback: () => {} }));
 onClick('#remote-close', () => rpc.$call('probe:disconnect'));
+function scriptRunAt(): chrome.extensionTypes.RunAt {
+  const value = document.querySelector<HTMLSelectElement>('#script-run-at')!.value;
+  if (value === 'document_start' || value === 'document_end' || value === 'document_idle')
+    return value;
+  throw new TypeError(`Unknown script stage: ${value}`);
+}
 for (const world of ['MAIN', 'ISOLATED'] as const)
   onClick(`#script-${world.toLowerCase()}`, () =>
     rpc.$call('example:scripts:install', {
       world,
       allFrames: document.querySelector<HTMLInputElement>('#script-all-frames')?.checked ?? false,
+      runAt: scriptRunAt(),
     }),
   );
 onClick('#script-disable', () => rpc.$call('example:scripts:disable'));

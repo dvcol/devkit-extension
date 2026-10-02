@@ -1,0 +1,1549 @@
+{
+  "browser": "157.0",
+  "observations": [
+    {
+      "world": "MAIN",
+      "runAt": "document_start",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "id": "example-script-timing",
+              "allFrames": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "matchOriginAsFallback": false,
+              "runAt": "document_start",
+              "world": "MAIN",
+              "persistAcrossSessions": false,
+              "cssOrigin": "author",
+              "js": ["script-timing.js"]
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "initial": {
+        "held": {
+          "currentGlobal": "loading",
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": "loading",
+            "injectedReadyState": "loading",
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": "loading",
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": "loading",
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": "loading",
+            "injectedReadyState": "loading",
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "loading",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      },
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": {
+        "currentGlobal": "loading",
+        "domContentLoaded": true,
+        "firstScript": {
+          "injectedGlobal": "loading",
+          "injectedReadyState": "loading",
+          "pageReadyState": "loading"
+        },
+        "imageComplete": true,
+        "injectedReadyState": "loading",
+        "parserComplete": true,
+        "readyState": "complete",
+        "windowLoaded": true
+      },
+      "disposed": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      }
+    },
+    {
+      "world": "MAIN",
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "id": "example-script-timing",
+              "allFrames": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "matchOriginAsFallback": false,
+              "runAt": "document_end",
+              "world": "MAIN",
+              "persistAcrossSessions": false,
+              "cssOrigin": "author",
+              "js": ["script-timing.js"]
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "initial": {
+        "held": {
+          "currentGlobal": "interactive",
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": "interactive",
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      },
+      "lifecycle": {
+        "disabled": {
+          "snapshot": {
+            "installation": {
+              "id": "example.bootstrap",
+              "status": "inactive",
+              "contributions": [
+                {
+                  "id": "example.bootstrap",
+                  "kind": "script",
+                  "generation": 1,
+                  "enabled": false,
+                  "status": "disabled",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "registrations": []
+          },
+          "registrations": []
+        },
+        "retained": {
+          "currentGlobal": "interactive",
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        },
+        "inactive": {
+          "held": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": false,
+            "injectedReadyState": null,
+            "parserComplete": true,
+            "readyState": "interactive",
+            "windowLoaded": false
+          },
+          "complete": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": true,
+            "injectedReadyState": null,
+            "parserComplete": true,
+            "readyState": "complete",
+            "windowLoaded": true
+          }
+        },
+        "enabled": {
+          "snapshot": {
+            "installation": {
+              "id": "example.bootstrap",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.bootstrap",
+                  "kind": "script",
+                  "generation": 2,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "registrations": [
+              {
+                "id": "example-script-timing",
+                "allFrames": false,
+                "matches": [
+                  "http://127.0.0.1/index.html",
+                  "http://localhost/index.html",
+                  "http://127.0.0.1/frame.html",
+                  "http://localhost/frame.html"
+                ],
+                "matchOriginAsFallback": false,
+                "runAt": "document_end",
+                "world": "MAIN",
+                "persistAcrossSessions": false,
+                "cssOrigin": "author",
+                "js": ["script-timing.js"]
+              }
+            ]
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "cssOrigin": "author",
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "restored": {
+          "held": {
+            "currentGlobal": "interactive",
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": false,
+            "injectedReadyState": "interactive",
+            "parserComplete": true,
+            "readyState": "interactive",
+            "windowLoaded": false
+          },
+          "complete": {
+            "currentGlobal": "interactive",
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": true,
+            "injectedReadyState": "interactive",
+            "parserComplete": true,
+            "readyState": "complete",
+            "windowLoaded": true
+          }
+        }
+      },
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": {
+        "currentGlobal": "interactive",
+        "domContentLoaded": true,
+        "firstScript": {
+          "injectedGlobal": null,
+          "injectedReadyState": null,
+          "pageReadyState": "loading"
+        },
+        "imageComplete": true,
+        "injectedReadyState": "interactive",
+        "parserComplete": true,
+        "readyState": "complete",
+        "windowLoaded": true
+      },
+      "disposed": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      }
+    },
+    {
+      "world": "MAIN",
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "id": "example-script-timing",
+              "allFrames": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "matchOriginAsFallback": false,
+              "runAt": "document_idle",
+              "world": "MAIN",
+              "persistAcrossSessions": false,
+              "cssOrigin": "author",
+              "js": ["script-timing.js"]
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "initial": {
+        "held": {
+          "currentGlobal": "interactive",
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": "interactive",
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      },
+      "lifecycle": {
+        "disabled": {
+          "snapshot": {
+            "installation": {
+              "id": "example.bootstrap",
+              "status": "inactive",
+              "contributions": [
+                {
+                  "id": "example.bootstrap",
+                  "kind": "script",
+                  "generation": 1,
+                  "enabled": false,
+                  "status": "disabled",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "registrations": []
+          },
+          "registrations": []
+        },
+        "retained": {
+          "currentGlobal": "interactive",
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        },
+        "inactive": {
+          "held": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": false,
+            "injectedReadyState": null,
+            "parserComplete": true,
+            "readyState": "interactive",
+            "windowLoaded": false
+          },
+          "complete": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": true,
+            "injectedReadyState": null,
+            "parserComplete": true,
+            "readyState": "complete",
+            "windowLoaded": true
+          }
+        },
+        "enabled": {
+          "snapshot": {
+            "installation": {
+              "id": "example.bootstrap",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.bootstrap",
+                  "kind": "script",
+                  "generation": 2,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "registrations": [
+              {
+                "id": "example-script-timing",
+                "allFrames": false,
+                "matches": [
+                  "http://127.0.0.1/index.html",
+                  "http://localhost/index.html",
+                  "http://127.0.0.1/frame.html",
+                  "http://localhost/frame.html"
+                ],
+                "matchOriginAsFallback": false,
+                "runAt": "document_idle",
+                "world": "MAIN",
+                "persistAcrossSessions": false,
+                "cssOrigin": "author",
+                "js": ["script-timing.js"]
+              }
+            ]
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "cssOrigin": "author",
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "restored": {
+          "held": {
+            "currentGlobal": "interactive",
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": false,
+            "injectedReadyState": "interactive",
+            "parserComplete": true,
+            "readyState": "interactive",
+            "windowLoaded": false
+          },
+          "complete": {
+            "currentGlobal": "interactive",
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": true,
+            "injectedReadyState": "interactive",
+            "parserComplete": true,
+            "readyState": "complete",
+            "windowLoaded": true
+          }
+        }
+      },
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": {
+        "currentGlobal": "interactive",
+        "domContentLoaded": true,
+        "firstScript": {
+          "injectedGlobal": null,
+          "injectedReadyState": null,
+          "pageReadyState": "loading"
+        },
+        "imageComplete": true,
+        "injectedReadyState": "interactive",
+        "parserComplete": true,
+        "readyState": "complete",
+        "windowLoaded": true
+      },
+      "disposed": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      }
+    },
+    {
+      "world": "ISOLATED",
+      "runAt": "document_start",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "id": "example-script-timing",
+              "allFrames": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "matchOriginAsFallback": false,
+              "runAt": "document_start",
+              "world": "ISOLATED",
+              "persistAcrossSessions": false,
+              "cssOrigin": "author",
+              "js": ["script-timing.js"]
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "initial": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": "loading",
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": "loading",
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": "loading",
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "loading",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      },
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": {
+        "currentGlobal": null,
+        "domContentLoaded": true,
+        "firstScript": {
+          "injectedGlobal": null,
+          "injectedReadyState": "loading",
+          "pageReadyState": "loading"
+        },
+        "imageComplete": true,
+        "injectedReadyState": "loading",
+        "parserComplete": true,
+        "readyState": "complete",
+        "windowLoaded": true
+      },
+      "disposed": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      }
+    },
+    {
+      "world": "ISOLATED",
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "id": "example-script-timing",
+              "allFrames": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "matchOriginAsFallback": false,
+              "runAt": "document_end",
+              "world": "ISOLATED",
+              "persistAcrossSessions": false,
+              "cssOrigin": "author",
+              "js": ["script-timing.js"]
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "initial": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      },
+      "lifecycle": {
+        "disabled": {
+          "snapshot": {
+            "installation": {
+              "id": "example.bootstrap",
+              "status": "inactive",
+              "contributions": [
+                {
+                  "id": "example.bootstrap",
+                  "kind": "script",
+                  "generation": 1,
+                  "enabled": false,
+                  "status": "disabled",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "registrations": []
+          },
+          "registrations": []
+        },
+        "retained": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        },
+        "inactive": {
+          "held": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": false,
+            "injectedReadyState": null,
+            "parserComplete": true,
+            "readyState": "interactive",
+            "windowLoaded": false
+          },
+          "complete": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": true,
+            "injectedReadyState": null,
+            "parserComplete": true,
+            "readyState": "complete",
+            "windowLoaded": true
+          }
+        },
+        "enabled": {
+          "snapshot": {
+            "installation": {
+              "id": "example.bootstrap",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.bootstrap",
+                  "kind": "script",
+                  "generation": 2,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "registrations": [
+              {
+                "id": "example-script-timing",
+                "allFrames": false,
+                "matches": [
+                  "http://127.0.0.1/index.html",
+                  "http://localhost/index.html",
+                  "http://127.0.0.1/frame.html",
+                  "http://localhost/frame.html"
+                ],
+                "matchOriginAsFallback": false,
+                "runAt": "document_end",
+                "world": "ISOLATED",
+                "persistAcrossSessions": false,
+                "cssOrigin": "author",
+                "js": ["script-timing.js"]
+              }
+            ]
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "cssOrigin": "author",
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "restored": {
+          "held": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": false,
+            "injectedReadyState": "interactive",
+            "parserComplete": true,
+            "readyState": "interactive",
+            "windowLoaded": false
+          },
+          "complete": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": true,
+            "injectedReadyState": "interactive",
+            "parserComplete": true,
+            "readyState": "complete",
+            "windowLoaded": true
+          }
+        }
+      },
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": {
+        "currentGlobal": null,
+        "domContentLoaded": true,
+        "firstScript": {
+          "injectedGlobal": null,
+          "injectedReadyState": null,
+          "pageReadyState": "loading"
+        },
+        "imageComplete": true,
+        "injectedReadyState": "interactive",
+        "parserComplete": true,
+        "readyState": "complete",
+        "windowLoaded": true
+      },
+      "disposed": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      }
+    },
+    {
+      "world": "ISOLATED",
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "id": "example-script-timing",
+              "allFrames": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "matchOriginAsFallback": false,
+              "runAt": "document_idle",
+              "world": "ISOLATED",
+              "persistAcrossSessions": false,
+              "cssOrigin": "author",
+              "js": ["script-timing.js"]
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "initial": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      },
+      "lifecycle": {
+        "disabled": {
+          "snapshot": {
+            "installation": {
+              "id": "example.bootstrap",
+              "status": "inactive",
+              "contributions": [
+                {
+                  "id": "example.bootstrap",
+                  "kind": "script",
+                  "generation": 1,
+                  "enabled": false,
+                  "status": "disabled",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "registrations": []
+          },
+          "registrations": []
+        },
+        "retained": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": "interactive",
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        },
+        "inactive": {
+          "held": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": false,
+            "injectedReadyState": null,
+            "parserComplete": true,
+            "readyState": "interactive",
+            "windowLoaded": false
+          },
+          "complete": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": true,
+            "injectedReadyState": null,
+            "parserComplete": true,
+            "readyState": "complete",
+            "windowLoaded": true
+          }
+        },
+        "enabled": {
+          "snapshot": {
+            "installation": {
+              "id": "example.bootstrap",
+              "status": "ready",
+              "contributions": [
+                {
+                  "id": "example.bootstrap",
+                  "kind": "script",
+                  "generation": 2,
+                  "enabled": true,
+                  "status": "active",
+                  "diagnostics": []
+                }
+              ],
+              "diagnostics": []
+            },
+            "registrations": [
+              {
+                "id": "example-script-timing",
+                "allFrames": false,
+                "matches": [
+                  "http://127.0.0.1/index.html",
+                  "http://localhost/index.html",
+                  "http://127.0.0.1/frame.html",
+                  "http://localhost/frame.html"
+                ],
+                "matchOriginAsFallback": false,
+                "runAt": "document_idle",
+                "world": "ISOLATED",
+                "persistAcrossSessions": false,
+                "cssOrigin": "author",
+                "js": ["script-timing.js"]
+              }
+            ]
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "cssOrigin": "author",
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/index.html",
+                "http://localhost/index.html",
+                "http://127.0.0.1/frame.html",
+                "http://localhost/frame.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "restored": {
+          "held": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": false,
+            "injectedReadyState": "interactive",
+            "parserComplete": true,
+            "readyState": "interactive",
+            "windowLoaded": false
+          },
+          "complete": {
+            "currentGlobal": null,
+            "domContentLoaded": true,
+            "firstScript": {
+              "injectedGlobal": null,
+              "injectedReadyState": null,
+              "pageReadyState": "loading"
+            },
+            "imageComplete": true,
+            "injectedReadyState": "interactive",
+            "parserComplete": true,
+            "readyState": "complete",
+            "windowLoaded": true
+          }
+        }
+      },
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": {
+        "currentGlobal": null,
+        "domContentLoaded": true,
+        "firstScript": {
+          "injectedGlobal": null,
+          "injectedReadyState": null,
+          "pageReadyState": "loading"
+        },
+        "imageComplete": true,
+        "injectedReadyState": "interactive",
+        "parserComplete": true,
+        "readyState": "complete",
+        "windowLoaded": true
+      },
+      "disposed": {
+        "held": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": false,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "interactive",
+          "windowLoaded": false
+        },
+        "complete": {
+          "currentGlobal": null,
+          "domContentLoaded": true,
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "imageComplete": true,
+          "injectedReadyState": null,
+          "parserComplete": true,
+          "readyState": "complete",
+          "windowLoaded": true
+        }
+      }
+    }
+  ],
+  "checks": [
+    "MAIN: native document_start timing, world visibility and disposal",
+    "MAIN: native document_end timing, world visibility and disposal",
+    "MAIN: document_end disable preserves existing effects; enable injects fresh documents",
+    "MAIN: native document_idle timing, world visibility and disposal",
+    "MAIN: document_idle disable preserves existing effects; enable injects fresh documents",
+    "ISOLATED: native document_start timing, world visibility and disposal",
+    "ISOLATED: native document_end timing, world visibility and disposal",
+    "ISOLATED: document_end disable preserves existing effects; enable injects fresh documents",
+    "ISOLATED: native document_idle timing, world visibility and disposal",
+    "ISOLATED: document_idle disable preserves existing effects; enable injects fresh documents"
+  ]
+}

@@ -5,6 +5,7 @@ import type { ProviderRpc, RpcProviderHandle } from '@devkit/devframe';
 interface ScriptOptions {
   readonly world: `${chrome.scripting.ExecutionWorld}`;
   readonly allFrames?: boolean;
+  readonly runAt?: chrome.extensionTypes.RunAt;
 }
 
 declare module 'devframe/types' {
@@ -17,7 +18,7 @@ declare module 'devframe/types' {
 }
 
 /** Packaged code stays in the native Vite/WXT graph; this recipe owns browser registration. */
-function timingScript({ world, allFrames = false }: ScriptOptions) {
+function timingScript({ world, allFrames = false, runAt = 'document_start' }: ScriptOptions) {
   return defineScript({
     id: 'example.bootstrap',
     execution: defineExecution({ id: 'example.background' }),
@@ -32,7 +33,7 @@ function timingScript({ world, allFrames = false }: ScriptOptions) {
             'http://127.0.0.1/frame.html',
             'http://localhost/frame.html',
           ],
-          runAt: 'document_start',
+          runAt,
           world,
           allFrames,
           persistAcrossSessions: false,

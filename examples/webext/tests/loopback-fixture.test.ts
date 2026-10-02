@@ -4,6 +4,7 @@ import { setTimeout } from 'node:timers/promises';
 import { expect, it } from 'vitest';
 import { startHeaderServer } from './header-rules';
 import { startRedirectServer } from './redirect-rules';
+import { startScriptStageServer } from './script-stages';
 
 async function withinDeadline<Value>(operation: Promise<Value>): Promise<Value> {
   const cancellation = new AbortController();
@@ -41,6 +42,7 @@ async function finishTeardown(
 it.each([
   { name: 'header', start: startHeaderServer },
   { name: 'redirect', start: startRedirectServer },
+  { name: 'script stage', start: startScriptStageServer },
 ])('closes the $name fixture and its unused TCP peer during teardown', async ({ start }) => {
   expect.assertions(2);
   const fixture = await start();

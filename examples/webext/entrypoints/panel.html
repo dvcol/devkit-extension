@@ -31,7 +31,15 @@
     ><button id="release">Release pending action</button>
     <button id="executions">Execution counts</button><button id="disconnect">Disconnect</button>
     <button id="remote-close">Worker disconnect</button><output id="result"></output>
-    <h2>Document-start script contribution</h2>
+    <h2>Native script contribution</h2>
+    <label>
+      Injection stage
+      <select id="script-run-at">
+        <option value="document_start">document_start</option>
+        <option value="document_end">document_end</option>
+        <option value="document_idle">document_idle</option>
+      </select>
+    </label>
     <label><input id="script-all-frames" type="checkbox" /> Include matching child frames</label>
     <button id="script-main">Install MAIN script</button>
     <button id="script-isolated">Install ISOLATED script</button>

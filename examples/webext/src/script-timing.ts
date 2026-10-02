@@ -1,4 +1,4 @@
-/** Packaged document-start recipe; the same synchronous code runs in either native world. */
+/** Packaged recipe; the same synchronous code runs at the selected native stage and world. */
 export function recordScriptTiming(): void {
   Reflect.set(globalThis, 'exampleScriptTiming', document.readyState);
   const injectedReadyState = document.readyState;

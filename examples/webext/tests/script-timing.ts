@@ -92,14 +92,17 @@ export function checkTimingSnapshot(
 export function checkTimingRegistration(
   registrations: Browser.scripting.RegisteredContentScript[],
   world: `${Browser.scripting.ExecutionWorld}`,
-  allFrames = false,
+  {
+    allFrames = false,
+    runAt = 'document_start',
+  }: Pick<Browser.scripting.RegisteredContentScript, 'allFrames' | 'runAt'> = {},
 ): void {
   assert.equal(registrations.length, 1);
   const registration = registrations[0];
   assert.ok(registration);
   assert.equal(registration.id, 'example-script-timing');
   assert.equal(registration.world, world);
-  assert.equal(registration.runAt, 'document_start');
+  assert.equal(registration.runAt, runAt);
   assert.equal(registration.allFrames, allFrames);
   assert.equal(registration.persistAcrossSessions, false);
   assert.deepEqual(registration.js, ['script-timing.js']);

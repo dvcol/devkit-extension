@@ -502,7 +502,7 @@
         }
       ],
       "gaps": [
-        "The common API owns native setup and cleanup. Native document_start now covers MAIN/ISOLATED, top/same-origin/cross-origin child frames, an ungranted matching child and the tested nonce CSP in production/development. Other injection stages, blank/blob/sandboxed frames, origin fallback, broader CSP operations, permission transitions, browser restart, dependency loss during real native registration and cleanup failure remain issue #11 obligations.",
+        "The common API owns native setup and cleanup. Native document_start covers MAIN/ISOLATED, top/same-origin/cross-origin child frames, an ungranted matching child and the tested nonce CSP in production/development. All three native stages now have top-level MAIN/ISOLATED timing and install/disable/enable/dispose evidence in both browsers and modes, including document_end before a held resource finishes. The full stage/frame/CSP cross-product, blank/blob/sandboxed frames, origin fallback, broader CSP operations, permission transitions, browser restart, dependency loss during real native registration and cleanup failure remain issue #11 obligations. No common document_idle scheduling order is imposed.",
         "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP response implementations remain separate native work."
       ],
       "browserEvidence": [
@@ -633,6 +633,86 @@
             "ISOLATED: allFrames=true strictCsp=true native frame matching and host permissions",
             "ISOLATED: native child-frame registration disable and enable under page CSP",
             "ISOLATED: allFrames=true disposed registration leaves fresh documents uninjected"
+          ],
+          "host": "firefox",
+          "mode": "development",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-script-stages.ts",
+          "receiptFile": "artifacts/script-stages.json",
+          "checks": [
+            "MAIN: native document_start timing, world visibility and disposal",
+            "MAIN: native document_end timing, world visibility and disposal",
+            "MAIN: document_end disable preserves existing effects; enable injects fresh documents",
+            "MAIN: native document_idle timing, world visibility and disposal",
+            "MAIN: document_idle disable preserves existing effects; enable injects fresh documents",
+            "ISOLATED: native document_start timing, world visibility and disposal",
+            "ISOLATED: native document_end timing, world visibility and disposal",
+            "ISOLATED: document_end disable preserves existing effects; enable injects fresh documents",
+            "ISOLATED: native document_idle timing, world visibility and disposal",
+            "ISOLATED: document_idle disable preserves existing effects; enable injects fresh documents"
+          ],
+          "host": "chromium",
+          "mode": "production",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-script-stages.ts",
+          "receiptFile": "artifacts/firefox/script-stages.json",
+          "checks": [
+            "MAIN: native document_start timing, world visibility and disposal",
+            "MAIN: native document_end timing, world visibility and disposal",
+            "MAIN: document_end disable preserves existing effects; enable injects fresh documents",
+            "MAIN: native document_idle timing, world visibility and disposal",
+            "MAIN: document_idle disable preserves existing effects; enable injects fresh documents",
+            "ISOLATED: native document_start timing, world visibility and disposal",
+            "ISOLATED: native document_end timing, world visibility and disposal",
+            "ISOLATED: document_end disable preserves existing effects; enable injects fresh documents",
+            "ISOLATED: native document_idle timing, world visibility and disposal",
+            "ISOLATED: document_idle disable preserves existing effects; enable injects fresh documents"
+          ],
+          "host": "firefox",
+          "mode": "production",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-script-stages.ts",
+          "receiptFile": "artifacts/chromium-development/script-stages.json",
+          "checks": [
+            "MAIN: native document_start timing, world visibility and disposal",
+            "MAIN: native document_end timing, world visibility and disposal",
+            "MAIN: document_end disable preserves existing effects; enable injects fresh documents",
+            "MAIN: native document_idle timing, world visibility and disposal",
+            "MAIN: document_idle disable preserves existing effects; enable injects fresh documents",
+            "ISOLATED: native document_start timing, world visibility and disposal",
+            "ISOLATED: native document_end timing, world visibility and disposal",
+            "ISOLATED: document_end disable preserves existing effects; enable injects fresh documents",
+            "ISOLATED: native document_idle timing, world visibility and disposal",
+            "ISOLATED: document_idle disable preserves existing effects; enable injects fresh documents"
+          ],
+          "host": "chromium",
+          "mode": "development",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-script-stages.ts",
+          "receiptFile": "artifacts/firefox-development/script-stages.json",
+          "checks": [
+            "MAIN: native document_start timing, world visibility and disposal",
+            "MAIN: native document_end timing, world visibility and disposal",
+            "MAIN: document_end disable preserves existing effects; enable injects fresh documents",
+            "MAIN: native document_idle timing, world visibility and disposal",
+            "MAIN: document_idle disable preserves existing effects; enable injects fresh documents",
+            "ISOLATED: native document_start timing, world visibility and disposal",
+            "ISOLATED: native document_end timing, world visibility and disposal",
+            "ISOLATED: document_end disable preserves existing effects; enable injects fresh documents",
+            "ISOLATED: native document_idle timing, world visibility and disposal",
+            "ISOLATED: document_idle disable preserves existing effects; enable injects fresh documents"
           ],
           "host": "firefox",
           "mode": "development",

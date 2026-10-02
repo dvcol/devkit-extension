@@ -65,7 +65,7 @@ async function checkRegistration(options: {
   await extension.locator('#script-all-frames').setChecked(allFrames);
   const installed = await control(extension, `script-${world.toLowerCase()}`, 'ready', 1);
   try {
-    checkTimingRegistration(installed.registrations, world, allFrames);
+    checkTimingRegistration(installed.registrations, world, { allFrames });
     for (const strictCsp of [false, true]) {
       fixture.setStrictCsp(strictCsp);
       await source.goto(fixture.url);
@@ -132,7 +132,7 @@ async function checkLifecycle(
   await source.reload();
   const inactive = await readFrames(source, { ...options, active: false });
   const enabled = await control(extension, 'script-enable', 'ready', 2);
-  checkTimingRegistration(enabled.registrations, world, true);
+  checkTimingRegistration(enabled.registrations, world, { allFrames: true });
   await source.reload();
   const restored = await readFrames(source, options);
   return { world, stage: 'lifecycle', disabled, retained, inactive, enabled, restored };
