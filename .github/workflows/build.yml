@@ -72,6 +72,13 @@ jobs:
           SE_SKIP_DRIVER_IN_PATH: 'true'
           VITE_COUNTER_STORAGE_KEY: example.persisted-counter
         run: pnpm --filter @devkit/example-webext test:persistence:firefox:restart
+      - name: Verify natural Firefox event-page idle and explicit state recovery
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+          VITE_COUNTER_STORAGE_KEY: example.persisted-counter
+        run: pnpm --filter @devkit/example-webext test:persistence:firefox:idle
       - name: Run the Firefox debugger availability test
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

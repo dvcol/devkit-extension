@@ -1,0 +1,205 @@
+{
+  "browser": "157.0",
+  "processId": 63101,
+  "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-native-idle-TGpHVb",
+  "sessionId": "d1399ff4-b696-4737-83aa-70b56cc1d256",
+  "extensionId": "devkit-native-port@example.invalid",
+  "origin": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540",
+  "storageKey": "example.persisted-counter",
+  "artifactHash": "afb30dd60980f8cce183b86e40d97ec31ea09ad855df935f6e4b0ba6bfda46ff",
+  "timer": {
+    "idleTimeoutHasUserValue": false,
+    "idleTimeoutMilliseconds": 30000
+  },
+  "idle": {
+    "initial": {
+      "addonId": "devkit-native-port@example.invalid",
+      "contextId": 157,
+      "hasShutdown": false,
+      "origin": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/",
+      "persistentBackground": false,
+      "policyActive": true,
+      "state": "running",
+      "toolboxAttached": false
+    },
+    "stopped": {
+      "addonId": "devkit-native-port@example.invalid",
+      "contextId": null,
+      "hasShutdown": false,
+      "origin": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/",
+      "persistentBackground": false,
+      "policyActive": true,
+      "state": "stopped",
+      "toolboxAttached": false
+    },
+    "idleStartedAt": 1790922422213,
+    "events": [
+      {
+        "isRunning": true,
+        "observedAt": 1790922421005
+      },
+      {
+        "isRunning": false,
+        "observedAt": 1790922452136
+      }
+    ],
+    "suspends": [
+      {
+        "addonId": "devkit-native-port@example.invalid",
+        "contextId": 157,
+        "hasShutdown": false,
+        "observedAt": 1790922452135,
+        "origin": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/",
+        "persistentBackground": false,
+        "policyActive": true,
+        "state": "suspending",
+        "toolboxAttached": false
+      }
+    ],
+    "elapsedMilliseconds": 29923
+  },
+  "disconnected": [
+    {
+      "handle": "c26f2c9a-37f9-4b01-946a-93463b923db5",
+      "counterMounts": 0,
+      "domain": "",
+      "managementMounts": 0,
+      "status": "Disconnected",
+      "timeOrigin": 1790922421100
+    },
+    {
+      "handle": "cb6b1735-2a80-4f1d-9049-9d0b5ca726a9",
+      "counterMounts": 0,
+      "domain": "",
+      "managementMounts": 0,
+      "status": "Disconnected",
+      "timeOrigin": 1790922421499
+    }
+  ],
+  "previous": {
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "5ed3c93d-abcd-49c1-bf21-3f75c5ad30d6",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "documents": [
+      {
+        "handle": "c26f2c9a-37f9-4b01-946a-93463b923db5",
+        "timeOrigin": 1790922421100
+      },
+      {
+        "handle": "cb6b1735-2a80-4f1d-9049-9d0b5ca726a9",
+        "timeOrigin": 1790922421499
+      }
+    ],
+    "callers": [
+      {
+        "id": 0,
+        "url": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/panel.html"
+      }
+    ],
+    "confirmedCounter": {
+      "value": 10
+    },
+    "independentCounter": {
+      "value": 44
+    },
+    "executions": "{\"started\":1,\"completed\":1}"
+  },
+  "replacement": {
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "a169585d-21ae-4da2-a1de-3f5e51eac4bd",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "documents": [
+      {
+        "handle": "7aa02a73-7a6f-46cf-8dce-0de05f640bce",
+        "timeOrigin": 1790922452185
+      },
+      {
+        "handle": "f9932b49-7361-4bca-af56-97f1f41bf78c",
+        "timeOrigin": 1790922452557
+      }
+    ],
+    "callers": [
+      {
+        "id": 0,
+        "url": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/panel.html"
+      }
+    ],
+    "restored": 10,
+    "savedCounter": {
+      "value": 11
+    },
+    "independentCounter": {
+      "value": 44
+    },
+    "executions": "{\"started\":0,\"completed\":0}"
+  },
+  "lifecycle": {
+    "current": {
+      "addonId": "devkit-native-port@example.invalid",
+      "contextId": 161,
+      "hasShutdown": false,
+      "origin": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/",
+      "persistentBackground": false,
+      "policyActive": true,
+      "state": "running",
+      "toolboxAttached": false
+    },
+    "events": [
+      {
+        "isRunning": true,
+        "observedAt": 1790922421005
+      },
+      {
+        "isRunning": false,
+        "observedAt": 1790922452136
+      },
+      {
+        "isRunning": true,
+        "observedAt": 1790922452247
+      }
+    ],
+    "suspends": [
+      {
+        "addonId": "devkit-native-port@example.invalid",
+        "contextId": 157,
+        "hasShutdown": false,
+        "observedAt": 1790922452135,
+        "origin": "moz-extension://992dd5ed-01ed-432b-a756-f5847834f540/",
+        "persistentBackground": false,
+        "policyActive": true,
+        "state": "suspending",
+        "toolboxAttached": false
+      }
+    ]
+  },
+  "checks": [
+    "native event-page suspend and stopped notifications occur at the unchanged native idle timer while two native Port clients remain quiet",
+    "the stopped native background context disappears without a DevTools toolbox or extension reload",
+    "old panel documents disconnect and dispose both mounted views while the Firefox process, profile and extension remain unchanged",
+    "explicit fresh callers restore the confirmed saved counter under a fresh native background context and provider incarnation",
+    "fresh clients mount each view once, reset ephemeral state and apply one rendered action exactly once without replaying completed work",
+    "an independent native storage key stays unchanged"
+  ],
+  "limitations": [
+    "Natural idle after confirmed writes, not interrupted native I/O, browser crashes or pending RPC suspension",
+    "Explicit fresh clients perform recovery; the fixture adds no automatic reconnect or replay",
+    "The fixture is loaded once as a native temporary add-on; permanent installation is not exercised",
+    "WebDriver Classic does not provide global page-error capture in this test"
+  ]
+}

@@ -3809,8 +3809,8 @@
       ],
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
-        "Forced Chromium service-worker termination, natural idle with quiet native Ports, and explicit fresh connections are linked. Firefox natural suspension/event-page lifetime, navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
-        "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. It does not prove Firefox natural suspension, interrupted-write durability or Firefox quota behavior. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
+        "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet native Ports, and explicit fresh connections are linked. Navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
+        "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium/Firefox idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. It does not prove interrupted-write durability or Firefox quota behavior. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
       ],
       "browserEvidence": [
         {
@@ -3897,6 +3897,22 @@
           "host": "chromium-webext",
           "mode": "production-extension-opt-in-storage-natural-worker-idle-explicit-fresh-clients",
           "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-idle.ts",
+          "receiptFile": "artifacts/persistence/firefox-idle.json",
+          "checks": [
+            "native event-page suspend and stopped notifications occur at the unchanged native idle timer while two native Port clients remain quiet",
+            "the stopped native background context disappears without a DevTools toolbox or extension reload",
+            "old panel documents disconnect and dispose both mounted views while the Firefox process, profile and extension remain unchanged",
+            "explicit fresh callers restore the confirmed saved counter under a fresh native background context and provider incarnation",
+            "fresh clients mount each view once, reset ephemeral state and apply one rendered action exactly once without replaying completed work",
+            "an independent native storage key stays unchanged"
+          ],
+          "host": "stable-firefox-webext",
+          "mode": "production-extension-opt-in-storage-natural-event-page-idle-explicit-fresh-clients",
+          "requirePageErrors": false
         }
       ]
     },
