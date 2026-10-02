@@ -218,6 +218,11 @@ onClick('#rich', async () => {
 });
 onClick('#unsupported', () => rpc.$call('probe:echo', { callback: () => {} }));
 onClick('#remote-close', () => rpc.$call('probe:disconnect'));
+onClick('#script-main', () => rpc.$call('example:scripts:install', 'MAIN'));
+onClick('#script-isolated', () => rpc.$call('example:scripts:install', 'ISOLATED'));
+onClick('#script-disable', () => rpc.$call('example:scripts:disable'));
+onClick('#script-enable', () => rpc.$call('example:scripts:enable'));
+onClick('#script-dispose', () => rpc.$call('example:scripts:dispose'));
 onClick('#routed', () =>
   routedClient.actions.invoke({
     action: increaseCounterAction,

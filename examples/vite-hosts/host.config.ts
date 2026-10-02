@@ -14,9 +14,10 @@ export default defineConfig(async ({ command, mode, isPreview }) => {
   let plugins: Plugin[] = [];
   if (isPreview === true) plugins = [counterPreviewPlugin(mode)];
   else if (command === 'serve') plugins = await counterHostPlugins(mode);
+  if (command === 'build') plugins.push(htmlBootstrapPlugin());
   return {
     root: fileURLToPath(new URL('./site', import.meta.url)),
-    plugins: [...plugins, htmlBootstrapPlugin()],
+    plugins,
     server: { host: '127.0.0.1' },
     preview: { host: '127.0.0.1' },
   };

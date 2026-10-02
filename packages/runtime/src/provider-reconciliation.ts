@@ -162,7 +162,7 @@ function eligibility(
   const extension = extensionDeclaration(contribution.definition);
   if (extension !== undefined && !environment.kinds.has(extension.descriptor.id))
     return 'unsupported';
-  if (['transform', 'script'].includes(contribution.definition.kind)) return 'unsupported';
+  if (contribution.definition.kind === 'transform') return 'unsupported';
   for (const requirement of Object.values(requirementsOf(contribution))) {
     if (findService(environment, requirement)?.status !== 'active') {
       const reason = unavailableReason(environment, requirement);

@@ -186,7 +186,13 @@ describe('declaration ownership', () => {
     const execution = { id: 'example.server' };
     const content = { title: 'domain owned' };
     const transform = { kind: 'transform' as const, id: 'example.transform', execution, content };
-    const script = { kind: 'script' as const, id: 'example.script', execution, content };
+    const script = {
+      kind: 'script' as const,
+      id: 'example.script',
+      execution,
+      requires: {},
+      setup() {},
+    };
     const plugin = definePlugin({
       id: 'example.plugin',
       transforms: [transform],

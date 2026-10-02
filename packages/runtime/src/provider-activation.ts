@@ -17,7 +17,7 @@ import {
   actionDeclaration,
   extensionDeclaration,
   serviceDeclaration,
-  viewDeclaration,
+  setupDeclaration,
 } from './provider-types.js';
 import type { OwnedContribution } from './provider-types.js';
 import { validateOriginal } from './validation.js';
@@ -31,7 +31,7 @@ export function requirementsOf(contribution: OwnedContribution): CapabilityRequi
   return (
     serviceDeclaration(contribution.definition)?.requires ??
     actionDeclaration(contribution.definition)?.requires ??
-    viewDeclaration(contribution.definition)?.requires ??
+    setupDeclaration(contribution.definition)?.requires ??
     {}
   );
 }
@@ -57,9 +57,9 @@ async function setupContribution(
     return implementation;
   }
   if (actionDeclaration(definition) !== undefined) return undefined;
-  const view = viewDeclaration(definition);
-  if (view !== undefined) {
-    await callRecipe(view.setup, context);
+  const recipe = setupDeclaration(definition);
+  if (recipe !== undefined) {
+    await callRecipe(recipe.setup, context);
     return undefined;
   }
   const extension = extensionDeclaration(definition);

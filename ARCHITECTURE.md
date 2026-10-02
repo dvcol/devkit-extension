@@ -52,7 +52,7 @@ Last-successful-build publication concerns asset availability. It does not resto
 | Action            | Shared versioned descriptor plus a separate handler contribution                   | An invocable use case that can consume capabilities                                 |
 | View contribution | Execution assignment, requirements and setup recipe                                | Owns native publication and subscriptions through its activation scope              |
 | Transform         | Kind-specific transform definition                                                 | Owned interception or transformation behavior                                       |
-| Script            | Packaged module and execution declaration                                          | Runs in its actual background/content/page execution with target scope              |
+| Script            | Execution assignment, requirements and native registration setup recipe            | Owns registration through its activation scope; native tooling packages page code   |
 | Plugin            | Named lists of services, actions, views, transforms, scripts and custom extensions | Installed and controlled together, with independent contribution activation/failure |
 | Custom kind       | Imported kind descriptor, payload schema and explicitly installed kind handler     | Allows new kinds without arbitrary plugin fields or a closed core switch            |
 
@@ -71,6 +71,7 @@ Every declaration helper takes one object. Contracts can be imported by a UI wit
 | `defineActionContract` | `{ id, version, operation }`                      | Shared action contract                     |
 | `defineAction`         | `{ contract, id, execution, requires?, handler }` | Implementation in `plugin.actions`         |
 | `defineView`           | `{ id, execution, requires?, setup }`             | Native setup recipe in `plugin.views`      |
+| `defineScript`         | `{ id, execution, requires?, setup }`             | Native setup recipe in `plugin.scripts`    |
 | `defineExtension`      | `{ descriptor, id, execution, payload }`          | Custom contribution in `plugin.extensions` |
 
 An operation describes one callable input/result pair. A capability names several operations; an action contract describes one invocable use case. “Contribution” remains the shared terminology and typing for owned additions. It does not require a generic `defineContribution` factory. `defineActionContract` replaces the former contract helper named `defineAction`; `defineAction` replaces `defineActionContribution`.
@@ -84,6 +85,14 @@ A view contribution owns a recipe and its activation scope. The native published
 Core and runtime remain native-independent. The author imports the native publisher; the host supplies its actual publishing context through the existing native descriptor lookup. Reuse one stable context object per native shared-state host so native duplicate detection and index ownership remain consistent. Native options, state, index discovery and renderer contracts remain unchanged; this adds no JSON schema, metadata catalog, state protocol, adapter API or framework dependency.
 
 The host owns renderer mounting and surface/dock placement. Native server dock registration has no unregister handle, so publication cleanup does not imply server-dock removal. The shared recipe is exercised by the server, Vite and WebExtension examples. The decision record and executable API inventory distinguish those checks from the remaining surface/HMR obligations.
+
+### Portable script contributions
+
+The owner accepted native declarations plus contribution setup on 2026-10-02, provided one common contribution API can register a feature on either provider realm. `defineScript({ id, execution, requires?, setup })` supplies that registration lifecycle in `plugin.scripts`. Like a view, it receives the existing typed `SetupContext<Requirements>`, returns `Awaitable<void>` and owns cleanup through `scope.onDispose`. The realm implementation performs native registration; core has no realm-specific option union or source loader. [Decision and native examples](./docs/planning/011-portable-script-declaration.md).
+
+The declared execution owns registration, not necessarily the injected code's execution. A background recipe can register a native MAIN-world content script. The browser owns document matching, permissions, timing and world semantics. A server recipe can own whether an installed native Vite HTML hook contributes a script to future HTML responses. Native declaration/build configuration packages or serves executable code and remains separate from runtime activation.
+
+Devframe host-page imports, Vite application HTML transformation and browser content-script registration retain their actual stages. Unregistration does not undo effects in existing documents. Built HTML remains built HTML in preview; disabling a live backend does not rewrite it. No common declaration promises an unsupported timing or rollback guarantee. Arbitrary HTTP/response transform contracts remain issue #11 work.
 
 ## Dependency and execution diagrams
 
@@ -374,7 +383,7 @@ if (admission.status === 'admitted') {
 
 `createBrowserPageImplementation` is application/adapter code returning operations satisfying `pageCapability` and an asynchronous cleanup function. It resolves/authorizes target references through the browser adapter before native work. This is not a claim that a browser API accepts the generic target reference directly. A server implementation supplies a different recipe for the same contract and receives its actual native server contexts.
 
-Transforms and scripts retain separate intended declaration kinds. The maintained core currently accepts only their common envelopes, and runtime reports them as unsupported until their domain contract is implemented. A transform-only plugin owns its interception registration through its activation scope. A page-only plugin packages its script for MAIN-world execution and a document generation, without acquiring background native APIs. Their exact operation and packaging signatures belong to [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
+Transforms retain their common envelope and an unsupported runtime outcome until their domain contract is implemented. Scripts use the native setup recipe described above. A script's registration recipe runs in its declared execution; packaged page code receives only its actual page/world APIs. A transform-only plugin will own its interception registration through its activation scope. Exact transform operations and remaining script-stage guarantees belong to [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
 
 A custom kind uses `defineContributionKind({ id, schema })`, `defineExtension({ descriptor: kind, id, execution, payload })` and `plugin.extensions`. The host explicitly supplies a `ContributionKindInstaller` for that descriptor. Its `activate` receives the validated definition and owned local setup scope. An unknown kind is an admission error; no arbitrary plugin key is treated as an extension. The renderer needs no change merely because another non-UI kind exists.
 

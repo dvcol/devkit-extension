@@ -25,5 +25,165 @@
         "pageReadyState": "loading"
       }
     }
+  ],
+  "lifecycle": [
+    {
+      "world": "MAIN",
+      "installed": {
+        "installation": {
+          "id": "example.bootstrap",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": ["http://127.0.0.1/index.html"],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "disabled": {
+        "installation": {
+          "id": "example.bootstrap",
+          "status": "inactive",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 1,
+              "enabled": false,
+              "status": "disabled",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "registrations": []
+      },
+      "enabled": {
+        "installation": {
+          "id": "example.bootstrap",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 2,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": ["http://127.0.0.1/index.html"],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "MAIN"
+          }
+        ]
+      }
+    },
+    {
+      "world": "ISOLATED",
+      "installed": {
+        "installation": {
+          "id": "example.bootstrap",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": ["http://127.0.0.1/index.html"],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "disabled": {
+        "installation": {
+          "id": "example.bootstrap",
+          "status": "inactive",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 1,
+              "enabled": false,
+              "status": "disabled",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "registrations": []
+      },
+      "enabled": {
+        "installation": {
+          "id": "example.bootstrap",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 2,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": ["http://127.0.0.1/index.html"],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "ISOLATED"
+          }
+        ]
+      }
+    }
   ]
 }

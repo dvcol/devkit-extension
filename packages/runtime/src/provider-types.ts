@@ -22,6 +22,7 @@ import type {
   ProviderCatalog,
   RuntimeDiagnostic,
   ServiceDeclaration,
+  ScriptDeclaration,
   ViewDeclaration,
 } from '@devkit/core';
 
@@ -62,8 +63,9 @@ export type ExecutableContribution =
   | ServiceDeclaration
   | ActionDeclaration
   | ViewDeclaration
+  | ScriptDeclaration
   | ExtensionDefinition
-  | ContributionDeclaration<'transform' | 'script'>;
+  | ContributionDeclaration<'transform'>;
 
 export interface OwnedContribution {
   readonly definition: ExecutableContribution;
@@ -110,7 +112,9 @@ export function extensionDeclaration(
   return undefined;
 }
 
-export function viewDeclaration(definition: ExecutableContribution): ViewDeclaration | undefined {
-  if (definition.kind === 'view') return definition;
+export function setupDeclaration(
+  definition: ExecutableContribution,
+): ViewDeclaration | ScriptDeclaration | undefined {
+  if (definition.kind === 'view' || definition.kind === 'script') return definition;
   return undefined;
 }

@@ -10,7 +10,7 @@ import {
   snapshotKind,
   snapshotOperation,
   snapshotService,
-  snapshotView,
+  snapshotSetup,
 } from './snapshots.js';
 
 import type {
@@ -32,6 +32,8 @@ import type {
   RealmDescriptor,
   ServiceDefinition,
   ServiceDeclaration,
+  ScriptDeclaration,
+  ScriptDefinition,
   SetupContext,
   ViewDeclaration,
   ViewDefinition,
@@ -50,6 +52,7 @@ import {
   assertRecord,
   assertRequirements,
   assertService,
+  assertScript,
   assertView,
 } from './validation.js';
 
@@ -189,7 +192,29 @@ export function defineView(
     assertRequirements(definition.requires, 'view.requires');
   const view = { ...definition, kind: 'view' as const, requires: definition.requires ?? {} };
   assertView(view, 'view');
-  return snapshotView(view);
+  return snapshotSetup(view);
+}
+
+export function defineScript<
+  const Requirements extends CapabilityRequirements = Record<never, never>,
+>(definition: {
+  readonly id: string;
+  readonly execution: ExecutionDescriptor;
+  readonly requires?: Requirements;
+  setup(context: SetupContext<NoInfer<Requirements>>): Awaitable<void>;
+}): ScriptDefinition<Requirements>;
+export function defineScript(
+  definition: Omit<ScriptDeclaration, 'kind' | 'requires'> & {
+    readonly requires?: CapabilityRequirements;
+  },
+): ScriptDeclaration {
+  assertRecord(definition, 'script');
+  assertKeys(definition, ['id', 'execution', 'requires', 'setup'], 'script');
+  if (Object.hasOwn(definition, 'requires'))
+    assertRequirements(definition.requires, 'script.requires');
+  const script = { ...definition, kind: 'script' as const, requires: definition.requires ?? {} };
+  assertScript(script, 'script');
+  return snapshotSetup(script);
 }
 
 export function defineExtension<const Kind extends ContributionKindDescriptor>(definition: {
@@ -229,13 +254,17 @@ function snapshotPluginEntry(value: unknown, kind: string, label: string): Contr
   }
   if (kind === 'view') {
     assertView(value, label);
-    return snapshotView(value);
+    return snapshotSetup(value);
+  }
+  if (kind === 'script') {
+    assertScript(value, label);
+    return snapshotSetup(value);
   }
   if (kind === 'extension') {
     assertExtension(value, label);
     return snapshotExtension(value);
   }
-  /** Domain adapters validate transform and script fields beyond this common envelope. */
+  /** Domain adapters validate transform fields beyond this common envelope. */
   assertContribution(value, kind, label);
   return snapshotContribution(value);
 }

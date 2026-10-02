@@ -12,6 +12,7 @@ import type { JsonRenderViewContext } from '@devframes/json-render/view';
 import { createMatchingCounterPlugin } from '@devkit/example-contribution/provider';
 import { createCounterView } from '@devkit/example-json-render/view';
 import { spec } from './spec';
+import { registerScriptControls } from './script-contribution';
 import {
   counterCapability,
   counterStateKey,
@@ -67,7 +68,7 @@ export function createExampleProvider(options: {
     if (descriptor.id === viewContext.id) return options.viewContext;
     return undefined;
   }
-  return createRpcProvider({
+  const provider = createRpcProvider({
     context: { rpc: options.rpc, realm, execution, native: { get } },
     providerId,
     services: [counterService],
@@ -89,4 +90,6 @@ export function createExampleProvider(options: {
       capabilities: [counterCapability],
     },
   });
+  registerScriptControls({ rpc: options.rpc, provider });
+  return provider;
 }

@@ -221,7 +221,7 @@
       ],
       "gaps": [
         "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Full surface placement, catalog compatibility, view-module HMR and every supported browser/preview failure case remain separate obligations.",
-        "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Script and transform declarations remain unsupported; their domain contracts are separate work."
+        "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform declarations remain unsupported; their domain contract is separate work. Script registration now has its own native setup contract and evidence group."
       ],
       "browserEvidence": [
         {
@@ -270,6 +270,188 @@
           "host": "chromium-webext",
           "mode": "production-extension/native-development-servers",
           "requirePageErrors": true
+        }
+      ]
+    },
+    {
+      "id": "portable-script-declaration-and-lifecycle",
+      "apis": [
+        "@devkit/core:PluginDefinition.scripts",
+        "@devkit/core:PluginInput.scripts",
+        "@devkit/core:ScriptDeclaration",
+        "@devkit/core:ScriptDeclaration.execution",
+        "@devkit/core:ScriptDeclaration.execution.id",
+        "@devkit/core:ScriptDeclaration.id",
+        "@devkit/core:ScriptDeclaration.kind",
+        "@devkit/core:ScriptDeclaration.requires",
+        "@devkit/core:ScriptDeclaration.setup",
+        "@devkit/core:ScriptDefinition",
+        "@devkit/core:ScriptDefinition.execution",
+        "@devkit/core:ScriptDefinition.execution.id",
+        "@devkit/core:ScriptDefinition.id",
+        "@devkit/core:ScriptDefinition.kind",
+        "@devkit/core:ScriptDefinition.requires",
+        "@devkit/core:ScriptDefinition.setup",
+        "@devkit/core:defineScript"
+      ],
+      "examples": [
+        "examples/vite-hosts",
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts script setup requirements native context and explicit scope cleanup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an undeclared requirement in script setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a wrong capability payload in script setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a resource returned from typed script setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a script envelope without requirements and setup in a plugin",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/scripts.test.ts",
+          "fullName": "script definitions keeps setup inert and snapshots requirements and execution without adopting packaged code or native registrations",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/scripts.test.ts",
+          "fullName": "script definitions rejects missing setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/scripts.test.ts",
+          "fullName": "script definitions rejects non-callable setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/scripts.test.ts",
+          "fullName": "script definitions rejects undefined requirements before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/scripts.test.ts",
+          "fullName": "script definitions rejects source discovery outside setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/scripts.test.ts",
+          "fullName": "script definitions rejects an incomplete structural script in a plugin",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-scripts.test.ts",
+          "fullName": "provider script lifecycle waits for requirements and cleans up before dependency loss while preserving explicit disable",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-scripts.test.ts",
+          "fullName": "provider script lifecycle cleans partial setup and leaves siblings usable until an explicit script retry",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-scripts.test.ts",
+          "fullName": "provider script lifecycle waits for native script cleanup before activating a replacement",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-scripts.test.ts",
+          "fullName": "provider script lifecycle retains reservations and blocks replacement when native script cleanup fails",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-scripts.test.ts",
+          "fullName": "provider script lifecycle does not adopt a resource returned by structural JavaScript setup",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "The common API owns native setup and cleanup. Full stage coverage, frame/CSP cases, permission failure, browser restart, dependency loss during real native registration and cleanup failure remain issue #11 obligations.",
+        "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP transforms remain unsupported and separate."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/browser.ts",
+          "receiptFile": "artifacts/html-timing.json",
+          "checks": [
+            "devframe: script contribution disable removes future HTML bootstrap and enable starts a fresh generation",
+            "devtools: script contribution disable removes future HTML bootstrap and enable starts a fresh generation"
+          ],
+          "host": "native-devframe-and-devtools-chromium",
+          "mode": "development",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-script-timing.ts",
+          "receiptFile": "artifacts/script-timing.json",
+          "checks": [
+            "MAIN: script contribution install disable enable dispose and native timing",
+            "ISOLATED: script contribution install disable enable dispose and native timing"
+          ],
+          "host": "chromium",
+          "mode": "production",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-script-timing.ts",
+          "receiptFile": "artifacts/firefox/script-timing.json",
+          "checks": [
+            "MAIN: script contribution install disable enable dispose and native timing",
+            "ISOLATED: script contribution install disable enable dispose and native timing"
+          ],
+          "host": "firefox",
+          "mode": "production",
+          "requirePageErrors": false
         }
       ]
     },
@@ -884,14 +1066,12 @@
         "@devkit/core:PluginDefinition.extensions",
         "@devkit/core:PluginDefinition.id",
         "@devkit/core:PluginDefinition.kind",
-        "@devkit/core:PluginDefinition.scripts",
         "@devkit/core:PluginDefinition.services",
         "@devkit/core:PluginDefinition.transforms",
         "@devkit/core:PluginInput",
         "@devkit/core:PluginInput.actions",
         "@devkit/core:PluginInput.extensions",
         "@devkit/core:PluginInput.id",
-        "@devkit/core:PluginInput.scripts",
         "@devkit/core:PluginInput.services",
         "@devkit/core:PluginInput.transforms",
         "@devkit/core:ProviderCatalog",

@@ -14,6 +14,7 @@ import {
   definePlugin,
   defineRealm,
   defineService,
+  defineScript,
   defineView,
 } from '../src/index.js';
 
@@ -120,7 +121,7 @@ describe('portable definitions', () => {
       ],
       views: [defineView({ id: 'example.view', execution, setup() {} })],
       transforms: [{ id: 'example.transform', kind: 'transform', execution }],
-      scripts: [{ id: 'example.script', kind: 'script', execution }],
+      scripts: [defineScript({ id: 'example.script', execution, setup() {} })],
       extensions: [],
     });
 

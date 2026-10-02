@@ -5,9 +5,11 @@ import { createDevframeProvider, createDevToolsProvider } from '@devkit/server';
 import type { ServerComposition, ServerProviderHandle } from '@devkit/server';
 import { DevTools } from '@vitejs/devtools';
 import type { Plugin, PreviewServer, ViteDevServer } from 'vite';
+import { definePlugin } from '@devkit/core';
 
 import { ProviderLifetime } from './lifetime.js';
 import { counterViewPlugin } from './counter-view.js';
+import { createHtmlBootstrapFeature } from './html-bootstrap.js';
 
 export { counterPreviewPlugin } from './preview.js';
 export { htmlBootstrapPlugin } from './html-bootstrap.js';
@@ -26,14 +28,20 @@ function hasProviderApi(api: unknown): api is { readonly ready: Promise<ServerPr
 /** Call inside a Vite config factory so every config reload creates fresh native plugins. */
 export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
   const lifetime = new ProviderLifetime();
+  const bootstrap = createHtmlBootstrapFeature();
   const composition: ServerComposition = {
     providerId: `example.${host}-vite`,
     services: [counterService],
-    plugins: [counterActionsPlugin, counterViewPlugin],
+    plugins: [
+      counterActionsPlugin,
+      counterViewPlugin,
+      definePlugin({ id: 'example.bootstrap', scripts: [bootstrap.script] }),
+    ],
     expose: { actions: [increaseCounterAction], capabilities: [counterCapability] },
   };
   if (host === 'devframe') {
     return [
+      bootstrap.plugin,
       lifetime.plugin(),
       viteDevframeHub({
         ui: false,
@@ -47,6 +55,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
     ];
   }
   return [
+    bootstrap.plugin,
     {
       ...lifetime.plugin(),
       devtools: {

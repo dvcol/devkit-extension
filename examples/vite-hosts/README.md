@@ -141,7 +141,7 @@ Automatic production browser refresh/HMR, a renderer-mounted build-failure view 
 
 ## Native HTML bootstrap timing
 
-[htmlBootstrapPlugin](./src/html-bootstrap.ts) uses Vite's public `transformIndexHtml` hook to prepend a classic inline script to the example's root HTML. The plugin is present during development and build. It changes neither the backend lifecycle nor Vite's watcher, and adds no HTTP response-transform pipeline.
+[htmlBootstrapPlugin](./src/html-bootstrap.ts) uses Vite's public `transformIndexHtml` hook to prepend a classic inline script to the example's root HTML. During development, `createHtmlBootstrapFeature` supplies the native hook plus a `defineScript` contribution in the actual provider. Setup enables the hook and scope cleanup disables it for future HTML responses. Independent builds use the native hook directly. It changes neither the backend lifecycle nor Vite's watcher, and adds no HTTP response-transform pipeline.
 
 The [site's first page script](./site/index.html) immediately freezes the bootstrap marker and its own `document.readyState`. Its visible output shows both values. Run either normal `demo:*` command, or build the site and run either `preview:*` command above.
 
@@ -169,9 +169,9 @@ pnpm exec turbo run build --filter=@devkit/example-vite-hosts --concurrency=1
 pnpm --filter @devkit/example-vite-hosts test:browser
 ```
 
-CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh timing, counter and watched-preview results go to ignored `artifacts/html-timing.json`; screenshots use `artifacts/{devframe,devtools}-{development,preview}.png`. The 28 host lifecycle tests remain separate.
+CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh timing, counter and watched-preview results go to ignored `artifacts/html-timing.json`; screenshots use `artifacts/{devframe,devtools}-{development,preview}.png`. The browser suite also disables/enables the script contribution on both development hosts, verifies native first-script effects and a fresh activation generation, then runs the existing counter and watch checks. The 28 host lifecycle tests remain separate. A [live in-app browser confirmation](./evidence/script-contribution-live.json) records the same timing changes with retained provider identity and counter state.
 
-This example uses a classic script because module scripts defer. `head-prepend` controls HTML placement; Vite hook `order` controls transformation processing, not browser scheduling. Preview does not reapply HTML hooks. The owned site has no CSP; applications with CSP must allow the script through their own policy, such as Vite's native `html.cspNonce`. This is not evidence of arbitrary HTTP response rewriting or execution on deployed pages. Firefox execution of this Vite fixture, CSP cases and the portable script declaration remain outside this slice.
+This example uses a classic script because module scripts defer. `head-prepend` controls HTML placement; Vite hook `order` controls transformation processing, not browser scheduling. Preview does not reapply HTML hooks. The owned site has no CSP; applications with CSP must allow the script through their own policy, such as Vite's native `html.cspNonce`. This is not evidence of arbitrary HTTP response rewriting or execution on deployed pages. Firefox execution of this Vite fixture and CSP cases remain outside this slice. [The common script declaration](../../docs/planning/011-portable-script-declaration.md) owns registration setup and cleanup; disabling the preview backend cannot remove code already emitted into production HTML.
 
 References: [Vite HTML hook](https://vite.dev/guide/api-plugin#transformindexhtml), [Vite CSP support](https://vite.dev/guide/features#content-security-policy-csp), [native script execution](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script).
 

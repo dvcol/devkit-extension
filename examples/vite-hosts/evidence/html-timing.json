@@ -9,6 +9,38 @@
         "bootstrapReadyState": "loading",
         "pageReadyState": "loading"
       },
+      "script": {
+        "disabled": {
+          "id": "example.bootstrap",
+          "status": "inactive",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 1,
+              "enabled": false,
+              "status": "disabled",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "enabled": {
+          "id": "example.bootstrap",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 2,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        }
+      },
       "counter": {
         "authenticatedPages": 3,
         "nativeJsonActions": 7,
@@ -65,6 +97,38 @@
       "snapshot": {
         "bootstrapReadyState": "loading",
         "pageReadyState": "loading"
+      },
+      "script": {
+        "disabled": {
+          "id": "example.bootstrap",
+          "status": "inactive",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 1,
+              "enabled": false,
+              "status": "disabled",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "enabled": {
+          "id": "example.bootstrap",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 2,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        }
       },
       "counter": {
         "authenticatedPages": 3,
@@ -135,6 +199,10 @@
       "originalDocumentRetained": true,
       "oldAssetsRetained": true
     }
+  ],
+  "checks": [
+    "devframe: script contribution disable removes future HTML bootstrap and enable starts a fresh generation",
+    "devtools: script contribution disable removes future HTML bootstrap and enable starts a fresh generation"
   ],
   "pageErrors": []
 }

@@ -1,0 +1,55 @@
+{
+  "browser": "Codex in-app browser, Chrome 154.0.0.0",
+  "passed": true,
+  "date": "2026-10-02",
+  "mechanism": "Actual maintained Vite host configuration; backend InstallationHandle disable/enable; fresh authenticated documents inspected through in-app browser accessibility state",
+  "checks": [
+    "devframe: live script disable and enable change future HTML while retaining backend identity and counter state",
+    "devtools: live script disable and enable change future HTML while retaining backend identity and counter state"
+  ],
+  "observations": [
+    {
+      "host": "devframe",
+      "providerId": "example.devframe-vite",
+      "incarnation": "e39e4e56-b8bb-4209-883c-6fe2779368f5",
+      "counter": 0,
+      "connection": "Connected",
+      "active": {
+        "bootstrapReadyState": "loading",
+        "pageReadyState": "loading"
+      },
+      "disabled": {
+        "bootstrapReadyState": null,
+        "pageReadyState": "loading"
+      },
+      "enabled": {
+        "bootstrapReadyState": "loading",
+        "pageReadyState": "loading"
+      },
+      "activationGenerations": [1, 2]
+    },
+    {
+      "host": "devtools",
+      "providerId": "example.devtools-vite",
+      "incarnation": "fec8e883-aec2-4255-a590-49553cc681a6",
+      "counter": 0,
+      "connection": "Connected",
+      "active": {
+        "bootstrapReadyState": "loading",
+        "pageReadyState": "loading"
+      },
+      "disabled": {
+        "bootstrapReadyState": null,
+        "pageReadyState": "loading"
+      },
+      "enabled": {
+        "bootstrapReadyState": "loading",
+        "pageReadyState": "loading"
+      },
+      "activationGenerations": [1, 2]
+    }
+  ],
+  "limitations": [
+    "Application connection and script timing only; the independently mounted native DevTools dock authentication was not exercised."
+  ]
+}

@@ -10,6 +10,7 @@ export {
   definePlugin,
   defineRealm,
   defineService,
+  defineScript,
   defineView,
 } from './definitions.js';
 export { isOperationError } from './errors.js';

@@ -160,6 +160,19 @@ export interface ViewDefinition<
   setup(context: SetupContext<Requirements>): Awaitable<void>;
 }
 
+export interface ScriptDeclaration extends ContributionDeclaration<'script'> {
+  readonly requires: CapabilityRequirements;
+  readonly setup: (...setupArguments: never[]) => unknown;
+}
+
+/** Setup owns native registration through its scope; native tooling packages executable code. */
+export interface ScriptDefinition<
+  Requirements extends CapabilityRequirements,
+> extends ScriptDeclaration {
+  readonly requires: Requirements;
+  setup(context: SetupContext<Requirements>): Awaitable<void>;
+}
+
 export interface ActionDescriptor<Operation extends OperationDefinition = OperationDefinition> {
   readonly kind: 'action-contract';
   readonly id: string;
@@ -209,7 +222,7 @@ export interface PluginInput {
   readonly actions?: readonly ActionDeclaration[];
   readonly views?: readonly ViewDeclaration[];
   readonly transforms?: readonly ContributionDeclaration<'transform'>[];
-  readonly scripts?: readonly ContributionDeclaration<'script'>[];
+  readonly scripts?: readonly ScriptDeclaration[];
   readonly extensions?: readonly ExtensionDefinition[];
 }
 

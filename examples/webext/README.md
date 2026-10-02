@@ -262,7 +262,7 @@ This is a one-time handoff. Closing or navigating the source page does not retar
 
 ## Packaged document-start scripts
 
-The [script recipe](./src/script-timing.ts) is synchronous, browser-only code. Production Vite and WXT's native `defineUnlistedScript` entry both package it as `script-timing.js`. Application code registers that file through native `scripting.registerContentScripts` before navigating. No SDK script factory, page RPC bridge or injected extension authority is involved.
+The [script recipe](./src/script-timing.ts) is synchronous, browser-only code. Production Vite and WXT's native `defineUnlistedScript` entry both package it as `script-timing.js`. The background-owned [script contribution](./src/script-contribution.ts) registers that file through native `scripting.registerContentScripts` before navigating. `defineScript` supplies the common contribution lifecycle used by the server example too; native APIs retain their registration options. No page RPC bridge or injected extension authority is involved.
 
 ```ts
 await chrome.scripting.registerContentScripts([
@@ -290,9 +290,9 @@ The [first inline page script](./tests/script-timing/index.html) dispatches a pl
 | ISOLATED                       | absent                     | `loading`                          | `loading`               |
 | Removed, then fresh navigation | absent                     | absent                             | `loading`               |
 
-The browser tests also read back the exact native registration, check an unmatched URL in each world, and confirm removal of the owned registration. Production bundle tests parse the artifact as a classic script and reject module dependencies. The same browser scenarios run in the native WXT development suites without changing WXT lifecycle behavior.
+The browser tests drive the packaged controls through native RPC, verify ready/inactive/disposed installation status and activation generations, and read back the exact native registration. In each world, disable removes future injection while preserving existing document effects; enable registers a new generation, and dispose removes the registration. Unmatched URLs remain unchanged. Production bundle tests parse the artifact as a classic script and reject module dependencies. The same browser scenarios run in the native WXT development suites without changing WXT lifecycle behavior.
 
-Recorded results: [Chromium production](./evidence/script-timing/chromium-production.json), [Firefox production](./evidence/script-timing/firefox-production.json), [Chromium development](./evidence/script-timing/chromium-development.json), [Firefox development](./evidence/script-timing/firefox-development.json). Chromium 153.0.8010.12 and Firefox 156.0.1 passed all four combinations. Fresh runs write `script-timing.json` in each command's existing artifact directory.
+Recorded results: [Chromium production](./evidence/script-timing/chromium-production.json), [Firefox production](./evidence/script-timing/firefox-production.json), [Chromium development](./evidence/script-timing/chromium-development.json), [Firefox development](./evidence/script-timing/firefox-development.json). Chromium 153.0.8010.12 and Firefox 157.0 passed the contribution install/disable/enable/dispose checks in production and native WXT development builds. Fresh runs write `script-timing.json` in each command's existing artifact directory.
 
 ```sh
 pnpm exec turbo run build --filter=@devkit/example-webext --concurrency=1
@@ -301,7 +301,7 @@ pnpm --filter @devkit/example-webext test:firefox
 pnpm --filter @devkit/example-webext test:dev
 ```
 
-This proves top-level loopback documents registered before navigation. It does not establish child-frame/CSP coverage, persistence across browser restarts, mutation rollback, already-open document timing or ISOLATED-world script replacement during development. Native Vite HTML transformation and the generic script contribution contract remain separate work under [#11](https://github.com/dvcol/devkit-extension/issues/11).
+This proves top-level loopback documents registered before navigation. It does not establish child-frame/CSP coverage, persistence across browser restarts, mutation rollback, already-open document timing or ISOLATED-world script replacement during development. The common script contract and native lifecycle are implemented. Complete injection stages and HTTP transforms remain work under [#11](https://github.com/dvcol/devkit-extension/issues/11). [Contract and ownership](../../docs/planning/011-portable-script-declaration.md).
 
 Native references: [Chrome content script timing](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts), [registered-script fields](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/RegisteredContentScript), and [Mozilla's API compatibility data](https://raw.githubusercontent.com/mdn/browser-compat-data/main/webextensions/api/scripting.json). The latter records programmatic `world` support from Firefox 128; the actual Firefox run above confirms the maintained version.
 

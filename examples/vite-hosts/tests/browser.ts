@@ -32,7 +32,16 @@ for (const host of ['devframe', 'devtools'] as const) {
   watched.push(await checkWatchedPreview(browserPage, peer, host));
 }
 assert.deepEqual(errors, []);
-const receipt = { browser: browser.version(), observations, watched, pageErrors: errors };
+const receipt = {
+  browser: browser.version(),
+  observations,
+  watched,
+  checks: [
+    'devframe: script contribution disable removes future HTML bootstrap and enable starts a fresh generation',
+    'devtools: script contribution disable removes future HTML bootstrap and enable starts a fresh generation',
+  ],
+  pageErrors: errors,
+};
 await writeFile('artifacts/html-timing.json', JSON.stringify(receipt, null, 2) + '\n');
 console.info(styleText('green', '✅ [vite-hosts]'), receipt);
 
@@ -54,6 +63,7 @@ async function checkDevelopment(page: Page, second: Page, host: ExampleHost) {
   const origin = `http://127.0.0.1:${address.port}`;
   await connectPage(page, origin, provider.provider);
   const snapshot = await firstScript(page);
+  const script = await checkScriptLifecycle({ page, origin, provider });
   const counter = await checkCounterPages({
     first: page,
     second,
@@ -61,7 +71,37 @@ async function checkDevelopment(page: Page, second: Page, host: ExampleHost) {
     provider,
     close: () => captureAndClose(page, `${host}-development`, server),
   });
-  return { host, mode: 'development', providerId: provider.provider.id, snapshot, counter };
+  return { host, mode: 'development', providerId: provider.provider.id, snapshot, script, counter };
+}
+
+async function checkScriptLifecycle({
+  page,
+  origin,
+  provider,
+}: {
+  page: Page;
+  origin: string;
+  provider: Awaited<ReturnType<typeof providerFromVite>>;
+}) {
+  const bootstrap = provider.startup.plugins.find(
+    (installation) => installation.snapshot().id === 'example.bootstrap',
+  );
+  assert.ok(bootstrap);
+  assert.equal(bootstrap.snapshot().status, 'ready');
+  await bootstrap.disable();
+  await page.goto('about:blank');
+  await connectPage(page, origin, provider.provider);
+  await expect(page.locator('#script-timing')).toHaveText(
+    JSON.stringify({ bootstrapReadyState: null, pageReadyState: 'loading' }),
+  );
+  const disabled = bootstrap.snapshot();
+  await bootstrap.enable();
+  await page.goto('about:blank');
+  await connectPage(page, origin, provider.provider);
+  await firstScript(page);
+  const enabled = bootstrap.snapshot();
+  assert.equal(enabled.contributions[0]?.generation, 2);
+  return { disabled, enabled };
 }
 
 async function checkPreview(page: Page, second: Page, host: ExampleHost) {

@@ -26,7 +26,7 @@ pnpm --filter @devkit/example-contribution... run build
 pnpm --filter @devkit/example-contribution run demo
 ```
 
-The [packaged script example](./examples/webext/README.md#packaged-document-start-scripts) verifies native `document_start` behavior in MAIN and ISOLATED worlds on Chromium and Firefox, through both production Vite and WXT development builds. It uses native browser registration; the generic script contribution contract remains under design.
+The [packaged script example](./examples/webext/README.md#packaged-document-start-scripts) verifies native `document_start` behavior in MAIN and ISOLATED worlds on Chromium and Firefox, through both production Vite and WXT development builds. `defineScript({ id, execution, requires?, setup })` owns registration and native cleanup through the existing contribution lifecycle. The Vite example uses the same API to own live HTML-hook activation on Devframe and DevTools. Native tooling still packages code; executed effects and completed production HTML are not rolled back by runtime cleanup. [Contract and boundaries](./docs/planning/011-portable-script-declaration.md).
 
 The [core proof matrix](./docs/contracts/CORE-API-MATRIX.md) records local evidence and the remaining host obligations. A passing local lifecycle example does not complete the Devframe, DevTools, Chromium or Firefox integrations.
 

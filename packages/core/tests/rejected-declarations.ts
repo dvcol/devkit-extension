@@ -1,4 +1,7 @@
+import { rejectedScriptConsumers } from './rejected-scripts.js';
+
 export const rejectedConsumers = [
+  ...rejectedScriptConsumers,
   {
     name: 'an undeclared requirement in view setup',
     source: `

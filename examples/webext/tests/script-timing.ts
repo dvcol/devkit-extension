@@ -41,6 +41,31 @@ export async function unregisterTimingScript() {
   return chrome.scripting.getRegisteredContentScripts({ ids: ['example-script-timing'] });
 }
 
+export function readTimingRegistration() {
+  return chrome.scripting.getRegisteredContentScripts({ ids: ['example-script-timing'] });
+}
+
+export function checkTimingInstallation(snapshot: unknown, status: string, generation?: number) {
+  let contributionStatus = status;
+  let installationStatus = status;
+  if (status === 'ready') contributionStatus = 'active';
+  if (status === 'disabled') installationStatus = 'inactive';
+  assert.partialDeepStrictEqual(snapshot, {
+    installation: {
+      id: 'example.bootstrap',
+      status: installationStatus,
+      contributions: [
+        {
+          id: 'example.bootstrap',
+          kind: 'script',
+          status: contributionStatus,
+          ...(generation === undefined ? {} : { generation }),
+        },
+      ],
+    },
+  });
+}
+
 export function readTimingSnapshot(): unknown {
   const snapshot = document.documentElement.dataset.firstScript;
   if (snapshot === undefined) throw new Error('The first page script did not record its snapshot');
