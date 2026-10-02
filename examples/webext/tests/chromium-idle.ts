@@ -163,7 +163,9 @@ async function restoreClients(
   };
 }
 
+/** Capture the restored panel in the foreground after the idle/recovery assertions. */
 async function saveScreenshot(connection: BrowserConnection, panel: Panel): Promise<void> {
+  await connection.command('Page.bringToFront', {}, panel.sessionId);
   const result = readObject(
     await connection.command('Page.captureScreenshot', {}, panel.sessionId),
   );
