@@ -32,6 +32,27 @@ export const transformedAction = defineActionContract({
 
 export const acceptedConsumers = [
   {
+    name: 'view setup requirements native context and explicit scope cleanup',
+    source: `
+import { definePlugin, defineView } from '@devkit/core';
+import type { ViewDeclaration, ViewDefinition } from '@devkit/core';
+import { capability, execution, nativeContext } from './contracts.js';
+
+export const view: ViewDefinition<{ readonly records: typeof capability }> = defineView({
+  id: 'example.view', execution, requires: { records: capability },
+  async setup({ services, native, scope }) {
+    (await services.records.api.read({ prefix: '' })) satisfies string;
+    native.get(nativeContext)?.title satisfies string | undefined;
+    scope.signal satisfies AbortSignal;
+    scope.onDispose(() => Promise.resolve());
+  },
+});
+export const declaration: ViewDeclaration = view;
+export const plugin = definePlugin({ id: 'example.view-plugin', views: [view] });
+export const independent = defineView({ id: 'example.independent', execution, setup() {} });
+`,
+  },
+  {
     name: 'operation input and output correlation including discriminated requests',
     source: `
 import type {

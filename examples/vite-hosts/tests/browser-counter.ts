@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import type { ProviderDescriptor } from '@devkit/core';
+import { counterCapability, counterStateKey } from '@devkit/example-contribution';
+import { devframeHubContext } from '@devkit/server';
+import type { ServerProviderHandle } from '@devkit/server';
 import { expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { buildOtpAuthUrl, getTempAuthCodeInfo } from 'devframe/node/auth';
@@ -22,16 +25,16 @@ async function readCapability(page: Page, value: number) {
   await expect(page.locator('#result')).toHaveText(JSON.stringify({ value }));
 }
 
-/** All mutations below come from the actual native JSON button through the portable router. */
+/** Real JSON buttons exercise portable dispatch; lifecycle checks also write native business state. */
 export async function checkCounterPages(options: {
   readonly first: Page;
   readonly second: Page;
   readonly origin: string;
-  readonly provider: ProviderDescriptor;
+  readonly provider: ServerProviderHandle;
   readonly close: () => Promise<void>;
 }) {
   const { first, second, origin, provider } = options;
-  await connectPage(second, origin, provider);
+  await connectPage(second, origin, provider.provider);
   await counterValue(first, 0);
   await counterValue(second, 0);
   await first.getByRole('button', { name: 'Increase counter', exact: true }).click();
@@ -57,19 +60,20 @@ export async function checkCounterPages(options: {
   await counterValue(second, 6);
   await readCapability(first, 6);
   await expect(first.getByRole('button', { name: 'Increase counter', exact: true })).toBeEnabled();
+  const viewLifecycle = await checkViewLifecycle(first, second, provider);
   await options.close();
-  await disconnected(first);
-  await disconnected(second);
+  await Promise.all([disconnected(first), disconnected(second)]);
   return {
     authenticatedPages: 3,
-    nativeJsonActions: 6,
-    finalValue: 6,
+    nativeJsonActions: 7,
+    finalValue: 21,
     nativeOtpConsumed: true,
     nativePromptOnReload: true,
     sharedStateAndCapability: true,
     unmountRemount: true,
     explicitDisconnectAndReconnect: true,
     backendCloseUnmountsBoth: true,
+    viewLifecycle,
   };
 }
 
@@ -78,6 +82,51 @@ export async function disconnected(page: Page) {
   await expect(page.locator('#counter button')).toHaveCount(0);
   await expect(page.locator('#read')).toBeDisabled();
   await expect(page.locator('#mount')).toBeDisabled();
+}
+
+async function checkViewLifecycle(first: Page, second: Page, provider: ServerProviderHandle) {
+  const resolution = await provider.resolve({ capability: counterCapability });
+  assert.equal(resolution.status, 'available');
+  assert.equal(resolution.binding.context.access, 'local');
+  const context = resolution.binding.context.native.get(devframeHubContext);
+  assert.ok(context);
+  const state = await context.rpc.sharedState.get<{ value: number }>(counterStateKey);
+  const service = provider.startup.services[0];
+  assert.ok(service);
+  const detachedButton = await second
+    .getByRole('button', { name: 'Increase counter', exact: true })
+    .elementHandle();
+  await first.locator('#unmount').click();
+  await service.disable();
+  await expect(first.locator('#counter button')).toHaveCount(0);
+  await expect(second.locator('#counter button')).toHaveCount(0);
+  await expect(first.locator('#mount')).toBeDisabled();
+  await expect(second.locator('#mount')).toBeDisabled();
+  state.mutate((value) => {
+    value.value = 20;
+  });
+  await service.enable();
+  await counterValue(second, 20);
+  await expect(second.locator('#counter button')).toHaveCount(2);
+  await expect(first.locator('#counter button')).toHaveCount(0);
+  await expect(first.locator('#mount')).toBeEnabled();
+  assert.equal(await detachedButton.evaluate((button) => button.isConnected), false);
+  await second.getByRole('button', { name: 'Increase counter', exact: true }).click();
+  await counterValue(second, 21);
+  await readCapability(second, 21);
+  await first.locator('#mount').click();
+  await counterValue(first, 21);
+  await expect(first.locator('#counter button')).toHaveCount(2);
+  assert.equal(state.value().value, 21);
+  await detachedButton.dispose();
+  return {
+    dependencyLossUnmounts: true,
+    nativeWriteWhileAbsent: 20,
+    reenableUsesCurrentState: true,
+    manualUnmountRetained: true,
+    previousButtonDetached: true,
+    singleMountAfterRestore: true,
+  };
 }
 
 async function checkRemount(first: Page, second: Page) {

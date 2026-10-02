@@ -1,6 +1,6 @@
 # Native Vite host examples
 
-One counter capability, service and action run in both the released `@devframes/vite/hub` integration and the actual `@vitejs/devtools` Vite plugin. The recipes come from `examples/server-contexts`; this example adds native Vite lifecycle wiring and a browser counter using the shared JSON spec from `examples/json-render`. The page imports the published native reference renderer and dispatches through the existing portable client over native RPC.
+One counter capability, service, action and view run in both the released `@devframes/vite/hub` integration and the actual `@vitejs/devtools` Vite plugin. Service/action recipes come from `examples/server-contexts`; the view recipe comes from `@devkit/example-json-render/view`. This example adds native Vite lifecycle wiring. The page imports the published native reference renderer and dispatches through the existing portable client over native RPC.
 
 From the repository root:
 
@@ -29,20 +29,21 @@ sequenceDiagram
     Vite->>Old: closeServer → provider.dispose()
     Old-->>Vite: Owned cleanup completed
     Vite->>New: HTTP listening
-    New->>New: Install shared service and action
+    New->>New: Install shared service, action and view
 ```
 
 `providerFromVite(server)` returns the current plugin's readiness promise. Await it after `listen()` or `restart()` before calling the example backend. `listen()` itself does not await asynchronous contribution activation. A saved handle remains bound to its original incarnation. Call `providerFromVite` again to acquire the replacement after restart.
 
-The small `ProviderLifetime` class is private to this example. It owns the native counter view and state projection alongside the provider. It neither watches files nor recreates servers. It removes its listening callback during disposal, handles closing before activation, and retains the original disposal promise. Cleanup failures reject `server.close()` and remain available in installation snapshots and diagnostics. The native host has already shut down by `closeServer`; contribution cleanup must not depend on an open native network connection.
+The small `ProviderLifetime` class is private to this example. It owns the provider, whose startup plugin owns the native counter view and state subscription through the accepted setup recipe. It neither watches files nor recreates servers. It removes its listening callback during disposal, handles closing before activation, and retains the original disposal promise. This example requires the view to activate at startup and rolls back the provider if the admitted view plugin is not ready. Cleanup failures reject `server.close()` and remain available in installation snapshots and diagnostics. The native host has already shut down by `closeServer`; contribution cleanup must not depend on an open native network connection.
 
 ## Verified behavior
 
-Twelve integration tests use real Vite servers, actual native hosts, temporary filesystem fixtures and built public package exports. Every row runs for both hosts.
+Fourteen integration tests use real Vite servers, actual native hosts, temporary filesystem fixtures and built public package exports. Every row runs for both hosts.
 
 | Case                           | Assertion                                                                                                                                        |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Startup and HTTP mounting      | The native connection metadata responds; shared action and state work; actual hub/kit contexts are exposed; owned command disappears on close    |
+| View contribution lifecycle    | Disable and dependency loss remove native state/index entries; enable and dependency restoration publish the current business state              |
 | Delayed cleanup during restart | Restart stays pending with HTTP closed until cleanup resolves; old binding becomes unavailable; provider ID stays stable and incarnation changes |
 | Cleanup failure                | Vite close rejects, the installation remains `cleanup-blocked`, and diagnostics are logged                                                       |
 | Close before listening         | No provider activates and the readiness promise rejects                                                                                          |
@@ -58,7 +59,7 @@ pnpm --filter @devkit/example-vite-hosts test
 
 Tests require permission to bind ephemeral loopback ports. Watched cases enable Vite HMR because Vite's config-restart handling runs through that path. The fixture waits for the watcher’s public `ready` event and uses filesystem polling. macOS can deliver delayed creation events for an unchanged temporary config after `ready`, which otherwise causes unrelated restarts during client-edit tests. Polling still observes real file changes through Vite; tests do not simulate watcher events or replace native hosts with mocks. This setting is confined to temporary test fixtures.
 
-Two [startup-failure tests](./tests/startup-failure.test.ts) use an independent plugin's public `devtools.setup` hook to register the same native view before the example publishes its counter. Both development and preview reject readiness with the native duplicate-view error after installing and rolling back the new provider. Native command events confirm service registration and removal; the catalog becomes unavailable, and retained action and capability RPC methods reject as unavailable. In development, native HTTP metadata still responds and the foreign view remains editable. Preview rejects startup and removes its native transport's upgrade listeners. This proves rollback after provider installation in the DevTools composition; it does not establish failures during native host setup or cancellation during activation.
+Two [startup-failure tests](./tests/startup-failure.test.ts) use an independent plugin's public `devtools.setup` hook to register the same native view before the example publishes its counter. Both development and preview reject readiness with the example's view-activation error and roll back the new provider; the diagnostic sink retains the native duplicate-view error. Native command events confirm service registration and removal; the catalog becomes unavailable, and retained action and capability RPC methods reject as unavailable. In development, native HTTP metadata still responds and the foreign view remains editable. Preview rejects startup and removes its native transport's upgrade listeners. The library build keeps the public `/view` import external so it shares native duplicate detection with other plugins. This proves rollback after provider installation in the DevTools composition; it does not establish failures during native host setup or cancellation during activation.
 
 ## Built assets with a live preview backend
 
@@ -89,7 +90,7 @@ Six additional integration tests cover both hosts against freshly built browser 
 | Delayed cleanup            | Preview close waits for contribution cleanup and removes upgrade listeners                           |
 | Failed cleanup             | Close rejects, the installation stays `cleanup-blocked`, and native transports still close           |
 
-The maintained suite now has 26 tests covering native development/preview hosts, view-publication rollback, watched production retention and process exit. The watched workflow is documented below. The browser suite below now verifies remote SDK dispatch and rendering. Automatic production asset reload remains open.
+The maintained suite now has 28 tests covering native development/preview hosts, view contribution lifecycle, publication rollback, watched production retention and process exit. The watched workflow is documented below. The browser suite below verifies remote SDK dispatch and rendering; a fresh Chromium 153 run passes on the migrated recipe for both hosts in development, preview and watched production. Automatic production asset reload remains open.
 
 ## Remaining host contract work
 
@@ -168,9 +169,9 @@ pnpm exec turbo run build --filter=@devkit/example-vite-hosts --concurrency=1
 pnpm --filter @devkit/example-vite-hosts test:browser
 ```
 
-CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh timing, counter and watched-preview results go to ignored `artifacts/html-timing.json`; screenshots use `artifacts/{devframe,devtools}-{development,preview}.png`. The 26 host lifecycle tests remain separate.
+CI runs this command after installing Chromium. It opens an owned browser, binds temporary loopback servers and removes temporary build output. Fresh timing, counter and watched-preview results go to ignored `artifacts/html-timing.json`; screenshots use `artifacts/{devframe,devtools}-{development,preview}.png`. The 28 host lifecycle tests remain separate.
 
-This example uses a classic script because module scripts defer. `head-prepend` controls HTML placement; Vite hook `order` controls transformation processing, not browser scheduling. Preview does not reapply HTML hooks. The owned site has no CSP; applications with CSP must allow the script through their own policy, such as Vite's native `html.cspNonce`. This is not evidence of arbitrary HTTP response rewriting or execution on deployed pages. Firefox execution of this Vite fixture, CSP cases, runtime contribution enable/disable and the portable script declaration remain outside this slice.
+This example uses a classic script because module scripts defer. `head-prepend` controls HTML placement; Vite hook `order` controls transformation processing, not browser scheduling. Preview does not reapply HTML hooks. The owned site has no CSP; applications with CSP must allow the script through their own policy, such as Vite's native `html.cspNonce`. This is not evidence of arbitrary HTTP response rewriting or execution on deployed pages. Firefox execution of this Vite fixture, CSP cases and the portable script declaration remain outside this slice.
 
 References: [Vite HTML hook](https://vite.dev/guide/api-plugin#transformindexhtml), [Vite CSP support](https://vite.dev/guide/features#content-security-policy-csp), [native script execution](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script).
 
@@ -178,7 +179,9 @@ References: [Vite HTML hook](https://vite.dev/guide/api-plugin#transformindexhtm
 
 The application discovers `/__devframes/__connection.json` or `/__devtools/__connection.json` through native `connectDevframe`. It uses an isolated native connection, so each reload requests trust through that backend's OTP flow. The native metadata base identifies the example host; the presence of Vite's HMR client distinguishes development from built preview. Build-time mode does not select the live backend.
 
-The existing `createDevframeProviderConnection` supplies an authorized catalog to `createClient`. `createActionCall` binds the shared action descriptor to that client; the native reference renderer, state subscriptions and all other RPC methods retain native behavior. A diagnostic button also invokes the shared read capability. The UI has no new portable view declaration, action handler API or authentication implementation.
+The existing `createDevframeProviderConnection` supplies an authorized catalog to `createClient`. `createActionCall` binds the shared action descriptor to that client; the native reference renderer, state subscriptions and all other RPC methods retain native behavior. A diagnostic button also invokes the shared read capability. The provider owns the view recipe; UI mounting retains native renderer and authentication APIs.
+
+The page observes the native view index. Removal aborts that mount's action binding and disposes its renderer, then evicts native cached state after any pending mount settles. Republication creates one fresh mount from current state unless the user manually unmounted it. The browser suite disables the actual counter service, writes native business state while the view is absent, and reenables it on both development and preview hosts. It verifies the old button is detached, the manual unmount remains respected, and one fresh click changes the restored value from 20 to 21.
 
 ```mermaid
 flowchart LR

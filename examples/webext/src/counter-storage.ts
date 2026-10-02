@@ -1,6 +1,5 @@
-import type { DevframeJsonRenderSpec } from '@devframes/json-render';
 import type { createJsonRenderView } from '@devframes/json-render/view';
-import type { RpcSharedStateHost } from 'devframe/types';
+import type { SharedState } from 'devframe/utils/shared-state';
 
 declare global {
   interface ImportMetaEnv {
@@ -13,20 +12,20 @@ type CounterView = ReturnType<typeof createJsonRenderView>;
 /** One background owns this key; UI state and provider identity remain ephemeral. */
 export async function connectCounterStorage(options: {
   key: string | undefined;
-  view: CounterView;
+  counter: SharedState<{ value: number }>;
   management: CounterView;
-  sharedState: RpcSharedStateHost;
 }): Promise<(() => void) | undefined> {
-  const { key, view, management, sharedState } = options;
+  const { key, counter, management } = options;
   if (key === undefined || key === '') return undefined;
   const stored = await chrome.storage.local.get<Record<string, unknown>>(key);
   if (stored[key] !== undefined)
-    view.patchState([{ op: 'replace', path: '/value', value: readCounter(stored[key]) }]);
-  const state = await sharedState.get<DevframeJsonRenderSpec>(view.ref.stateKey);
-  let previousValue = view.value().state?.value;
+    counter.mutate((snapshot) => {
+      snapshot.value = readCounter(stored[key]);
+    });
+  let previousValue = counter.value().value;
   management.patchState([{ op: 'replace', path: '/storage', value: 'Ready' }]);
-  return state.on('updated', (snapshot) => {
-    const value = snapshot.state?.value;
+  return counter.on('updated', (snapshot) => {
+    const { value } = snapshot;
     if (value === previousValue) return;
     previousValue = value;
     void saveCounter({ key, value, management });

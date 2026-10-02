@@ -1,18 +1,20 @@
-# Portable view declaration: owner review
+# Portable view declaration: accepted native setup recipe
 
-[Renderer and surface contract](https://github.com/dvcol/devkit-extension/issues/12) owns this decision. Both declarations below are proposals, not implemented exports. Native view publication and rendering already work; this review concerns connecting their lifetime to `plugin.views`.
+[Renderer and surface contract](https://github.com/dvcol/devkit-extension/issues/12) owns this decision. The owner accepted **B, the native setup recipe, on 2026-10-02**. A remains an unchosen proposal, retained below with the review baseline and comparison. The accepted declaration is implemented and verified in the native server, Vite and extension examples; the remaining contract gaps are listed below.
 
-## Current behavior and missing behavior
+The accepted contract is `defineView({ id, execution, requires?, setup })`, with `setup(context: SetupContext<Requirements>): Awaitable<void>` and `ViewDeclaration` entries in `plugin.views`. Core/runtime remain native-independent. The recipe calls native APIs and explicitly registers cleanup with the existing activation scope. Native published views, state, index discovery and renderer behavior retain their native contracts.
 
-`PluginInput.views` currently accepts only `{ kind, id, execution }`. The runtime reports these entries as `unsupported`. Examples instead call native `createJsonRenderView` directly, own its cleanup and discover published views through the native JSON index.
+## Review baseline and missing behavior
 
-The shared example now exports `publishCounterView({ context, actionName? })`, used by the standalone JSON and Vite hosts. It composes the native publisher and counter-state subscription with one disposal handle. This reduces duplication in the examples but does not activate `plugin.views`; either declaration below still needs the contribution lifecycle integration described here.
+At review start, `PluginInput.views` accepted only `{ kind, id, execution }`, and runtime reported these entries as `unsupported`. Examples instead called native `createJsonRenderView` directly, owned its cleanup and discovered published views through the native JSON index.
+
+The shared example's `publishCounterView({ context, actionName? })`, used by the standalone JSON and Vite hosts, composed the native publisher and counter-state subscription with one disposal handle. This reduced duplication without activating `plugin.views`; the accepted recipe brings that native work into the contribution lifecycle.
 
 A useful portable view contribution must activate on installation, stop on disable/disposal or dependency loss, and activate afresh on enable. It must also support the existing example's live business-state subscription. Native publication, shared state, validation, rendering and transport already provide their behavior; the SDK needs contribution lifecycle ownership around those calls.
 
 ```mermaid
 flowchart LR
-  Plugin["plugin.views envelope"] --> Waiting["unsupported today"]
+  Plugin["plugin.views envelope at review start"] --> Waiting["unsupported"]
   Example["Example host code"] --> Publisher["Native createJsonRenderView"]
   Publisher --> Index["Native state and view index"]
   Index --> Surface["Host mounts native renderer"]
@@ -22,10 +24,10 @@ flowchart LR
 
 Native options are `{ id, spec, schema?, scope?, title? }`. The context needs `{ rpc: { sharedState } }` and must have stable object identity for native duplicate detection and index ownership. The handle already provides `value`, `update`, `patchState` and idempotent `dispose`. Disposal removes the native publication and its state. Neither option adds a view store, discovery protocol or renderer implementation.
 
-## A. Declare native view options
+## A. Declare native view options, unchosen
 
 ```ts
-// Proposal only.
+// Unchosen proposal; not the accepted defineView contract.
 const counterView = defineView({
   id: 'counter',
   execution,
@@ -50,7 +52,7 @@ The adapter creates the view and registers its disposal. Authors supply JSON opt
 
 The limitation is live composition. The author receives neither the activation scope nor the created handle. The current server counter reads native business state, subscribes to updates, and calls `view.patchState`. That code would remain outside this declaration, or require an additional hook later. The core's emitted declaration would also need a resolvable native JSON type dependency if it directly exposes that options type. A type-only import does not remove that consumer dependency.
 
-## B. Declare a native setup recipe
+## B. Declare a native setup recipe, accepted 2026-10-02
 
 ```ts
 // Existing helper and native type; this descriptor is shared with the host.
@@ -58,7 +60,7 @@ const counterViewContext = defineNativeContext<JsonRenderViewContext>({
   id: 'example.counter-view-context',
 });
 
-// Proposal only: defineView and its setup support do not exist yet.
+// Implemented contract; native publication and cleanup remain explicit.
 const counterView = defineView({
   id: 'counter',
   execution,
@@ -98,11 +100,13 @@ flowchart LR
   Cleanup --> Unsubscribe["Stop subscription, then dispose view"]
 ```
 
-This uses the same `setup`, `native`, `scope` and optional typed `requires` pattern as services. Definitions remain inert; installation runs setup. Core/runtime can retain native-independent types while the author imports the native publisher. The adapter supplies the stable native context through the existing descriptor lookup. No new context container or binding language is needed.
+This uses the same `setup`, `native`, `scope` and optional typed `requires` pattern as services. Definitions remain inert; installation runs setup. Core/runtime retain native-independent types while the author imports the native publisher. The host supplies the stable native context through the existing descriptor lookup, using the same context object for all publications on that native shared-state host. No new adapter API, context container, binding language or framework dependency is added.
 
-The author must register `view.dispose` immediately after creation, before later code can fail. Otherwise an early throw can leak that native resource. Registered cleanup uses the existing reverse-order disposal, aggregate failure reporting and replacement barriers. This is the same resource-ownership responsibility as other setup recipes, not an automatic resource collector.
+The author must register `view.dispose` immediately after creation, before later code can fail. Otherwise an early throw can leak that native resource. Registered cleanup runs in reverse order, so the example unsubscribes before disposing its view. Setup failure runs registered cleanup and remains failed until explicit retry. If cleanup throws, every registered cleanup is still attempted, failures are aggregated, and the contribution remains cleanup-blocked. Cleanup that never settles also blocks a successor; enable, retry and replacement cannot bypass that barrier.
 
-## Comparison and recommendation
+Declared capability loss stops the view contribution before its dependency is released. Restoration or reenable activates a fresh recipe after successful cleanup. Referencing an action in the native JSON spec does not make that action an implicit activation requirement. The published view's state belongs to its native handle; separate host-owned business state survives contribution replacement according to its native lifetime.
+
+## Review comparison and accepted decision
 
 | Concern                            | A: native options                             | B: native setup recipe                              |
 | ---------------------------------- | --------------------------------------------- | --------------------------------------------------- |
@@ -115,18 +119,22 @@ The author must register `view.dispose` immediately after creation, before later
 | Dependencies                       | Requires lifecycle integration                | Reuses the same optional typed requirements pattern |
 | Rendering and transport            | Native                                        | Native                                              |
 
-Recommend **B** for the required live contribution behavior. It follows the existing service declaration pattern, moves current native code into its contribution lifetime, and avoids adding another binding API later. A is attractive when view declarations are intentionally limited to static publication, but that restriction does not cover the demonstrated counter synchronization.
+The owner accepted **B** for the required live contribution behavior. It follows the existing service declaration pattern, moves current native code into its contribution lifetime, and avoids adding another binding API later. A remains unchosen because options alone do not cover the demonstrated counter synchronization.
 
-The owner decision is whether `plugin.views` should accept native options only, or a setup recipe that can own live subscriptions. No choice is assumed here.
+The accepted declaration adds contribution ownership around native calls. It adds no JSON schema, metadata catalog, state protocol or renderer implementation.
 
 ## Surface placement stays host-owned
 
-Server `DevframeDocksHost.register()` returns an update handle and has no public unregister method. Client-local dock registration does have disposal. Automatically making a server dock follow a removable contribution would need missing native behavior; neither proposal silently deletes vendor maps or adds a local dock protocol.
+Server `DevframeDocksHost.register()` returns an update handle and has no public unregister method. Client-local dock registration does have disposal. Automatically making a server dock follow a removable contribution would need missing native behavior; the accepted recipe does not delete vendor maps or add a local dock protocol.
 
-Both proposals own native publication. Existing native-index consumers can remove their mounts when publication disappears. A server dock registered for host lifetime keeps that native lifetime; portable server-dock removal remains an explicit gap. The current counter example already documents this separation.
+The recipe owns native publication; the host owns renderer mounting and surface/dock placement. Existing native-index consumers can remove their mounts when publication disappears. A server dock registered for host lifetime keeps that native lifetime; portable server-dock removal remains an explicit gap. The current counter example already documents this separation.
 
-## Required proof after the decision
+## Implementation and proof
 
-Implement the chosen declaration through public package exports. Run one contribution on an actual server and extension provider; verify initial publication, live updates, disable/removal, reenable with current state, dependency loss and cleanup failure. Keep renderer and browser-host differences explicit. Verify no duplicate mount or stale subscription can act on a replacement. Update glossary/architecture only after the owner settles the declaration.
+The accepted declaration is implemented in core/runtime and consumed by one browser-safe counter recipe in `examples/json-render/src/view.ts`. Both native server factories, Vite development/preview hosts and the Chromium/Firefox extension providers install that recipe. Host-owned business state survives view disable and dependency loss. Surfaces use the native index to remove mounts and native client caches; republishing reads current data.
+
+Core/runtime checks cover declaration typing, inert setup, dependency teardown, setup failure, explicit cleanup and replacement barriers. Genuine server tests cover native publication/state ownership. The maintained server and extension browser suites verify removal, reenabling and detached action cleanup. Both Vite hosts also pass development, built preview and watched-build checks. In-app checks confirm actions, renderer replacement, remounting and host shutdown.
+
+The shared recipe does not settle all surface placement, script/transform, renderer-module HMR or native-cache edge cases. Exact test and browser receipts belong to the renderer ticket and the executable API inventory; a passing slice is not complete framework conformance.
 
 Evidence inspected in this checkout: `packages/core/src/types.ts`, `packages/runtime/src/provider-activation.ts`, `packages/runtime/src/provider-reconciliation.ts`, `packages/runtime/src/scope.ts`, `examples/json-render/src/index.ts`, and the installed public `@devframes/json-render/view` and native dock declarations. The existing exact-version patches supply the `/view` export; this review does not claim unpatched consumer support.

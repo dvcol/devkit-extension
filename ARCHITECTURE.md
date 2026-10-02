@@ -45,16 +45,16 @@ Last-successful-build publication concerns asset availability. It does not resto
 
 ## Contracts, contributions and plugins
 
-| Element     | Declaration                                                                        | Runtime meaning                                                                     |
-| ----------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Capability  | Imported ID, mandatory positive integer contract version, operation schemas        | A service contract; does not imply availability                                     |
-| Service     | Capability descriptor plus execution assignment, requirements and setup recipe     | Constructs an owned implementation of exactly that contract                         |
-| Action      | Shared versioned descriptor plus a separate handler contribution                   | An invocable use case that can consume capabilities                                 |
-| View        | JSON definition, references and bindings                                           | Published presentation, mounted by a renderer on a surface                          |
-| Transform   | Kind-specific transform definition                                                 | Owned interception or transformation behavior                                       |
-| Script      | Packaged module and execution declaration                                          | Runs in its actual background/content/page execution with target scope              |
-| Plugin      | Named lists of services, actions, views, transforms, scripts and custom extensions | Installed and controlled together, with independent contribution activation/failure |
-| Custom kind | Imported kind descriptor, payload schema and explicitly installed kind handler     | Allows new kinds without arbitrary plugin fields or a closed core switch            |
+| Element           | Declaration                                                                        | Runtime meaning                                                                     |
+| ----------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Capability        | Imported ID, mandatory positive integer contract version, operation schemas        | A service contract; does not imply availability                                     |
+| Service           | Capability descriptor plus execution assignment, requirements and setup recipe     | Constructs an owned implementation of exactly that contract                         |
+| Action            | Shared versioned descriptor plus a separate handler contribution                   | An invocable use case that can consume capabilities                                 |
+| View contribution | Execution assignment, requirements and setup recipe                                | Owns native publication and subscriptions through its activation scope              |
+| Transform         | Kind-specific transform definition                                                 | Owned interception or transformation behavior                                       |
+| Script            | Packaged module and execution declaration                                          | Runs in its actual background/content/page execution with target scope              |
+| Plugin            | Named lists of services, actions, views, transforms, scripts and custom extensions | Installed and controlled together, with independent contribution activation/failure |
+| Custom kind       | Imported kind descriptor, payload schema and explicitly installed kind handler     | Allows new kinds without arbitrary plugin fields or a closed core switch            |
 
 A service always declares a capability contract and its version. There is no unversioned service, implicit latest version or required portable raw-object `provide`. Native APIs remain available in eligible native contexts.
 
@@ -70,9 +70,20 @@ Every declaration helper takes one object. Contracts can be imported by a UI wit
 | `defineService`        | `{ capability, id, execution, requires?, setup }` | Implementation in `plugin.services`        |
 | `defineActionContract` | `{ id, version, operation }`                      | Shared action contract                     |
 | `defineAction`         | `{ contract, id, execution, requires?, handler }` | Implementation in `plugin.actions`         |
+| `defineView`           | `{ id, execution, requires?, setup }`             | Native setup recipe in `plugin.views`      |
 | `defineExtension`      | `{ descriptor, id, execution, payload }`          | Custom contribution in `plugin.extensions` |
 
 An operation describes one callable input/result pair. A capability names several operations; an action contract describes one invocable use case. “Contribution” remains the shared terminology and typing for owned additions. It does not require a generic `defineContribution` factory. `defineActionContract` replaces the former contract helper named `defineAction`; `defineAction` replaces `defineActionContribution`.
+
+### Portable view contributions
+
+The owner accepted the [native setup recipe](./docs/planning/012-portable-view-declaration.md) on 2026-10-02. `plugin.views` contains `ViewDeclaration` entries created by `defineView({ id, execution, requires?, setup })`. Setup receives the existing `SetupContext<Requirements>` and returns `Awaitable<void>`. The declaration is inert; activation runs the recipe in its assigned execution with its declared capability bindings.
+
+A view contribution owns a recipe and its activation scope. The native published view is the resource that recipe creates with `createJsonRenderView`. Authors register `view.dispose` immediately after creation and register subscription cleanup through `scope.onDispose`. Dependency loss, disable, enable and replacement use the existing contribution lifecycle. Cleanup runs in reverse acquisition order; failures retain the cleanup barrier and block a successor.
+
+Core and runtime remain native-independent. The author imports the native publisher; the host supplies its actual publishing context through the existing native descriptor lookup. Reuse one stable context object per native shared-state host so native duplicate detection and index ownership remain consistent. Native options, state, index discovery and renderer contracts remain unchanged; this adds no JSON schema, metadata catalog, state protocol, adapter API or framework dependency.
+
+The host owns renderer mounting and surface/dock placement. Native server dock registration has no unregister handle, so publication cleanup does not imply server-dock removal. The shared recipe is exercised by the server, Vite and WebExtension examples. The decision record and executable API inventory distinguish those checks from the remaining surface/HMR obligations.
 
 ## Dependency and execution diagrams
 
@@ -300,7 +311,7 @@ The [state contract](https://github.com/dvcol/devkit-extension/issues/8) tracks 
 
 ## Representative shared and native declarations
 
-The following pseudocode follows the maintained [core package](./packages/core/README.md). View and browser adapter integration remain domain-ticket work. `titleInputSchema` and `titleResultSchema` are application-owned Standard Schema validators; `titleResultSchema` accepts `{ title: string }`.
+The following pseudocode follows the maintained [core package](./packages/core/README.md). The accepted view recipe is described above; its browser integration proof remains domain-ticket work. `titleInputSchema` and `titleResultSchema` are application-owned Standard Schema validators; `titleResultSchema` accepts `{ title: string }`.
 
 ```ts
 const pageCapability = defineCapability({
@@ -337,7 +348,7 @@ const inspectorPlugin = definePlugin({
 });
 ```
 
-The action handler is packaged for provider execution and does not run in the renderer. `inspectorView` is a JSON view declaration referencing the action's public descriptor; it does not import that handler. A UI-free plugin can omit `views`. Direct capability calls need no action wrapper.
+The action handler is packaged for provider execution and does not run in the renderer. `inspectorView` is a view contribution recipe that publishes a native JSON spec referencing the action's public descriptor; the spec does not import that handler. A UI-free plugin can omit `views`. Direct capability calls need no action wrapper.
 
 ```ts
 const browserPageService = defineService({
@@ -363,7 +374,7 @@ if (admission.status === 'admitted') {
 
 `createBrowserPageImplementation` is application/adapter code returning operations satisfying `pageCapability` and an asynchronous cleanup function. It resolves/authorizes target references through the browser adapter before native work. This is not a claim that a browser API accepts the generic target reference directly. A server implementation supplies a different recipe for the same contract and receives its actual native server contexts.
 
-Transforms and scripts retain their own declaration kinds and execution hooks. A transform-only plugin owns its interception registration through its activation scope. A page-only plugin packages its script for MAIN-world execution and a document generation, without acquiring background native APIs. Their exact operation and packaging signatures belong to [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
+Transforms and scripts retain separate intended declaration kinds. The maintained core currently accepts only their common envelopes, and runtime reports them as unsupported until their domain contract is implemented. A transform-only plugin owns its interception registration through its activation scope. A page-only plugin packages its script for MAIN-world execution and a document generation, without acquiring background native APIs. Their exact operation and packaging signatures belong to [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
 
 A custom kind uses `defineContributionKind({ id, schema })`, `defineExtension({ descriptor: kind, id, execution, payload })` and `plugin.extensions`. The host explicitly supplies a `ContributionKindInstaller` for that descriptor. Its `activate` receives the validated definition and owned local setup scope. An unknown kind is an admission error; no arbitrary plugin key is treated as an extension. The renderer needs no change merely because another non-UI kind exists.
 

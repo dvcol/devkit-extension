@@ -38,7 +38,9 @@ The lower-level exports remain available to adapters that need to compose their 
 
 Targets must already be resolved, authorized and checked for freshness by the owning adapter. Schema validation is neither authorization nor serialization. Native objects and causes remain local. The adapter must expose classified failures through its diagnostics/status channel and appropriate local logging.
 
-Service recipes, actions and registered custom contribution kinds execute locally. View, script and transform declarations retain an explicit `unsupported` waiting state until their domain contracts and adapters supply implementations. Calling a lower-level scope alone cannot establish that in-progress setup or calls ended. The core proof matrix remains incomplete until these contracts execute in real hosts.
+Service and view recipes, actions and registered custom contribution kinds execute locally. A view uses the existing requirement bindings and activation scope: dependency loss disposes its owned resources, restoration starts a fresh setup, and explicit disable remains in force until enable. Failed setup requires an explicit retry; failed cleanup blocks replacement. View setup owns native publication and registers its disposer with `scope.onDispose`; the runtime does not inspect or dispose returned handles. The portable catalog continues to advertise action and capability contracts, while native APIs own view discovery and rendering.
+
+Script and transform declarations retain an explicit `unsupported` waiting state until their domain contracts and adapters supply implementations. Calling a lower-level scope alone cannot establish that in-progress setup or calls ended. The core proof matrix remains incomplete until these contracts execute in real hosts.
 
 From the repository root, build the core dependency before using this package:
 

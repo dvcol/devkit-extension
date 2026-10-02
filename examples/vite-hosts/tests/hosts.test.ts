@@ -1,4 +1,6 @@
 import { defineService } from '@devkit/core';
+import { JSON_RENDER_INDEX_KEY } from '@devframes/json-render';
+import type { DevframeJsonRenderSpec, JsonRenderIndex } from '@devframes/json-render';
 import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
 import { counterService } from '@devkit/example-server-contexts';
 import { providerFromVite } from '@devkit/example-vite-hosts';
@@ -30,6 +32,54 @@ describe.each(['devframe', 'devtools'] as const)('%s Vite host', (host) => {
       expect(hub?.rpc.sharedState.keys()).not.toContain('devframe:json-render:example:counter');
       expect(hub?.commands.commands.has('example:read-server-counter')).toBe(false);
       expect(admitted(provider.startup.services[0]).snapshot().status).toBe('disposed');
+    } finally {
+      await current.close();
+    }
+  });
+
+  it('owns native view publication through disable, enable and dependency restoration', async () => {
+    expect.assertions(14);
+    const current = await fixture(host);
+    const stateKey = 'devframe:json-render:example:counter';
+    try {
+      await current.server.listen();
+      const provider = await providerFromVite(current.server);
+      const binding = await bindingFor(provider);
+      const context = binding.native.get(devframeHubContext);
+      const sharedState = context!.rpc.sharedState;
+      const index = await sharedState.get<JsonRenderIndex>(JSON_RENDER_INDEX_KEY);
+      const view = admitted(provider.startup.plugins[1]);
+      const service = admitted(provider.startup.services[0]);
+      expect(view.snapshot().status).toBe('ready');
+      const initial = await sharedState.get<DevframeJsonRenderSpec>(stateKey);
+      expect(initial.value().state?.value).toBe(0);
+      await expect(
+        provider.invoke({ action: increaseCounterAction, input: { amount: 3 } }),
+      ).resolves.toBe(3);
+      expect(initial.value().state?.value).toBe(3);
+
+      await view.disable();
+      expect(sharedState.keys()).not.toContain(stateKey);
+      expect(index.value()[stateKey]).toBeUndefined();
+      await expect(
+        provider.invoke({ action: increaseCounterAction, input: { amount: 2 } }),
+      ).resolves.toBe(5);
+      await view.enable();
+      expect(view.snapshot().status).toBe('ready');
+      const enabled = await sharedState.get<DevframeJsonRenderSpec>(stateKey);
+      expect(enabled.value().state?.value).toBe(5);
+
+      await service.disable();
+      expect(view.snapshot().contributions[0]).toMatchObject({
+        status: 'waiting',
+        reason: 'dependency-unavailable',
+      });
+      expect(sharedState.keys()).not.toContain(stateKey);
+      expect(index.value()[stateKey]).toBeUndefined();
+      await service.enable();
+      expect(view.snapshot().status).toBe('ready');
+      const restored = await sharedState.get<DevframeJsonRenderSpec>(stateKey);
+      expect(restored.value().state?.value).toBe(5);
     } finally {
       await current.close();
     }

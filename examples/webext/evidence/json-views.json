@@ -2,6 +2,7 @@
   "browser": "153.0.8010.12",
   "checks": [
     "native view index discovers an existing view on connection",
+    "a held native view-state response settles before same-key republication reads current state and continues receiving updates",
     "empty native view index keeps its provider connected",
     "late publication mounts without reconnecting",
     "identical view IDs and state keys stay separate across native hosts",

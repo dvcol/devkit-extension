@@ -2,12 +2,19 @@ import { createExampleConnection } from './connection';
 import { mountServerControls } from './servers';
 import { createRendererRpc, recipients } from './renderer-actions';
 import { mountPermissionControls } from './permissions';
-import type { DevframeJsonRenderSpec } from '@devframes/json-render';
+import { JSON_RENDER_INDEX_KEY } from '@devframes/json-render';
+import type { JsonRenderIndex, JsonRenderIndexEntry } from '@devframes/json-render';
 import renderer from '@devframes/json-render-ui/renderer';
 import { createClient } from '@devkit/client';
 import { createRpcProviderConnection } from '@devkit/devframe/client';
 import type { RpcProviderConnection } from '@devkit/devframe/client';
-import { counterCapability, increaseCounterAction, providerId, realm } from './contracts';
+import {
+  counterCapability,
+  counterStateKey,
+  increaseCounterAction,
+  providerId,
+  realm,
+} from './contracts';
 
 /** Only popups need an intrinsic minimum width; Firefox omits getViews in DevTools contexts. */
 if (chrome.extension.getViews?.({ type: 'popup' }).includes(window))
@@ -19,7 +26,12 @@ const { port, client, events, rpc, sharedState } = createExampleConnection(close
 const container = document.querySelector<HTMLElement>('#renderer')!;
 const status = document.querySelector<HTMLElement>('#status')!;
 const result = document.querySelector<HTMLElement>('#result')!;
-const mountedViews: Array<{ dispose?: () => void }> = [];
+interface MountedView {
+  readonly signal: AbortSignal;
+  readonly ready: Promise<void>;
+  dispose(): Promise<void>;
+}
+const mountedViews = new Map<string, MountedView>();
 let closed = false;
 let backgroundClosed = false;
 const routedClient = createClient();
@@ -27,6 +39,7 @@ const disposeServers = mountServerControls(routedClient);
 const disposePermissions = mountPermissionControls();
 let providerConnection: RpcProviderConnection | undefined;
 let unsubscribeCatalog: (() => void) | undefined;
+let unsubscribeViews: (() => void) | undefined;
 function close(): void {
   if (closed) return;
   closed = true;
@@ -42,10 +55,11 @@ function closeBackground(): void {
   rpc.$close();
   events.emit('connection:status', 'disconnected', 'connected');
   unsubscribeCatalog?.();
+  unsubscribeViews?.();
   providerConnection?.dispose();
   for (const key of sharedState.keys()) sharedState.delete(key);
-  for (const mounted of mountedViews) mounted.dispose?.();
-  mountedViews.splice(0);
+  for (const mounted of mountedViews.values()) void mounted.dispose().catch(reportViewFailure);
+  mountedViews.clear();
   port.disconnect();
   status.textContent = 'Disconnected';
 }
@@ -61,16 +75,13 @@ document
 import.meta.hot?.dispose(dispose);
 import.meta.hot?.accept();
 
-const nativeContext = {
-  rpc: createRendererRpc({
-    rpc: { call: rpc.$call, sharedState },
-    actions: routedClient.actions,
-    signal: viewLifetime.signal,
-  }),
-};
 try {
-  await mountView('counter', container);
-  await mountView('management', document.querySelector<HTMLElement>('#management')!);
+  const index = await sharedState.get<JsonRenderIndex>(JSON_RENDER_INDEX_KEY);
+  viewLifetime.signal.throwIfAborted();
+  unsubscribeViews = index.on('updated', (snapshot) => {
+    void updateViews(snapshot).catch(reportViewFailure);
+  });
+  await updateViews(index.value());
   providerConnection = await createRpcProviderConnection({
     rpc: { call: rpc.$call, client, events },
     providerId,
@@ -93,23 +104,82 @@ try {
     result.textContent = error instanceof Error ? error.message : String(error);
 }
 
-async function mountView(id: string, target: HTMLElement): Promise<void> {
-  const mounted = await renderer({
-    entry: {
-      id,
-      title: id,
-      icon: 'i-ph:plus',
-      type: 'json-render',
-      view: { stateKey: `devframe:json-render:global:${id}` },
-    },
-    container: target,
-    context: nativeContext,
-  });
-  if (backgroundClosed) {
-    mounted.dispose?.();
-    throw new Error('The native connection closed during renderer startup');
+async function updateViews(index: JsonRenderIndex = {}): Promise<void> {
+  for (const [stateKey, mounted] of mountedViews) {
+    if (index[stateKey] !== undefined || mounted.signal.aborted) continue;
+    void mounted
+      .dispose()
+      .finally(() => {
+        if (mountedViews.get(stateKey) === mounted) mountedViews.delete(stateKey);
+      })
+      .catch(reportViewFailure);
   }
-  mountedViews.push(mounted);
+  for (const entry of Object.values(index)) {
+    const previous = mountedViews.get(entry.stateKey);
+    if (previous !== undefined && !previous.signal.aborted) continue;
+    if (entry.id !== 'counter' && entry.id !== 'management') continue;
+    const target = {
+      counter: container,
+      management: document.querySelector<HTMLElement>('#management')!,
+    }[entry.id];
+    mountedViews.set(entry.stateKey, mountView(entry, target, previous));
+  }
+  await Promise.all(Array.from(mountedViews.values(), (mounted) => mounted.ready));
+}
+
+/** Native index removal ends this mount's actions even if its renderer is still loading. */
+function mountView(
+  entry: JsonRenderIndexEntry,
+  target: HTMLElement,
+  previous?: MountedView,
+): MountedView {
+  const lifetime = new AbortController();
+  let mounted: Awaited<ReturnType<typeof renderer>> | undefined;
+  let disposal: Promise<void> | undefined;
+  const ready = render().catch((error: unknown) => {
+    if (!lifetime.signal.aborted) throw error;
+  });
+  const release = (): Promise<void> => {
+    lifetime.abort(new Error('View removed'));
+    disposal ??= ready.then(cleanup, cleanup);
+    return disposal;
+  };
+  async function render(): Promise<void> {
+    await previous?.dispose();
+    if (lifetime.signal.aborted) return;
+    const instance = await renderer({
+      entry: {
+        id: entry.id,
+        title: entry.title,
+        icon: 'i-ph:plus',
+        type: 'json-render',
+        view: entry,
+      },
+      container: target,
+      context: {
+        rpc: createRendererRpc({
+          rpc: { call: rpc.$call, sharedState },
+          actions: routedClient.actions,
+          signal: lifetime.signal,
+        }),
+      },
+    });
+    mounted = instance;
+  }
+  /** A pending native get can cache its state after removal; evict only after it has settled. */
+  function cleanup(): void {
+    try {
+      mounted?.dispose?.();
+    } finally {
+      sharedState.delete(entry.stateKey);
+    }
+  }
+  return { signal: lifetime.signal, dispose: release, ready };
+}
+
+function reportViewFailure(error: unknown): void {
+  if (backgroundClosed) return;
+  result.textContent = error instanceof Error ? error.message : String(error);
 }
 
 async function run(operation: () => Promise<unknown>): Promise<void> {
@@ -136,11 +206,9 @@ onClick('#wait', () => rpc.$call('probe:wait'));
 onClick('#release', () => rpc.$call('probe:release'));
 onClick('#executions', () => rpc.$call('devframe:rpc:server-state:get', 'probe:executions'));
 onClick('#write', async () => {
-  const state = await sharedState.get<DevframeJsonRenderSpec>(
-    'devframe:json-render:global:counter',
-  );
+  const state = await sharedState.get<{ value: number }>(counterStateKey);
   state.mutate((draft) => {
-    draft.state = { value: 10 };
+    draft.value = 10;
   });
   return 'Native write';
 });

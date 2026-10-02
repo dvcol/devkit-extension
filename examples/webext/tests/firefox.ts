@@ -7,7 +7,13 @@ import { Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
 import { checkFirefoxScriptTiming } from './firefox-script-timing.ts';
 import { checkFirefoxServers } from './firefox-servers.ts';
 import { checkFirefoxSelectedPage } from './firefox-selected-page.ts';
-import { checkFirefoxHosts } from './firefox-hosts.ts';
+import {
+  checkFirefoxHosts,
+  checkFirefoxDeniedPage,
+  retainCounterViewButton,
+  verifyRemovedCounterView,
+  verifyRestoredCounterView,
+} from './firefox-hosts.ts';
 
 const extensionUuid = crypto.randomUUID();
 const options = new Options()
@@ -66,7 +72,7 @@ try {
   await checkFirefoxServers(driver);
   await checkFirefoxSelectedPage(driver);
   await checkFirefoxScriptTiming(driver, 'artifacts/firefox');
-  await checkDeniedPage();
+  await checkFirefoxDeniedPage(driver, origin);
   await driver.switchTo().window(second);
   await click('#remote-close');
   await waitText('#status', 'Disconnected');
@@ -153,36 +159,31 @@ async function checkRouting(first: string, second: string): Promise<void> {
   await counter(13);
   await driver.switchTo().window(second);
   await counter(13);
+  await retainCounterViewButton(driver);
   await manageService('Disable service');
   await waitText('#catalog', 'disabled');
   await managementStatus('disabled');
+  await verifyRemovedCounterView(driver);
   await driver.switchTo().window(first);
   await waitText('#catalog', 'disabled');
   await managementStatus('disabled');
+  await verifyRemovedCounterView(driver);
   await click('#routed');
   await contains('#result', 'No currently available provider');
+  await click('#write');
+  await waitText('#result', '"Native write"');
   await manageService('Enable service');
   await waitText('#catalog', 'active');
   await managementStatus('active');
+  await counter(10);
   await driver.switchTo().window(second);
   await waitText('#catalog', 'active');
   await managementStatus('active');
-  await click('#routed');
-  await waitText('#result', '14');
-}
-
-async function checkDeniedPage(): Promise<void> {
-  await driver.switchTo().newWindow('tab');
-  await driver.get(`${origin}/denied.html`);
-  await waitText('#status', 'Disconnected');
-  await contains('#result', 'closed');
-  assert.equal(
-    await driver.executeScript<boolean>(
-      'return !!document.querySelector("#renderer").shadowRoot?.querySelector("button")',
-    ),
-    false,
-  );
-  await driver.close();
+  await verifyRestoredCounterView(driver, 10);
+  for (const value of [11, 12, 13, 14]) {
+    await click('#routed');
+    await waitText('#result', String(value));
+  }
 }
 
 async function connected(value: number): Promise<void> {
@@ -260,6 +261,7 @@ async function saveEvidence(surfaceChecks: string[]): Promise<void> {
       'backend completes once without replay after reconnect',
       'provider incarnation survives page reconnect',
       'native JSON management controls disable and reenable the service with authoritative status on both pages',
+      'dependent counter view unpublishes on disable and republishes with a native business write made while absent; detached action cannot dispatch',
       'management renderer unmounts on disconnect and remounts once with current state',
       'detached management button cannot disable the service after disconnect',
       'denied packaged URL rejects and cleans up mount',

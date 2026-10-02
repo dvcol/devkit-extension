@@ -66,6 +66,214 @@
       ]
     },
     {
+      "id": "portable-view-declaration-and-lifecycle",
+      "apis": [
+        "@devkit/core:PluginDefinition.views",
+        "@devkit/core:PluginInput.views",
+        "@devkit/core:ViewDeclaration",
+        "@devkit/core:ViewDeclaration.execution",
+        "@devkit/core:ViewDeclaration.execution.id",
+        "@devkit/core:ViewDeclaration.id",
+        "@devkit/core:ViewDeclaration.kind",
+        "@devkit/core:ViewDeclaration.requires",
+        "@devkit/core:ViewDeclaration.setup",
+        "@devkit/core:ViewDefinition",
+        "@devkit/core:ViewDefinition.execution",
+        "@devkit/core:ViewDefinition.execution.id",
+        "@devkit/core:ViewDefinition.id",
+        "@devkit/core:ViewDefinition.kind",
+        "@devkit/core:ViewDefinition.requires",
+        "@devkit/core:ViewDefinition.setup",
+        "@devkit/core:defineView"
+      ],
+      "examples": [
+        "examples/json-render",
+        "examples/vite-hosts",
+        "examples/webext"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts view setup requirements native context and explicit scope cleanup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an undeclared requirement in view setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a wrong capability payload in view setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a resource returned from typed view setup",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a view envelope without requirements and setup in a plugin",
+          "host": "typescript-core-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/views.test.ts",
+          "fullName": "view definitions keeps setup inert and snapshots requirements and execution without adopting native resources",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/views.test.ts",
+          "fullName": "view definitions rejects missing setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/views.test.ts",
+          "fullName": "view definitions rejects non-callable setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/views.test.ts",
+          "fullName": "view definitions rejects undefined requirements before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/views.test.ts",
+          "fullName": "view definitions rejects renderer fields outside setup before setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/views.test.ts",
+          "fullName": "view definitions rejects an incomplete structural view in a plugin",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle waits for requirements and cleans up before dependency loss while preserving explicit disable",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle cleans partial setup and leaves siblings usable until an explicit view retry",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle waits for native view cleanup before activating a replacement",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle retains reservations and blocks replacement when native view cleanup fails",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle does not adopt a resource returned by structural JavaScript setup",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "examples/json-render",
+          "testFile": "tests/view-lifecycle.test.ts",
+          "fullName": "devframe view contribution owns native publication through plugin and capability lifetimes without owning business state",
+          "host": "devframe",
+          "mode": "native-node-host"
+        },
+        {
+          "workspace": "examples/json-render",
+          "testFile": "tests/view-lifecycle.test.ts",
+          "fullName": "devtools view contribution owns native publication through plugin and capability lifetimes without owning business state",
+          "host": "devtools",
+          "mode": "native-node-host"
+        }
+      ],
+      "gaps": [
+        "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Full surface placement, catalog compatibility, view-module HMR and every supported browser/preview failure case remain separate obligations.",
+        "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Script and transform declarations remain unsupported; their domain contracts are separate work."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/json-render",
+          "testFile": "tests/browser.ts",
+          "receiptFile": "artifacts/renderers.json",
+          "checks": [
+            "devframe: pending native view read is disposed before same-key republication mounts",
+            "devframe: view disable and dependency loss remove both mounts; reenable republishes current business state",
+            "devtools: pending native view read is disposed before same-key republication mounts",
+            "devtools: view disable and dependency loss remove both mounts; reenable republishes current business state"
+          ],
+          "host": "chromium-devframe-and-devtools",
+          "mode": "native-development-servers",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/browser.ts",
+          "receiptFile": "artifacts/receipt.json",
+          "checks": [
+            "dependent counter view unpublishes on disable and republishes once with a native business write made while absent; detached action cannot dispatch"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox.ts",
+          "receiptFile": "artifacts/firefox/receipt.json",
+          "checks": [
+            "dependent counter view unpublishes on disable and republishes with a native business write made while absent; detached action cannot dispatch"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/json-views.ts",
+          "receiptFile": "artifacts/json-views.json",
+          "checks": [
+            "a held native view-state response settles before same-key republication reads current state and continues receiving updates"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension/native-development-servers",
+          "requirePageErrors": true
+        }
+      ]
+    },
+    {
       "id": "custom-contribution-kind-lifecycle",
       "apis": [
         "@devkit/core:ContributionKindInstaller.activate",
@@ -679,7 +887,6 @@
         "@devkit/core:PluginDefinition.scripts",
         "@devkit/core:PluginDefinition.services",
         "@devkit/core:PluginDefinition.transforms",
-        "@devkit/core:PluginDefinition.views",
         "@devkit/core:PluginInput",
         "@devkit/core:PluginInput.actions",
         "@devkit/core:PluginInput.extensions",
@@ -687,7 +894,6 @@
         "@devkit/core:PluginInput.scripts",
         "@devkit/core:PluginInput.services",
         "@devkit/core:PluginInput.transforms",
-        "@devkit/core:PluginInput.views",
         "@devkit/core:ProviderCatalog",
         "@devkit/core:ProviderCatalog.snapshot",
         "@devkit/core:ProviderCatalog.subscribe",
@@ -1842,11 +2048,46 @@
           "fullName": "provider cancellation and resource ownership publishes the stop attempt before synchronous abort listeners reenter disable",
           "host": "node",
           "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle waits for requirements and cleans up before dependency loss while preserving explicit disable",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle cleans partial setup and leaves siblings usable until an explicit view retry",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle waits for native view cleanup before activating a replacement",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle retains reservations and blocks replacement when native view cleanup fails",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-views.test.ts",
+          "fullName": "provider view lifecycle does not adopt a resource returned by structural JavaScript setup",
+          "host": "node",
+          "mode": "unit"
         }
       ],
       "gaps": [
         "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
-        "Direct strict handles and relaxed admission envelopes have runtime evidence. Conditional return types remain a separate type-checking obligation. View, script and transform contributions are only asserted as unsupported; these tests do not implement their domain contracts."
+        "Direct strict handles and relaxed admission envelopes have runtime evidence. Conditional return types remain a separate type-checking obligation. View setup now uses the existing requirements, activation scope, dependency-loss teardown/restart and replacement barriers; its native host/rendering evidence remains separate. Script and transform contributions remain unsupported."
       ]
     },
     {

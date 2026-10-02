@@ -4,30 +4,55 @@
     {
       "mode": "devframe",
       "checks": [
+        "pending native view read is disposed before same-key republication mounts",
         "unchanged JSON view with reference and custom renderer",
         "native action and state shared across both rendered pages",
         "native input rejection displayed without an unhandled error",
         "unmount removes subscriptions, DOM and click listeners",
         "remount reads current state; unregister restores reference renderer",
         "unsupported component fails explicitly on update and mount; valid remount recovers",
+        "view disable and dependency loss remove both mounts; reenable republishes current business state",
         "host disconnect disposes both views and controls"
       ],
-      "finalValue": 5,
+      "finalValue": 7,
       "pageErrors": []
     },
     {
       "mode": "devtools",
       "checks": [
+        "pending native view read is disposed before same-key republication mounts",
         "unchanged JSON view with reference and custom renderer",
         "native action and state shared across both rendered pages",
         "native input rejection displayed without an unhandled error",
         "unmount removes subscriptions, DOM and click listeners",
         "remount reads current state; unregister restores reference renderer",
         "unsupported component fails explicitly on update and mount; valid remount recovers",
+        "view disable and dependency loss remove both mounts; reenable republishes current business state",
         "host disconnect disposes both views and controls"
       ],
-      "finalValue": 5,
+      "finalValue": 7,
       "pageErrors": []
     }
-  ]
+  ],
+  "checks": [
+    "devframe: pending native view read is disposed before same-key republication mounts",
+    "devframe: unchanged JSON view with reference and custom renderer",
+    "devframe: native action and state shared across both rendered pages",
+    "devframe: native input rejection displayed without an unhandled error",
+    "devframe: unmount removes subscriptions, DOM and click listeners",
+    "devframe: remount reads current state; unregister restores reference renderer",
+    "devframe: unsupported component fails explicitly on update and mount; valid remount recovers",
+    "devframe: view disable and dependency loss remove both mounts; reenable republishes current business state",
+    "devframe: host disconnect disposes both views and controls",
+    "devtools: pending native view read is disposed before same-key republication mounts",
+    "devtools: unchanged JSON view with reference and custom renderer",
+    "devtools: native action and state shared across both rendered pages",
+    "devtools: native input rejection displayed without an unhandled error",
+    "devtools: unmount removes subscriptions, DOM and click listeners",
+    "devtools: remount reads current state; unregister restores reference renderer",
+    "devtools: unsupported component fails explicitly on update and mount; valid remount recovers",
+    "devtools: view disable and dependency loss remove both mounts; reenable republishes current business state",
+    "devtools: host disconnect disposes both views and controls"
+  ],
+  "pageErrors": []
 }

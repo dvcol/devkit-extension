@@ -10,6 +10,7 @@ import {
   snapshotKind,
   snapshotOperation,
   snapshotService,
+  snapshotView,
 } from './snapshots.js';
 
 import type {
@@ -32,6 +33,8 @@ import type {
   ServiceDefinition,
   ServiceDeclaration,
   SetupContext,
+  ViewDeclaration,
+  ViewDefinition,
 } from './types.js';
 import {
   assertAction,
@@ -47,6 +50,7 @@ import {
   assertRecord,
   assertRequirements,
   assertService,
+  assertView,
 } from './validation.js';
 
 export function defineRealm<const Identifier extends string>(
@@ -166,6 +170,28 @@ export function defineContributionKind<const Kind extends ContributionKindDescri
   return snapshotKind(definition);
 }
 
+export function defineView<
+  const Requirements extends CapabilityRequirements = Record<never, never>,
+>(definition: {
+  readonly id: string;
+  readonly execution: ExecutionDescriptor;
+  readonly requires?: Requirements;
+  setup(context: SetupContext<NoInfer<Requirements>>): Awaitable<void>;
+}): ViewDefinition<Requirements>;
+export function defineView(
+  definition: Omit<ViewDeclaration, 'kind' | 'requires'> & {
+    readonly requires?: CapabilityRequirements;
+  },
+): ViewDeclaration {
+  assertRecord(definition, 'view');
+  assertKeys(definition, ['id', 'execution', 'requires', 'setup'], 'view');
+  if (Object.hasOwn(definition, 'requires'))
+    assertRequirements(definition.requires, 'view.requires');
+  const view = { ...definition, kind: 'view' as const, requires: definition.requires ?? {} };
+  assertView(view, 'view');
+  return snapshotView(view);
+}
+
 export function defineExtension<const Kind extends ContributionKindDescriptor>(definition: {
   readonly descriptor: Kind;
   readonly id: string;
@@ -201,11 +227,15 @@ function snapshotPluginEntry(value: unknown, kind: string, label: string): Contr
     assertActionContribution(value, label);
     return snapshotActionContribution(value);
   }
+  if (kind === 'view') {
+    assertView(value, label);
+    return snapshotView(value);
+  }
   if (kind === 'extension') {
     assertExtension(value, label);
     return snapshotExtension(value);
   }
-  /** Domain adapters validate view, transform and script fields beyond this common envelope. */
+  /** Domain adapters validate transform and script fields beyond this common envelope. */
   assertContribution(value, kind, label);
   return snapshotContribution(value);
 }

@@ -4,3 +4,6 @@ export {
   increaseCounterAction,
   increaseMatchingCounterAction,
 } from './contracts.js';
+
+/** Native host-owned counter data; published views only project this state. */
+export const counterStateKey = 'example:server-counter';

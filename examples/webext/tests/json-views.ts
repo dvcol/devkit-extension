@@ -3,11 +3,12 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { styleText } from 'node:util';
-import { increaseCounterAction } from '@devkit/example-contribution';
+import { counterStateKey, increaseCounterAction } from '@devkit/example-contribution';
 import { createRemoteHost } from '@devkit/example-server-contexts';
 import { chromium, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { publishCounterView } from './json-view-fixture.ts';
+import { structuredCloneParse } from 'devframe/utils/structured-clone';
 
 type ServerHost = Awaited<ReturnType<typeof createRemoteHost>>;
 const profile = await mkdtemp(join(tmpdir(), 'devkit-json-views-'));
@@ -24,8 +25,6 @@ try {
   const worker = browser.serviceWorkers()[0] ?? (await browser.waitForEvent('serviceworker'));
   const origin = `chrome-extension://${new URL(worker.url()).host}`;
   const page = await browser.newPage();
-  await page.goto(`${origin}/panel.html`);
-  await expect(page.locator('#status')).toHaveText('Connected');
   const devframe = await createRemoteHost('devframe', {
     providerId: 'example.devframe',
     allowedOrigins: [origin],
@@ -36,11 +35,31 @@ try {
     allowedOrigins: [origin],
   });
   cleanup.defer(devtools.close);
-  const first = await publishCounterView(devframe);
+  let first = await publishCounterView(devframe);
   cleanup.defer(first.dispose);
+  const pendingRead = await delayFirstViewRead(page, first.view.ref.stateKey);
+  await page.goto(`${origin}/panel.html`);
+  await expect(page.locator('#status')).toHaveText('Connected');
   await connect(page, devframe);
   const firstGroup = page.locator('[data-provider="example.devframe"]');
   const secondGroup = page.locator('[data-provider="example.devtools"]');
+  await expect.poll(() => pendingRead.release !== undefined).toBe(true);
+  first.dispose();
+  await expect(firstGroup.locator('[data-view]')).toHaveCount(0);
+  const business = await devframe.context.rpc.sharedState.get<{ value: number }>(counterStateKey);
+  business.mutate((state) => {
+    state.value = 7;
+  });
+  first = await publishCounterView(devframe);
+  cleanup.defer(first.dispose);
+  await expect(firstGroup.locator('[data-view]')).toHaveCount(1);
+  assert.ok(pendingRead.release);
+  pendingRead.release();
+  await expect(firstGroup.getByText('Remote: 7', { exact: true })).toBeVisible();
+  assert.equal(pendingRead.reads, 2);
+  business.mutate((state) => {
+    state.value = 0;
+  });
   await expect(firstGroup.getByText('Remote: 0', { exact: true })).toBeVisible();
   await connect(page, devtools);
   await expect(secondGroup.locator('[data-view]')).toHaveCount(0);
@@ -101,6 +120,7 @@ try {
     browser: browser.browser()?.version(),
     checks: [
       'native view index discovers an existing view on connection',
+      'a held native view-state response settles before same-key republication reads current state and continues receiving updates',
       'empty native view index keeps its provider connected',
       'late publication mounts without reconnecting',
       'identical view IDs and state keys stay separate across native hosts',
@@ -133,4 +153,49 @@ async function connect(page: Page, host: ServerHost): Promise<void> {
   await expect(page.locator('#server-result')).toHaveText(
     `"Connected ${host.provider.provider.id}"`,
   );
+}
+
+/** Hold one actual native response without changing authentication, payloads or backend work. */
+async function delayFirstViewRead(page: Page, stateKey: string) {
+  const pending: { reads: number; release?: () => void } = { reads: 0 };
+  let requestId: unknown;
+  await page.routeWebSocket(/\/__devkit-remote\//u, (socket) => {
+    const server = socket.connectToServer();
+    socket.onMessage((message) => {
+      const envelope = nativeEnvelope(message);
+      if (
+        envelope.m === 'devframe:rpc:server-state:get' &&
+        Array.isArray(envelope.a) &&
+        envelope.a[0] === stateKey
+      ) {
+        pending.reads += 1;
+        if (pending.reads === 1) requestId = envelope.i;
+      }
+      server.send(message);
+    });
+    server.onMessage((message) => {
+      const envelope = nativeEnvelope(message);
+      if (requestId !== undefined && envelope.i === requestId) {
+        requestId = undefined;
+        pending.release = () => {
+          socket.send(message);
+        };
+        return;
+      }
+      socket.send(message);
+    });
+  });
+  return pending;
+}
+
+function nativeEnvelope(message: string | Buffer): Record<string, unknown> {
+  const serialized = message.toString();
+  if (serialized.startsWith('s:')) return structuredCloneParse(serialized.slice(2));
+  const value: unknown = JSON.parse(serialized);
+  assert.ok(isEnvelope(value));
+  return value;
+}
+
+function isEnvelope(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

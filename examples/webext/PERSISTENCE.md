@@ -22,7 +22,7 @@ The key belongs to this example's background within the browser's extension/prof
 ```mermaid
 flowchart LR
   Storage[Native storage.local counter record] --> Restore[Background initialization]
-  Restore --> State[Native counter view / shared state]
+  Restore --> State[Native business counter state]
   Restore --> Ready
   Provider[Native provider startup] --> Ready
   Ready[Native RPC resolver awaits initialization] --> UI[Existing panel and JSON renderer]
@@ -32,9 +32,9 @@ flowchart LR
   Write --> Status[Existing JSON management status]
 ```
 
-Native views, provider exposure and Port listeners register synchronously. The native RPC resolver waits for the initial storage read and provider startup before returning the original handler. It does not buffer messages or add a readiness protocol. Read errors become throwing handlers because native birpc serializes handler errors; a directly rejected resolver would bypass that error boundary. The panel's existing failed-startup path displays the error and removes its mounts.
+Native business state and Port listeners register synchronously. Provider startup activates the view recipe and its native publication. The native RPC resolver waits for the initial storage read and provider startup before returning the original handler. It does not buffer messages or add a readiness protocol. Read errors become throwing handlers because native birpc serializes handler errors; a directly rejected resolver would bypass that error boundary. The panel's existing failed-startup path displays the error and removes its mounts.
 
-Only `{ value: integer }` is saved. Missing data uses the counter's initial zero; malformed records reject startup and remain untouched. The background subscribes once to native counter-state changes, so both portable actions and native state writes can save a new value. Provider identity, domain input, action feedback, management status and diagnostic execution counters remain ephemeral. Service disable/enable and panel reconnect do not create another persistence subscription. External edits to the saved record are read on the next background startup; this example does not add storage-change replication or conflict resolution.
+Only `{ value: integer }` is saved. Missing data uses the counter's initial zero; malformed records reject startup and remain untouched. The background subscribes once to native counter-state changes, so both portable actions and native state writes can save a new value. Provider identity, domain input, action feedback, management status and diagnostic execution counters remain ephemeral. Service or view disable/enable and panel reconnect do not create another persistence subscription. Removing the view leaves the native business counter intact; reenabling projects its latest value. External edits to the saved record are read on the next background startup; this example does not add storage-change replication or conflict resolution.
 
 Writes remain asynchronous native operations. An action can finish before its write, and a failed write does not roll back live shared state. The JSON management view reports each value's write completion or failure, and the background logs failures. Overlapping writes follow native browser behavior; a status names the value whose operation completed, not a guarantee that all writes have finished. There is no flush, retry, durable-action acknowledgement or recovery controller. Correcting saved data requires an explicit fresh background before its clients reconnect.
 

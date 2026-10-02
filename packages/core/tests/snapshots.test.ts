@@ -182,30 +182,25 @@ describe('declaration ownership', () => {
   });
 
   it('copies domain contribution envelopes while leaving domain-owned values intact', () => {
-    expect.assertions(7);
+    expect.assertions(5);
     const execution = { id: 'example.server' };
     const content = { title: 'domain owned' };
-    const view = { kind: 'view' as const, id: 'example.view', execution, content };
     const transform = { kind: 'transform' as const, id: 'example.transform', execution, content };
     const script = { kind: 'script' as const, id: 'example.script', execution, content };
     const plugin = definePlugin({
       id: 'example.plugin',
-      views: [view],
       transforms: [transform],
       scripts: [script],
     });
 
-    view.id = 'mutated';
     transform.id = 'mutated';
     script.id = 'mutated';
     execution.id = 'mutated';
 
-    expect(plugin.views[0]?.id).toBe('example.view');
     expect(plugin.transforms[0]?.id).toBe('example.transform');
     expect(plugin.scripts[0]?.id).toBe('example.script');
-    expect(plugin.views[0]?.execution.id).toBe('example.server');
     expect(plugin.transforms[0]?.execution.id).toBe('example.server');
     expect(plugin.scripts[0]?.execution.id).toBe('example.server');
-    expect(plugin.views[0]?.content).toBe(content);
+    expect(plugin.transforms[0]?.content).toBe(content);
   });
 });

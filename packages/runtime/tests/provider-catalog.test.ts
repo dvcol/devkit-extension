@@ -1,4 +1,10 @@
-import { defineAction, defineCapability, definePlugin, defineService } from '@devkit/core';
+import {
+  defineAction,
+  defineCapability,
+  definePlugin,
+  defineService,
+  defineView,
+} from '@devkit/core';
 import type { ProviderCatalogSnapshot } from '@devkit/core';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -72,7 +78,7 @@ describe('provider catalog', () => {
               handler: ({ input }) => input,
             }),
           ],
-          views: [{ id: 'view', kind: 'view', execution }],
+          views: [defineView({ id: 'view', execution, setup() {} })],
         }),
       ],
     });

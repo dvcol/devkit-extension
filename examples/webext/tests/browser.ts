@@ -111,24 +111,42 @@ try {
   await expect(first.locator('#result')).toContainText('fulfilled');
   for (const page of [first, second])
     await expect(page.getByText('Counter: 13', { exact: true })).toBeVisible();
+  const detachedCounter = await first
+    .locator('#renderer')
+    .getByRole('button', { name: 'Increase counter', exact: true })
+    .elementHandle();
   await second.getByRole('button', { name: 'Disable service', exact: true }).click();
   for (const page of [first, second]) {
     await expect(page.locator('#catalog')).toHaveText('disabled');
+    await expect(page.locator('#renderer').getByRole('button')).toHaveCount(0);
     await expect(
       page.locator('#management').getByText('Counter service: disabled', { exact: true }),
     ).toBeVisible();
   }
   await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
   await expect(first.locator('#result')).toContainText('No currently available provider');
+  await first.getByRole('button', { name: 'Native write', exact: true }).click();
+  await expect(first.locator('#result')).toHaveText('"Native write"');
   await second.getByRole('button', { name: 'Enable service', exact: true }).click();
   for (const page of [first, second]) {
     await expect(page.locator('#catalog')).toHaveText('active');
     await expect(
       page.locator('#management').getByText('Counter service: active', { exact: true }),
     ).toBeVisible();
+    await expect(page.locator('#renderer').getByText('Counter: 10', { exact: true })).toBeVisible();
+    await expect(
+      page.locator('#renderer').getByRole('button', { name: 'Increase counter', exact: true }),
+    ).toHaveCount(1);
   }
-  await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
-  await expect(first.locator('#result')).toHaveText('14');
+  await detachedCounter.evaluate((button) =>
+    button.dispatchEvent(new MouseEvent('click', { bubbles: true })),
+  );
+  await first.getByRole('button', { name: 'Read capability', exact: true }).click();
+  await expect(first.locator('#result')).toHaveText('10');
+  for (const value of [11, 12, 13, 14]) {
+    await first.getByRole('button', { name: 'Routed increase', exact: true }).click();
+    await expect(first.locator('#result')).toHaveText(String(value));
+  }
   await checkConfiguredServers(first, second);
   await checkSelectedPage(first);
   await checkScriptTiming(first, 'artifacts');
@@ -166,6 +184,7 @@ try {
       'explicit realm/provider routing and broadcast',
       'catalog disable/enable updates on both clients',
       'native JSON management controls disable and reenable the service with authoritative status on both pages',
+      'dependent counter view unpublishes on disable and republishes once with a native business write made while absent; detached action cannot dispatch',
       'management renderer unmounts on disconnect and remounts once with current state',
       'detached management button cannot disable the service after disconnect',
       'provider incarnation retained across UI reconnect',

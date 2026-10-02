@@ -7,6 +7,7 @@ import { DevTools } from '@vitejs/devtools';
 import type { Plugin, PreviewServer, ViteDevServer } from 'vite';
 
 import { ProviderLifetime } from './lifetime.js';
+import { counterViewPlugin } from './counter-view.js';
 
 export { counterPreviewPlugin } from './preview.js';
 export { htmlBootstrapPlugin } from './html-bootstrap.js';
@@ -28,7 +29,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
   const composition: ServerComposition = {
     providerId: `example.${host}-vite`,
     services: [counterService],
-    plugins: [counterActionsPlugin],
+    plugins: [counterActionsPlugin, counterViewPlugin],
     expose: { actions: [increaseCounterAction], capabilities: [counterCapability] },
   };
   if (host === 'devframe') {
@@ -40,7 +41,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
         mcp: false,
         register: false,
         configure(context) {
-          lifetime.prepare(() => createDevframeProvider({ context, ...composition }), context);
+          lifetime.prepare(() => createDevframeProvider({ context, ...composition }));
         },
       }),
     ];
@@ -50,7 +51,7 @@ export async function counterHostPlugins(host: ExampleHost): Promise<Plugin[]> {
       ...lifetime.plugin(),
       devtools: {
         setup(context) {
-          lifetime.prepare(() => createDevToolsProvider({ context, ...composition }), context);
+          lifetime.prepare(() => createDevToolsProvider({ context, ...composition }));
         },
       },
     },

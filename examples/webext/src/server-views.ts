@@ -13,6 +13,12 @@ interface ServerViewsOptions {
   readonly actions: ActionClient;
 }
 
+interface MountedView {
+  readonly signal: AbortSignal;
+  readonly ready: Promise<void>;
+  dispose(): Promise<void>;
+}
+
 /** Each connection keeps its native view index, state keys and RPC ownership. */
 export async function mountServerViews(options: ServerViewsOptions): Promise<() => void> {
   const { providerId, rpc } = options;
@@ -23,10 +29,10 @@ export async function mountServerViews(options: ServerViewsOptions): Promise<() 
   heading.textContent = providerId;
   group.append(heading);
   document.querySelector('#server-views')!.append(group);
-  const views = new Map<string, () => void>();
+  const views = new Map<string, MountedView>();
   const dispose = () => {
     lifetime.abort();
-    for (const release of views.values()) release();
+    for (const mounted of views.values()) void mounted.dispose();
     views.clear();
     group.remove();
   };
@@ -35,14 +41,16 @@ export async function mountServerViews(options: ServerViewsOptions): Promise<() 
   });
   lifetime.signal.addEventListener('abort', unsubscribe, { once: true });
   function update(index: JsonRenderIndex = {}): void {
-    for (const [stateKey, release] of views) {
-      if (index[stateKey] !== undefined) continue;
-      release();
-      views.delete(stateKey);
+    for (const [stateKey, mounted] of views) {
+      if (index[stateKey] !== undefined || mounted.signal.aborted) continue;
+      void mounted.dispose().finally(() => {
+        if (views.get(stateKey) === mounted) views.delete(stateKey);
+      });
     }
     for (const entry of Object.values(index)) {
-      if (!views.has(entry.stateKey))
-        views.set(entry.stateKey, mountView({ entry, server: options, group }));
+      const previous = views.get(entry.stateKey);
+      if (previous !== undefined && !previous.signal.aborted) continue;
+      views.set(entry.stateKey, mountView({ entry, server: options, group, previous }));
     }
   }
   try {
@@ -84,16 +92,19 @@ function mountView(options: {
   readonly entry: JsonRenderIndexEntry;
   readonly server: ServerViewsOptions;
   readonly group: HTMLElement;
-}): () => void {
-  const { entry, server, group } = options;
+  readonly previous: MountedView | undefined;
+}): MountedView {
+  const { entry, server, group, previous } = options;
   const lifetime = new AbortController();
   const context = createRendererContext(server, lifetime.signal);
   const container = document.createElement('div');
   container.dataset.view = entry.stateKey;
   group.append(container);
-  let disposed = false;
   let mounted: Awaited<ReturnType<typeof renderer>> | undefined;
+  let disposal: Promise<void> | undefined;
   async function render(): Promise<void> {
+    await previous?.dispose();
+    if (lifetime.signal.aborted) return;
     const instance = await renderer({
       entry: {
         id: entry.id,
@@ -106,17 +117,23 @@ function mountView(options: {
       context,
     });
     mounted = instance;
-    if (disposed) instance.dispose?.();
   }
-  void render().catch((error: unknown) => {
-    if (disposed) return;
+  const ready = render().catch((error: unknown) => {
+    if (lifetime.signal.aborted) return;
     (container.shadowRoot ?? container).textContent =
       error instanceof Error ? error.message : String(error);
   });
-  return () => {
-    disposed = true;
+  const dispose = (): Promise<void> => {
     lifetime.abort();
-    mounted?.dispose?.();
     container.remove();
+    disposal ??= ready.finally(() => {
+      try {
+        mounted?.dispose?.();
+      } finally {
+        server.rpc.sharedState.delete(entry.stateKey);
+      }
+    });
+    return disposal;
   };
+  return { signal: lifetime.signal, ready, dispose };
 }

@@ -147,6 +147,19 @@ export interface ServiceDefinition<
   setup(context: SetupContext<Requirements>): Awaitable<CapabilityImplementation<Capability>>;
 }
 
+export interface ViewDeclaration extends ContributionDeclaration<'view'> {
+  readonly requires: CapabilityRequirements;
+  readonly setup: (...setupArguments: never[]) => unknown;
+}
+
+/** Setup owns native publication through its scope; returned resources are not adopted. */
+export interface ViewDefinition<
+  Requirements extends CapabilityRequirements,
+> extends ViewDeclaration {
+  readonly requires: Requirements;
+  setup(context: SetupContext<Requirements>): Awaitable<void>;
+}
+
 export interface ActionDescriptor<Operation extends OperationDefinition = OperationDefinition> {
   readonly kind: 'action-contract';
   readonly id: string;
@@ -194,7 +207,7 @@ export interface PluginInput {
   readonly id: string;
   readonly services?: readonly ServiceDeclaration[];
   readonly actions?: readonly ActionDeclaration[];
-  readonly views?: readonly ContributionDeclaration<'view'>[];
+  readonly views?: readonly ViewDeclaration[];
   readonly transforms?: readonly ContributionDeclaration<'transform'>[];
   readonly scripts?: readonly ContributionDeclaration<'script'>[];
   readonly extensions?: readonly ExtensionDefinition[];

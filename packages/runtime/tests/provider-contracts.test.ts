@@ -97,7 +97,7 @@ describe('provider admission and invocation contracts', () => {
     });
     const domain = admitted(
       await runtime.plugins.install(
-        definePlugin({ id: 'domain', views: [{ id: 'view', kind: 'view', execution }] }),
+        definePlugin({ id: 'domain', scripts: [{ id: 'script', kind: 'script', execution }] }),
       ),
     );
     expect(domain.snapshot().contributions[0]).toMatchObject({

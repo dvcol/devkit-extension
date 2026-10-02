@@ -51,9 +51,7 @@ describe.each(['devframe', 'devtools'] as const)('%s native JSON view', (mode) =
     expect(asset.headers.get('content-type')).toContain('javascript');
     expect(await asset.text()).toBe(await readFile(jsonRenderUiRenderer().file, 'utf8'));
     expect(example.host.context.docks.values()).toContainEqual(example.entry);
-    const viewState = await observer.sharedState.get<DevframeJsonRenderSpec>(
-      example.view.ref.stateKey,
-    );
+    const viewState = await observer.sharedState.get<DevframeJsonRenderSpec>(example.stateKey);
     expect(viewState.value().state).toEqual({ value: 0 });
     await expect(client.call(counterActionName, { amount: 2 })).resolves.toBe(2);
     await expect.poll(() => viewState.value().state).toEqual({ value: 2 });
@@ -79,7 +77,7 @@ describe.each(['devframe', 'devtools'] as const)('%s native JSON view', (mode) =
     });
     expect(example.view.value().state).toEqual({ value: 3 });
     await example.close();
-    expect(example.host.context.rpc.sharedState.keys()).not.toContain(example.view.ref.stateKey);
+    expect(example.host.context.rpc.sharedState.keys()).not.toContain(example.stateKey);
     expect(() => {
       state.mutate((value) => {
         value.value = 4;

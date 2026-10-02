@@ -1,6 +1,6 @@
 import { JSON_RENDER_INDEX_KEY } from '@devframes/json-render';
-import type { JsonRenderIndex } from '@devframes/json-render';
-import type { DevframeJsonRenderDockEntry, JsonRenderRpcContext } from '@devframes/json-render/hub';
+import type { JsonRenderIndex, JsonRenderIndexEntry } from '@devframes/json-render';
+import type { JsonRenderRpcContext } from '@devframes/json-render/hub';
 import renderer from '@devframes/json-render-ui/renderer';
 import { createClient } from '@devkit/client';
 import type { Client } from '@devkit/client';
@@ -9,6 +9,12 @@ import { counterCapability, increaseCounterAction } from '@devkit/example-contri
 import { createDevframeProviderConnection } from '@devkit/server/client';
 import { connectDevframe } from 'devframe/client';
 import type { DevframeRpcClient } from 'devframe/client';
+
+interface CounterConnection {
+  readonly rpc: DevframeRpcClient;
+  readonly client: Client;
+  readonly provider: string;
+}
 
 const container = document.querySelector<HTMLElement>('#counter')!;
 const status = document.querySelector<HTMLElement>('#connection')!;
@@ -19,8 +25,10 @@ const readButton = document.querySelector<HTMLButtonElement>('#read')!;
 const disconnectButton = document.querySelector<HTMLButtonElement>('#disconnect')!;
 const lifetime = new AbortController();
 const cleanup = new DisposableStack();
-let mounted: Awaited<ReturnType<typeof renderer>> | undefined;
-let mounting = false;
+let disposeView: (() => void) | undefined;
+let pendingMount: Promise<void> = Promise.resolve();
+let published = false;
+let wantsMounted = true;
 
 /** Native connection metadata identifies the selected example host, independent of build mode. */
 function providerId(rpc: DevframeRpcClient): string {
@@ -30,10 +38,9 @@ function providerId(rpc: DevframeRpcClient): string {
 }
 
 function unmount(): void {
-  mounted?.dispose?.();
-  mounted = undefined;
-  container.replaceChildren();
-  mountButton.disabled = lifetime.signal.aborted || mounting;
+  disposeView?.();
+  disposeView = undefined;
+  mountButton.disabled = lifetime.signal.aborted || !published;
   unmountButton.disabled = true;
 }
 
@@ -82,68 +89,112 @@ async function start(): Promise<void> {
   document.querySelector<HTMLOutputElement>('#provider')!.textContent = JSON.stringify(
     connection.provider,
   );
-  await mountCounter(rpc, client, connection.provider.id);
+  await mountCounter({ rpc, client, provider: connection.provider.id });
 }
 
-async function mountCounter(
-  rpc: DevframeRpcClient,
-  client: Client,
-  provider: string,
-): Promise<void> {
-  const routing = { realm: 'devserver', provider: provider };
-  const context = {
+async function mountCounter(connection: CounterConnection): Promise<void> {
+  const { rpc, client } = connection;
+  const index = await rpc.sharedState.get<JsonRenderIndex>(JSON_RENDER_INDEX_KEY);
+  lifetime.signal.throwIfAborted();
+  let view: JsonRenderIndexEntry | undefined;
+  function update(): void {
+    const next = Object.values(index.value()).find(
+      (entry) => entry.id === 'counter' && entry.scope === 'example',
+    );
+    const removedKey = view?.stateKey;
+    if (next?.stateKey === removedKey && published) return;
+    view = next;
+    published = view !== undefined;
+    if (removedKey !== undefined) {
+      unmount();
+      /** A pending native get can refill the cache; settle it before eviction and remount. */
+      const evictRemovedState = (): void => {
+        rpc.sharedState.delete(removedKey);
+      };
+      pendingMount = pendingMount.then(evictRemovedState);
+    }
+    mountButton.disabled = lifetime.signal.aborted || !published || disposeView !== undefined;
+    if (view === undefined) {
+      status.textContent = 'Connected. Counter view unavailable.';
+      return;
+    }
+    status.textContent = 'Connected';
+    if (wantsMounted) void mount(view, connection);
+  }
+
+  own(index.on('updated', update));
+  mountButton.addEventListener(
+    'click',
+    () => {
+      wantsMounted = true;
+      if (view !== undefined) void mount(view, connection);
+    },
+    { signal: lifetime.signal },
+  );
+  readButton.addEventListener('click', () => void read(client), { signal: lifetime.signal });
+  readButton.disabled = false;
+  disconnectButton.disabled = false;
+  update();
+  await pendingMount;
+}
+
+function mount(view: JsonRenderIndexEntry, connection: CounterConnection): Promise<void> {
+  if (!published || lifetime.signal.aborted || disposeView !== undefined) return Promise.resolve();
+  const actions = new AbortController();
+  const resources = new DisposableStack();
+  const target = document.createElement('div');
+  container.append(target);
+  resources.defer(() => {
+    target.remove();
+  });
+  const disposeMount = () => {
+    actions.abort();
+    resources.dispose();
+  };
+  disposeView = disposeMount;
+  mountButton.disabled = true;
+  async function activate(): Promise<void> {
+    if (actions.signal.aborted) return;
+    try {
+      const instance = await renderer({
+        entry: { id: view.id, title: view.title, type: 'json-render', view, icon: 'ph:plus' },
+        container: target,
+        context: rendererContext(connection, actions.signal),
+      });
+      if (resources.disposed) {
+        instance.dispose?.();
+        return;
+      }
+      resources.defer(() => instance.dispose?.());
+      unmountButton.disabled = false;
+      status.textContent = 'Connected';
+    } catch (error) {
+      if (actions.signal.aborted) return;
+      unmount();
+      status.textContent = `Mount failed: ${String(error)}`;
+    } finally {
+      if (disposeView === disposeMount || disposeView === undefined)
+        mountButton.disabled = lifetime.signal.aborted || !published || disposeView !== undefined;
+    }
+  }
+  const completion = pendingMount.then(activate);
+  pendingMount = completion;
+  return completion;
+}
+
+function rendererContext(connection: CounterConnection, signal: AbortSignal): JsonRenderRpcContext {
+  const { rpc, client, provider } = connection;
+  return {
     rpc: {
       ...rpc,
       call: createActionCall({
         rpc,
         actions: client.actions,
-        bindings: [{ action: increaseCounterAction, routing }],
-        signal: lifetime.signal,
+        bindings: [{ action: increaseCounterAction, routing: { realm: 'devserver', provider } }],
+        signal,
       }),
     },
   };
-  const index = await rpc.sharedState.get<JsonRenderIndex>(JSON_RENDER_INDEX_KEY);
-  lifetime.signal.throwIfAborted();
-  const view = Object.values(index.value()).find((entry) => entry.id === 'counter');
-  if (view === undefined) throw new Error('The shared counter view is unavailable');
-  const entry = {
-    id: view.id,
-    title: view.title,
-    type: 'json-render',
-    view,
-    icon: 'ph:plus',
-  } as const;
-
-  mountButton.addEventListener('click', () => void mount(entry, context), {
-    signal: lifetime.signal,
-  });
-  readButton.addEventListener('click', () => void read(client), { signal: lifetime.signal });
-  readButton.disabled = false;
-  disconnectButton.disabled = false;
-  await mount(entry, context);
-}
-
-async function mount(
-  entry: DevframeJsonRenderDockEntry,
-  context: JsonRenderRpcContext,
-): Promise<void> {
-  mounting = true;
-  mountButton.disabled = true;
-  try {
-    const instance = await renderer({ entry, container, context });
-    if (lifetime.signal.aborted) {
-      instance.dispose?.();
-      return;
-    }
-    mounted = instance;
-    unmountButton.disabled = false;
-    status.textContent = 'Connected';
-  } catch (error) {
-    if (!lifetime.signal.aborted) status.textContent = `Mount failed: ${String(error)}`;
-  } finally {
-    mounting = false;
-    mountButton.disabled = lifetime.signal.aborted || mounted !== undefined;
-  }
 }
 
 async function read(client: Client): Promise<void> {
@@ -160,7 +211,14 @@ async function read(client: Client): Promise<void> {
   }
 }
 
-unmountButton.addEventListener('click', unmount, { signal: lifetime.signal });
+unmountButton.addEventListener(
+  'click',
+  () => {
+    wantsMounted = false;
+    unmount();
+  },
+  { signal: lifetime.signal },
+);
 disconnectButton.addEventListener('click', dispose, { signal: lifetime.signal });
 const reloadButton = document.querySelector<HTMLButtonElement>('#reload')!;
 const reload = () => {

@@ -17,6 +17,7 @@
     "explicit realm/provider routing and broadcast",
     "catalog disable/enable updates on both clients",
     "native JSON management controls disable and reenable the service with authoritative status on both pages",
+    "dependent counter view unpublishes on disable and republishes once with a native business write made while absent; detached action cannot dispatch",
     "management renderer unmounts on disconnect and remounts once with current state",
     "detached management button cannot disable the service after disconnect",
     "provider incarnation retained across UI reconnect",

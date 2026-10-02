@@ -11,6 +11,7 @@ import type {
   RouteSelector,
   RoutingDirective,
   ServiceDeclaration,
+  ViewDeclaration,
 } from './types.js';
 import type { RoutingPolicy } from './routing.js';
 
@@ -123,6 +124,15 @@ export function snapshotActionContribution<Action extends ActionDeclaration>(
     execution: snapshotExecution(action.execution),
     contract: snapshotAction(action.contract),
     requires: snapshotRequirements(action.requires),
+  });
+}
+
+export function snapshotView<View extends ViewDeclaration>(view: View): View {
+  return Object.freeze({
+    ...view,
+    id: view.id,
+    execution: snapshotExecution(view.execution),
+    requires: snapshotRequirements(view.requires),
   });
 }
 

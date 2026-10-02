@@ -14,6 +14,7 @@ import {
   definePlugin,
   defineRealm,
   defineService,
+  defineView,
 } from '../src/index.js';
 
 const execution = defineExecution({ id: 'example.server' });
@@ -117,7 +118,7 @@ describe('portable definitions', () => {
       actions: [
         defineAction({ contract: action, id: 'example.handler', execution, handler: () => '' }),
       ],
-      views: [{ id: 'example.view', kind: 'view', execution }],
+      views: [defineView({ id: 'example.view', execution, setup() {} })],
       transforms: [{ id: 'example.transform', kind: 'transform', execution }],
       scripts: [{ id: 'example.script', kind: 'script', execution }],
       extensions: [],

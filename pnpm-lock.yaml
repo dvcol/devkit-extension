@@ -285,6 +285,9 @@ importers:
       '@devframes/json-render-ui':
         specifier: 1.0.0
         version: 1.0.0(patch_hash=8d7d773249e3b2f3f1a9fdcf472f1f72dde02f8fdf5b1e9a8e53a2efe7a51fa4)(@devframes/hub@1.0.0(@devframes/agentic@1.0.0)(crossws@0.4.12(patch_hash=7da56550dc94db34785dcf6f291726999229a09d0c66d5831b869ab1bc76a605)(srvx@1.0.5))(devframe@1.0.0))(devframe@1.0.0)
+      '@devkit/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@devkit/example-contribution':
         specifier: workspace:*
         version: link:../contribution
@@ -407,6 +410,9 @@ importers:
       '@devkit/example-contribution':
         specifier: workspace:*
         version: link:../contribution
+      '@devkit/example-json-render':
+        specifier: workspace:*
+        version: link:../json-render
       '@devkit/server':
         specifier: workspace:*
         version: link:../../packages/server

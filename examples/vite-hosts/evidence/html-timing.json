@@ -11,14 +11,22 @@
       },
       "counter": {
         "authenticatedPages": 3,
-        "nativeJsonActions": 6,
-        "finalValue": 6,
+        "nativeJsonActions": 7,
+        "finalValue": 21,
         "nativeOtpConsumed": true,
         "nativePromptOnReload": true,
         "sharedStateAndCapability": true,
         "unmountRemount": true,
         "explicitDisconnectAndReconnect": true,
-        "backendCloseUnmountsBoth": true
+        "backendCloseUnmountsBoth": true,
+        "viewLifecycle": {
+          "dependencyLossUnmounts": true,
+          "nativeWriteWhileAbsent": 20,
+          "reenableUsesCurrentState": true,
+          "manualUnmountRetained": true,
+          "previousButtonDetached": true,
+          "singleMountAfterRestore": true
+        }
       }
     },
     {
@@ -31,14 +39,22 @@
       },
       "counter": {
         "authenticatedPages": 3,
-        "nativeJsonActions": 6,
-        "finalValue": 6,
+        "nativeJsonActions": 7,
+        "finalValue": 21,
         "nativeOtpConsumed": true,
         "nativePromptOnReload": true,
         "sharedStateAndCapability": true,
         "unmountRemount": true,
         "explicitDisconnectAndReconnect": true,
-        "backendCloseUnmountsBoth": true
+        "backendCloseUnmountsBoth": true,
+        "viewLifecycle": {
+          "dependencyLossUnmounts": true,
+          "nativeWriteWhileAbsent": 20,
+          "reenableUsesCurrentState": true,
+          "manualUnmountRetained": true,
+          "previousButtonDetached": true,
+          "singleMountAfterRestore": true
+        }
       },
       "previewTransforms": 0
     },
@@ -52,14 +68,22 @@
       },
       "counter": {
         "authenticatedPages": 3,
-        "nativeJsonActions": 6,
-        "finalValue": 6,
+        "nativeJsonActions": 7,
+        "finalValue": 21,
         "nativeOtpConsumed": true,
         "nativePromptOnReload": true,
         "sharedStateAndCapability": true,
         "unmountRemount": true,
         "explicitDisconnectAndReconnect": true,
-        "backendCloseUnmountsBoth": true
+        "backendCloseUnmountsBoth": true,
+        "viewLifecycle": {
+          "dependencyLossUnmounts": true,
+          "nativeWriteWhileAbsent": 20,
+          "reenableUsesCurrentState": true,
+          "manualUnmountRetained": true,
+          "previousButtonDetached": true,
+          "singleMountAfterRestore": true
+        }
       }
     },
     {
@@ -72,14 +96,22 @@
       },
       "counter": {
         "authenticatedPages": 3,
-        "nativeJsonActions": 6,
-        "finalValue": 6,
+        "nativeJsonActions": 7,
+        "finalValue": 21,
         "nativeOtpConsumed": true,
         "nativePromptOnReload": true,
         "sharedStateAndCapability": true,
         "unmountRemount": true,
         "explicitDisconnectAndReconnect": true,
-        "backendCloseUnmountsBoth": true
+        "backendCloseUnmountsBoth": true,
+        "viewLifecycle": {
+          "dependencyLossUnmounts": true,
+          "nativeWriteWhileAbsent": 20,
+          "reenableUsesCurrentState": true,
+          "manualUnmountRetained": true,
+          "previousButtonDetached": true,
+          "singleMountAfterRestore": true
+        }
       },
       "previewTransforms": 0
     }

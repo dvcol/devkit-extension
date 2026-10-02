@@ -22,6 +22,7 @@ import type {
   ProviderCatalog,
   RuntimeDiagnostic,
   ServiceDeclaration,
+  ViewDeclaration,
 } from '@devkit/core';
 
 import type { Activation } from './activation.js';
@@ -60,8 +61,9 @@ export interface ProviderLifecycle<Strict extends boolean = true> {
 export type ExecutableContribution =
   | ServiceDeclaration
   | ActionDeclaration
+  | ViewDeclaration
   | ExtensionDefinition
-  | ContributionDeclaration<'view' | 'transform' | 'script'>;
+  | ContributionDeclaration<'transform' | 'script'>;
 
 export interface OwnedContribution {
   readonly definition: ExecutableContribution;
@@ -105,5 +107,10 @@ export function extensionDeclaration(
   definition: ExecutableContribution,
 ): ExtensionDefinition | undefined {
   if (definition.kind === 'extension') return definition;
+  return undefined;
+}
+
+export function viewDeclaration(definition: ExecutableContribution): ViewDeclaration | undefined {
+  if (definition.kind === 'view') return definition;
   return undefined;
 }

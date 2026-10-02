@@ -29,6 +29,7 @@
     "@devkit/core": "workspace:*",
     "@devkit/devframe": "workspace:*",
     "@devkit/example-contribution": "workspace:*",
+    "@devkit/example-json-render": "workspace:*",
     "@devkit/server": "workspace:*",
     "@devkit/webext": "workspace:*",
     "devframe": "1.0.0"

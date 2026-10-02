@@ -9,7 +9,7 @@ import { createRpcServer } from 'devframe/rpc/server';
 import { createRpcSharedStateServerHost } from 'devframe/rpc/shared-state';
 import { createSharedState } from 'devframe/utils/shared-state';
 import { createPortChannel } from '@devkit/webext';
-import { createCounterViews } from './spec';
+import { createBackgroundState } from './spec';
 import { observeProvider } from './management-spec';
 import { createExampleProvider } from './provider';
 import { connectCounterStorage } from './counter-storage';
@@ -53,18 +53,18 @@ function createBackground() {
     },
     broadcast,
   });
-  const { view, management } = createCounterViews(sharedState);
+  const { counter, registration, viewContext, management } = createBackgroundState(sharedState);
   const provider = createExampleProvider({
     rpc: {
       register: collector.register.bind(collector),
       has: collector.has.bind(collector),
       broadcast,
     },
-    view,
+    viewContext,
   });
   const key = import.meta.env.VITE_COUNTER_STORAGE_KEY;
-  const storage = connectCounterStorage({ key, view, management, sharedState });
-  const ready = Promise.all([provider, storage]);
+  const storage = connectCounterStorage({ key, counter, management });
+  const ready = Promise.all([provider, storage, registration]);
   void ready.catch((error: unknown) => {
     console.error('Background startup failed', error);
   });

@@ -58,7 +58,7 @@ async function checkDevelopment(page: Page, second: Page, host: ExampleHost) {
     first: page,
     second,
     origin,
-    provider: provider.provider,
+    provider,
     close: () => captureAndClose(page, `${host}-development`, server),
   });
   return { host, mode: 'development', providerId: provider.provider.id, snapshot, counter };
@@ -101,7 +101,7 @@ async function checkPreview(page: Page, second: Page, host: ExampleHost) {
     first: page,
     second,
     origin,
-    provider: provider.provider,
+    provider,
     close: () => captureAndClose(page, `${host}-preview`, server),
   });
   assert.equal(previewTransforms, 0);

@@ -11,6 +11,7 @@ import type {
   RouteSelector,
   ExtensionDefinition,
   ServiceDeclaration,
+  ViewDeclaration,
 } from './types.js';
 
 export function assertRecord(
@@ -173,6 +174,14 @@ export function assertActionContribution(
   assertRequirements(value.requires, `${label}.requires`);
   if (typeof value.handler !== 'function')
     throw new TypeError(`${label}.handler must be a function`);
+}
+
+export function assertView(value: unknown, label: string): asserts value is ViewDeclaration {
+  assertRecord(value, label);
+  assertKeys(value, ['kind', 'id', 'execution', 'requires', 'setup'], label);
+  assertContribution(value, 'view', label);
+  assertRequirements(value.requires, `${label}.requires`);
+  if (typeof value.setup !== 'function') throw new TypeError(`${label}.setup must be a function`);
 }
 
 export function assertExtension(

@@ -24,13 +24,14 @@ Canonical vocabulary for the portable contribution ecosystem. Behavior and contr
 
 Use native APIs and types directly when their semantics fit. Similar words do not imply identical contracts:
 
-| SDK term           | Native Devframe concept                                             | Boundary                                                                                                                                        |
-| ------------------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Service definition | Local `services.provide` or a package-based wire-service definition | The SDK adds exact capability contracts and owned dependency/replacement lifecycle. Native wire-service identity/version is npm package/semver. |
-| Plugin             | Native host plugin/definition                                       | An SDK plugin groups owned contributions. It can be installed by a native plugin; it does not replace host plugin setup.                        |
-| Client             | Native RPC/client context                                           | The SDK client selects among provider connections. Each connection retains native transport, authentication and serialization.                  |
-| Shared state       | Native `SharedState` and host state publication                     | Preserve native lifetime and writes. Contributions/hosts own keys, scope, validation, persistence and conflicts.                                |
-| View/renderer      | Native JSON-render model, refs and hub mount/dispose                | Reuse the upstream model. Extension surface integration does not justify another JSON protocol.                                                 |
+| SDK term                | Native Devframe concept                                             | Boundary                                                                                                                                        |
+| ----------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Service definition      | Local `services.provide` or a package-based wire-service definition | The SDK adds exact capability contracts and owned dependency/replacement lifecycle. Native wire-service identity/version is npm package/semver. |
+| Plugin                  | Native host plugin/definition                                       | An SDK plugin groups owned contributions. It can be installed by a native plugin; it does not replace host plugin setup.                        |
+| Client                  | Native RPC/client context                                           | The SDK client selects among provider connections. Each connection retains native transport, authentication and serialization.                  |
+| Shared state            | Native `SharedState` and host state publication                     | Preserve native lifetime and writes. Contributions/hosts own keys, scope, validation, persistence and conflicts.                                |
+| View contribution       | Native view publication and subscriptions                           | The SDK owns the setup recipe's activation scope; the author registers native cleanup explicitly.                                               |
+| Published view/renderer | Native JSON-render model, refs and hub mount/dispose                | Reuse native publication, discovery and rendering. The host owns UI placement.                                                                  |
 
 See the [upstream alignment review](./docs/research/upstream-alignment-review.md) for the source comparison and remaining gaps.
 
@@ -73,22 +74,23 @@ See the [upstream alignment review](./docs/research/upstream-alignment-review.md
 
 ## Calls and presentation
 
-| Term                | Definition                                                                               | Distinction                                                                               |
-| ------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Resource / target   | A subject defined by a capability, such as a domain, document or debugger session        | Its identity and freshness rules belong to that capability, with no universal SDK shape   |
-| Invocation          | One requested operation call with schema-defined input, cancellation and routing context | Resource identifiers and filters are ordinary typed input                                 |
-| Routing policy      | Rules selecting eligible providers before dispatch                                       | Distinct from service construction and provider-state synchronization                     |
-| Applicability       | Whether a request concerns resources owned by an implementation                          | Implementation code and schema-defined results; not provider readiness or authorization   |
-| Command result      | The typed value or error returned to the initiating caller                               | Other clients observe state separately; no implicit event bus or automatic replay         |
-| Ambiguous selection | More than one equally eligible provider satisfies the current selector                   | Requires an explicit caller/UI/agent discriminant; discovery order cannot pick a winner   |
-| Dispatch            | The routing boundary after which an invocation's selected route cannot change            | A timeout or reported failure does not authorize fallback or replay                       |
-| Broadcast           | Explicit execution across several selected providers with individual outcomes            | Does not merge provider state or replace ordinary value-returning methods                 |
-| Diagnostic          | A serializable report identifying a failure's code, owner and phase                      | Native exceptions remain local; diagnostics support logs and current/later UI             |
-| View                | A declared JSON presentation and its bindings                                            | Its availability need not depend on every action it references                            |
-| Renderer            | An implementation turning the JSON view contract into UI                                 | Replaceable; its own framework does not become a dependency of authoring contracts        |
-| Action binding      | Client-local association between an imported action contract and its dispatch policy     | Connects native JSON action IDs to the router; does not install handlers or own providers |
-| UI surface          | Where a view is mounted, such as popup, options, panel or sidebar                        | Separate from realm, provider and execution ownership                                     |
-| Live preview        | Built assets served with a live provider for actions and state                           | Separate from a static snapshot and from a source development server                      |
+| Term                | Definition                                                                                                    | Distinction                                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Resource / target   | A subject defined by a capability, such as a domain, document or debugger session                             | Its identity and freshness rules belong to that capability, with no universal SDK shape                          |
+| Invocation          | One requested operation call with schema-defined input, cancellation and routing context                      | Resource identifiers and filters are ordinary typed input                                                        |
+| Routing policy      | Rules selecting eligible providers before dispatch                                                            | Distinct from service construction and provider-state synchronization                                            |
+| Applicability       | Whether a request concerns resources owned by an implementation                                               | Implementation code and schema-defined results; not provider readiness or authorization                          |
+| Command result      | The typed value or error returned to the initiating caller                                                    | Other clients observe state separately; no implicit event bus or automatic replay                                |
+| Ambiguous selection | More than one equally eligible provider satisfies the current selector                                        | Requires an explicit caller/UI/agent discriminant; discovery order cannot pick a winner                          |
+| Dispatch            | The routing boundary after which an invocation's selected route cannot change                                 | A timeout or reported failure does not authorize fallback or replay                                              |
+| Broadcast           | Explicit execution across several selected providers with individual outcomes                                 | Does not merge provider state or replace ordinary value-returning methods                                        |
+| Diagnostic          | A serializable report identifying a failure's code, owner and phase                                           | Native exceptions remain local; diagnostics support logs and current/later UI                                    |
+| View contribution   | An inert setup recipe created by `defineView`, with execution assignment and optional capability requirements | Owns native publication and subscriptions through its activation scope; it is not the published view             |
+| Published view      | The native JSON presentation exposed through a native view handle, shared state and index                     | Its renderer and surface lifetime remain host-owned; referenced actions are not implicit activation requirements |
+| Renderer            | An implementation turning the JSON view contract into UI                                                      | Replaceable; its own framework does not become a dependency of authoring contracts                               |
+| Action binding      | Client-local association between an imported action contract and its dispatch policy                          | Connects native JSON action IDs to the router; does not install handlers or own providers                        |
+| UI surface          | Where a view is mounted, such as popup, options, panel or sidebar                                             | Separate from realm, provider and execution ownership                                                            |
+| Live preview        | Built assets served with a live provider for actions and state                                                | Separate from a static snapshot and from a source development server                                             |
 
 ## Relationship summary
 
@@ -107,7 +109,7 @@ An **installation result** is a direct installation handle under strict admissio
 
 A **host-owned remote method** is a named native RPC entry point for an explicitly exposed contract. Its registration lasts for the host lifetime, independently of contribution implementation availability. Disabling or disposing an implementation makes calls unavailable; the method's presence alone does not establish readiness or authorization.
 
-`defineActionContract({ id, version, operation, routing? })` describes a callable action and an optional client-visible route default. `defineAction({ contract, id, execution, requires?, handler })` implements it. `defineService({ capability, id, execution, requires?, setup })` implements a capability. All definition helpers use one object; “contribution” describes their shared ownership model, not a second action API.
+`defineActionContract({ id, version, operation, routing? })` describes a callable action and an optional client-visible route default. `defineAction({ contract, id, execution, requires?, handler })` implements it. `defineService({ capability, id, execution, requires?, setup })` implements a capability. `defineView({ id, execution, requires?, setup })` declares a view contribution in `plugin.views`; its setup returns `Awaitable<void>` and registers native resource cleanup through the supplied scope. The owner accepted this recipe on [2026-10-02](./docs/planning/012-portable-view-declaration.md). All definition helpers use one object; “contribution” describes their shared ownership model, not a second action API.
 
 A **route selector** constrains a required string `realm` and optional string `provider`. Its provider identity is scoped to that realm. Symbol descriptions and numbers are not normalized into identifiers. The caller owns stable naming; the runtime owns validation and collision detection. A selector identifies a logical provider, while a bound invocation retains one specific incarnation.
 

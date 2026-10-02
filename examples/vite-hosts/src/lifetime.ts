@@ -1,10 +1,9 @@
 import { styleText } from 'node:util';
 
-import { increaseCounterAction } from '@devkit/example-contribution';
-import { publishCounterView } from '@devkit/example-json-render';
-import type { CounterViewOptions } from '@devkit/example-json-render';
 import type { ServerProviderHandle } from '@devkit/server';
 import type { Plugin } from 'vite';
+
+import { assertCounterViewReady } from './counter-view.js';
 
 /** Example-local binding to one Vite HTTP server, not a general reload controller. */
 export class ProviderLifetime {
@@ -23,14 +22,13 @@ export class ProviderLifetime {
     void this.ready.catch(() => null);
   }
 
-  prepare(installer: () => Promise<ServerProviderHandle>, context: CounterViewOptions['context']) {
+  prepare(installer: () => Promise<ServerProviderHandle>) {
     if (this.install !== undefined) throw new Error('A native context was already supplied');
     this.install = async () => {
       await using startup = new AsyncDisposableStack();
       const provider = await installer();
       startup.defer(() => provider.dispose());
-      const view = await publishCounterView({ context, actionName: increaseCounterAction.id });
-      startup.defer(view.dispose);
+      assertCounterViewReady(provider);
       this.cleanup = startup.move();
       return provider;
     };

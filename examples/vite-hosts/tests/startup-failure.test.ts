@@ -13,9 +13,10 @@ import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit';
 import { getRpcHandler } from 'devframe/rpc';
 import { createServer, preview } from 'vite';
 import type { Plugin, PreviewServer } from 'vite';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 const collisionMessage = 'A JSON-render view with id "counter" already exists in scope "example"';
+const activationMessage = 'The counter view contribution did not activate';
 const commandId = 'example:read-server-counter';
 const foreignSpec = {
   root: 'text',
@@ -101,7 +102,8 @@ async function expectRolledBack(context: ViteDevToolsNodeContext, providerId: st
 
 describe('native view publication failure', () => {
   it('rejects development readiness and rolls back the provider without disposing the foreign view', async () => {
-    expect.assertions(12);
+    expect.assertions(13);
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
     const directory = await mkdtemp(join(tmpdir(), 'devkit-dev-startup-failure-'));
     const collision = conflictingView();
     const server = await createServer({
@@ -117,7 +119,8 @@ describe('native view publication failure', () => {
     const foreign = await collision.created;
     try {
       await server.listen();
-      await expect(providerFromVite(server)).rejects.toThrow(collisionMessage);
+      await expect(providerFromVite(server)).rejects.toThrow(activationMessage);
+      expect(errors.mock.calls.flat().map(String).join('\n')).toContain(collisionMessage);
       expect(foreign.commandEvents).toEqual(['registered', 'unregistered']);
       await expectRolledBack(foreign.context, 'example.devtools-vite');
       expect(server.httpServer?.listening).toBe(true);
@@ -132,15 +135,17 @@ describe('native view publication failure', () => {
     } finally {
       foreign.dispose();
       try {
-        await expect(server.close()).rejects.toThrow(collisionMessage);
+        await expect(server.close()).rejects.toThrow(activationMessage);
       } finally {
+        errors.mockRestore();
         await rm(directory, { recursive: true, force: true });
       }
     }
   });
 
   it('rejects preview startup and readiness, rolls back the provider and closes its native transport', async () => {
-    expect.assertions(9);
+    expect.assertions(10);
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
     const directory = await mkdtemp(join(tmpdir(), 'devkit-preview-startup-failure-'));
     const collision = conflictingView();
     const configured = Promise.withResolvers<PreviewServer>();
@@ -166,9 +171,10 @@ describe('native view publication failure', () => {
           ],
           preview: { host: '127.0.0.1', port: 0 },
         }),
-      ).rejects.toThrow(collisionMessage);
+      ).rejects.toThrow(activationMessage);
       const current = await configured.promise;
-      await expect(providerFromVite(current)).rejects.toThrow(collisionMessage);
+      await expect(providerFromVite(current)).rejects.toThrow(activationMessage);
+      expect(errors.mock.calls.flat().map(String).join('\n')).toContain(collisionMessage);
       const foreign = await collision.created;
       expect(foreign.commandEvents).toEqual(['registered', 'unregistered']);
       await expectRolledBack(foreign.context, 'example.devtools-preview');
@@ -179,6 +185,7 @@ describe('native view publication failure', () => {
       try {
         await server?.close();
       } finally {
+        errors.mockRestore();
         await rm(directory, { recursive: true, force: true });
       }
     }

@@ -1,5 +1,7 @@
 import { once } from 'node:events';
 import { afterEach, expect, it, vi } from 'vitest';
+import { JSON_RENDER_INDEX_KEY } from '@devframes/json-render';
+import { counterStateKey } from '../src/contracts';
 import { startStoredBackground } from './storage-fixture';
 
 afterEach(() => {
@@ -66,4 +68,46 @@ it('keeps the default background independent of extension storage permission', a
   await expect(background.rpc.$call('probe:echo', 'ready')).resolves.toBe('ready');
   expect(background.get).not.toHaveBeenCalled();
   expect(background.set).not.toHaveBeenCalled();
+});
+
+it('removes only the dependent view and republishes the latest independent counter after service enable', async () => {
+  expect.assertions(8);
+  vi.stubEnv('VITE_COUNTER_STORAGE_KEY', '');
+  using background = startStoredBackground();
+  background.start();
+  const viewKey = 'devframe:json-render:global:counter';
+  const managementKey = 'devframe:json-render:global:management';
+  const initialIndex: unknown = await background.rpc.$call(
+    'devframe:rpc:server-state:get',
+    JSON_RENDER_INDEX_KEY,
+  );
+  expect(initialIndex).toHaveProperty(viewKey);
+  expect(initialIndex).toHaveProperty(managementKey);
+  await background.rpc.$call('probe:disable-service');
+  const disabledIndex: unknown = await background.rpc.$call(
+    'devframe:rpc:server-state:get',
+    JSON_RENDER_INDEX_KEY,
+  );
+  expect(disabledIndex).not.toHaveProperty(viewKey);
+  expect(disabledIndex).toHaveProperty(managementKey);
+  await background.rpc.$call(
+    'devframe:rpc:server-state:set',
+    counterStateKey,
+    { value: 21 },
+    'native-write-while-disabled',
+  );
+  expect(await background.rpc.$call('devframe:rpc:server-state:get', counterStateKey)).toEqual({
+    value: 21,
+  });
+  expect(
+    await background.rpc.$call('devframe:rpc:server-state:get', JSON_RENDER_INDEX_KEY),
+  ).not.toHaveProperty(viewKey);
+  await background.rpc.$call('probe:enable-service');
+  expect(
+    await background.rpc.$call('devframe:rpc:server-state:get', JSON_RENDER_INDEX_KEY),
+  ).toHaveProperty(viewKey);
+  expect(await background.rpc.$call('devframe:rpc:server-state:get', viewKey)).toHaveProperty(
+    'state.value',
+    21,
+  );
 });

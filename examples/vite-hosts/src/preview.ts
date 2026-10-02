@@ -2,7 +2,6 @@ import { Server as HttpServer } from 'node:http';
 
 import { initHub } from '@devframes/hub/initiate';
 import { counterCapability, increaseCounterAction } from '@devkit/example-contribution';
-import { publishCounterView } from '@devkit/example-json-render';
 import { counterActionsPlugin, counterService } from '@devkit/example-server-contexts';
 import { createDevframeProvider, createDevToolsProvider } from '@devkit/server';
 import type { ServerProviderHandle } from '@devkit/server';
@@ -10,13 +9,13 @@ import { createDevToolsContext, createDevToolsHub } from '@vitejs/devtools';
 import type { Plugin, PreviewServer } from 'vite';
 
 import type { ExampleHost } from './index.js';
+import { assertCounterViewReady, counterViewPlugin } from './counter-view.js';
 
 class PreviewLifetime {
   readonly readiness = Promise.withResolvers<ServerProviderHandle>();
   private provider: ServerProviderHandle | undefined;
   private closeHost: (() => Promise<void>) | undefined;
   private disposal: Promise<void> | undefined;
-  private disposeView: (() => void) | undefined;
 
   constructor() {
     void this.readiness.promise.catch(() => null);
@@ -24,11 +23,6 @@ class PreviewLifetime {
 
   private async dispose() {
     const failures: unknown[] = [];
-    try {
-      this.disposeView?.();
-    } catch (error) {
-      failures.push(error);
-    }
     try {
       await this.provider?.dispose();
     } catch (error) {
@@ -53,7 +47,7 @@ class PreviewLifetime {
     const composition = {
       providerId: `example.${host}-preview`,
       services: [counterService],
-      plugins: [counterActionsPlugin],
+      plugins: [counterActionsPlugin, counterViewPlugin],
       expose: { actions: [increaseCounterAction], capabilities: [counterCapability] },
     };
     if (host === 'devframe') {
@@ -65,9 +59,7 @@ class PreviewLifetime {
         mcp: false,
         configure: async (context) => {
           this.provider = await createDevframeProvider({ context, ...composition });
-          this.disposeView = (
-            await publishCounterView({ context, actionName: increaseCounterAction.id })
-          ).dispose;
+          assertCounterViewReady(this.provider);
         },
       });
       this.closeHost = () => nativeHost.close();
@@ -90,9 +82,7 @@ class PreviewLifetime {
     });
     this.closeHost = () => nativeHost.close();
     this.provider = await createDevToolsProvider({ context, ...composition });
-    this.disposeView = (
-      await publishCounterView({ context, actionName: increaseCounterAction.id })
-    ).dispose;
+    assertCounterViewReady(this.provider);
     server.middlewares.use(nativeHost.middleware);
   }
 

@@ -13,7 +13,12 @@ import {
   notifyInstallation,
   providerDiagnostic,
 } from './provider-status.js';
-import { actionDeclaration, extensionDeclaration, serviceDeclaration } from './provider-types.js';
+import {
+  actionDeclaration,
+  extensionDeclaration,
+  serviceDeclaration,
+  viewDeclaration,
+} from './provider-types.js';
 import type { OwnedContribution } from './provider-types.js';
 import { validateOriginal } from './validation.js';
 
@@ -26,6 +31,7 @@ export function requirementsOf(contribution: OwnedContribution): CapabilityRequi
   return (
     serviceDeclaration(contribution.definition)?.requires ??
     actionDeclaration(contribution.definition)?.requires ??
+    viewDeclaration(contribution.definition)?.requires ??
     {}
   );
 }
@@ -51,6 +57,11 @@ async function setupContribution(
     return implementation;
   }
   if (actionDeclaration(definition) !== undefined) return undefined;
+  const view = viewDeclaration(definition);
+  if (view !== undefined) {
+    await callRecipe(view.setup, context);
+    return undefined;
+  }
   const extension = extensionDeclaration(definition);
   if (extension === undefined) throw new Error('Contribution kind has no activation handler');
   const installer = environment.kinds.get(extension.descriptor.id);
