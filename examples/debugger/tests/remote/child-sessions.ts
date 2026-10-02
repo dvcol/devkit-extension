@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { agent, approveTarget, checkTrust } from './authentication.ts';
 import { createNativeBrowser } from './browser.ts';
 import { poll, send } from './driver.ts';
-import { createNativeHost } from './host.ts';
+import type { createNativeHost } from './host.ts';
 import {
   attachmentOwnershipResponseSchema,
   closePeerResponseSchema,
@@ -47,9 +47,8 @@ declare global {
   }
 }
 
-export async function checkChildSessions() {
+export async function checkChildSessions(host: NativeHost) {
   await using cleanup = new AsyncDisposableStack();
-  const host = await createNativeHost();
   cleanup.defer(host.close);
   const browser = await createNativeBrowser(host);
   cleanup.defer(browser.close);

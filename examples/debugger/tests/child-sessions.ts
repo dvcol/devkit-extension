@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { styleText } from 'node:util';
 import { checkChildSessions } from './remote/child-sessions.ts';
+import { createNativeHost } from './remote/host.ts';
 
-const receipt = await checkChildSessions();
+const receipt = await checkChildSessions(await createNativeHost());
 assert.deepEqual(receipt.hostErrors, []);
 assert.deepEqual(receipt.pageErrors, []);
 await mkdir('artifacts', { recursive: true });

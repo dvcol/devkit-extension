@@ -17,7 +17,7 @@
           "status": "connected",
           "isTrusted": true,
           "isolated": true,
-          "targetTabId": 57359295,
+          "targetTabId": 218445754,
           "pairingConfirmations": 0,
           "providerDisposed": false,
           "clientDisposed": false,
@@ -38,10 +38,10 @@
       "name": "The actual extension control approves only the owned fixture tab",
       "details": [
         {
-          "requestId": "e96dd1c0-4c14-4566-bf9c-0e6a295d7f0b",
+          "requestId": "2c9ae9cd-38c2-44eb-9ddb-d12536d4a2e3",
           "selector": {
             "kind": "explicit-tabs",
-            "tabIds": [57359295]
+            "tabIds": [218445754]
           },
           "accepted": true,
           "senderURL": "chrome-extension://ndnbmoeiannmdogkojjjjmcaepjlidgl/control.html"
@@ -103,7 +103,7 @@
       "name": "Host broker operation changes the real page through native RPC",
       "details": {
         "result": {
-          "operationId": "9c4f15a4-92ac-4d49-be0e-8bfabe87066a",
+          "operationId": "9542f16b-25a1-4708-907c-e5b440062ee9",
           "value": {
             "result": {
               "type": "string",
@@ -146,5 +146,34 @@
       }
     }
   ],
-  "hostErrors": []
+  "hostErrors": [],
+  "childSessions": {
+    "browserVersion": "153.0.8010.12",
+    "child": {
+      "type": "iframe",
+      "generation": 1,
+      "title": "Owned child debugger frame",
+      "origin": "http://localhost:53977"
+    },
+    "root": {
+      "title": "Owned remote debugger target",
+      "origin": "http://127.0.0.1:53977"
+    },
+    "event": {
+      "method": "Runtime.consoleAPICalled",
+      "value": "owned-child-event",
+      "rootEventFiltered": true,
+      "publicSessionDiffersFromChrome": true
+    },
+    "childRemoved": true,
+    "staleChild": "CDP_COMMAND_FAILED",
+    "rootPreserved": true,
+    "ownership": {
+      "ownsAttachment": false,
+      "error": "native-not-attached"
+    },
+    "leasesAfterDisposal": 0,
+    "hostErrors": [],
+    "pageErrors": []
+  }
 }
