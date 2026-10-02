@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
 import { createJsonRenderExample } from '@devkit/example-json-render';
 import { counterStateKey, increaseCounterAction } from '@devkit/example-contribution';
 import { chromium, expect } from '@playwright/test';
 import type { Browser, BrowserContext, Page } from '@playwright/test';
-import { createServer } from 'vite';
 import { structuredCloneParse } from 'devframe/utils/structured-clone';
 import { counterSpec } from '../src/spec.ts';
+import { serve } from './browser-fixture.ts';
 
 await using cleanup = new AsyncDisposableStack();
 const browser = await chromium.launch({ headless: true });
@@ -212,22 +211,6 @@ async function checkReplacement(reference: Page, custom: Page): Promise<void> {
   await counter(custom, 4);
   await custom.locator('#renderer').selectOption('custom');
   await expect(custom.locator('[data-renderer="custom"]')).toBeVisible();
-}
-
-async function serve(example: Awaited<ReturnType<typeof createJsonRenderExample>>) {
-  const server = await createServer({
-    configFile: false,
-    root: fileURLToPath(new URL('../browser/', import.meta.url)),
-    logLevel: 'silent',
-    define: { DEMO_AUTH_TOKEN: JSON.stringify(example.host.token) },
-    server: {
-      host: '127.0.0.1',
-      port: 0,
-      proxy: { '/__devkit-remote/': { target: example.host.origin, ws: true } },
-    },
-  });
-  await server.listen();
-  return server;
 }
 
 async function checkActions(reference: Page, custom: Page): Promise<void> {

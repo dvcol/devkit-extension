@@ -283,7 +283,7 @@
         }
       ],
       "gaps": [
-        "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Full surface placement, catalog compatibility, view-module HMR and every supported browser/preview failure case remain separate obligations.",
+        "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Chromium and Firefox custom/reference renderers now have native actions, error feedback, unmount/remount, replacement, dependency-loss and host-close evidence. Firefox delayed-response replacement and global page-error capture, full surface placement, catalog compatibility, view-module HMR and every supported preview failure case remain separate obligations.",
         "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform registration uses the same native setup contract; complete native transformation mechanisms and failure cases remain separate work. Script registration now has its own native setup contract and evidence group."
       ],
       "browserEvidence": [
@@ -300,6 +300,32 @@
           "host": "chromium-devframe-and-devtools",
           "mode": "native-development-servers",
           "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/json-render",
+          "testFile": "tests/firefox.ts",
+          "receiptFile": "artifacts/firefox-renderers.json",
+          "checks": [
+            "devframe: unchanged JSON view with reference and custom renderer",
+            "devframe: native action and state shared across both rendered pages",
+            "devframe: native invalid input is displayed without mutating state; valid action clears custom error",
+            "devframe: unmount removes DOM and subscriptions; retained detached button cannot dispatch",
+            "devframe: remount reads current state; unregister restores reference renderer",
+            "devframe: unsupported component fails explicitly on update and mount; valid remount recovers",
+            "devframe: view disable and dependency loss remove both mounts; reenable republishes current business state",
+            "devframe: host disconnect disposes both views and controls",
+            "devtools: unchanged JSON view with reference and custom renderer",
+            "devtools: native action and state shared across both rendered pages",
+            "devtools: native invalid input is displayed without mutating state; valid action clears custom error",
+            "devtools: unmount removes DOM and subscriptions; retained detached button cannot dispatch",
+            "devtools: remount reads current state; unregister restores reference renderer",
+            "devtools: unsupported component fails explicitly on update and mount; valid remount recovers",
+            "devtools: view disable and dependency loss remove both mounts; reenable republishes current business state",
+            "devtools: host disconnect disposes both views and controls"
+          ],
+          "host": "firefox-devframe-and-devtools",
+          "mode": "native-development-servers",
+          "requirePageErrors": false
         },
         {
           "workspace": "examples/webext",

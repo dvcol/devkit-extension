@@ -63,6 +63,7 @@ pnpm --filter @devkit/example-json-render lint
 pnpm --filter @devkit/example-json-render format:check
 pnpm --filter @devkit/example-json-render test
 pnpm --filter @devkit/example-json-render test:browser
+SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-json-render test:firefox
 ```
 
 Eight automated tests consume built exports and real native sockets. Both hosts prove native dock/manifest publication, byte-for-byte serving of the published renderer asset, action/schema/auth behavior, subscribed view updates and projection cleanup. The browser build test rejects Node shims, backend implementations and Vue/React modules in the surface and custom-renderer bundle. Tests mock only the browser `location` global required by native connection bootstrap.
@@ -71,7 +72,11 @@ Earlier live in-app checks on both hosts confirmed initial render, action update
 
 The reference renderer uses the [versioned upstream retry-error backport](../../patches/README.md#native-renderer-action-retry). It clears the retained failure when retrying that same action. The maintained WebExtension browser tests verify native alert removal after recovery. This does not change rejection handling: a deliberately rejected action without a JSON `onError` callback can still emit an unhandled-rejection message. No SDK error-policy layer suppresses that behavior.
 
-The maintained Chromium command now opens reference/custom views against each actual backend. It verifies nine scenario groups per host: unchanged JSON publication, shared actions/state, native input failure, detached-view cleanup, remount and renderer replacement, unsupported component failure/recovery, contribution and dependency teardown/reenable, pending native state reads across republication, and host disconnect. The retained [receipt](./evidence/renderers.json) records Chromium 153.0.8010.12, final counter `7` for each backend and zero page errors. CI runs the command after installing Chromium. Servers, browser contexts and temporary native storage are closed after each run. This does not establish Firefox custom-renderer behavior or renderer-module HMR.
+The maintained Chromium command now opens reference/custom views against each actual backend. It verifies nine scenario groups per host: unchanged JSON publication, shared actions/state, native input failure, detached-view cleanup, remount and renderer replacement, unsupported component failure/recovery, contribution and dependency teardown/reenable, pending native state reads across republication, and host disconnect. The retained [receipt](./evidence/renderers.json) records Chromium 153.0.8010.12, final counter `7` for each backend and zero page errors. CI runs the command after installing Chromium. Servers, browser contexts and temporary native storage are closed after each run.
+
+`test:firefox` uses the installed Firefox browser through Selenium WebDriver. Set `FIREFOX_BINARY` when its executable is outside the driver's discovery path. The maintained run passes on Firefox 157.0 / geckodriver 0.37.1 against both genuine native backends, using the same JSON spec, custom renderer, page and Vite proxy as Chromium. It verifies eight scenario groups per host: shared rendered actions/state, invalid-input rejection and recovery, detached-view disposal, current-state remounting, renderer replacement, unsupported-component update/mount failure and recovery, contribution/dependency disable and reenable, and host shutdown. The test asserts one mount, two action buttons, final counter `7` and provider disposal for each host. It writes `artifacts/firefox-renderers.json` and `artifacts/firefox-{devframe,devtools}.png`.
+
+Firefox WebDriver Classic does not capture global page errors in this test, so its receipt makes no zero-error claim. Delaying a native state response across republication remains Chromium-only evidence. Neither command establishes renderer-module HMR, injected rendering or complete catalog conformance.
 
 ## Scope
 
