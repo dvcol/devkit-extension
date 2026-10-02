@@ -6,7 +6,9 @@
     "disable removes future response admissions and enable registers a fresh activation",
     "native HTTP redirection reports the StreamFilter error while unmatched redirected bytes and later responses remain correct",
     "native output arrives before the input stream finishes, preserving split UTF-8 bytes",
-    "disposal removes future admissions while an admitted native stream completes normally"
+    "disposal removes future admissions while an admitted native stream completes normally",
+    "native Firefox reader cancellation ends page consumption while the admitted input remains open during a bounded observation and finishes after listener disposal",
+    "native Firefox Fetch abort rejects reads with AbortError and closes the held response and socket through StreamFilter onstop without onerror"
   ],
   "observation": {
     "checks": [
@@ -319,6 +321,355 @@
       "chunks": 10,
       "completed": 9,
       "errors": ["Channel redirected"]
+    }
+  },
+  "cancellation": {
+    "checks": [
+      "native Firefox reader cancellation ends page consumption while the admitted input remains open during a bounded observation and finishes after listener disposal",
+      "native Firefox Fetch abort rejects reads with AbortError and closes the held response and socket through StreamFilter onstop without onerror"
+    ],
+    "reader": {
+      "installed": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 0,
+        "chunks": 0,
+        "completed": 0,
+        "errors": []
+      },
+      "firstBytes": {
+        "status": 200,
+        "text": "native:first-caf"
+      },
+      "before": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 1,
+        "chunks": 1,
+        "completed": 0,
+        "errors": []
+      },
+      "heldBefore": {
+        "responseEnded": false,
+        "responseDestroyed": false,
+        "socketDestroyed": false,
+        "requestAborted": false,
+        "responseClosed": false,
+        "socketClosed": false
+      },
+      "page": {
+        "afterRead": {
+          "bytes": null,
+          "done": true,
+          "outcome": "fulfilled"
+        },
+        "cancellation": {
+          "outcome": "fulfilled"
+        },
+        "firstText": "native:first-caf",
+        "mode": "reader",
+        "pendingRead": {
+          "bytes": null,
+          "done": true,
+          "outcome": "fulfilled"
+        },
+        "readerClosed": {
+          "outcome": "fulfilled"
+        },
+        "signalAborted": false
+      },
+      "observationMilliseconds": 1000,
+      "after": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 1,
+        "chunks": 1,
+        "completed": 0,
+        "errors": []
+      },
+      "heldAfter": {
+        "responseEnded": false,
+        "responseDestroyed": false,
+        "socketDestroyed": false,
+        "requestAborted": false,
+        "responseClosed": false,
+        "socketClosed": false
+      },
+      "disposed": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "disposed",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": false,
+              "status": "disposed",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 1,
+        "chunks": 1,
+        "completed": 0,
+        "errors": []
+      },
+      "terminal": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "disposed",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": false,
+              "status": "disposed",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 1,
+        "chunks": 2,
+        "completed": 1,
+        "errors": []
+      },
+      "released": {
+        "responseEnded": true,
+        "responseDestroyed": true,
+        "socketDestroyed": true,
+        "requestAborted": false,
+        "responseClosed": true,
+        "socketClosed": true
+      }
+    },
+    "fetch": {
+      "installed": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 0,
+        "chunks": 0,
+        "completed": 0,
+        "errors": []
+      },
+      "firstBytes": {
+        "status": 200,
+        "text": "native:first-caf"
+      },
+      "before": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 1,
+        "chunks": 1,
+        "completed": 0,
+        "errors": []
+      },
+      "heldBefore": {
+        "responseEnded": false,
+        "responseDestroyed": false,
+        "socketDestroyed": false,
+        "requestAborted": false,
+        "responseClosed": false,
+        "socketClosed": false
+      },
+      "page": {
+        "afterRead": {
+          "message": "The operation was aborted. ",
+          "name": "AbortError",
+          "outcome": "rejected"
+        },
+        "cancellation": {
+          "outcome": "fulfilled"
+        },
+        "firstText": "native:first-caf",
+        "mode": "fetch",
+        "pendingRead": {
+          "message": "The operation was aborted. ",
+          "name": "AbortError",
+          "outcome": "rejected"
+        },
+        "readerClosed": {
+          "message": "The operation was aborted. ",
+          "name": "AbortError",
+          "outcome": "rejected"
+        },
+        "signalAborted": true
+      },
+      "terminal": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 1,
+        "chunks": 1,
+        "completed": 1,
+        "errors": []
+      },
+      "aborted": {
+        "responseEnded": false,
+        "responseDestroyed": true,
+        "socketDestroyed": true,
+        "requestAborted": true,
+        "responseClosed": true,
+        "socketClosed": true
+      },
+      "laterTransformed": {
+        "status": 200,
+        "text": "native:original-世界"
+      },
+      "afterLater": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 2,
+        "chunks": 2,
+        "completed": 2,
+        "errors": []
+      },
+      "disposed": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "disposed",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": false,
+              "status": "disposed",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 2,
+        "chunks": 2,
+        "completed": 2,
+        "errors": []
+      },
+      "final": {
+        "filteringMethodPresent": true,
+        "installation": {
+          "id": "example.response-body",
+          "status": "disposed",
+          "contributions": [
+            {
+              "id": "example.response-body",
+              "kind": "transform",
+              "generation": 1,
+              "enabled": false,
+              "status": "disposed",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "admitted": 2,
+        "chunks": 2,
+        "completed": 2,
+        "errors": []
+      }
     }
   },
   "permissions": {

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { createServer } from 'node:http';
-import type { Server, ServerResponse } from 'node:http';
-import { checkNativeResponseEncodings, writeEncodedResponse } from './response-encoding.ts';
+import { checkNativeResponseEncodings } from './response-encoding.ts';
+import type { ResponseServer } from './response-server.ts';
+export { startResponseServer } from './response-server.ts';
 
 export const responseBodyChecks = [
   'native Firefox filters prefix the owned response bytes and leave unmatched bytes unchanged',
@@ -12,66 +12,12 @@ export const responseBodyChecks = [
   'disposal removes future admissions while an admitted native stream completes normally',
 ];
 
-export async function startResponseServer() {
-  let streaming: ServerResponse | undefined;
-  const server = createServer((request, response) => {
-    const path = request.url ?? '/';
-    response.setHeader('Cache-Control', 'no-store');
-    if (path === '/') {
-      response.setHeader('Content-Type', 'text/html; charset=utf-8');
-      response.end(
-        '<!doctype html><title>Native response fixture</title><h1>Native response fixture</h1>',
-      );
-      return;
-    }
-    response.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    if (writeEncodedResponse(path, response)) return;
-    if (path === '/transform-response/stream') {
-      streaming = response;
-      response.write(Buffer.concat([Buffer.from('first-caf'), Buffer.from([0xc3])]));
-      return;
-    }
-    if (path === '/transform-response/redirect') {
-      response.writeHead(302, { Location: '/unmatched-response' });
-      response.end();
-      return;
-    }
-    /** Keep the fixture's ordinary body chunked so the prefix has no Content-Length assumption. */
-    response.write('original-世界');
-    response.end();
-  });
-  await new Promise<void>((resolve, reject) => {
-    server.once('error', reject);
-    server.listen(0, '127.0.0.1', resolve);
-  });
-  const address = server.address();
-  if (address === null || typeof address === 'string')
-    throw new Error('Missing native response fixture port');
-  return {
-    url: `http://127.0.0.1:${address.port}/`,
-    releaseStream() {
-      assert.ok(streaming !== undefined);
-      streaming.end(Buffer.concat([Buffer.from([0xa9]), Buffer.from('-second-世界')]));
-    },
-    close: () => closeResponseServer(server),
-  };
-}
-
-function closeResponseServer(server: Server) {
-  return new Promise<void>((resolve, reject) => {
-    server.close((error) => {
-      if (error) reject(error);
-      else resolve();
-    });
-    server.closeAllConnections();
-  });
-}
-
 declare global {
   interface Window {
     responseFixture?: {
       readonly reader: ReadableStreamDefaultReader<Uint8Array>;
       readonly decoder: TextDecoder;
+      controller?: AbortController;
       text: string;
     };
   }
@@ -83,8 +29,11 @@ export async function readNativeResponse(path: string) {
 }
 
 /** Observe downstream bytes while the fixture deliberately holds the remaining input open. */
-export async function startNativeResponse(path: string, expected: string) {
-  const response = await fetch(new URL(path, location.href), { cache: 'no-store' });
+export async function startNativeResponse(path: string, expected: string, abortable = false) {
+  const controller = abortable ? new AbortController() : undefined;
+  const request: RequestInit = { cache: 'no-store' };
+  if (controller !== undefined) request.signal = controller.signal;
+  const response = await fetch(new URL(path, location.href), request);
   if (response.body === null) throw new Error('Missing native response stream');
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
@@ -96,6 +45,7 @@ export async function startNativeResponse(path: string, expected: string) {
     if (!expected.startsWith(text)) throw new Error(`Unexpected native response prefix: ${text}`);
   }
   window.responseFixture = { reader, decoder, text };
+  if (controller !== undefined) window.responseFixture.controller = controller;
   return { status: response.status, text };
 }
 
@@ -137,10 +87,7 @@ function installation(snapshot: unknown, status: string, generation: number) {
   });
 }
 
-export async function checkFirefoxResponseBody(
-  browser: ResponseBrowser,
-  fixture: Awaited<ReturnType<typeof startResponseServer>>,
-) {
+export async function checkFirefoxResponseBody(browser: ResponseBrowser, fixture: ResponseServer) {
   const original = await browser.read('/transform-response/plain');
   assert.deepEqual(original, { status: 200, text: 'original-世界' });
   const installed = await browser.control('install');

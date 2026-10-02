@@ -780,7 +780,9 @@
             "disable removes future response admissions and enable registers a fresh activation",
             "native HTTP redirection reports the StreamFilter error while unmatched redirected bytes and later responses remain correct",
             "native output arrives before the input stream finishes, preserving split UTF-8 bytes",
-            "disposal removes future admissions while an admitted native stream completes normally"
+            "disposal removes future admissions while an admitted native stream completes normally",
+            "native Firefox reader cancellation ends page consumption while the admitted input remains open during a bounded observation and finishes after listener disposal",
+            "native Firefox Fetch abort rejects reads with AbortError and closes the held response and socket through StreamFilter onstop without onerror"
           ],
           "host": "firefox-webext",
           "mode": "production-extension",
@@ -807,7 +809,9 @@
             "disable removes future response admissions and enable registers a fresh activation",
             "native HTTP redirection reports the StreamFilter error while unmatched redirected bytes and later responses remain correct",
             "native output arrives before the input stream finishes, preserving split UTF-8 bytes",
-            "disposal removes future admissions while an admitted native stream completes normally"
+            "disposal removes future admissions while an admitted native stream completes normally",
+            "native Firefox reader cancellation ends page consumption while the admitted input remains open during a bounded observation and finishes after listener disposal",
+            "native Firefox Fetch abort rejects reads with AbortError and closes the held response and socket through StreamFilter onstop without onerror"
           ],
           "host": "firefox-webext",
           "mode": "native-wxt-development",
@@ -816,7 +820,8 @@
       ],
       "gaps": [
         "The common API owns native registration and cleanup. Bounded Vite HTML, native Chromium/Firefox DNR header and same-origin redirect examples, and Firefox byte-stream filtering establish their own timing, independent lifecycle and native failures in supported development/production modes. Chromium explicitly rejects the unavailable Firefox filtering method. No common response pipeline or cross-mechanism order is claimed.",
-        "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, persistent response-listener wakeup and brotli/zstd, malformed/truncated encodings, range responses, caching, HTTP/2/3 and cancellation still need exact native evidence. Admitted Firefox stream completion after disposal is covered. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes. Valid gzip/deflate with fixed-length and chunked framing now have exact delivered-byte/header evidence in both Firefox modes; original encoded headers remain visible, with no SDK header-normalization promise."
+        "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, persistent response-listener wakeup and brotli/zstd, malformed/truncated encodings, range responses, caching and HTTP/2/3 still need exact native evidence. Admitted Firefox stream completion after disposal is covered. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes. Valid gzip/deflate with fixed-length and chunked framing now have exact delivered-byte/header evidence in both Firefox modes; original encoded headers remain visible, with no SDK header-normalization promise.",
+        "Running-background Firefox loopback streams now have distinct native reader-cancellation and Fetch-abort evidence in production and development. Reader cancellation is a bounded consumption observation, not an upstream cancellation guarantee; Fetch abort reaches native onstop without a filter error. Page destruction, other consumers, cancellation with other encodings/protocols and idle wakeup remain unproved. No SDK cancellation policy is inferred."
       ]
     },
     {
