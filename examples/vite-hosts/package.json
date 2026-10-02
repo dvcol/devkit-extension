@@ -22,7 +22,7 @@
     "preview:devtools": "node src/preview-demo.ts devtools",
     "demo:devframe": "node src/demo.ts devframe",
     "demo:devtools": "node src/demo.ts devtools",
-    "test": "vitest run",
+    "test": "vitest run --reporter=default --reporter=json --outputFile=.conformance/vitest.json",
     "test:browser": "node tests/browser.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src site tests vite.config.ts host.config.ts",

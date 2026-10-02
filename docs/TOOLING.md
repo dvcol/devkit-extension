@@ -56,6 +56,10 @@ Generated `dist`, coverage and the pnpm lockfile are excluded from formatting. T
 
 ## Enforcement proof
 
+Every maintained example's Vitest command writes `.conformance/vitest.json` through the native JSON reporter while retaining normal console output. CI's existing `examples/*/.conformance/vitest.json` artifact rule retains these executed cases. The debugger and Vite-host examples originally emitted console results only; their commands now use the same reporters as the other examples. A narrow run verifies 26 debugger cases and 28 Vite-host cases, with no failed, pending or todo cases.
+
+These reports preserve unit-case names and outcomes. The separate native browser commands and receipts establish real-host behavior. Keep both evidence sources when reconciling a ticket or release gate.
+
 `scripts/check-enforcement.ts` creates temporary TypeScript fixtures and removes them afterward. It verifies a valid source passes, an equality violation fails, the same rule as a warning still fails, a floating promise triggers type-aware lint, a type mismatch fails the independent compiler, and formatting drift fails until Oxfmt repairs it. Diagnostics are checked for the intended rule or compiler code so an unrelated crash cannot satisfy a negative case.
 
 The implementation replaces direct legacy source-linter/formatter dependencies, configuration, staged hooks and CI callers. Oxlint rule IDs containing `eslint/` are built into Oxlint and do not mean ESLint is installed or invoked. Conventional-commit linting remains separate. The template's publishing and deployment workflows were removed because they targeted the former application; release automation is still owned by issue 16.

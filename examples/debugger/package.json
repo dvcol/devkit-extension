@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build && vite build --mode firefox && vite build --mode devframe",
-    "test": "vitest run --root .",
+    "test": "vitest run --root . --reporter=default --reporter=json --outputFile=.conformance/vitest.json",
     "test:browser": "node tests/browser.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src tests vite.config.ts",
