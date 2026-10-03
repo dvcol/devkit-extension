@@ -41,6 +41,8 @@ jobs:
         run: pnpm --filter @devkit/example-vite-hosts test:browser
       - name: Run custom and reference renderers on both native backends
         run: pnpm --filter @devkit/example-json-render test:browser
+      - name: Verify native renderer source and style updates in Chromium
+        run: pnpm --filter @devkit/example-json-render test:reload:chromium
       - name: Run the Chromium debugger contribution browser test
         run: pnpm --filter @devkit/example-debugger test:browser
       - name: Run authenticated native CDB browser integration
@@ -58,6 +60,12 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-json-render test:firefox
+      - name: Verify native renderer source and style updates in Firefox
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-json-render test:reload:firefox
       - name: Run the Firefox extension browser test
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

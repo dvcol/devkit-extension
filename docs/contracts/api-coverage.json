@@ -283,7 +283,7 @@
         }
       ],
       "gaps": [
-        "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Chromium and Firefox custom/reference renderers now have native actions, error feedback, unmount/remount, replacement, dependency-loss and host-close evidence. Firefox delayed-response replacement and global page-error capture, full surface placement, catalog compatibility, view-module HMR and every supported preview failure case remain separate obligations.",
+        "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Chromium and Firefox custom/reference renderers now have native actions, error feedback, unmount/remount, replacement, dependency-loss and host-close evidence. Firefox delayed-response replacement and global page-error capture, full surface placement, catalog compatibility, self-accepting renderer replacement, invalid-edit recovery and every supported preview failure case remain separate obligations. Native CSS HMR and renderer-module page reload now have maintained real Chromium/Firefox development evidence on both native server hosts; they preserve backend/provider state and native form behavior.",
         "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform registration uses the same native setup contract; complete native transformation mechanisms and failure cases remain separate work. Script registration now has its own native setup contract and evidence group."
       ],
       "browserEvidence": [
@@ -359,6 +359,38 @@
           "host": "chromium-webext",
           "mode": "production-extension/native-development-servers",
           "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/json-render",
+          "testFile": "tests/chromium-reload.ts",
+          "receiptFile": "artifacts/chromium-reload.json",
+          "checks": [
+            "devframe: native CSS HMR retains document and custom mount with shared backend state",
+            "devframe: native renderer-module reload creates a fresh document and retains provider state without replay",
+            "devframe: updated custom renderer remounts once and each action has one backend effect",
+            "devtools: native CSS HMR retains document and custom mount with shared backend state",
+            "devtools: native renderer-module reload creates a fresh document and retains provider state without replay",
+            "devtools: updated custom renderer remounts once and each action has one backend effect"
+          ],
+          "host": "chromium-native-devframe-and-devtools",
+          "mode": "development-vite-native-hmr-and-page-reload",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/json-render",
+          "testFile": "tests/firefox-reload.ts",
+          "receiptFile": "artifacts/firefox-reload.json",
+          "checks": [
+            "devframe: native CSS HMR retains document and custom mount with shared backend state",
+            "devframe: native renderer-module reload creates a fresh document and retains provider state without replay",
+            "devframe: updated custom renderer remounts once and each action has one backend effect",
+            "devtools: native CSS HMR retains document and custom mount with shared backend state",
+            "devtools: native renderer-module reload creates a fresh document and retains provider state without replay",
+            "devtools: updated custom renderer remounts once and each action has one backend effect"
+          ],
+          "host": "firefox-native-devframe-and-devtools",
+          "mode": "development-vite-native-hmr-and-page-reload",
+          "requirePageErrors": false
         }
       ]
     },

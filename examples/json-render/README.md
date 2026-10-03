@@ -63,7 +63,9 @@ pnpm --filter @devkit/example-json-render lint
 pnpm --filter @devkit/example-json-render format:check
 pnpm --filter @devkit/example-json-render test
 pnpm --filter @devkit/example-json-render test:browser
+pnpm --filter @devkit/example-json-render test:reload:chromium
 SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-json-render test:firefox
+SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-json-render test:reload:firefox
 ```
 
 Eight automated tests consume built exports and real native sockets. Both hosts prove native dock/manifest publication, byte-for-byte serving of the published renderer asset, action/schema/auth behavior, subscribed view updates and projection cleanup. The browser build test rejects Node shims, backend implementations and Vue/React modules in the surface and custom-renderer bundle. Tests mock only the browser `location` global required by native connection bootstrap.
@@ -77,6 +79,8 @@ The maintained Chromium command now opens reference/custom views against each ac
 `test:firefox` uses the installed Firefox browser through Selenium WebDriver. Set `FIREFOX_BINARY` when its executable is outside the driver's discovery path. The maintained run passes on Firefox 157.0 / geckodriver 0.37.1 against both genuine native backends, using the same JSON spec, custom renderer, page and Vite proxy as Chromium. It verifies eight scenario groups per host: shared rendered actions/state, invalid-input rejection and recovery, detached-view disposal, current-state remounting, renderer replacement, unsupported-component update/mount failure and recovery, contribution/dependency disable and reenable, and host shutdown. The test asserts one mount, two action buttons, final counter `7` and provider disposal for each host. It writes `artifacts/firefox-renderers.json` and `artifacts/firefox-{devframe,devtools}.png`.
 
 Firefox WebDriver Classic does not capture global page errors in this test, so its receipt makes no zero-error claim. Delaying a native state response across republication remains Chromium-only evidence. Neither command establishes renderer-module HMR, injected rendering or complete catalog conformance.
+
+The separate reload commands edit copies of this maintained page against both native backends. CSS HMR keeps the document, custom DOM mount and counter; editing the custom renderer module follows Vite's page reload because the module has no accepting HMR boundary. A fresh native client reads the retained counter, and selecting the updated renderer produces one mount and one action effect. Chromium resets the selector to reference; Firefox restores custom. Startup registers the actual selection so the restored control agrees with the mounted renderer. No SDK reload controller or shared-state recovery policy is added. [The regression and retained observations](../../docs/research/native-renderer-reload.md) record the exact limits.
 
 ## Scope
 

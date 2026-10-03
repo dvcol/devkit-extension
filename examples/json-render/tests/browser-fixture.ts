@@ -2,10 +2,13 @@ import { fileURLToPath } from 'node:url';
 import type { createJsonRenderExample } from '@devkit/example-json-render';
 import { createServer } from 'vite';
 
-export async function serve(example: Awaited<ReturnType<typeof createJsonRenderExample>>) {
+export async function serve(
+  example: Awaited<ReturnType<typeof createJsonRenderExample>>,
+  options: { root?: string } = {},
+) {
   const server = await createServer({
     configFile: false,
-    root: fileURLToPath(new URL('../browser/', import.meta.url)),
+    root: options.root ?? fileURLToPath(new URL('../browser/', import.meta.url)),
     logLevel: 'silent',
     define: { DEMO_AUTH_TOKEN: JSON.stringify(example.host.token) },
     server: {

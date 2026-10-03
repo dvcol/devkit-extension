@@ -1,0 +1,34 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "mode": "devframe",
+      "documentBefore": 1790986928322.5,
+      "documentAfter": 1790986928817.2,
+      "cssMountRetained": true,
+      "providerRetained": true,
+      "rendererAfterReload": "reference",
+      "finalValue": 3,
+      "pageErrors": []
+    },
+    {
+      "mode": "devtools",
+      "documentBefore": 1790986929032.9,
+      "documentAfter": 1790986929444.7,
+      "cssMountRetained": true,
+      "providerRetained": true,
+      "rendererAfterReload": "reference",
+      "finalValue": 3,
+      "pageErrors": []
+    }
+  ],
+  "checks": [
+    "devframe: native CSS HMR retains document and custom mount with shared backend state",
+    "devframe: native renderer-module reload creates a fresh document and retains provider state without replay",
+    "devframe: updated custom renderer remounts once and each action has one backend effect",
+    "devtools: native CSS HMR retains document and custom mount with shared backend state",
+    "devtools: native renderer-module reload creates a fresh document and retains provider state without replay",
+    "devtools: updated custom renderer remounts once and each action has one backend effect"
+  ],
+  "pageErrors": []
+}

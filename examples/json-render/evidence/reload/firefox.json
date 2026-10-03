@@ -1,0 +1,33 @@
+{
+  "browser": "157.0",
+  "driver": "0.37.1",
+  "observations": [
+    {
+      "mode": "devframe",
+      "documentBefore": 1790986931055,
+      "documentAfter": 1790986932020,
+      "cssMountRetained": true,
+      "providerRetained": true,
+      "rendererAfterReload": "custom",
+      "finalValue": 3
+    },
+    {
+      "mode": "devtools",
+      "documentBefore": 1790986932263,
+      "documentAfter": 1790986933148,
+      "cssMountRetained": true,
+      "providerRetained": true,
+      "rendererAfterReload": "custom",
+      "finalValue": 3
+    }
+  ],
+  "checks": [
+    "devframe: native CSS HMR retains document and custom mount with shared backend state",
+    "devframe: native renderer-module reload creates a fresh document and retains provider state without replay",
+    "devframe: updated custom renderer remounts once and each action has one backend effect",
+    "devtools: native CSS HMR retains document and custom mount with shared backend state",
+    "devtools: native renderer-module reload creates a fresh document and retains provider state without replay",
+    "devtools: updated custom renderer remounts once and each action has one backend effect"
+  ],
+  "limitations": ["No global page-error capture through WebDriver Classic"]
+}

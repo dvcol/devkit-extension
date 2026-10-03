@@ -23,6 +23,8 @@
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",
     "test": "vitest run --reporter=default --reporter=json --outputFile=.conformance/vitest.json",
     "test:browser": "node tests/browser.ts",
+    "test:reload:chromium": "node tests/chromium-reload.ts",
+    "test:reload:firefox": "node tests/firefox-reload.ts",
     "demo": "node src/demo.ts",
     "test:firefox": "node tests/firefox.ts"
   },

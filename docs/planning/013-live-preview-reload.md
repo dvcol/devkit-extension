@@ -27,7 +27,7 @@ Before the first success, entry requests return 503 and status is starting/build
 
 Real-host tests perform actual source edits and inject real syntax, `generateBundle` and `writeBundle` failures. They check HTML/JavaScript retention, successful recovery, old asset URLs, independent backend actions, provider identity, watcher restart, duplicate publishers, idempotent close and process-listener cleanup in both native hosts. A separate child-process test verifies exit-time lock release. The example README records the exact combined-command check and limits.
 
-Automatic browser reload, JSON renderer replacement/failure display, portable remote invocation, background/content-script reload, navigation invalidation and declared retained-state recovery remain open. Unsupported or untested host/mode cells must remain explicit. The example does not settle callback selection or broadcast semantics in the separate routing contract.
+Automatic watched-production browser reload remains open. Later native extension and renderer receipts below establish their bounded development updates; complete failure-mode and host/mode cells remain explicit. The example does not settle callback selection or broadcast semantics in the separate routing contract.
 
 The upstream cleanup proposal remains [Vite draft 23574](https://github.com/vitejs/vite/pull/23574). No Vite workspace patch is adopted; the owner will take over the draft.
 
@@ -50,5 +50,7 @@ This exposed WXT reloading unchanged sibling HTML, which removes Firefox's DevTo
 Popup/DevTools/sidebar background/config transitions, direct DevTools registration changes, content/page updates, rapid edits and watched-production extension behavior remain open. Cross-provider JSON action routing still needs the separate [renderer seam decision](./012-json-routing-seam.md).
 
 ## Concurrent native development
+
+The [maintained renderer reload proof](../research/native-renderer-reload.md) edits actual page copies against both native backends in Chromium and Firefox. Native CSS HMR preserves the document and custom mount. Renderer code follows Vite page reload, with a fresh client reading the same provider/counter. A small example startup correction registers the current selector value, including Firefox's native restored selection. This proves the documented native update boundary without a second watcher or renderer replacement controller; self-accepting replacement, invalid-edit recovery and watched-production refresh remain separate cells.
 
 The maintained configuration gives each browser its own Vite `cacheDir` under its application root. A [targeted concurrent probe](../research/native-development-cache.md) reproduced an optimized renderer request returning504 and leaving the panel at `Connecting` when the servers shared a dependency cache. With cache isolation as the only experiment change, startup plus nine configuration restarts passed in both browsers. The complete development suites also pass concurrently through the maintained `test:dev` script, which CI now runs. This uses native Vite configuration, without another dependency patch, retry loop or state-recovery mechanism. Earlier incidents without network captures cannot conclusively be attributed to this failure.

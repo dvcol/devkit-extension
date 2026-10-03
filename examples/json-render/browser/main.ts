@@ -150,15 +150,20 @@ async function observePublication(
 function registerRendererChoice(runtime: DevframeClientRuntime): void {
   let unregister: (() => void) | undefined;
   own(() => unregister?.());
+  function registerSelection(): void {
+    unregister?.();
+    unregister = undefined;
+    if (rendererSelect.value === 'custom')
+      unregister = runtime.context.renderers.register('json-render', domRenderer);
+  }
+  /** A browser reload can restore the selector before native client startup. */
+  registerSelection();
   rendererSelect.addEventListener(
     'change',
     () => {
       const mounted = disposeView !== undefined;
       unmount();
-      unregister?.();
-      unregister = undefined;
-      if (rendererSelect.value === 'custom')
-        unregister = runtime.context.renderers.register('json-render', domRenderer);
+      registerSelection();
       if (mounted) void mount(runtime);
     },
     { signal: events.signal },
