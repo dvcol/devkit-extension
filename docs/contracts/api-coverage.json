@@ -1607,6 +1607,54 @@
       ]
     },
     {
+      "id": "installation-state-and-control",
+      "apis": [
+        "@devkit/core:ContributionSnapshot.generation",
+        "@devkit/core:ContributionSnapshot.reason",
+        "@devkit/core:ContributionSnapshot.status",
+        "@devkit/core:InstallationHandle.disable",
+        "@devkit/core:InstallationHandle.dispose",
+        "@devkit/core:InstallationHandle.enable",
+        "@devkit/core:InstallationHandle.retry",
+        "@devkit/core:InstallationHandle.snapshot",
+        "@devkit/core:InstallationHandle.subscribe",
+        "@devkit/core:InstallationSnapshot.contributions",
+        "@devkit/core:InstallationSnapshot.diagnostics",
+        "@devkit/core:InstallationSnapshot.status"
+      ],
+      "examples": [
+        "examples/contribution"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-lifecycle.test.ts",
+          "fullName": "provider lifecycle composition restores waiting dependents automatically but preserves explicit disable",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-lifecycle.test.ts",
+          "fullName": "provider lifecycle composition isolates setup failure and retries only after an explicit request",
+          "host": "node",
+          "mode": "unit"
+        },
+        {
+          "workspace": "packages/runtime",
+          "testFile": "tests/provider-lifecycle.test.ts",
+          "fullName": "provider lifecycle composition delivers initial snapshots and isolates listener failures and unsubscribe",
+          "host": "node",
+          "mode": "unit"
+        }
+      ],
+      "gaps": [
+        "These local provider tests directly assert dependency waiting, explicit disable, selected activation generations, setup retry, initial subscription, unsubscribe, listener failure, disposal and selected installation statuses. They do not cover every state, reason, snapshot member, collection element or transition.",
+        "The diagnostics assertions establish a listener-failed entry and an empty list after successful retry. They do not compare setup diagnostics before and after retry or establish all diagnostic ownership and clearing behavior.",
+        "This evidence exercises runtime behavior in Node. It does not prove method return typing, concurrent blocked cleanup, native permissions, remote/browser subscriptions, other hosts or development/preview reload behavior."
+      ]
+    },
+    {
       "id": "@devkit/core-unmapped",
       "apis": [
         "@devkit/core:ActionDeclaration",
@@ -1776,11 +1824,8 @@
         "@devkit/core:ContributionSnapshot",
         "@devkit/core:ContributionSnapshot.diagnostics",
         "@devkit/core:ContributionSnapshot.enabled",
-        "@devkit/core:ContributionSnapshot.generation",
         "@devkit/core:ContributionSnapshot.id",
         "@devkit/core:ContributionSnapshot.kind",
-        "@devkit/core:ContributionSnapshot.reason",
-        "@devkit/core:ContributionSnapshot.status",
         "@devkit/core:DefinitionInstallationApi",
         "@devkit/core:DefinitionInstallationApi.install",
         "@devkit/core:DefinitionInstallationApi.replace",
@@ -1794,18 +1839,9 @@
         "@devkit/core:ExtensionDefinition.execution.id",
         "@devkit/core:ExtensionDefinition.kind",
         "@devkit/core:InstallationHandle",
-        "@devkit/core:InstallationHandle.disable",
-        "@devkit/core:InstallationHandle.dispose",
-        "@devkit/core:InstallationHandle.enable",
-        "@devkit/core:InstallationHandle.retry",
-        "@devkit/core:InstallationHandle.snapshot",
-        "@devkit/core:InstallationHandle.subscribe",
         "@devkit/core:InstallationResult",
         "@devkit/core:InstallationSnapshot",
-        "@devkit/core:InstallationSnapshot.contributions",
-        "@devkit/core:InstallationSnapshot.diagnostics",
         "@devkit/core:InstallationSnapshot.id",
-        "@devkit/core:InstallationSnapshot.status",
         "@devkit/core:InvocationOptions",
         "@devkit/core:InvocationOptions.signal",
         "@devkit/core:NativeContextAccess",
