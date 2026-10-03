@@ -1,0 +1,143 @@
+{
+  "browser": "157.0",
+  "driver": "0.37.1",
+  "observations": [
+    {
+      "host": "devframe",
+      "initial": {
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "739861a7-b826-4a39-a2da-bf5d4a6011cf",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: No response inspected",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: No response inspected",
+        "marker": "Marker installed: false"
+      },
+      "completed": {
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "739861a7-b826-4a39-a2da-bf5d4a6011cf",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:49809/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false"
+      },
+      "requests": [
+        {
+          "status": "completed"
+        }
+      ],
+      "disconnectedPeers": [
+        {
+          "path": "/__devframes/__ws",
+          "closed": true
+        }
+      ],
+      "alternate": {
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "03a2ad5a-c72f-4877-90f6-25e7f895950b",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: No response inspected",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: No response inspected",
+        "marker": "Marker installed: false"
+      },
+      "alternateRequestsBefore": [],
+      "alternateRequestsAfter": []
+    },
+    {
+      "host": "devtools",
+      "initial": {
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "03a2ad5a-c72f-4877-90f6-25e7f895950b",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: No response inspected",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: No response inspected",
+        "marker": "Marker installed: false"
+      },
+      "completed": {
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "03a2ad5a-c72f-4877-90f6-25e7f895950b",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:49810/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false"
+      },
+      "requests": [
+        {
+          "status": "completed"
+        }
+      ],
+      "disconnectedPeers": [
+        {
+          "path": "/__devtools/__ws",
+          "closed": true
+        },
+        {
+          "path": "/__devtools/__ws",
+          "closed": true
+        }
+      ],
+      "alternate": {
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "739861a7-b826-4a39-a2da-bf5d4a6011cf",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:49809/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false"
+      },
+      "alternateRequestsBefore": [
+        {
+          "status": "completed"
+        }
+      ],
+      "alternateRequestsAfter": [
+        {
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "the unchanged inspector action starts one real HTTP request on its pinned backend",
+    "sender pagehide disconnects its native peer while a second peer and held backend fetch survive",
+    "releasing the real response updates retained native state without changing provider incarnation",
+    "the alternate host receives no new HTTP request or state change",
+    "a fresh sender mount observes retained native state without replaying the inspection"
+  ],
+  "limitations": [
+    "The abandoned document promise is not inspected; only its actual pagehide and native disconnection are exercised",
+    "No available fallback selector is configured; no replay or reroute is claimed beyond this pinned route",
+    "Renderer replacement alone is not cancellation in the Vite inspector",
+    "Remote caller loss does not cancel already-dispatched backend work or roll back state",
+    "Firefox native development only; extension contexts and preview are not exercised",
+    "No global page-error or browser-console capture through WebDriver Classic; visible native failures are asserted"
+  ]
+}

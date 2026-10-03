@@ -285,7 +285,8 @@
       "gaps": [
         "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Chromium and Firefox custom/reference renderers now have native actions, error feedback, unmount/remount, replacement, dependency-loss and host-close evidence. Firefox delayed-response replacement and global page-error capture, full surface placement, catalog compatibility, self-accepting renderer replacement and every supported preview failure case remain separate obligations. Native CSS HMR, renderer-module page reload and invalid-source recovery now have maintained real Chromium/Firefox development evidence on both native server hosts; they preserve backend/provider state and native form behavior.",
         "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform registration uses the same native setup contract; complete native transformation mechanisms and failure cases remain separate work. Script registration now has its own native setup contract and evidence group.",
-        "The response-inspector proof links the exact shared JSON spec/actions, reference/custom rendering, mount-local callbacks, peer projections and real owned response/marker effects across both native server hosts and packaged Chromium/Firefox extensions. Both browsers now verify one panel with all three native providers, realm/provider selection, independent state and isolated disconnect; Chromium configuration returns a partial rejection while Firefox succeeds on all providers. Real HTTP failure/recovery runs on both browsers and both server renderers. Eight native preview tests verify response changes/reset, marker rejection before state/HTML mutation and independent resource disposal. Packed contracts compile and execute separately; the installed native artifact consumer now composes packed actions and view publication/state/disposal on both context types in Bundler and NodeNext, without claiming browser mounting or HTTP effects. Packed browser/native host I/O composition, extension error recovery, broader inspector development/reload transitions, cancellation races and an optional CDB profile remain open. Standalone mixed hosts use public initHub origin/auth options; the native Vite wrapper is not covered by that composition. Firefox Classic receipts claim visible-state checks, not global error capture. Extension custom rendering now has Chrome/Firefox native broadcast, replacement and disconnect evidence. Chrome/Firefox watched inspector production proofs now cover both native preview hosts, reference/custom actions, failed-build retention, recovery and close; existing documents do not automatically reload."
+        "The response-inspector proof links the exact shared JSON spec/actions, reference/custom rendering, mount-local callbacks, peer projections and real owned response/marker effects across both native server hosts and packaged Chromium/Firefox extensions. Both browsers now verify one panel with all three native providers, realm/provider selection, independent state and isolated disconnect; Chromium configuration returns a partial rejection while Firefox succeeds on all providers. Real HTTP failure/recovery runs on both browsers and both server renderers. Eight native preview tests verify response changes/reset, marker rejection before state/HTML mutation and independent resource disposal. Packed contracts compile and execute separately; the installed native artifact consumer now composes packed actions and view publication/state/disposal on both context types in Bundler and NodeNext, without claiming browser mounting or HTTP effects. Packed browser/native host I/O composition, extension error recovery, broader inspector development/reload transitions, cancellation races and an optional CDB profile remain open. Standalone mixed hosts use public initHub origin/auth options; the native Vite wrapper is not covered by that composition. Firefox Classic receipts claim visible-state checks, not global error capture. Extension custom rendering now has Chrome/Firefox native broadcast, replacement and disconnect evidence. Chrome/Firefox watched inspector production proofs now cover both native preview hosts, reference/custom actions, failed-build retention, recovery and close; existing documents do not automatically reload.",
+        "Chrome/Firefox pinned inspector caller-disconnect proofs observe native sender socket closure, one completed held HTTP request, unchanged provider incarnation and alternate host, and retained state at observer/remount. They configure no available fallback selector and do not inspect the abandoned Promise, promise backend cancellation/rollback, or cover extension/preview races."
       ],
       "browserEvidence": [
         {
@@ -599,6 +600,36 @@
           ],
           "host": "firefox-devframe-and-devtools-reference-and-custom",
           "mode": "watched-production-preview",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-races.ts",
+          "receiptFile": "artifacts/inspector-races-chromium.json",
+          "checks": [
+            "the unchanged inspector action starts one real HTTP request on its pinned backend",
+            "sender pagehide disconnects its native peer while a second peer and held backend fetch survive",
+            "releasing the real response updates retained native state without changing provider incarnation",
+            "the alternate host receives no new HTTP request or state change",
+            "a fresh sender mount observes retained native state without replaying the inspection"
+          ],
+          "host": "chromium-devframe-and-devtools",
+          "mode": "development-pinned-caller-disconnect",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-races-firefox.ts",
+          "receiptFile": "artifacts/inspector-races-firefox.json",
+          "checks": [
+            "the unchanged inspector action starts one real HTTP request on its pinned backend",
+            "sender pagehide disconnects its native peer while a second peer and held backend fetch survive",
+            "releasing the real response updates retained native state without changing provider incarnation",
+            "the alternate host receives no new HTTP request or state change",
+            "a fresh sender mount observes retained native state without replaying the inspection"
+          ],
+          "host": "firefox-devframe-and-devtools",
+          "mode": "development-pinned-caller-disconnect",
           "requirePageErrors": false
         }
       ]
@@ -4198,7 +4229,8 @@
       ],
       "gaps": [
         "Evidence checks local selection, readiness, replacement, cancellation and invalid-routing errors. It does not assert every RoutingErrorCode variant or every error metadata field.",
-        "The mixed Chromium/Firefox inspectors link actual extension/standalone Devframe/DevTools recipient selection, per-provider outcomes, independent state and disconnected-provider rejection without rerouting. Chromium configuration is a partial rejection; Firefox configuration succeeds on all three providers. Production server routing and broader development/reload coverage remain open. Providers own fixture selection; no generic application-domain routing is claimed."
+        "The mixed Chromium/Firefox inspectors link actual extension/standalone Devframe/DevTools recipient selection, per-provider outcomes, independent state and disconnected-provider rejection without rerouting. Chromium configuration is a partial rejection; Firefox configuration succeeds on all three providers. Production server routing and broader development/reload coverage remain open. Providers own fixture selection; no generic application-domain routing is claimed.",
+        "Chrome/Firefox pinned inspector caller-disconnect proofs observe native sender socket closure, one completed held HTTP request, unchanged provider incarnation and alternate host, and retained state at observer/remount. They configure no available fallback selector and do not inspect the abandoned Promise, promise backend cancellation/rollback, or cover extension/preview races."
       ],
       "browserEvidence": [
         {
@@ -4269,6 +4301,36 @@
           ],
           "host": "firefox-extension-custom-with-devframe-and-devtools",
           "mode": "production-extension-with-native-development-contexts",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-races.ts",
+          "receiptFile": "artifacts/inspector-races-chromium.json",
+          "checks": [
+            "the unchanged inspector action starts one real HTTP request on its pinned backend",
+            "sender pagehide disconnects its native peer while a second peer and held backend fetch survive",
+            "releasing the real response updates retained native state without changing provider incarnation",
+            "the alternate host receives no new HTTP request or state change",
+            "a fresh sender mount observes retained native state without replaying the inspection"
+          ],
+          "host": "chromium-devframe-and-devtools",
+          "mode": "development-pinned-caller-disconnect",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-races-firefox.ts",
+          "receiptFile": "artifacts/inspector-races-firefox.json",
+          "checks": [
+            "the unchanged inspector action starts one real HTTP request on its pinned backend",
+            "sender pagehide disconnects its native peer while a second peer and held backend fetch survive",
+            "releasing the real response updates retained native state without changing provider incarnation",
+            "the alternate host receives no new HTTP request or state change",
+            "a fresh sender mount observes retained native state without replaying the inspection"
+          ],
+          "host": "firefox-devframe-and-devtools",
+          "mode": "development-pinned-caller-disconnect",
           "requirePageErrors": false
         }
       ]

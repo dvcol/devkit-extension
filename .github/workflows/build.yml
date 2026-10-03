@@ -49,6 +49,8 @@ jobs:
         run: pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-errors.ts
       - name: Verify watched inspector production generations through both native preview hosts
         run: pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-production.ts
+      - name: Verify native inspector work after the pinned caller disconnects
+        run: pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-races.ts
       - name: Run the shared inspector in the Chromium extension
         run: pnpm --filter @devkit/example-webext exec node tests/chromium-inspector.ts
       - name: Run custom and reference renderers on both native backends
@@ -90,6 +92,12 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-production-firefox.ts
+      - name: Verify pinned inspector caller-disconnect behavior in Firefox
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-races-firefox.ts
       - name: Verify native renderer source and style updates in Firefox
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

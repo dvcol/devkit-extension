@@ -129,9 +129,11 @@ The automated server command uses the native temporary authentication code and c
 pnpm --filter @devkit/example-vite-hosts test:inspector
 pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-errors.ts
 pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-production.ts
+pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-races.ts
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts test:inspector:firefox
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-errors-firefox.ts
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-production-firefox.ts
+FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-races-firefox.ts
 ```
 
 The extension proof starts and closes its owned fixture server and disposable browser profile. It loads the built example extension, opens `panel.html` and clicks the same five authored buttons:
@@ -176,6 +178,26 @@ The extension inspector's **Renderer** selector now mounts the same authored vie
 
 Production preview does not automatically reload an existing document. Navigate explicitly to the new complete generation. The private preview fixture supports HTTP/1 without TLS. DevTools discovery first probes the absent Devframe metadata endpoint, which returns an actual 404 under static preview. Chrome records and permits only that exact request/status and matching console message; all other errors fail the proof. [Its retained receipt](../../examples/vite-hosts/evidence/inspector-production-chromium.json) contains the actual failures and recoveries. [Firefox's receipt](../../examples/vite-hosts/evidence/inspector-production-firefox.json) records visible state and connection checks; WebDriver Classic does not capture global page/console errors or discovery requests.
 
+The pinned caller-disconnect proofs hold one actual HTTP request after the unchanged Inspect action reaches its selected backend. Navigating the sender away closes all captured native sender sockets while a second client and the backend fetch remain live. Releasing the original middleware request completes it once. The observer receives the result with the same provider incarnation; the alternate host receives no request or state change. A fresh sender mount reads that retained state without replay. [Chrome](../../examples/vite-hosts/evidence/inspector-races-chromium.json) records zero page/console errors; [Firefox](../../examples/vite-hosts/evidence/inspector-races-firefox.json) records its visible-state and Classic error-capture limits.
+
+```mermaid
+sequenceDiagram
+  participant Sender
+  participant Provider as Selected native provider
+  participant HTTP as Owned held HTTP endpoint
+  participant Observer as Second native client
+  Sender->>Provider: Inspect action over native RPC
+  Provider->>HTTP: Fetch original response
+  Sender--xProvider: Document leaves, sender sockets close
+  Note over Provider,HTTP: Backend work remains pending
+  HTTP-->>Provider: Release original response
+  Provider-->>Observer: Native shared-state projection
+  Sender->>Provider: Fresh client mount
+  Provider-->>Sender: Retained state, no action replay
+```
+
+Caller loss does not promise cancellation of dispatched work or rollback. Renderer replacement alone does not abort the Vite page's connection lifetime. The abandoned document Promise is not inspected, and this fixture configures no available fallback selector. Extension and preview races remain distinct acceptance cells.
+
 The packed-contract check, `node scripts/check-example-package.ts`, installs real tarballs outside the workspace. Strict Bundler and NodeNext consumers preserve boolean configure input/result types and execute all four shared actions through packed runtime. A separate browser contract bundle imports the schema/descriptors and rejects backend, Node or framework leakage. This proves packed contracts and their local runtime composition, not packed renderer/native host composition.
 
 The maintained native artifact gate, `node scripts/check-native-packages.ts`, now also installs the packed shared actions and JSON view together on actual Devframe and DevTools contexts. Strict Bundler and NodeNext consumers check the native publication index, exact action references/inputs, action-driven projection changes, view subscription/publication disposal and retained business state. Its consumer-local service uses native shared state and explicitly performs no HTTP interception or document injection. This proves installed native-context/action/view composition, not browser mounting or the complete inspector host feature. The unchanged JSON example manifest requires the packed server-contexts example as well; all three example tarballs are installed without workspace links or manifest edits. The existing six-SDK browser graph and native RPC checks remain enforced.
@@ -196,4 +218,4 @@ Done for this slice:
 
 The affected Vite example suite now passes 42 tests, including eight real-preview cases across Devframe and DevTools.
 
-The full ticket remains open. Packed complete browser/native host I/O consumption, extension error recovery, development edits, broader inspector development/reload transitions, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
+The full ticket remains open. Packed complete browser/native host I/O consumption, extension error recovery, development edits, broader inspector development/reload transitions, broader cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
