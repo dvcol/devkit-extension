@@ -285,7 +285,7 @@
       "gaps": [
         "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Chromium and Firefox custom/reference renderers now have native actions, error feedback, unmount/remount, replacement, dependency-loss and host-close evidence. Firefox delayed-response replacement and global page-error capture, full surface placement, catalog compatibility, self-accepting renderer replacement and every supported preview failure case remain separate obligations. Native CSS HMR, renderer-module page reload and invalid-source recovery now have maintained real Chromium/Firefox development evidence on both native server hosts; they preserve backend/provider state and native form behavior.",
         "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform registration uses the same native setup contract; complete native transformation mechanisms and failure cases remain separate work. Script registration now has its own native setup contract and evidence group.",
-        "The response-inspector proof links the exact authored JSON view with reference/custom renderers, mount-local callbacks, peer projections, disposed controls, future-document markers and actual owned response bytes on both native server hosts in Chromium/Firefox development, plus Chromium/Firefox production extension implementations. Packed contracts compile and execute separately; packed complete host composition, extension custom-renderer placement, mixed-provider inspector broadcast, watched inspector production builds and browser preview/reload, error-callback recovery, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is unavailable; remote failures remain native generic errors and Firefox Classic lacks global page/console capture. Eight real Vite preview tests now verify response modification/reset, marker rejection before state/HTML mutation and separate script/transform/service disposal on both native hosts; this does not prove browser preview or build-watch behavior."
+        "The response-inspector proof links the exact authored JSON view with reference/custom renderers, mount-local callbacks, peer projections, disposed controls, future-document markers and actual owned response bytes on both native server hosts in Chromium/Firefox development, plus Chromium/Firefox production extension implementations. Packed contracts compile and execute separately; packed complete host composition, extension custom-renderer placement, Firefox mixed-provider inspector composition, watched inspector production builds and browser preview/reload, error-callback recovery, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is unavailable; remote failures remain native generic errors and Firefox Classic lacks global page/console capture. Eight real Vite preview tests now verify response modification/reset, marker rejection before state/HTML mutation and separate script/transform/service disposal on both native hosts; this does not prove browser preview or build-watch behavior. Nine mixed Chromium checks now link realm/provider selection, all-provider partial rejection, independent native view/state projections, future marker/reset and surviving siblings after one backend disconnect. Standalone contexts use public initHub, with per-connection native origin/auth options; this does not prove the native Vite wrapper forwards those options."
       ],
       "browserEvidence": [
         {
@@ -470,6 +470,25 @@
             "devtools: renderer replacement disposes the old control and a fresh custom mount resets its local outcome",
             "devtools: all five shared inspector buttons remain usable without changing provider identity"
           ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/mixed-inspector.ts",
+          "receiptFile": "artifacts/inspector/mixed-chromium.json",
+          "checks": [
+            "one packaged native JSON inspector broadcasts the same four shared actions to extension, Devframe and DevTools providers",
+            "separate native connections mount identical inspector view keys with independent state and actual owned response URLs",
+            "realm-only selection modifies both servers while leaving the extension unchanged",
+            "explicit provider selection resets only Devframe while preserving DevTools and extension state",
+            "all-provider configure returns Chromium rejection beside both server successes; the native success callback retains broadcast semantics",
+            "all-provider inspection displays original Chromium bytes and modified bytes from each server-owned endpoint",
+            "all-provider marker affects each next document before its first parser script",
+            "all-provider reset clears state and future marker injection without changing existing document markers",
+            "one disconnected server rejects without rerouting while its sibling and the extension still inspect their own responses"
+          ],
+          "host": "chromium-extension-with-devframe-and-devtools",
+          "mode": "production-extension-with-native-development-contexts",
+          "requirePageErrors": true
         }
       ]
     },
@@ -657,7 +676,7 @@
       "gaps": [
         "The common API owns native setup and cleanup. All three native stages now cover MAIN/ISOLATED, allFrames false/true, top/same-origin/cross-origin children, an ungranted matching child and the tested nonce CSP in Chromium/Firefox production/development. Native install/disable/enable/dispose, preserved old effects and absent fresh-document markers are directly observed. The separate held-resource fixture proves document_end before load; no common idle scheduling order is imposed. Blank/blob/sandboxed frames, origin fallback, broader CSP operations, remaining permission transitions, browser restart, dependency loss during real registration and cleanup failure remain issue #11 obligations. A native Firefox production MAIN/document_start top-level case now keeps the same registration across permission revoke/regrant and observes fresh-document injection stop/resume without reinstall; other worlds/stages/frames, development and Chrome remain separate cells.",
         "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP response implementations remain separate native work.",
-        "The response-inspector proof links the exact authored JSON view with reference/custom renderers, mount-local callbacks, peer projections, disposed controls, future-document markers and actual owned response bytes on both native server hosts in Chromium/Firefox development, plus Chromium/Firefox production extension implementations. Packed contracts compile and execute separately; packed complete host composition, extension custom-renderer placement, mixed-provider inspector broadcast, watched inspector production builds and browser preview/reload, error-callback recovery, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is unavailable; remote failures remain native generic errors and Firefox Classic lacks global page/console capture. Eight real Vite preview tests now verify response modification/reset, marker rejection before state/HTML mutation and separate script/transform/service disposal on both native hosts; this does not prove browser preview or build-watch behavior."
+        "The response-inspector proof links the exact authored JSON view with reference/custom renderers, mount-local callbacks, peer projections, disposed controls, future-document markers and actual owned response bytes on both native server hosts in Chromium/Firefox development, plus Chromium/Firefox production extension implementations. Packed contracts compile and execute separately; packed complete host composition, extension custom-renderer placement, Firefox mixed-provider inspector composition, watched inspector production builds and browser preview/reload, error-callback recovery, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is unavailable; remote failures remain native generic errors and Firefox Classic lacks global page/console capture. Eight real Vite preview tests now verify response modification/reset, marker rejection before state/HTML mutation and separate script/transform/service disposal on both native hosts; this does not prove browser preview or build-watch behavior. Nine mixed Chromium checks now link realm/provider selection, all-provider partial rejection, independent native view/state projections, future marker/reset and surviving siblings after one backend disconnect. Standalone contexts use public initHub, with per-connection native origin/auth options; this does not prove the native Vite wrapper forwards those options."
       ],
       "browserEvidence": [
         {
@@ -1046,6 +1065,25 @@
             "devtools: marker registration affects a fresh document before its first parser script without changing the existing document",
             "devtools: reset restores baseline configuration and future HTML while preserving provider identity"
           ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/mixed-inspector.ts",
+          "receiptFile": "artifacts/inspector/mixed-chromium.json",
+          "checks": [
+            "one packaged native JSON inspector broadcasts the same four shared actions to extension, Devframe and DevTools providers",
+            "separate native connections mount identical inspector view keys with independent state and actual owned response URLs",
+            "realm-only selection modifies both servers while leaving the extension unchanged",
+            "explicit provider selection resets only Devframe while preserving DevTools and extension state",
+            "all-provider configure returns Chromium rejection beside both server successes; the native success callback retains broadcast semantics",
+            "all-provider inspection displays original Chromium bytes and modified bytes from each server-owned endpoint",
+            "all-provider marker affects each next document before its first parser script",
+            "all-provider reset clears state and future marker injection without changing existing document markers",
+            "one disconnected server rejects without rerouting while its sibling and the extension still inspect their own responses"
+          ],
+          "host": "chromium-extension-with-devframe-and-devtools",
+          "mode": "production-extension-with-native-development-contexts",
+          "requirePageErrors": true
         }
       ]
     },
@@ -1499,13 +1537,32 @@
             "devframe: inspect reads actual original and configured response bytes from the owned Vite endpoint",
             "devtools: inspect reads actual original and configured response bytes from the owned Vite endpoint"
           ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/mixed-inspector.ts",
+          "receiptFile": "artifacts/inspector/mixed-chromium.json",
+          "checks": [
+            "one packaged native JSON inspector broadcasts the same four shared actions to extension, Devframe and DevTools providers",
+            "separate native connections mount identical inspector view keys with independent state and actual owned response URLs",
+            "realm-only selection modifies both servers while leaving the extension unchanged",
+            "explicit provider selection resets only Devframe while preserving DevTools and extension state",
+            "all-provider configure returns Chromium rejection beside both server successes; the native success callback retains broadcast semantics",
+            "all-provider inspection displays original Chromium bytes and modified bytes from each server-owned endpoint",
+            "all-provider marker affects each next document before its first parser script",
+            "all-provider reset clears state and future marker injection without changing existing document markers",
+            "one disconnected server rejects without rerouting while its sibling and the extension still inspect their own responses"
+          ],
+          "host": "chromium-extension-with-devframe-and-devtools",
+          "mode": "production-extension-with-native-development-contexts",
+          "requirePageErrors": true
         }
       ],
       "gaps": [
         "The common API owns native registration and cleanup. Bounded Vite HTML, native Chromium/Firefox DNR header and same-origin redirect examples, and Firefox byte-stream filtering establish their own timing, independent lifecycle and native failures in supported development/production modes. Chromium explicitly rejects the unavailable Firefox filtering method. No common response pipeline or cross-mechanism order is claimed.",
         "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, persistent response-listener wakeup and brotli/zstd, malformed/truncated encodings, range responses, caching and HTTP/2/3 still need exact native evidence. Admitted Firefox stream completion after disposal is covered. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes. Valid gzip/deflate with fixed-length and chunked framing now have exact delivered-byte/header evidence in both Firefox modes; original encoded headers remain visible, with no SDK header-normalization promise.",
         "Running-background Firefox loopback streams now have distinct native reader-cancellation and Fetch-abort evidence in production and development. Reader cancellation is a bounded consumption observation, not an upstream cancellation guarantee; Fetch abort reaches native onstop without a filter error. Page destruction, other consumers, cancellation with other encodings/protocols and idle wakeup remain unproved. No SDK cancellation policy is inferred.",
-        "The response-inspector proof links the exact authored JSON view with reference/custom renderers, mount-local callbacks, peer projections, disposed controls, future-document markers and actual owned response bytes on both native server hosts in Chromium/Firefox development, plus Chromium/Firefox production extension implementations. Packed contracts compile and execute separately; packed complete host composition, extension custom-renderer placement, mixed-provider inspector broadcast, watched inspector production builds and browser preview/reload, error-callback recovery, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is unavailable; remote failures remain native generic errors and Firefox Classic lacks global page/console capture. Eight real Vite preview tests now verify response modification/reset, marker rejection before state/HTML mutation and separate script/transform/service disposal on both native hosts; this does not prove browser preview or build-watch behavior."
+        "The response-inspector proof links the exact authored JSON view with reference/custom renderers, mount-local callbacks, peer projections, disposed controls, future-document markers and actual owned response bytes on both native server hosts in Chromium/Firefox development, plus Chromium/Firefox production extension implementations. Packed contracts compile and execute separately; packed complete host composition, extension custom-renderer placement, Firefox mixed-provider inspector composition, watched inspector production builds and browser preview/reload, error-callback recovery, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is unavailable; remote failures remain native generic errors and Firefox Classic lacks global page/console capture. Eight real Vite preview tests now verify response modification/reset, marker rejection before state/HTML mutation and separate script/transform/service disposal on both native hosts; this does not prove browser preview or build-watch behavior. Nine mixed Chromium checks now link realm/provider selection, all-provider partial rejection, independent native view/state projections, future marker/reset and surviving siblings after one backend disconnect. Standalone contexts use public initHub, with per-connection native origin/auth options; this does not prove the native Vite wrapper forwards those options."
       ]
     },
     {
@@ -3926,7 +3983,28 @@
       ],
       "gaps": [
         "Evidence checks local selection, readiness, replacement, cancellation and invalid-routing errors. It does not assert every RoutingErrorCode variant or every error metadata field.",
-        "Native host and browser transport, development, production and reload evidence remains to be linked. No claim is made about application-owned domain filtering from these local selector tests."
+        "The mixed Chromium inspector now links actual extension/standalone Devframe/DevTools recipient selection, partial rejection, independent state and disconnected-provider results. Browser Firefox mixed composition, production server routing and broader development/reload coverage remain open. The inspector uses provider-owned fixture selection; no generic application-domain routing is claimed."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/mixed-inspector.ts",
+          "receiptFile": "artifacts/inspector/mixed-chromium.json",
+          "checks": [
+            "one packaged native JSON inspector broadcasts the same four shared actions to extension, Devframe and DevTools providers",
+            "separate native connections mount identical inspector view keys with independent state and actual owned response URLs",
+            "realm-only selection modifies both servers while leaving the extension unchanged",
+            "explicit provider selection resets only Devframe while preserving DevTools and extension state",
+            "all-provider configure returns Chromium rejection beside both server successes; the native success callback retains broadcast semantics",
+            "all-provider inspection displays original Chromium bytes and modified bytes from each server-owned endpoint",
+            "all-provider marker affects each next document before its first parser script",
+            "all-provider reset clears state and future marker injection without changing existing document markers",
+            "one disconnected server rejects without rerouting while its sibling and the extension still inspect their own responses"
+          ],
+          "host": "chromium-extension-with-devframe-and-devtools",
+          "mode": "production-extension-with-native-development-contexts",
+          "requirePageErrors": true
+        }
       ]
     },
     {

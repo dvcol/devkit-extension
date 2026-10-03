@@ -35,6 +35,8 @@ jobs:
         run: pnpm --filter @devkit/example-webext test:json-actions
       - name: Discover native provider views in the extension
         run: pnpm --filter @devkit/example-webext test:json-views
+      - name: Broadcast the shared inspector across extension and native server providers
+        run: pnpm --filter @devkit/example-webext exec node tests/mixed-inspector.ts
       - name: Reject untrusted extension callers and stale browser documents
         run: pnpm --filter @devkit/example-webext test:trust:chromium
       - name: Run native Vite browser actions, state and HTML timing

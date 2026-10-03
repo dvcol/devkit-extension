@@ -38,7 +38,7 @@ flowchart TD
   BrowserState --> UI
 ```
 
-The diagram shows supported composition, not a passing mixed-host inspector broadcast. The current standalone server page selects its one provider; the extension panel uses its existing recipient controls. A provider selects resources inside its own capability. The SDK does not interpret fixture URLs or tab identities.
+The standalone server page selects its one provider. [The mixed Chromium proof](../../examples/webext/tests/mixed-inspector.ts) connects one packaged extension panel to both native backends through its existing recipient controls. Realm selection changes both servers while leaving the extension unchanged; explicit provider selection resets only Devframe. An all-provider configuration returns the Chromium rejection alongside both server successes. Each provider selects resources inside its own capability. The SDK does not interpret fixture URLs or tab identities. Closing Devframe produces a catalog-unknown rejection while DevTools and the extension still inspect their own responses; no call reroutes to a sibling.
 
 The implemented declaration calls are:
 
@@ -69,6 +69,19 @@ const provider = await createDevframeProvider({
 ```
 
 The native configuration also exposes the imported capability and actions through the existing provider `expose` property. The extension uses its own execution/native descriptors and service implementation with the same action/view factories. There is no mandatory all-in-one inspector package: the action plugin and view recipe are separate imported declarations.
+
+The mixed fixture composes the existing private example `createRemoteContext` helper with public `initHub` on real Vite servers. Each connection has a temporary native interactive-auth token and explicitly allows the actual extension origin. Hub middleware mounts in Vite's `configureServer` hook. This tests standalone native context composition; the separate server page proofs test the maintained Vite plugin bootstrap. No origin rewrite, copied authentication or transport policy is introduced.
+
+```typescript
+// Existing public Devframe API, owned by the embedding fixture.
+const hub = initHub({
+  context,
+  server: viteServer.httpServer,
+  allowedOrigins: [extensionOrigin],
+  auth: createInteractiveAuth(context, { clientAuthTokens: [temporaryToken] }),
+  // Remaining fixture options retain the existing native hub setup.
+});
+```
 
 ## Observable behavior
 
@@ -110,6 +123,7 @@ The extension proof starts and closes its owned fixture server and disposable br
 
 ```sh
 pnpm --filter @devkit/example-webext exec node tests/chromium-inspector.ts
+pnpm --filter @devkit/example-webext exec node tests/mixed-inspector.ts
 SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-webext exec node tests/firefox-inspector.ts
 ```
 
@@ -123,12 +137,13 @@ Set `FIREFOX_BINARY` when Firefox is outside the driver's discovery path. The br
 
 ## Executed evidence and limits
 
-| Run                                                           | Version                            | Retained evidence                                                                                                     |
-| ------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Devframe and DevTools reference UI, native development        | Chromium 153.0.8010.12             | [18 checks with both renderers, zero page/console errors](../../examples/vite-hosts/evidence/inspector-chromium.json) |
-| Devframe and DevTools reference/custom UI, native development | Firefox 157.0 / geckodriver 0.37.1 | [20 checks through both native hosts](../../examples/vite-hosts/evidence/inspector-firefox.json)                      |
-| Native packaged extension                                     | Chromium 153.0.8010.12             | [6 checks, zero page errors](../../examples/webext/evidence/inspector/chromium.json)                                  |
-| Native packaged extension                                     | Firefox 157.0 / geckodriver 0.37.1 | [7 checks, actual response filtering](../../examples/webext/evidence/inspector/firefox.json)                          |
+| Run                                                                  | Version                            | Retained evidence                                                                                                     |
+| -------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Devframe and DevTools reference UI, native development               | Chromium 153.0.8010.12             | [18 checks with both renderers, zero page/console errors](../../examples/vite-hosts/evidence/inspector-chromium.json) |
+| Devframe and DevTools reference/custom UI, native development        | Firefox 157.0 / geckodriver 0.37.1 | [20 checks through both native hosts](../../examples/vite-hosts/evidence/inspector-firefox.json)                      |
+| Packaged extension panel with both standalone native server contexts | Chromium 153.0.8010.12             | [9 checks, separate state and partial failure](../../examples/webext/evidence/inspector/mixed-chromium.json)          |
+| Native packaged extension                                            | Chromium 153.0.8010.12             | [6 checks, zero page errors](../../examples/webext/evidence/inspector/chromium.json)                                  |
+| Native packaged extension                                            | Firefox 157.0 / geckodriver 0.37.1 | [7 checks, actual response filtering](../../examples/webext/evidence/inspector/firefox.json)                          |
 
 Receipts are written only after successful assertions and resource cleanup. The server proof observes distinct provider identities and independent state. Extension failures preserve the prior inspection result, independent counter and provider incarnation. Firefox WebDriver Classic does not capture global page errors, so its receipt makes no zero-error claim.
 
@@ -152,4 +167,4 @@ Done for this slice:
 
 The affected Vite example suite now passes 42 tests, including eight real-preview cases across Devframe and DevTools.
 
-The full ticket remains open. Packed complete host consumption, extension custom-renderer placement, inspector mixed-provider selection/broadcast and partial failures, development edits, watched inspector production builds and browser preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
+The full ticket remains open. Packed complete host consumption, extension custom-renderer placement, Firefox mixed-provider inspector composition, development edits, watched inspector production builds and browser preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
