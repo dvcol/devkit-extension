@@ -45,6 +45,7 @@ async function compileConsumer(fixture: string) {
 }
 
 describe('built public server declarations', () => {
+  /** Keep assertions and cleanup inside their test after the compiler's 30-second bound. */
   for (const fixture of [
     'provider.type-test.ts',
     'remote-client.type-test.ts',
@@ -56,6 +57,6 @@ describe('built public server declarations', () => {
       const result = await compileConsumer(fixture);
       expect(result.error).toBeUndefined();
       expect({ status: result.status, output: result.output }).toEqual({ status: 0, output: '' });
-    });
+    }, 35_000);
   }
 });

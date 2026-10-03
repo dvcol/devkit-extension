@@ -35,17 +35,18 @@ async function compileConsumer(fixture: string) {
 }
 
 describe('built public runtime declarations', () => {
+  /** Keep assertions and cleanup inside their test after the compiler's 30-second bound. */
   it('preserves strict relaxed and configured installation result contracts', async () => {
     expect.assertions(2);
     const result = await compileConsumer('provider-results.type-test.ts');
     expect(result.error).toBeUndefined();
     expect({ status: result.status, output: result.output }).toEqual({ status: 0, output: '' });
-  });
+  }, 35_000);
 
   it('preserves native context descriptor types and optional lookup results', async () => {
     expect.assertions(2);
     const result = await compileConsumer('native-context.type-test.ts');
     expect(result.error).toBeUndefined();
     expect({ status: result.status, output: result.output }).toEqual({ status: 0, output: '' });
-  });
+  }, 35_000);
 });
