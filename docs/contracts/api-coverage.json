@@ -2005,7 +2005,23 @@
       ],
       "gaps": [
         "These Node assertions cover native Error instances, portable records and selected malformed diagnostic shapes. They do not prove every diagnostic variant, native transport error serialization or safe disclosure to untrusted recipients.",
-        "The maintained debugger example uses this guard for its missing-caller check, but its browser receipt format is not consumed by this inventory. Compile-time narrowing and host/mode coverage remain separate obligations."
+        "The maintained Chromium receipt now consumes the guard for the omitted optional CDB implementation and its unavailable-capability diagnostic. Other diagnostic variants, compile-time narrowing and broader host/mode coverage remain separate obligations."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/debugger",
+          "testFile": "tests/chromium-disabled.ts",
+          "receiptFile": "artifacts/chromium-disabled.json",
+          "checks": [
+            "The default Chromium profile omits debugger permission and has no native debugger API",
+            "The real runtime retains a waiting action, no service and an unavailable capability",
+            "Invoking the optional action rejects with unavailable-capability without reading the page title",
+            "Provider, browser, server and temporary extension/profile are disposed before receipt publication"
+          ],
+          "host": "chromium-extension",
+          "mode": "production-optional-cdb-disabled",
+          "requirePageErrors": true
+        }
       ]
     },
     {
@@ -3533,7 +3549,8 @@
         "@devkit/runtime:createProviderLifecycle"
       ],
       "examples": [
-        "examples/contribution"
+        "examples/contribution",
+        "examples/debugger"
       ],
       "evidence": [
         {
@@ -3727,8 +3744,24 @@
         }
       ],
       "gaps": [
-        "Evidence executes the real runtime in Node with local handlers, native AbortController and deferred promises. It does not establish Devframe, DevTools, Chromium or Firefox development, production or reload behavior.",
+        "Node evidence covers local runtime composition. A native Chromium profile now verifies an omitted optional service, waiting action and unavailable invocation without debugger permission or page evaluation. Broader Devframe, DevTools, Firefox and reload behavior remains separate.",
         "Direct strict handles and relaxed admission envelopes have runtime evidence. Conditional return types remain a separate type-checking obligation. View setup now uses the existing requirements, activation scope, dependency-loss teardown/restart and replacement barriers; its native host/rendering evidence remains separate. Script and transform setup recipes are implemented and have separate declaration/lifecycle evidence groups; their broader native host/mode acceptance remains open."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": "examples/debugger",
+          "testFile": "tests/chromium-disabled.ts",
+          "receiptFile": "artifacts/chromium-disabled.json",
+          "checks": [
+            "The default Chromium profile omits debugger permission and has no native debugger API",
+            "The real runtime retains a waiting action, no service and an unavailable capability",
+            "Invoking the optional action rejects with unavailable-capability without reading the page title",
+            "Provider, browser, server and temporary extension/profile are disposed before receipt publication"
+          ],
+          "host": "chromium-extension",
+          "mode": "production-optional-cdb-disabled",
+          "requirePageErrors": true
+        }
       ]
     },
     {

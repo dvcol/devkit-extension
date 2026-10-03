@@ -6,6 +6,10 @@ This private, UI-free example composes `@devkit/core` contribution definitions a
 
 The embedded recipe is a **trusted in-process composition**. The host's `debug` capability level is broader than this action, and the embedded client is trusted. The separate [authenticated native check](#authenticated-native-devframe-composition) below exercises CDB's existing remote provider APIs. Neither establishes a general debugger SDK contract or an untrusted-page authorization boundary.
 
+## Optional disabled profile
+
+`pnpm --filter @devkit/example-debugger exec node tests/chromium-disabled.ts` builds a disposable MV3 extension with no debugger permission and calls the existing `installDebuggerContributions(undefined, ...)`. The real runtime retains the waiting title action, installs no service and rejects invocation with `unavailable-capability`. Chrome exposes no debugger API; the owned page records zero title evaluations and keeps the same document. [Four retained checks](./evidence/chromium-disabled.json) complement the enabled embedded and authenticated native compositions below. This is an ordinary optional capability profile, not an inspector implementation or another realm. The runner writes its generated receipt after all owned resources are disposed.
+
 ## Composition and ownership
 
 The recipe uses the actual public native APIs:

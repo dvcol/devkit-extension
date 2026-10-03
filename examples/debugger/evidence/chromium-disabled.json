@@ -1,0 +1,51 @@
+{
+  "browser": "153.0.8010.12",
+  "profile": "cdb-disabled",
+  "checks": [
+    "The default Chromium profile omits debugger permission and has no native debugger API",
+    "The real runtime retains a waiting action, no service and an unavailable capability",
+    "Invoking the optional action rejects with unavailable-capability without reading the page title",
+    "Provider, browser, server and temporary extension/profile are disposed before receipt publication"
+  ],
+  "native": {
+    "passed": true,
+    "result": {
+      "installedServices": 0,
+      "capability": "unavailable",
+      "plugin": {
+        "id": "example.debugger.actions",
+        "status": "inactive",
+        "contributions": [
+          {
+            "id": "example.debugger.read-title",
+            "kind": "action",
+            "generation": 0,
+            "enabled": true,
+            "status": "waiting",
+            "reason": "dependency-unavailable",
+            "diagnostics": []
+          }
+        ],
+        "diagnostics": []
+      },
+      "actionError": {
+        "code": "unavailable-capability",
+        "message": "Action example.debugger.read-page-title@1 is unavailable"
+      },
+      "diagnostics": ["unavailable-capability"],
+      "nativeDebuggerAvailable": false,
+      "permissions": {
+        "origins": [],
+        "permissions": []
+      },
+      "manifestPermissions": []
+    }
+  },
+  "page": {
+    "titleReads": 0,
+    "title": "Owned disabled CDB target",
+    "sameDocument": true
+  },
+  "pageErrors": [],
+  "scope": "Optional CDB capability profile; this does not implement inspectorCapability through CDB"
+}

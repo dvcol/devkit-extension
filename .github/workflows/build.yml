@@ -59,6 +59,8 @@ jobs:
         run: pnpm --filter @devkit/example-json-render test:browser
       - name: Verify native renderer source and style updates in Chromium
         run: pnpm --filter @devkit/example-json-render test:reload:chromium
+      - name: Verify the default profile without optional debugger authority
+        run: pnpm --filter @devkit/example-debugger exec node tests/chromium-disabled.ts
       - name: Run the Chromium debugger contribution browser test
         run: pnpm --filter @devkit/example-debugger test:browser
       - name: Run authenticated native CDB browser integration
