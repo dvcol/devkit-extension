@@ -7,6 +7,7 @@ export interface ScriptContextOptions {
   readonly allFrames: boolean;
   readonly strictCsp: boolean;
   readonly active: boolean;
+  readonly runAt?: chrome.extensionTypes.RunAt;
 }
 
 /** HTTP headers and page scripts stay independent of Vite's development HTML injection. */
@@ -95,8 +96,16 @@ export function readOptionalHostPermission() {
 }
 
 /** These readers run directly in each document; no page-to-extension bridge is involved. */
-export function scriptContextReady(strictCsp: boolean): boolean {
+export function scriptContextReady({
+  strictCsp,
+  injected,
+}: {
+  strictCsp: boolean;
+  injected: boolean;
+}): boolean {
   if (document.documentElement.dataset.firstScript === undefined) return false;
+  document.dispatchEvent(new Event('example-script-timing'));
+  if (injected && document.documentElement.dataset.injectedState === undefined) return false;
   if (!strictCsp) return true;
   return (document.documentElement.dataset.cspViolations ?? '')
     .split(',')
@@ -131,16 +140,31 @@ export function checkScriptContexts(
   assert.equal(new URL(denied.url).hostname, 'localhost');
   for (const [index, snapshot] of snapshots.entries()) {
     const injected = options.active && (index === 0 || options.allFrames) && index !== 3;
-    assert.deepEqual(snapshot.firstScript, {
-      injectedGlobal: injected && options.world === 'MAIN' ? 'loading' : null,
-      injectedReadyState: injected ? 'loading' : null,
-      pageReadyState: 'loading',
-    });
-    assert.equal(snapshot.currentGlobal, injected && options.world === 'MAIN' ? 'loading' : null);
-    assert.equal(snapshot.currentInjectedState, injected ? 'loading' : null);
-    assert.equal(snapshot.ordinaryScript, options.strictCsp ? null : 'executed');
-    checkViolations(snapshot.violations, options.strictCsp);
+    checkScriptContext(snapshot, options, injected);
   }
+}
+
+function checkScriptContext(
+  snapshot: ScriptContextSnapshot,
+  options: ScriptContextOptions,
+  injected: boolean,
+): void {
+  const early = injected && (options.runAt ?? 'document_start') === 'document_start';
+  assert.deepEqual(snapshot.firstScript, {
+    injectedGlobal: early && options.world === 'MAIN' ? 'loading' : null,
+    injectedReadyState: early ? 'loading' : null,
+    pageReadyState: 'loading',
+  });
+  if (injected) {
+    const readyStates = early ? ['loading'] : ['interactive', 'complete'];
+    assert.ok(readyStates.includes(snapshot.currentInjectedState ?? ''));
+  } else assert.equal(snapshot.currentInjectedState, null);
+  assert.equal(
+    snapshot.currentGlobal,
+    options.world === 'MAIN' ? snapshot.currentInjectedState : null,
+  );
+  assert.equal(snapshot.ordinaryScript, options.strictCsp ? null : 'executed');
+  checkViolations(snapshot.violations, options.strictCsp);
 }
 
 function checkViolations(violations: readonly string[], strictCsp: boolean): void {

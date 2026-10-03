@@ -26,14 +26,24 @@ export async function checkChromiumScriptContexts(extension: Page, artifactDirec
   assert.equal(optionalHostBefore, false);
   const observations = [];
   const checks = [];
-  for (const world of ['MAIN', 'ISOLATED'] as const) {
-    for (const allFrames of [false, true]) {
-      const result = await checkRegistration({ extension, source, fixture, world, allFrames });
-      observations.push(...result.observations);
-      checks.push(...result.checks);
+  for (const runAt of ['document_start', 'document_end', 'document_idle'] as const) {
+    for (const world of ['MAIN', 'ISOLATED'] as const) {
+      for (const allFrames of [false, true]) {
+        const result = await checkRegistration({
+          extension,
+          source,
+          fixture,
+          world,
+          allFrames,
+          runAt,
+        });
+        observations.push(...result.observations);
+        checks.push(...result.checks);
+      }
     }
   }
   await extension.locator('#script-all-frames').uncheck();
+  await extension.locator('#script-run-at').selectOption('document_start');
   const optionalHostAfter = await extension.evaluate(readOptionalHostPermission);
   assert.equal(optionalHostAfter, false);
   await writeFile(
@@ -57,34 +67,38 @@ async function checkRegistration(options: {
   fixture: ScriptContextServer;
   world: `${chrome.scripting.ExecutionWorld}`;
   allFrames: boolean;
+  runAt?: chrome.extensionTypes.RunAt;
 }) {
-  const { extension, source, fixture, world, allFrames } = options;
+  const { extension, source, fixture, world, allFrames, runAt = 'document_start' } = options;
   const observations = [];
   const checks = [];
   let disposal: Awaited<ReturnType<typeof control>> | undefined;
   await extension.locator('#script-all-frames').setChecked(allFrames);
+  await extension.locator('#script-run-at').selectOption(runAt);
   const installed = await control(extension, `script-${world.toLowerCase()}`, 'ready', 1);
   try {
-    checkTimingRegistration(installed.registrations, world, { allFrames });
+    checkTimingRegistration(installed.registrations, world, { allFrames, runAt });
     for (const strictCsp of [false, true]) {
       fixture.setStrictCsp(strictCsp);
       await source.goto(fixture.url);
-      const current = { world, allFrames, strictCsp, active: true };
+      const current = { world, allFrames, strictCsp, active: true, runAt };
       observations.push({ ...current, installed, snapshots: await readFrames(source, current) });
       checks.push(
-        `${world}: allFrames=${allFrames} strictCsp=${strictCsp} native frame matching and host permissions`,
+        `${world} ${runAt}: allFrames=${allFrames} strictCsp=${strictCsp} native frame matching and host permissions`,
       );
     }
     if (allFrames) {
-      observations.push(await checkLifecycle(extension, source, world));
-      checks.push(`${world}: native child-frame registration disable and enable under page CSP`);
+      observations.push(await checkLifecycle(extension, source, { world, runAt }));
+      checks.push(
+        `${world} ${runAt}: native child-frame registration disable and enable under page CSP`,
+      );
     }
   } finally {
     disposal = await control(extension, 'script-dispose', 'disposed');
     assert.deepEqual(disposal.registrations, []);
   }
   await source.reload();
-  const disposed = { world, allFrames, strictCsp: true, active: false };
+  const disposed = { world, allFrames, strictCsp: true, active: false, runAt };
   observations.push({
     ...disposed,
     stage: 'disposed',
@@ -92,7 +106,7 @@ async function checkRegistration(options: {
     snapshots: await readFrames(source, disposed),
   });
   checks.push(
-    `${world}: allFrames=${allFrames} disposed registration leaves fresh documents uninjected`,
+    `${world} ${runAt}: allFrames=${allFrames} disposed registration leaves fresh documents uninjected`,
   );
   return { observations, checks };
 }
@@ -103,9 +117,10 @@ async function readFrames(source: Page, options: ScriptContextOptions) {
     ...['same', 'cross', 'denied'].map((name) => source.frame({ name })),
   ];
   const snapshots = [];
-  for (const frame of frames) {
+  for (const [index, frame] of frames.entries()) {
     assert.ok(frame);
-    await frame.waitForFunction(scriptContextReady, options.strictCsp);
+    const injected = options.active && (index === 0 || options.allFrames) && index !== 3;
+    await frame.waitForFunction(scriptContextReady, { strictCsp: options.strictCsp, injected });
     snapshots.push(await frame.evaluate(readScriptContextSnapshot));
   }
   checkScriptContexts(snapshots, options);
@@ -123,17 +138,17 @@ async function control(extension: Page, identifier: string, status: string, gene
 async function checkLifecycle(
   extension: Page,
   source: Page,
-  world: `${chrome.scripting.ExecutionWorld}`,
+  { world, runAt = 'document_start' }: Pick<ScriptContextOptions, 'world' | 'runAt'>,
 ) {
-  const options = { world, allFrames: true, strictCsp: true, active: true };
+  const options = { world, allFrames: true, strictCsp: true, active: true, runAt };
   const disabled = await control(extension, 'script-disable', 'disabled', 1);
   assert.deepEqual(disabled.registrations, []);
   const retained = await readFrames(source, options);
   await source.reload();
   const inactive = await readFrames(source, { ...options, active: false });
   const enabled = await control(extension, 'script-enable', 'ready', 2);
-  checkTimingRegistration(enabled.registrations, world, { allFrames: true });
+  checkTimingRegistration(enabled.registrations, world, { allFrames: true, runAt });
   await source.reload();
   const restored = await readFrames(source, options);
-  return { world, stage: 'lifecycle', disabled, retained, inactive, enabled, restored };
+  return { world, runAt, stage: 'lifecycle', disabled, retained, inactive, enabled, restored };
 }

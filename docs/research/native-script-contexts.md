@@ -1,10 +1,10 @@
 # Native script frames and page CSP
 
-This example extends the existing `defineScript` recipe with native `allFrames`. Registration still uses `scripting.registerContentScripts`; the contribution scope owns `unregisterContentScripts`. Core and the adapters gain no API, frame router or permission policy. The owning ticket is [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
+This example extends the existing `defineScript` recipe with native `allFrames` and `runAt`. Registration still uses `scripting.registerContentScripts`; the contribution scope owns `unregisterContentScripts`. Core and the adapters gain no API, frame router or permission policy. The owning ticket is [Injection and transform contract](https://github.com/dvcol/devkit-extension/issues/11).
 
 ## Implemented example
 
-The extension panel has an **Include matching child frames** checkbox, initially unchecked. Its existing MAIN and ISOLATED buttons install the same contribution with `{ world, allFrames }`. These are private example controls, not a new SDK declaration API.
+The extension panel has an **Include matching child frames** checkbox, initially unchecked. Its existing MAIN and ISOLATED buttons install the same contribution with `{ world, allFrames, runAt }`; the stage selector keeps document_start as its default. These are private example controls, not a new SDK declaration API.
 
 ```ts
 defineScript({
@@ -16,7 +16,7 @@ defineScript({
         id: 'example-script-timing',
         js: ['script-timing.js'],
         matches: matchingFixturePaths,
-        runAt: 'document_start',
+        runAt,
         world,
         allFrames,
         persistAcrossSessions: false,
@@ -33,7 +33,7 @@ This sketch omits the unchanged example controller and its status display. `matc
 
 ```mermaid
 flowchart TD
-  Panel["Panel: world + allFrames"] --> Contribution["defineScript setup / scope cleanup"]
+  Panel["Panel: world + allFrames + native stage"] --> Contribution["defineScript setup / scope cleanup"]
   Contribution --> Browser["Native scripting registration"]
   Browser --> Top["127.0.0.1 top document"]
   Browser --> Same["127.0.0.1 same-origin child"]
@@ -45,7 +45,7 @@ The different port makes the third document cross-origin without changing the gr
 
 ## Assertions and observations
 
-Each Chromium and Firefox run covers eight active combinations: two worlds, `allFrames` false/true, and ordinary/nonce CSP. Every combination inspects the top document and all three children.
+Each Chromium and Firefox run covers 24 active combinations: all three native stages, two worlds, `allFrames` false/true, and ordinary/nonce CSP. Every combination inspects the top document and all three children.
 
 | Native option      | Top document | Same-origin child | Cross-origin child with host permission | Matching localhost child without permission |
 | ------------------ | ------------ | ----------------- | --------------------------------------- | ------------------------------------------- |
@@ -54,9 +54,9 @@ Each Chromium and Firefox run covers eight active combinations: two worlds, `all
 
 The nonce policy is `default-src 'none'; script-src 'nonce-fixture-reader'; frame-src http://127.0.0.1:* http://localhost:*`. A nonce-authorized first page script records injection timing; an ordinary inline control must stay blocked and produce a script-source CSP violation. Without the nonce reader, a blocked observer could falsely suggest that native injection never happened.
 
-The tested packaged `document_start` code executes under this policy in both worlds. In MAIN, its global is visible to the page. In ISOLATED, the global stays private while its DOM marker is visible. Both markers establish execution while `document.readyState` is `loading`, before the first page script. These observations concern native packaged registration, not a page-created `<script>` element or every operation that injected code might subsequently attempt. Chrome's [content-script CSP documentation](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#content_security_policy) describes the world's policies; the retained native observations establish this fixture's initial execution.
+The tested packaged code executes under this policy at all three stages in both worlds. In MAIN, its global is visible to the page. In ISOLATED, the global stays private while its DOM marker is visible. At document_start, the first page script observes execution captured at loading. At end and idle, that first script has no injection marker; the driver later observes native injection captured at interactive or complete. The separate [held-resource stage fixture](./native-script-stages.md) establishes document_end before load. No common idle ordering is inferred from these observations. These observations concern native packaged registration, not a page-created `<script>` element or every operation that injected code might subsequently attempt. Chrome's [content-script CSP documentation](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts#content_security_policy) describes the world's policies; the retained native observations establish this fixture's initial execution.
 
-With child frames enabled, the tests then click the actual disable and enable buttons under CSP. Disable empties native registration and leaves already executed effects intact; fresh documents contain no injected markers. Enable starts generation 2, restores native registration and injects into fresh permitted documents. Dispose empties registration and leaves subsequent documents uninjected. The localhost permission remains absent before and after the scenario.
+With child frames enabled, the tests click the actual disable and enable buttons under CSP for each world and stage, giving six lifecycle cases. Disable empties native registration and leaves already executed effects intact; fresh documents contain no injected markers. Enable starts generation 2, restores native registration and injects into fresh permitted documents. Dispose empties registration and leaves subsequent documents uninjected. The localhost permission remains absent before and after the scenario.
 
 ## Maintained confirmation
 
@@ -73,10 +73,10 @@ pnpm --filter @devkit/example-webext typecheck
 
 The maintained suites call `chromium-script-contexts.ts` and `firefox-script-contexts.ts` in production and WXT development. Each writes `script-contexts.json` only after all assertions pass. Receipts retain native registrations, permission observations, per-document markers, blocked controls and lifecycle snapshots. CI already retains the four artifact directories and verifies the exact named checks through the API matrix.
 
-All four maintained browser commands pass on Chrome `153.0.8010.12` and Firefox `157.0`, on macOS with Node `24.20.0`. Each receipt has 14 named checks and 72 document observations, including the existing-document, disabled and restored lifecycle reads. Independent receipt verification confirms all 56 exact matrix checks and all 288 document observations. The Chrome production suite also reports no page errors. All 30 extension unit tests, strict type-aware Oxlint, TypeScript 7 and scoped formatting pass; both native production builds pass.
+All four maintained browser commands pass on Chrome `153.0.8010.12` and Firefox `157.0`, on macOS with Node `24.20.0`. Each receipt has 42 named checks and 216 document observations, including 24 matrix cells, six lifecycle cases and 12 disposals. Independent receipt verification confirms all 168 exact matrix checks and all 864 document observations, selected native stage/frame options, empty lifecycle registration sets and absent optional localhost permission. Chromium captured late injection at interactive; Firefox captured end at interactive and idle at complete in this frame fixture. The Chrome production suite also reports no page errors. All 31 extension unit tests, strict type-aware Oxlint, TypeScript 7 and scoped formatting pass; both native production builds pass.
 
 Retained observations are in [Chromium production](../../examples/webext/evidence/script-contexts/chromium-production.json), [Firefox production](../../examples/webext/evidence/script-contexts/firefox-production.json), [Chromium development](../../examples/webext/evidence/script-contexts/chromium-development.json) and [Firefox development](../../examples/webext/evidence/script-contexts/firefox-development.json). The four maintained browser commands complete their owned browser/fixture teardown. Full workspace and Linux native acceptance runs in CI after the issue-scoped commit.
 
 ## Remaining scope
 
-This frame/CSP slice covers document_start. The separate [native stage proof](./native-script-stages.md) verifies all three stages in top-level MAIN/ISOLATED documents; their full cross-product with frames/CSP remains open. This slice does not establish injection into blank/blob/sandboxed frames, origin fallback, frame replacement, permission-revocation rollback, browser restart, dependency loss during registration or native cleanup failure. It does not promise to undo existing page effects. Those obligations remain with the native contribution recipes and their owning tickets, rather than a generic SDK enforcement layer.
+This frame/CSP slice covers all three native stages. The separate [native stage proof](./native-script-stages.md) verifies document_end against a held subresource in top-level MAIN/ISOLATED documents. This slice does not establish injection into blank/blob/sandboxed frames, origin fallback, frame replacement, permission-revocation rollback, browser restart, dependency loss during registration or native cleanup failure. It does not promise to undo existing page effects. Those obligations remain with the native contribution recipes and their owning tickets, rather than a generic SDK enforcement layer.

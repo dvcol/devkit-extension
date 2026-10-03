@@ -10,6 +10,7 @@
       "allFrames": false,
       "strictCsp": false,
       "active": true,
+      "runAt": "document_start",
       "installed": {
         "snapshot": {
           "installation": {
@@ -65,7 +66,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -77,7 +78,7 @@
           "violations": []
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -89,7 +90,7 @@
           "violations": []
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -101,7 +102,7 @@
           "violations": []
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -119,6 +120,7 @@
       "allFrames": false,
       "strictCsp": true,
       "active": true,
+      "runAt": "document_start",
       "installed": {
         "snapshot": {
           "installation": {
@@ -174,7 +176,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -186,7 +188,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -198,7 +200,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -210,7 +212,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -228,6 +230,7 @@
       "allFrames": false,
       "strictCsp": true,
       "active": false,
+      "runAt": "document_start",
       "stage": "disposed",
       "disposal": {
         "snapshot": {
@@ -252,7 +255,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -264,7 +267,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -276,7 +279,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -288,7 +291,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -306,6 +309,7 @@
       "allFrames": true,
       "strictCsp": false,
       "active": true,
+      "runAt": "document_start",
       "installed": {
         "snapshot": {
           "installation": {
@@ -361,7 +365,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -373,7 +377,7 @@
           "violations": []
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -385,7 +389,7 @@
           "violations": []
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -397,7 +401,7 @@
           "violations": []
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -415,6 +419,7 @@
       "allFrames": true,
       "strictCsp": true,
       "active": true,
+      "runAt": "document_start",
       "installed": {
         "snapshot": {
           "installation": {
@@ -470,7 +475,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -482,7 +487,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -494,7 +499,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -506,7 +511,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -521,6 +526,7 @@
     },
     {
       "world": "MAIN",
+      "runAt": "document_start",
       "stage": "lifecycle",
       "disabled": {
         "snapshot": {
@@ -545,7 +551,7 @@
       },
       "retained": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -557,7 +563,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -569,7 +575,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -581,7 +587,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -595,7 +601,7 @@
       ],
       "inactive": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -607,7 +613,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -619,7 +625,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -631,7 +637,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -698,7 +704,7 @@
       },
       "restored": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -710,7 +716,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -722,7 +728,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": "loading",
             "injectedReadyState": "loading",
@@ -734,7 +740,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -752,6 +758,7 @@
       "allFrames": true,
       "strictCsp": true,
       "active": false,
+      "runAt": "document_start",
       "stage": "disposed",
       "disposal": {
         "snapshot": {
@@ -776,7 +783,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -788,7 +795,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -800,7 +807,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -812,7 +819,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -830,6 +837,7 @@
       "allFrames": false,
       "strictCsp": false,
       "active": true,
+      "runAt": "document_start",
       "installed": {
         "snapshot": {
           "installation": {
@@ -885,7 +893,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -897,7 +905,7 @@
           "violations": []
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -909,7 +917,7 @@
           "violations": []
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -921,7 +929,7 @@
           "violations": []
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -939,6 +947,7 @@
       "allFrames": false,
       "strictCsp": true,
       "active": true,
+      "runAt": "document_start",
       "installed": {
         "snapshot": {
           "installation": {
@@ -994,7 +1003,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1006,7 +1015,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1018,7 +1027,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1030,7 +1039,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1048,6 +1057,7 @@
       "allFrames": false,
       "strictCsp": true,
       "active": false,
+      "runAt": "document_start",
       "stage": "disposed",
       "disposal": {
         "snapshot": {
@@ -1072,7 +1082,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1084,7 +1094,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1096,7 +1106,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1108,7 +1118,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1126,6 +1136,7 @@
       "allFrames": true,
       "strictCsp": false,
       "active": true,
+      "runAt": "document_start",
       "installed": {
         "snapshot": {
           "installation": {
@@ -1181,7 +1192,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1193,7 +1204,7 @@
           "violations": []
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1205,7 +1216,7 @@
           "violations": []
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1217,7 +1228,7 @@
           "violations": []
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1235,6 +1246,7 @@
       "allFrames": true,
       "strictCsp": true,
       "active": true,
+      "runAt": "document_start",
       "installed": {
         "snapshot": {
           "installation": {
@@ -1290,7 +1302,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1302,7 +1314,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1314,7 +1326,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1326,7 +1338,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1341,6 +1353,7 @@
     },
     {
       "world": "ISOLATED",
+      "runAt": "document_start",
       "stage": "lifecycle",
       "disabled": {
         "snapshot": {
@@ -1365,7 +1378,7 @@
       },
       "retained": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1377,7 +1390,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1389,7 +1402,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1401,7 +1414,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1415,7 +1428,7 @@
       ],
       "inactive": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1427,7 +1440,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1439,7 +1452,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1451,7 +1464,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1518,7 +1531,7 @@
       },
       "restored": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1530,7 +1543,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1542,7 +1555,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": "loading",
@@ -1554,7 +1567,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1572,6 +1585,7 @@
       "allFrames": true,
       "strictCsp": true,
       "active": false,
+      "runAt": "document_start",
       "stage": "disposed",
       "disposal": {
         "snapshot": {
@@ -1596,7 +1610,7 @@
       },
       "snapshots": [
         {
-          "url": "http://127.0.0.1:56569/index.html",
+          "url": "http://127.0.0.1:58925/index.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1608,7 +1622,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56569/frame.html",
+          "url": "http://127.0.0.1:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1620,7 +1634,7 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://127.0.0.1:56570/frame.html",
+          "url": "http://127.0.0.1:58926/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1632,7 +1646,3315 @@
           "violations": ["script-src-elem"]
         },
         {
-          "url": "http://localhost:56569/frame.html",
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": false,
+      "strictCsp": false,
+      "active": true,
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": false,
+      "strictCsp": true,
+      "active": true,
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": false,
+      "strictCsp": true,
+      "active": false,
+      "runAt": "document_end",
+      "stage": "disposed",
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": true,
+      "strictCsp": false,
+      "active": true,
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": true,
+      "strictCsp": true,
+      "active": true,
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "runAt": "document_end",
+      "stage": "lifecycle",
+      "disabled": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "inactive",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disabled",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ],
+      "inactive": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ],
+      "enabled": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "restored": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": true,
+      "strictCsp": true,
+      "active": false,
+      "runAt": "document_end",
+      "stage": "disposed",
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": false,
+      "strictCsp": false,
+      "active": true,
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": false,
+      "strictCsp": true,
+      "active": true,
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": false,
+      "strictCsp": true,
+      "active": false,
+      "runAt": "document_end",
+      "stage": "disposed",
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": true,
+      "strictCsp": false,
+      "active": true,
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": true,
+      "strictCsp": true,
+      "active": true,
+      "runAt": "document_end",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "runAt": "document_end",
+      "stage": "lifecycle",
+      "disabled": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "inactive",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disabled",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ],
+      "inactive": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ],
+      "enabled": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_end",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_end",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "restored": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": true,
+      "strictCsp": true,
+      "active": false,
+      "runAt": "document_end",
+      "stage": "disposed",
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": false,
+      "strictCsp": false,
+      "active": true,
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": false,
+      "strictCsp": true,
+      "active": true,
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": false,
+      "strictCsp": true,
+      "active": false,
+      "runAt": "document_idle",
+      "stage": "disposed",
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": true,
+      "strictCsp": false,
+      "active": true,
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": true,
+      "strictCsp": true,
+      "active": true,
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "runAt": "document_idle",
+      "stage": "lifecycle",
+      "disabled": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "inactive",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disabled",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ],
+      "inactive": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ],
+      "enabled": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "MAIN"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "MAIN"
+          }
+        ]
+      },
+      "restored": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": "interactive",
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "MAIN",
+      "allFrames": true,
+      "strictCsp": true,
+      "active": false,
+      "runAt": "document_idle",
+      "stage": "disposed",
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": false,
+      "strictCsp": false,
+      "active": true,
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": false,
+      "strictCsp": true,
+      "active": true,
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": false,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": false,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": false,
+      "strictCsp": true,
+      "active": false,
+      "runAt": "document_idle",
+      "stage": "disposed",
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": true,
+      "strictCsp": false,
+      "active": true,
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": "executed",
+          "violations": []
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": "executed",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": true,
+      "strictCsp": true,
+      "active": true,
+      "runAt": "document_idle",
+      "installed": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "runAt": "document_idle",
+      "stage": "lifecycle",
+      "disabled": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "inactive",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 1,
+                "enabled": false,
+                "status": "disabled",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "retained": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ],
+      "inactive": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ],
+      "enabled": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "ready",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": true,
+                "status": "active",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": [
+            {
+              "allFrames": true,
+              "id": "example-script-timing",
+              "js": ["script-timing.js"],
+              "matchOriginAsFallback": false,
+              "matches": [
+                "http://127.0.0.1/frame.html",
+                "http://127.0.0.1/index.html",
+                "http://localhost/frame.html",
+                "http://localhost/index.html"
+              ],
+              "persistAcrossSessions": false,
+              "runAt": "document_idle",
+              "world": "ISOLATED"
+            }
+          ]
+        },
+        "registrations": [
+          {
+            "allFrames": true,
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/frame.html",
+              "http://127.0.0.1/index.html",
+              "http://localhost/frame.html",
+              "http://localhost/index.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_idle",
+            "world": "ISOLATED"
+          }
+        ]
+      },
+      "restored": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": "interactive",
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        }
+      ]
+    },
+    {
+      "world": "ISOLATED",
+      "allFrames": true,
+      "strictCsp": true,
+      "active": false,
+      "runAt": "document_idle",
+      "stage": "disposed",
+      "disposal": {
+        "snapshot": {
+          "installation": {
+            "id": "example.bootstrap",
+            "status": "disposed",
+            "contributions": [
+              {
+                "id": "example.bootstrap",
+                "kind": "script",
+                "generation": 2,
+                "enabled": false,
+                "status": "disposed",
+                "diagnostics": []
+              }
+            ],
+            "diagnostics": []
+          },
+          "registrations": []
+        },
+        "registrations": []
+      },
+      "snapshots": [
+        {
+          "url": "http://127.0.0.1:58925/index.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58925/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://127.0.0.1:58926/frame.html",
+          "firstScript": {
+            "injectedGlobal": null,
+            "injectedReadyState": null,
+            "pageReadyState": "loading"
+          },
+          "currentGlobal": null,
+          "currentInjectedState": null,
+          "ordinaryScript": null,
+          "violations": ["script-src-elem"]
+        },
+        {
+          "url": "http://localhost:58925/frame.html",
           "firstScript": {
             "injectedGlobal": null,
             "injectedReadyState": null,
@@ -1647,19 +4969,47 @@
     }
   ],
   "checks": [
-    "MAIN: allFrames=false strictCsp=false native frame matching and host permissions",
-    "MAIN: allFrames=false strictCsp=true native frame matching and host permissions",
-    "MAIN: allFrames=false disposed registration leaves fresh documents uninjected",
-    "MAIN: allFrames=true strictCsp=false native frame matching and host permissions",
-    "MAIN: allFrames=true strictCsp=true native frame matching and host permissions",
-    "MAIN: native child-frame registration disable and enable under page CSP",
-    "MAIN: allFrames=true disposed registration leaves fresh documents uninjected",
-    "ISOLATED: allFrames=false strictCsp=false native frame matching and host permissions",
-    "ISOLATED: allFrames=false strictCsp=true native frame matching and host permissions",
-    "ISOLATED: allFrames=false disposed registration leaves fresh documents uninjected",
-    "ISOLATED: allFrames=true strictCsp=false native frame matching and host permissions",
-    "ISOLATED: allFrames=true strictCsp=true native frame matching and host permissions",
-    "ISOLATED: native child-frame registration disable and enable under page CSP",
-    "ISOLATED: allFrames=true disposed registration leaves fresh documents uninjected"
+    "MAIN document_start: allFrames=false strictCsp=false native frame matching and host permissions",
+    "MAIN document_start: allFrames=false strictCsp=true native frame matching and host permissions",
+    "MAIN document_start: allFrames=false disposed registration leaves fresh documents uninjected",
+    "MAIN document_start: allFrames=true strictCsp=false native frame matching and host permissions",
+    "MAIN document_start: allFrames=true strictCsp=true native frame matching and host permissions",
+    "MAIN document_start: native child-frame registration disable and enable under page CSP",
+    "MAIN document_start: allFrames=true disposed registration leaves fresh documents uninjected",
+    "ISOLATED document_start: allFrames=false strictCsp=false native frame matching and host permissions",
+    "ISOLATED document_start: allFrames=false strictCsp=true native frame matching and host permissions",
+    "ISOLATED document_start: allFrames=false disposed registration leaves fresh documents uninjected",
+    "ISOLATED document_start: allFrames=true strictCsp=false native frame matching and host permissions",
+    "ISOLATED document_start: allFrames=true strictCsp=true native frame matching and host permissions",
+    "ISOLATED document_start: native child-frame registration disable and enable under page CSP",
+    "ISOLATED document_start: allFrames=true disposed registration leaves fresh documents uninjected",
+    "MAIN document_end: allFrames=false strictCsp=false native frame matching and host permissions",
+    "MAIN document_end: allFrames=false strictCsp=true native frame matching and host permissions",
+    "MAIN document_end: allFrames=false disposed registration leaves fresh documents uninjected",
+    "MAIN document_end: allFrames=true strictCsp=false native frame matching and host permissions",
+    "MAIN document_end: allFrames=true strictCsp=true native frame matching and host permissions",
+    "MAIN document_end: native child-frame registration disable and enable under page CSP",
+    "MAIN document_end: allFrames=true disposed registration leaves fresh documents uninjected",
+    "ISOLATED document_end: allFrames=false strictCsp=false native frame matching and host permissions",
+    "ISOLATED document_end: allFrames=false strictCsp=true native frame matching and host permissions",
+    "ISOLATED document_end: allFrames=false disposed registration leaves fresh documents uninjected",
+    "ISOLATED document_end: allFrames=true strictCsp=false native frame matching and host permissions",
+    "ISOLATED document_end: allFrames=true strictCsp=true native frame matching and host permissions",
+    "ISOLATED document_end: native child-frame registration disable and enable under page CSP",
+    "ISOLATED document_end: allFrames=true disposed registration leaves fresh documents uninjected",
+    "MAIN document_idle: allFrames=false strictCsp=false native frame matching and host permissions",
+    "MAIN document_idle: allFrames=false strictCsp=true native frame matching and host permissions",
+    "MAIN document_idle: allFrames=false disposed registration leaves fresh documents uninjected",
+    "MAIN document_idle: allFrames=true strictCsp=false native frame matching and host permissions",
+    "MAIN document_idle: allFrames=true strictCsp=true native frame matching and host permissions",
+    "MAIN document_idle: native child-frame registration disable and enable under page CSP",
+    "MAIN document_idle: allFrames=true disposed registration leaves fresh documents uninjected",
+    "ISOLATED document_idle: allFrames=false strictCsp=false native frame matching and host permissions",
+    "ISOLATED document_idle: allFrames=false strictCsp=true native frame matching and host permissions",
+    "ISOLATED document_idle: allFrames=false disposed registration leaves fresh documents uninjected",
+    "ISOLATED document_idle: allFrames=true strictCsp=false native frame matching and host permissions",
+    "ISOLATED document_idle: allFrames=true strictCsp=true native frame matching and host permissions",
+    "ISOLATED document_idle: native child-frame registration disable and enable under page CSP",
+    "ISOLATED document_idle: allFrames=true disposed registration leaves fresh documents uninjected"
   ]
 }

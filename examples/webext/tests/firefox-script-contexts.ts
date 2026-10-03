@@ -26,7 +26,7 @@ interface ContextPages {
   readonly source: string;
 }
 
-interface ContextRegistration extends Pick<ScriptContextOptions, 'world' | 'allFrames'> {
+interface ContextRegistration extends Pick<ScriptContextOptions, 'world' | 'allFrames' | 'runAt'> {
   readonly pages: ContextPages;
   readonly fixture: ScriptContextServer;
 }
@@ -48,15 +48,18 @@ export async function checkFirefoxScriptContexts(driver: Driver, artifactDirecto
   });
   const observations = [];
   const checks = [];
-  for (const world of ['MAIN', 'ISOLATED'] as const) {
-    for (const allFrames of [false, true]) {
-      const result = await checkRegistration(driver, { pages, fixture, world, allFrames });
-      observations.push(...result.observations);
-      checks.push(...result.checks);
+  for (const runAt of ['document_start', 'document_end', 'document_idle'] as const) {
+    for (const world of ['MAIN', 'ISOLATED'] as const) {
+      for (const allFrames of [false, true]) {
+        const result = await checkRegistration(driver, { pages, fixture, world, allFrames, runAt });
+        observations.push(...result.observations);
+        checks.push(...result.checks);
+      }
     }
   }
   await driver.switchTo().window(extension);
   await driver.findElement(By.id('script-all-frames')).click();
+  await driver.findElement(By.css('#script-run-at option[value="document_start"]')).click();
   const optionalHostAfter = await driver.executeScript<boolean>(readOptionalHostPermission);
   assert.equal(optionalHostAfter, false);
   await writeFile(
@@ -75,29 +78,32 @@ export async function checkFirefoxScriptContexts(driver: Driver, artifactDirecto
 }
 
 async function checkRegistration(driver: Driver, options: ContextRegistration) {
-  const { pages, fixture, world, allFrames } = options;
+  const { pages, fixture, world, allFrames, runAt = 'document_start' } = options;
   const observations = [];
   const checks = [];
   let disposal: Awaited<ReturnType<typeof control>> | undefined;
   await driver.switchTo().window(pages.extension);
   const checkbox = driver.findElement(By.id('script-all-frames'));
   if ((await checkbox.isSelected()) !== allFrames) await checkbox.click();
+  await driver.findElement(By.css(`#script-run-at option[value="${runAt}"]`)).click();
   const installed = await control(driver, pages, `script-${world.toLowerCase()}`, 'ready', 1);
   try {
-    checkTimingRegistration(installed.registrations, world, { allFrames });
+    checkTimingRegistration(installed.registrations, world, { allFrames, runAt });
     for (const strictCsp of [false, true]) {
       fixture.setStrictCsp(strictCsp);
       await driver.switchTo().window(pages.source);
       await driver.get(fixture.url);
-      const current = { world, allFrames, strictCsp, active: true };
+      const current = { world, allFrames, strictCsp, active: true, runAt };
       observations.push({ ...current, installed, snapshots: await readFrames(driver, current) });
       checks.push(
-        `${world}: allFrames=${allFrames} strictCsp=${strictCsp} native frame matching and host permissions`,
+        `${world} ${runAt}: allFrames=${allFrames} strictCsp=${strictCsp} native frame matching and host permissions`,
       );
     }
     if (allFrames) {
-      observations.push(await checkLifecycle(driver, pages, world));
-      checks.push(`${world}: native child-frame registration disable and enable under page CSP`);
+      observations.push(await checkLifecycle(driver, pages, { world, runAt }));
+      checks.push(
+        `${world} ${runAt}: native child-frame registration disable and enable under page CSP`,
+      );
     }
   } finally {
     disposal = await control(driver, pages, 'script-dispose', 'disposed');
@@ -105,7 +111,7 @@ async function checkRegistration(driver: Driver, options: ContextRegistration) {
   }
   await driver.switchTo().window(pages.source);
   await driver.navigate().refresh();
-  const disposed = { world, allFrames, strictCsp: true, active: false };
+  const disposed = { world, allFrames, strictCsp: true, active: false, runAt };
   observations.push({
     ...disposed,
     stage: 'disposed',
@@ -113,7 +119,7 @@ async function checkRegistration(driver: Driver, options: ContextRegistration) {
     snapshots: await readFrames(driver, disposed),
   });
   checks.push(
-    `${world}: allFrames=${allFrames} disposed registration leaves fresh documents uninjected`,
+    `${world} ${runAt}: allFrames=${allFrames} disposed registration leaves fresh documents uninjected`,
   );
   return { observations, checks };
 }
@@ -121,10 +127,14 @@ async function checkRegistration(driver: Driver, options: ContextRegistration) {
 async function readFrames(driver: Driver, options: ScriptContextOptions) {
   const snapshots: ScriptContextSnapshot[] = [];
   await driver.switchTo().defaultContent();
-  for (const name of [undefined, 'same', 'cross', 'denied']) {
+  for (const [index, name] of [undefined, 'same', 'cross', 'denied'].entries()) {
     if (name !== undefined) await driver.switchTo().frame(await driver.findElement(By.name(name)));
     await driver.wait(
-      () => driver.executeScript<boolean>(scriptContextReady, options.strictCsp),
+      () =>
+        driver.executeScript<boolean>(scriptContextReady, {
+          strictCsp: options.strictCsp,
+          injected: options.active && (index === 0 || options.allFrames) && index !== 3,
+        }),
       10_000,
     );
     snapshots.push(await driver.executeScript<ScriptContextSnapshot>(readScriptContextSnapshot));
@@ -157,9 +167,9 @@ async function control(
 async function checkLifecycle(
   driver: Driver,
   pages: ContextPages,
-  world: `${chrome.scripting.ExecutionWorld}`,
+  { world, runAt = 'document_start' }: Pick<ScriptContextOptions, 'world' | 'runAt'>,
 ) {
-  const options = { world, allFrames: true, strictCsp: true, active: true };
+  const options = { world, allFrames: true, strictCsp: true, active: true, runAt };
   const disabled = await control(driver, pages, 'script-disable', 'disabled', 1);
   assert.deepEqual(disabled.registrations, []);
   await driver.switchTo().window(pages.source);
@@ -167,9 +177,9 @@ async function checkLifecycle(
   await driver.navigate().refresh();
   const inactive = await readFrames(driver, { ...options, active: false });
   const enabled = await control(driver, pages, 'script-enable', 'ready', 2);
-  checkTimingRegistration(enabled.registrations, world, { allFrames: true });
+  checkTimingRegistration(enabled.registrations, world, { allFrames: true, runAt });
   await driver.switchTo().window(pages.source);
   await driver.navigate().refresh();
   const restored = await readFrames(driver, options);
-  return { world, stage: 'lifecycle', disabled, retained, inactive, enabled, restored };
+  return { world, runAt, stage: 'lifecycle', disabled, retained, inactive, enabled, restored };
 }
