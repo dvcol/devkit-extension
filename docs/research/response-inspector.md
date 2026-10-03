@@ -128,10 +128,12 @@ The automated server command uses the native temporary authentication code and c
 ```sh
 pnpm --filter @devkit/example-vite-hosts test:inspector
 pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-errors.ts
+pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-development-chromium.ts
 pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-production.ts
 pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-races.ts
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts test:inspector:firefox
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-errors-firefox.ts
+FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-development-firefox.ts
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-production-firefox.ts
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-races-firefox.ts
 ```
@@ -182,6 +184,8 @@ Extension error recovery now runs with both renderer choices and a real native D
 
 Production preview does not automatically reload an existing document. Navigate explicitly to the new complete generation. The private preview fixture supports HTTP/1 without TLS. DevTools discovery first probes the absent Devframe metadata endpoint, which returns an actual 404 under static preview. Chrome records and permits only that exact request/status and matching console message; all other errors fail the proof. [Its retained receipt](../../examples/vite-hosts/evidence/inspector-production-chromium.json) contains the actual failures and recoveries. [Firefox's receipt](../../examples/vite-hosts/evidence/inspector-production-firefox.json) records visible state and connection checks; WebDriver Classic does not capture global page/console errors or discovery requests.
 
+[Chromium](../../examples/vite-hosts/evidence/inspector-development-chromium.json) and [Firefox](../../examples/vite-hosts/evidence/inspector-development-firefox.json) each verify eight development-edit checks through the maintained inspector configuration on both native hosts. The fixture copies only application browser source into an owned temporary directory. A valid main-module edit causes Vite document reload; a genuine syntax error produces the native overlay, zero inspector mounts and a disabled renderer selector. Repair remounts the unchanged authored view with the same provider incarnation, enabled configuration and modified prior body. Each host observes exactly three completed response requests for three explicit Inspect clicks, with none during reload or repair. Native authentication prompts after reload are answered through their actual UI using the terminal code. Chromium retains its expected module HTTP 500 console errors and records zero unhandled page errors; Firefox retains its Classic capture limit. Backend source HMR and extension edits are not exercised by this cell.
+
 The pinned caller-disconnect proofs hold one actual HTTP request after the unchanged Inspect action reaches its selected backend. Navigating the sender away closes all captured native sender sockets while a second client and the backend fetch remain live. Releasing the original middleware request completes it once. The observer receives the result with the same provider incarnation; the alternate host receives no request or state change. A fresh sender mount reads that retained state without replay. [Chrome](../../examples/vite-hosts/evidence/inspector-races-chromium.json) records zero page/console errors; [Firefox](../../examples/vite-hosts/evidence/inspector-races-firefox.json) records its visible-state and Classic error-capture limits.
 
 ```mermaid
@@ -226,4 +230,4 @@ Done for this slice:
 
 The affected Vite example suite now passes 42 tests, including eight real-preview cases across Devframe and DevTools.
 
-The full ticket remains open. Installed extension application consumption and inspector development edits still need their own evidence. Broader lifecycle and race cells remain with their parent contracts. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
+The full ticket remains open. Installed extension application consumption still needs its own evidence. Broader lifecycle and race cells remain with their parent contracts. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.

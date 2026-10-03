@@ -1,0 +1,168 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "host": "devframe",
+      "initial": {
+        "document": 1791000158355.9,
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "b88621a6-b062-4bc3-b866-0afd800c21bf",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "updated": {
+        "document": 1791000158692.3,
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "b88621a6-b062-4bc3-b866-0afd800c21bf",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "failure": {
+        "document": 1791000158849.6,
+        "message": "Transform failed with 1 error:\n\n[PARSE_ERROR] Unexpected token\n     ╭─[ artifacts/inspector-development-F7dTFs/site/main.ts:177:33 ]\n     │\n 177 │ export const invalidInspector = ;\n     │                                 ┬  \n     │                                 ╰── \n─────╯",
+        "mounts": 0,
+        "rendererDisabled": true,
+        "responseStatus": 500
+      },
+      "recovered": {
+        "document": 1791000158950.4,
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "b88621a6-b062-4bc3-b866-0afd800c21bf",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "requests": [
+        {
+          "url": "/inspector-response",
+          "completed": true
+        },
+        {
+          "url": "/inspector-response",
+          "completed": true
+        },
+        {
+          "url": "/inspector-response",
+          "completed": true
+        }
+      ],
+      "pageErrors": [],
+      "consoleErrors": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+          "url": "http://127.0.0.1:56654/main.ts?t=1791000158830"
+        }
+      ],
+      "authPrompts": [
+        "devframe: enter the authentication code shown in your terminal",
+        "devframe: enter the authentication code shown in your terminal"
+      ]
+    },
+    {
+      "host": "devtools",
+      "initial": {
+        "document": 1791000159216.3,
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "f339693d-4a92-4d45-bc65-236c17b757ce",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "updated": {
+        "document": 1791000159723.5,
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "f339693d-4a92-4d45-bc65-236c17b757ce",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "failure": {
+        "document": 1791000160067,
+        "message": "Transform failed with 1 error:\n\n[PARSE_ERROR] Unexpected token\n     ╭─[ artifacts/inspector-development-g00AMf/site/main.ts:177:33 ]\n     │\n 177 │ export const invalidInspector = ;\n     │                                 ┬  \n     │                                 ╰── \n─────╯",
+        "mounts": 0,
+        "rendererDisabled": true,
+        "responseStatus": 500
+      },
+      "recovered": {
+        "document": 1791000160168.6,
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "f339693d-4a92-4d45-bc65-236c17b757ce",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "requests": [
+        {
+          "url": "/inspector-response",
+          "completed": true
+        },
+        {
+          "url": "/inspector-response",
+          "completed": true
+        },
+        {
+          "url": "/inspector-response",
+          "completed": true
+        }
+      ],
+      "pageErrors": [],
+      "consoleErrors": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+          "url": "http://127.0.0.1:56681/main.ts?t=1791000160044"
+        }
+      ],
+      "authPrompts": [
+        "devframe: enter the authentication code shown in your terminal",
+        "devframe: enter the authentication code shown in your terminal"
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "checks": [
+    "devframe: a valid inspector main-module edit causes native Vite document reload while retaining provider and business state",
+    "devframe: a genuine syntax error shows the native overlay with zero inspector mounts and a disabled renderer selector",
+    "devframe: valid source recovery remounts the unchanged authored view once with retained state and no response replay",
+    "devframe: each explicit Inspect action after reload or repair produces exactly one real owned HTTP request",
+    "devtools: a valid inspector main-module edit causes native Vite document reload while retaining provider and business state",
+    "devtools: a genuine syntax error shows the native overlay with zero inspector mounts and a disabled renderer selector",
+    "devtools: valid source recovery remounts the unchanged authored view once with retained state and no response replay",
+    "devtools: each explicit Inspect action after reload or repair produces exactly one real owned HTTP request"
+  ],
+  "limitations": [
+    "Native inspector main-module reload only; backend module HMR and extension edits are not exercised",
+    "A failed browser module cannot dispatch actions; the native backend remains alive with its prior state"
+  ]
+}

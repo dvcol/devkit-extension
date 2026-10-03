@@ -49,6 +49,8 @@ jobs:
         run: pnpm --filter @devkit/example-vite-hosts test:browser
       - name: Run the shared inspector through both native server hosts
         run: pnpm --filter @devkit/example-vite-hosts test:inspector
+      - name: Verify native inspector development reload and source recovery
+        run: pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-development-chromium.ts
       - name: Verify authored inspector error callbacks and recovery on both native hosts
         run: pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-errors.ts
       - name: Verify watched inspector production generations through both native preview hosts
@@ -86,6 +88,12 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-vite-hosts test:inspector:firefox
+      - name: Verify native inspector development reload and recovery in Firefox
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-development-firefox.ts
       - name: Verify authored inspector error callbacks and recovery in Firefox
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

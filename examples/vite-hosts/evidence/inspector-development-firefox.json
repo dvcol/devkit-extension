@@ -1,0 +1,153 @@
+{
+  "browser": "157.0",
+  "driver": "0.37.1",
+  "observations": [
+    {
+      "host": "devframe",
+      "initial": {
+        "document": 1790999946082,
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "7c9f6dc8-0edd-404d-b65f-50ce1ba9eaad",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "updated": {
+        "document": 1790999946830,
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "7c9f6dc8-0edd-404d-b65f-50ce1ba9eaad",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "failure": {
+        "document": 1790999947241,
+        "message": "Transform failed with 1 error:\n\n[PARSE_ERROR] Unexpected token\n     ╭─[ artifacts/inspector-development-Xa5SWK/site/main.ts:177:33 ]\n     │\n 177 │ export const invalidInspector = ;\n     │                                 ┬  \n     │                                 ╰── \n─────╯",
+        "mounts": 0,
+        "rendererDisabled": true
+      },
+      "recovered": {
+        "document": 1790999947543,
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "7c9f6dc8-0edd-404d-b65f-50ce1ba9eaad",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "requests": [
+        {
+          "url": "/inspector-response",
+          "completed": true
+        },
+        {
+          "url": "/inspector-response",
+          "completed": true
+        },
+        {
+          "url": "/inspector-response",
+          "completed": true
+        }
+      ],
+      "authPrompts": [
+        "devframe: enter the authentication code shown in your terminal",
+        "devframe: enter the authentication code shown in your terminal"
+      ]
+    },
+    {
+      "host": "devtools",
+      "initial": {
+        "document": 1790999947958,
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "77a39205-5b99-4bec-aff9-5fcfe2b8fb76",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "updated": {
+        "document": 1790999948395,
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "77a39205-5b99-4bec-aff9-5fcfe2b8fb76",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "failure": {
+        "document": 1790999948919,
+        "message": "Transform failed with 1 error:\n\n[PARSE_ERROR] Unexpected token\n     ╭─[ artifacts/inspector-development-H8L8FW/site/main.ts:177:33 ]\n     │\n 177 │ export const invalidInspector = ;\n     │                                 ┬  \n     │                                 ╰── \n─────╯",
+        "mounts": 0,
+        "rendererDisabled": true
+      },
+      "recovered": {
+        "document": 1790999949226,
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "77a39205-5b99-4bec-aff9-5fcfe2b8fb76",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "renderer": "reference",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true"
+      },
+      "requests": [
+        {
+          "url": "/inspector-response",
+          "completed": true
+        },
+        {
+          "url": "/inspector-response",
+          "completed": true
+        },
+        {
+          "url": "/inspector-response",
+          "completed": true
+        }
+      ],
+      "authPrompts": [
+        "devframe: enter the authentication code shown in your terminal",
+        "devframe: enter the authentication code shown in your terminal"
+      ]
+    }
+  ],
+  "checks": [
+    "devframe: a valid inspector main-module edit causes native Vite document reload while retaining provider and business state",
+    "devframe: a genuine syntax error shows the native overlay with zero inspector mounts and a disabled renderer selector",
+    "devframe: valid source recovery remounts the unchanged authored view once with retained state and no response replay",
+    "devframe: each explicit Inspect action after reload or repair produces exactly one real owned HTTP request",
+    "devtools: a valid inspector main-module edit causes native Vite document reload while retaining provider and business state",
+    "devtools: a genuine syntax error shows the native overlay with zero inspector mounts and a disabled renderer selector",
+    "devtools: valid source recovery remounts the unchanged authored view once with retained state and no response replay",
+    "devtools: each explicit Inspect action after reload or repair produces exactly one real owned HTTP request"
+  ],
+  "limitations": [
+    "WebDriver Classic does not capture global page or console errors; actual native overlay and visible renderer state are asserted",
+    "Native inspector main-module reload only; backend module HMR and extension edits are not exercised",
+    "A failed browser module cannot dispatch actions; the native backend remains alive with its prior state"
+  ]
+}

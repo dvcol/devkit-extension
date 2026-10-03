@@ -681,6 +681,42 @@
           "host": "firefox-extension-devframe",
           "mode": "production-extension-native-development-sibling-reference-custom",
           "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-development-chromium.ts",
+          "receiptFile": "artifacts/inspector-development-chromium.json",
+          "checks": [
+            "devframe: a valid inspector main-module edit causes native Vite document reload while retaining provider and business state",
+            "devframe: a genuine syntax error shows the native overlay with zero inspector mounts and a disabled renderer selector",
+            "devframe: valid source recovery remounts the unchanged authored view once with retained state and no response replay",
+            "devframe: each explicit Inspect action after reload or repair produces exactly one real owned HTTP request",
+            "devtools: a valid inspector main-module edit causes native Vite document reload while retaining provider and business state",
+            "devtools: a genuine syntax error shows the native overlay with zero inspector mounts and a disabled renderer selector",
+            "devtools: valid source recovery remounts the unchanged authored view once with retained state and no response replay",
+            "devtools: each explicit Inspect action after reload or repair produces exactly one real owned HTTP request"
+          ],
+          "host": "chromium-devframe-devtools",
+          "mode": "native-development-main-module-edit-reload-failure-recovery",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-development-firefox.ts",
+          "receiptFile": "artifacts/inspector-development-firefox.json",
+          "checks": [
+            "devframe: a valid inspector main-module edit causes native Vite document reload while retaining provider and business state",
+            "devframe: a genuine syntax error shows the native overlay with zero inspector mounts and a disabled renderer selector",
+            "devframe: valid source recovery remounts the unchanged authored view once with retained state and no response replay",
+            "devframe: each explicit Inspect action after reload or repair produces exactly one real owned HTTP request",
+            "devtools: a valid inspector main-module edit causes native Vite document reload while retaining provider and business state",
+            "devtools: a genuine syntax error shows the native overlay with zero inspector mounts and a disabled renderer selector",
+            "devtools: valid source recovery remounts the unchanged authored view once with retained state and no response replay",
+            "devtools: each explicit Inspect action after reload or repair produces exactly one real owned HTTP request"
+          ],
+          "host": "firefox-devframe-devtools",
+          "mode": "native-development-main-module-edit-reload-failure-recovery",
+          "requirePageErrors": false
         }
       ]
     },
