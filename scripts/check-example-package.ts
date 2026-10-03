@@ -10,6 +10,7 @@ import { build, parseSync } from 'vite';
 import {
   contractsConsumerSource,
   exampleConsumerSource,
+  inspectorConsumerSource,
 } from './fixtures/example-package-sources.ts';
 
 const repositoryDirectory = resolvePath(import.meta.dirname, '..');
@@ -125,7 +126,7 @@ async function checkConsumerTypes(
         types: [],
         outDir: outputDirectory,
       },
-      include: ['consumer.ts', 'contracts.ts'],
+      include: ['consumer.ts', 'contracts.ts', 'inspector.ts'],
     }),
   );
   await run(
@@ -140,6 +141,10 @@ async function checkConsumerTypes(
   await executeConsumer(
     join(consumerDirectory, outputDirectory, 'contracts.js'),
     'contracts-consumer-passed',
+  );
+  await executeConsumer(
+    join(consumerDirectory, outputDirectory, 'inspector.js'),
+    'inspector-consumer-passed',
   );
 }
 
@@ -166,6 +171,7 @@ function inspectStaticWrapper(identifier: string, source: string) {
 
 async function inspectContractModule(identifier: string) {
   const isIndex = identifier.endsWith('/dist/index.js');
+  const isInspector = identifier.endsWith('/dist/inspector.js');
   const sourceMapText = await readFile(`${identifier}.map`, 'utf8').catch((error: unknown) => {
     if (isRecord(error) && error['code'] === 'ENOENT') return null;
     throw error;
@@ -182,7 +188,9 @@ async function inspectContractModule(identifier: string) {
   assert.ok(
     sources.every(
       (source: unknown) =>
-        source === '../src/contracts.ts' || (isIndex && source === '../src/index.ts'),
+        source === '../src/contracts.ts' ||
+        (isIndex && source === '../src/index.ts') ||
+        (isInspector && source === '../src/inspector.ts'),
     ),
     `Example bundled provider code into its contract entry: ${identifier}`,
   );
@@ -246,12 +254,13 @@ try {
   await inspectInstalledPackages();
   await writeFile(join(consumerDirectory, 'consumer.ts'), exampleConsumerSource);
   await writeFile(join(consumerDirectory, 'contracts.ts'), contractsConsumerSource);
+  await writeFile(join(consumerDirectory, 'inspector.ts'), inspectorConsumerSource);
   await checkConsumerTypes('ESNext', 'Bundler');
   await checkConsumerTypes('NodeNext', 'NodeNext');
   await checkContractsBrowserBundle();
   console.info(
     styleText('cyan', '📦 [example-artifacts]'),
-    'Packed NodeNext/Bundler declarations, action/capability calls, subscription disposal and browser contract graph passed.',
+    'Packed NodeNext/Bundler declarations, counter and inspector action/capability calls, subscription disposal and browser contract graph passed.',
   );
 } finally {
   await rm(consumerDirectory, { recursive: true, force: true });
