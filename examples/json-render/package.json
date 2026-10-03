@@ -14,6 +14,10 @@
     "./view": {
       "types": "./dist/view.d.ts",
       "import": "./dist/view.js"
+    },
+    "./inspector": {
+      "types": "./dist/inspector.d.ts",
+      "import": "./dist/inspector.js"
     }
   },
   "scripts": {

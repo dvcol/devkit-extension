@@ -22,10 +22,13 @@
     "preview:devtools": "node src/preview-demo.ts devtools",
     "demo:devframe": "node src/demo.ts devframe",
     "demo:devtools": "node src/demo.ts devtools",
+    "inspector:devframe": "vite --config inspector.config.ts --mode devframe",
+    "inspector:devtools": "vite --config inspector.config.ts --mode devtools",
     "test": "vitest run --reporter=default --reporter=json --outputFile=.conformance/vitest.json",
     "test:browser": "node tests/browser.ts",
+    "test:inspector": "node tests/inspector-browser.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src site tests vite.config.ts host.config.ts",
+    "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src site inspector-site tests vite.config.ts host.config.ts inspector.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check ."
   },
   "dependencies": {

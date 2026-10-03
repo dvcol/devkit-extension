@@ -284,7 +284,8 @@
       ],
       "gaps": [
         "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Chromium and Firefox custom/reference renderers now have native actions, error feedback, unmount/remount, replacement, dependency-loss and host-close evidence. Firefox delayed-response replacement and global page-error capture, full surface placement, catalog compatibility, self-accepting renderer replacement and every supported preview failure case remain separate obligations. Native CSS HMR, renderer-module page reload and invalid-source recovery now have maintained real Chromium/Firefox development evidence on both native server hosts; they preserve backend/provider state and native form behavior.",
-        "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform registration uses the same native setup contract; complete native transformation mechanisms and failure cases remain separate work. Script registration now has its own native setup contract and evidence group."
+        "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform registration uses the same native setup contract; complete native transformation mechanisms and failure cases remain separate work. Script registration now has its own native setup contract and evidence group.",
+        "The response-inspector proof now links the same authored native JSON view, future-document marker and actual owned response bytes on Chromium development Devframe/DevTools and Chromium/Firefox production extensions. Packed consumption, an alternate renderer for this exact spec, mixed-provider inspector broadcast, standalone Firefox server UI, inspector production-preview/reload, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is explicitly unavailable; Firefox rejection causes remain native generic remote errors and WebDriver Classic lacks global page-error capture."
       ],
       "browserEvidence": [
         {
@@ -399,6 +400,42 @@
           "host": "firefox-native-devframe-and-devtools",
           "mode": "development-vite-native-hmr-and-page-reload",
           "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-browser.ts",
+          "receiptFile": "artifacts/inspector-chromium.json",
+          "host": "chromium",
+          "mode": "development",
+          "requirePageErrors": true,
+          "checks": [
+            "devframe: the unchanged native renderer dispatches shared inspector actions through the selected provider",
+            "devtools: the unchanged native renderer dispatches shared inspector actions through the selected provider"
+          ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-inspector.ts",
+          "receiptFile": "artifacts/inspector/chromium.json",
+          "host": "chromium",
+          "mode": "production",
+          "requirePageErrors": true,
+          "checks": [
+            "shared native JSON inspector returns the actual owned response URL and status and displays its body",
+            "inspector failures preserve the independent counter state and provider incarnation"
+          ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-inspector.ts",
+          "receiptFile": "artifacts/inspector/firefox.json",
+          "host": "firefox",
+          "mode": "production",
+          "requirePageErrors": false,
+          "checks": [
+            "shared native JSON inspector returns the actual owned response URL and status and displays its body",
+            "inspector failures preserve the independent counter state and provider incarnation"
+          ]
         }
       ]
     },
@@ -543,7 +580,8 @@
       ],
       "gaps": [
         "The common API owns native setup and cleanup. All three native stages now cover MAIN/ISOLATED, allFrames false/true, top/same-origin/cross-origin children, an ungranted matching child and the tested nonce CSP in Chromium/Firefox production/development. Native install/disable/enable/dispose, preserved old effects and absent fresh-document markers are directly observed. The separate held-resource fixture proves document_end before load; no common idle scheduling order is imposed. Blank/blob/sandboxed frames, origin fallback, broader CSP operations, remaining permission transitions, browser restart, dependency loss during real registration and cleanup failure remain issue #11 obligations. A native Firefox production MAIN/document_start top-level case now keeps the same registration across permission revoke/regrant and observes fresh-document injection stop/resume without reinstall; other worlds/stages/frames, development and Chrome remain separate cells.",
-        "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP response implementations remain separate native work."
+        "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP response implementations remain separate native work.",
+        "The response-inspector proof now links the same authored native JSON view, future-document marker and actual owned response bytes on Chromium development Devframe/DevTools and Chromium/Firefox production extensions. Packed consumption, an alternate renderer for this exact spec, mixed-provider inspector broadcast, standalone Firefox server UI, inspector production-preview/reload, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is explicitly unavailable; Firefox rejection causes remain native generic remote errors and WebDriver Classic lacks global page-error capture."
       ],
       "browserEvidence": [
         {
@@ -880,6 +918,44 @@
           "host": "firefox-webext",
           "mode": "production-extension-native-permission-ui",
           "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-browser.ts",
+          "receiptFile": "artifacts/inspector-chromium.json",
+          "host": "chromium",
+          "mode": "development",
+          "requirePageErrors": true,
+          "checks": [
+            "devframe: marker registration affects a fresh document before its first parser script without changing the existing document",
+            "devframe: reset restores baseline configuration and future HTML while preserving provider identity",
+            "devtools: marker registration affects a fresh document before its first parser script without changing the existing document",
+            "devtools: reset restores baseline configuration and future HTML while preserving provider identity"
+          ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-inspector.ts",
+          "receiptFile": "artifacts/inspector/chromium.json",
+          "host": "chromium",
+          "mode": "production",
+          "requirePageErrors": true,
+          "checks": [
+            "marker registration affects the next owned document before its first parser script",
+            "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact"
+          ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-inspector.ts",
+          "receiptFile": "artifacts/inspector/firefox.json",
+          "host": "firefox",
+          "mode": "production",
+          "requirePageErrors": false,
+          "checks": [
+            "marker registration affects the next owned document before its first parser script",
+            "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact"
+          ]
         }
       ]
     },
@@ -1244,12 +1320,48 @@
           "host": "firefox-webext",
           "mode": "native-wxt-development",
           "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/vite-hosts",
+          "testFile": "tests/inspector-browser.ts",
+          "receiptFile": "artifacts/inspector-chromium.json",
+          "host": "chromium",
+          "mode": "development",
+          "requirePageErrors": true,
+          "checks": [
+            "devframe: inspect reads actual original and configured response bytes from the owned Vite endpoint",
+            "devtools: inspect reads actual original and configured response bytes from the owned Vite endpoint"
+          ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-inspector.ts",
+          "receiptFile": "artifacts/inspector/chromium.json",
+          "host": "chromium",
+          "mode": "production",
+          "requirePageErrors": true,
+          "checks": [
+            "Chromium reports response modification unavailable, rejects enabling and preserves actual response bytes"
+          ]
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-inspector.ts",
+          "receiptFile": "artifacts/inspector/firefox.json",
+          "host": "firefox",
+          "mode": "production",
+          "requirePageErrors": false,
+          "checks": [
+            "Firefox modifies actual page-fetch response bytes only for the selected top-level fixture document",
+            "the same tab navigating to another document receives the original body while modification remains enabled"
+          ]
         }
       ],
       "gaps": [
         "The common API owns native registration and cleanup. Bounded Vite HTML, native Chromium/Firefox DNR header and same-origin redirect examples, and Firefox byte-stream filtering establish their own timing, independent lifecycle and native failures in supported development/production modes. Chromium explicitly rejects the unavailable Firefox filtering method. No common response pipeline or cross-mechanism order is claimed.",
         "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, persistent response-listener wakeup and brotli/zstd, malformed/truncated encodings, range responses, caching and HTTP/2/3 still need exact native evidence. Admitted Firefox stream completion after disposal is covered. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes. Valid gzip/deflate with fixed-length and chunked framing now have exact delivered-byte/header evidence in both Firefox modes; original encoded headers remain visible, with no SDK header-normalization promise.",
-        "Running-background Firefox loopback streams now have distinct native reader-cancellation and Fetch-abort evidence in production and development. Reader cancellation is a bounded consumption observation, not an upstream cancellation guarantee; Fetch abort reaches native onstop without a filter error. Page destruction, other consumers, cancellation with other encodings/protocols and idle wakeup remain unproved. No SDK cancellation policy is inferred."
+        "Running-background Firefox loopback streams now have distinct native reader-cancellation and Fetch-abort evidence in production and development. Reader cancellation is a bounded consumption observation, not an upstream cancellation guarantee; Fetch abort reaches native onstop without a filter error. Page destruction, other consumers, cancellation with other encodings/protocols and idle wakeup remain unproved. No SDK cancellation policy is inferred.",
+        "The response-inspector proof now links the same authored native JSON view, future-document marker and actual owned response bytes on Chromium development Devframe/DevTools and Chromium/Firefox production extensions. Packed consumption, an alternate renderer for this exact spec, mixed-provider inspector broadcast, standalone Firefox server UI, inspector production-preview/reload, cancellation/disconnection races and an optional CDB profile remain separate acceptance cells. Chromium response filtering is explicitly unavailable; Firefox rejection causes remain native generic remote errors and WebDriver Classic lacks global page-error capture."
       ]
     },
     {

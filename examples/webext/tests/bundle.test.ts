@@ -44,8 +44,9 @@ it.each([
 ])(
   'bundles native RPC and rendering for $browser',
   async ({ mode, background, browserSettings }) => {
-    expect.assertions(9);
-    const { modules, imports, files, manifest, timingScript } = await inspectBundle(mode);
+    expect.assertions(12);
+    const { modules, imports, files, manifest, timingScript, inspectorScript } =
+      await inspectBundle(mode);
     expect(modules.filter((id) => /(?:^node:|browser-external)/u.test(id))).toEqual([]);
     expect(modules.filter((id) => id.includes('webextension-polyfill'))).toEqual([]);
     expect(
@@ -60,11 +61,15 @@ it.each([
         'devtools.html',
         'manifest.json',
         'script-timing.js',
+        'inspector-marker.js',
       ]),
     );
     expect(timingScript).not.toBe('');
     expect(() => new Script(timingScript)).not.toThrow();
     expect(timingScript).not.toMatch(/import\s*\(/u);
+    expect(inspectorScript).not.toBe('');
+    expect(() => new Script(inspectorScript)).not.toThrow();
+    expect(inspectorScript).not.toMatch(/import\s*\(/u);
     expect(manifest).toEqual({
       manifest_version: 3,
       name: 'Devkit native Port example',
@@ -104,6 +109,7 @@ async function inspectBundle(mode: string) {
   const files: string[] = [];
   let manifest: unknown;
   let timingScript = '';
+  let inspectorScript = '';
   let backgroundScript = '';
   await build({
     configFile: './vite.config.ts',
@@ -121,6 +127,8 @@ async function inspectBundle(mode: string) {
               backgroundScript = output.code;
             if (output.type === 'chunk' && output.fileName === 'script-timing.js')
               timingScript = output.code;
+            if (output.type === 'chunk' && output.fileName === 'inspector-marker.js')
+              inspectorScript = output.code;
             if (output.type === 'chunk') imports.push(...output.imports, ...output.dynamicImports);
             if (output.type !== 'asset' || output.fileName !== 'manifest.json') continue;
             const source = output.source;
@@ -132,5 +140,5 @@ async function inspectBundle(mode: string) {
     ],
     build: { write: false },
   });
-  return { modules, imports, files, manifest, timingScript, backgroundScript };
+  return { modules, imports, files, manifest, timingScript, inspectorScript, backgroundScript };
 }

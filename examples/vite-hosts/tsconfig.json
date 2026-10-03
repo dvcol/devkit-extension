@@ -6,5 +6,13 @@
     "types": ["node", "vite/client"],
     "lib": ["ES2024", "DOM"]
   },
-  "include": ["src", "site", "tests", "vite.config.ts", "host.config.ts"]
+  "include": [
+    "src",
+    "site",
+    "inspector-site",
+    "tests",
+    "vite.config.ts",
+    "host.config.ts",
+    "inspector.config.ts"
+  ]
 }

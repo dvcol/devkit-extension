@@ -81,6 +81,10 @@ function createRendererContext(
         bindings: [
           { action: increaseCounterAction, routing },
           { action: increaseMatchingCounterAction, routing },
+          { action: readInspectorAction, routing },
+          { action: configureInspectorAction, routing },
+          { action: markInspectorAction, routing },
+          { action: resetInspectorAction, routing },
         ],
       }),
     },
@@ -137,3 +141,9 @@ function mountView(options: {
   };
   return { signal: lifetime.signal, ready, dispose };
 }
+import {
+  configureInspectorAction,
+  markInspectorAction,
+  readInspectorAction,
+  resetInspectorAction,
+} from '@devkit/example-contribution/inspector';

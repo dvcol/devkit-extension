@@ -46,6 +46,7 @@ export default defineConfig(({ mode }) => {
           devtools: resolve(import.meta.dirname, 'entrypoints/devtools.html'),
           background: resolve(import.meta.dirname, 'src/background-entry.ts'),
           'script-timing': resolve(import.meta.dirname, 'src/script-timing-entry.ts'),
+          'inspector-marker': resolve(import.meta.dirname, 'src/inspector-marker-entry.ts'),
         },
         output: { entryFileNames: '[name].js' },
       },

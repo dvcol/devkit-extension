@@ -39,6 +39,10 @@ jobs:
         run: pnpm --filter @devkit/example-webext test:trust:chromium
       - name: Run native Vite browser actions, state and HTML timing
         run: pnpm --filter @devkit/example-vite-hosts test:browser
+      - name: Run the shared inspector through both native server hosts
+        run: pnpm --filter @devkit/example-vite-hosts test:inspector
+      - name: Run the shared inspector in the Chromium extension
+        run: pnpm --filter @devkit/example-webext exec node tests/chromium-inspector.ts
       - name: Run custom and reference renderers on both native backends
         run: pnpm --filter @devkit/example-json-render test:browser
       - name: Verify native renderer source and style updates in Chromium
@@ -72,6 +76,12 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-webext test:firefox
+      - name: Run the shared inspector in the Firefox extension
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-webext exec node tests/firefox-inspector.ts
       - name: Verify opt-in Firefox counter persistence
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
@@ -141,6 +151,7 @@ jobs:
             examples/webext/artifacts/firefox/*.json
             examples/webext/artifacts/firefox/*.png
             examples/webext/artifacts/trust/*.json
+            examples/webext/artifacts/inspector/*.json
             examples/webext/artifacts/persistence/*.json
             examples/webext/artifacts/persistence/*.png
             examples/webext/artifacts/*-development/*.json

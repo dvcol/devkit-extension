@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      document.documentElement.dataset.firstInspectorScript = JSON.stringify({
+        marker: Reflect.get(globalThis, 'responseInspectorMarker') ?? null,
+        readyState: document.readyState,
+      });
+      document.addEventListener(
+        'DOMContentLoaded',
+        () => {
+          document.querySelector('#marker-observation').textContent =
+            document.documentElement.dataset.firstInspectorScript;
+        },
+        { once: true },
+      );
+    </script>
+    <meta charset="UTF-8" />
+    <title>Portable response inspector</title>
+  </head>
+  <body>
+    <h1>Portable response inspector</h1>
+    <p>Enter the native authentication code printed by the running host when prompted.</p>
+    <p id="connection" role="status">Connecting…</p>
+    <output id="provider"></output>
+    <section id="inspector"></section>
+    <p>First parser-script observation: <output id="marker-observation"></output></p>
+    <a href="/inspector-fixture">Open a fresh fixture document</a>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

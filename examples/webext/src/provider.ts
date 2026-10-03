@@ -11,6 +11,14 @@ import type { ProviderRpc } from '@devkit/devframe';
 import type { JsonRenderViewContext } from '@devframes/json-render/view';
 import { createMatchingCounterPlugin } from '@devkit/example-contribution/provider';
 import { createCounterView } from '@devkit/example-json-render/view';
+import {
+  configureInspectorAction,
+  inspectorCapability,
+  markInspectorAction,
+  readInspectorAction,
+  resetInspectorAction,
+} from '@devkit/example-contribution/inspector';
+import { createInspectorPlugin } from './inspector-plugin';
 import { spec } from './spec';
 import { registerNativeContributionControls } from './native-contributions';
 import {
@@ -84,10 +92,18 @@ export function createExampleProvider(options: {
           createCounterView({ execution, nativeContext: viewContext, scope: 'global', spec }),
         ],
       }),
+      createInspectorPlugin({ execution, nativeContext: viewContext }),
     ],
     expose: {
-      actions: [increaseCounterAction, increaseMatchingCounterAction],
-      capabilities: [counterCapability],
+      actions: [
+        increaseCounterAction,
+        increaseMatchingCounterAction,
+        readInspectorAction,
+        configureInspectorAction,
+        markInspectorAction,
+        resetInspectorAction,
+      ],
+      capabilities: [counterCapability, inspectorCapability],
     },
   });
   registerNativeContributionControls({ rpc: options.rpc, provider });

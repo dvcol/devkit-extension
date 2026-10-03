@@ -15,6 +15,10 @@
     "./provider": {
       "types": "./dist/provider.d.ts",
       "import": "./dist/provider.js"
+    },
+    "./inspector": {
+      "types": "./dist/inspector.d.ts",
+      "import": "./dist/inspector.js"
     }
   },
   "scripts": {

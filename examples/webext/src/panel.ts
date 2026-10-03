@@ -117,10 +117,12 @@ async function updateViews(index: JsonRenderIndex = {}): Promise<void> {
   for (const entry of Object.values(index)) {
     const previous = mountedViews.get(entry.stateKey);
     if (previous !== undefined && !previous.signal.aborted) continue;
-    if (entry.id !== 'counter' && entry.id !== 'management') continue;
+    if (entry.id !== 'counter' && entry.id !== 'management' && entry.id !== 'response-inspector')
+      continue;
     const target = {
       counter: container,
       management: document.querySelector<HTMLElement>('#management')!,
+      'response-inspector': document.querySelector<HTMLElement>('#inspector')!,
     }[entry.id];
     mountedViews.set(entry.stateKey, mountView(entry, target, previous));
   }

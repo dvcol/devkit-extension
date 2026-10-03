@@ -1,0 +1,238 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "host": "devframe",
+      "origin": "http://127.0.0.1:62819",
+      "original": {
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "495304ab-63c1-46c0-b956-1ed81866041c",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:62819/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        }
+      },
+      "modified": {
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "495304ab-63c1-46c0-b956-1ed81866041c",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:62819/inspector-response",
+        "configuration": "Modification enabled: true",
+        "body": "Response body: native:fixture:original",
+        "marker": "Marker installed: false",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        }
+      },
+      "marked": {
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "495304ab-63c1-46c0-b956-1ed81866041c",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:62819/inspector-response",
+        "configuration": "Modification enabled: true",
+        "body": "Response body: native:fixture:original",
+        "marker": "Marker installed: true",
+        "firstScript": {
+          "marker": "loading",
+          "readyState": "loading"
+        }
+      },
+      "reset": {
+        "reset": {
+          "provider": {
+            "id": "example.devframe-inspector",
+            "incarnation": "495304ab-63c1-46c0-b956-1ed81866041c",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "target": "Target: No response inspected",
+          "configuration": "Modification enabled: false",
+          "body": "Response body: No response inspected",
+          "marker": "Marker installed: false",
+          "firstScript": {
+            "marker": "loading",
+            "readyState": "loading"
+          }
+        },
+        "freshDocument": {
+          "provider": {
+            "id": "example.devframe-inspector",
+            "incarnation": "495304ab-63c1-46c0-b956-1ed81866041c",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "target": "Target: http://127.0.0.1:62819/inspector-response",
+          "configuration": "Modification enabled: false",
+          "body": "Response body: fixture:original",
+          "marker": "Marker installed: false",
+          "firstScript": {
+            "marker": null,
+            "readyState": "loading"
+          }
+        }
+      },
+      "unaffected": {
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "cf009cf1-afd7-4284-888e-b2695a7f3725",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:62820/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        }
+      }
+    },
+    {
+      "host": "devtools",
+      "origin": "http://127.0.0.1:62820",
+      "original": {
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "cf009cf1-afd7-4284-888e-b2695a7f3725",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:62820/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        }
+      },
+      "modified": {
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "cf009cf1-afd7-4284-888e-b2695a7f3725",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:62820/inspector-response",
+        "configuration": "Modification enabled: true",
+        "body": "Response body: native:fixture:original",
+        "marker": "Marker installed: false",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        }
+      },
+      "marked": {
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "cf009cf1-afd7-4284-888e-b2695a7f3725",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:62820/inspector-response",
+        "configuration": "Modification enabled: true",
+        "body": "Response body: native:fixture:original",
+        "marker": "Marker installed: true",
+        "firstScript": {
+          "marker": "loading",
+          "readyState": "loading"
+        }
+      },
+      "reset": {
+        "reset": {
+          "provider": {
+            "id": "example.devtools-inspector",
+            "incarnation": "cf009cf1-afd7-4284-888e-b2695a7f3725",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "target": "Target: No response inspected",
+          "configuration": "Modification enabled: false",
+          "body": "Response body: No response inspected",
+          "marker": "Marker installed: false",
+          "firstScript": {
+            "marker": "loading",
+            "readyState": "loading"
+          }
+        },
+        "freshDocument": {
+          "provider": {
+            "id": "example.devtools-inspector",
+            "incarnation": "cf009cf1-afd7-4284-888e-b2695a7f3725",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "target": "Target: http://127.0.0.1:62820/inspector-response",
+          "configuration": "Modification enabled: false",
+          "body": "Response body: fixture:original",
+          "marker": "Marker installed: false",
+          "firstScript": {
+            "marker": null,
+            "readyState": "loading"
+          }
+        }
+      },
+      "unaffected": {
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "495304ab-63c1-46c0-b956-1ed81866041c",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "target": "Target: http://127.0.0.1:62819/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        }
+      }
+    }
+  ],
+  "checks": [
+    "devframe: the unchanged native renderer dispatches shared inspector actions through the selected provider",
+    "devframe: inspect reads actual original and configured response bytes from the owned Vite endpoint",
+    "devframe: marker registration affects a fresh document before its first parser script without changing the existing document",
+    "devframe: reset restores baseline configuration and future HTML while preserving provider identity",
+    "devframe: the two live backends retain distinct provider identities and native business state",
+    "devtools: the unchanged native renderer dispatches shared inspector actions through the selected provider",
+    "devtools: inspect reads actual original and configured response bytes from the owned Vite endpoint",
+    "devtools: marker registration affects a fresh document before its first parser script without changing the existing document",
+    "devtools: reset restores baseline configuration and future HTML while preserving provider identity",
+    "devtools: the two live backends retain distinct provider identities and native business state"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "limitations": [
+    "Native development only; preview, packed artifacts and alternate renderers are not exercised"
+  ]
+}

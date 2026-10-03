@@ -1,0 +1,209 @@
+{
+  "browser": "157.0",
+  "mode": "production-extension",
+  "checks": [
+    "shared native JSON inspector returns the actual owned response URL and status and displays its body",
+    "zero and multiple owned fixture tabs reject per provider without requesting a response or changing prior results",
+    "marker registration affects the next owned document before its first parser script",
+    "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact",
+    "inspector failures preserve the independent counter state and provider incarnation",
+    "Firefox modifies actual page-fetch response bytes only for the selected top-level fixture document",
+    "the same tab navigating to another document receives the original body while modification remains enabled"
+  ],
+  "observations": {
+    "absent": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "17474f2c-bfe7-4893-b1c7-647dd21b8870",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "rejected",
+        "reason": {
+          "message": "Operation handler failed"
+        }
+      }
+    ],
+    "original": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "17474f2c-bfe7-4893-b1c7-647dd21b8870",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "fulfilled",
+        "value": {
+          "target": "http://127.0.0.1:62019/inspector-fixture",
+          "configuration": {
+            "enabled": false
+          },
+          "modification": {
+            "status": "available"
+          },
+          "latest": {
+            "url": "http://127.0.0.1:62019/inspector-response",
+            "status": 200,
+            "body": "fixture:original"
+          },
+          "marker": false
+        }
+      }
+    ],
+    "ambiguous": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "17474f2c-bfe7-4893-b1c7-647dd21b8870",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "rejected",
+        "reason": {
+          "message": "Operation handler failed"
+        }
+      }
+    ],
+    "enabled": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "17474f2c-bfe7-4893-b1c7-647dd21b8870",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "fulfilled",
+        "value": {
+          "target": "http://127.0.0.1:62019/inspector-fixture",
+          "configuration": {
+            "enabled": true
+          },
+          "modification": {
+            "status": "available"
+          },
+          "latest": {
+            "url": "http://127.0.0.1:62019/inspector-response",
+            "status": 200,
+            "body": "fixture:original"
+          },
+          "marker": false
+        }
+      }
+    ],
+    "modified": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "17474f2c-bfe7-4893-b1c7-647dd21b8870",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "fulfilled",
+        "value": {
+          "target": "http://127.0.0.1:62019/inspector-fixture",
+          "configuration": {
+            "enabled": true
+          },
+          "modification": {
+            "status": "available"
+          },
+          "latest": {
+            "url": "http://127.0.0.1:62019/inspector-response",
+            "status": 200,
+            "body": "native:fixture:original"
+          },
+          "marker": false
+        }
+      }
+    ],
+    "otherDocument": {
+      "body": "fixture:original",
+      "status": 200,
+      "url": "http://127.0.0.1:62019/inspector-response"
+    },
+    "beforeMarker": {
+      "currentMarker": null,
+      "firstScript": {
+        "marker": null,
+        "readyState": "loading"
+      }
+    },
+    "marker": {
+      "installed": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "17474f2c-bfe7-4893-b1c7-647dd21b8870",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62019/inspector-fixture",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62019/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": true
+          }
+        }
+      ],
+      "active": {
+        "currentMarker": "loading",
+        "firstScript": {
+          "marker": "loading",
+          "readyState": "loading"
+        }
+      },
+      "reset": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "17474f2c-bfe7-4893-b1c7-647dd21b8870",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "afterReset": {
+        "currentMarker": null,
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        }
+      }
+    }
+  },
+  "limitations": [
+    "No global page-error capture through WebDriver Classic",
+    "Panel rejection messages retain the native generic operation error; precise target-selection causes are covered by service tests",
+    "One extension provider; mixed-host inspector broadcast remains a separate proof"
+  ]
+}

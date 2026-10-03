@@ -6,6 +6,13 @@ import type { DevframeRpcServerFunctions } from 'devframe/types';
 import { createPortChannel } from '@devkit/webext';
 import { startExampleBackground } from '../src/background';
 
+/** Resolve the current test's native API after its global fixture has been installed. */
+vi.mock('@wxt-dev/browser', () => ({
+  get browser() {
+    return chrome;
+  },
+}));
+
 /** Only native browser I/O is replaced; the background and RPC dispatch run unchanged. */
 export function startStoredBackground() {
   const { port1, port2 } = new MessageChannel();

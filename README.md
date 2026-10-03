@@ -80,4 +80,6 @@ pnpm exec oxfmt --check path/to/changed-file.ts
 
 Keep local validation scoped to the changed package or dependency graph. `pnpm ci` is the full repository gate used by GitHub Actions. Historical probes under `docs/probes` preserve exact executed evidence and are separate from maintained packages and examples.
 
+[The shared response inspector](./docs/research/response-inspector.md) composes the same capability/action contracts and native JSON view across Devframe, DevTools, Chromium and Firefox. Its documented commands and retained native receipts distinguish supported response modification, unavailable operations and the remaining prototype acceptance cells.
+
 The previous template's publishing and deployment workflows have been removed. Package publishing, browser-store releases and example deployment will be established through the release contract in [issue 16](https://github.com/dvcol/devkit-extension/issues/16).

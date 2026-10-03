@@ -1,6 +1,13 @@
 import type { JsonRenderRpcContext } from '@devframes/json-render/hub';
 import type { ActionClient, BroadcastInvocationOptions } from '@devkit/core';
 import { createActionCall } from '@devkit/devframe/client';
+import type { ActionBinding } from '@devkit/devframe/client';
+import {
+  configureInspectorAction,
+  markInspectorAction,
+  readInspectorAction,
+  resetInspectorAction,
+} from '@devkit/example-contribution/inspector';
 import {
   increaseCounterAction,
   increaseMatchingCounterAction,
@@ -40,6 +47,7 @@ export function createRendererRpc(options: {
       bindings: [
         { action: increaseCounterAction, routing: { realm: realm.id, provider: providerId } },
         { action: increaseMatchingCounterAction, selection: recipients(selection.value) },
+        ...inspectorBindings(selection.value),
       ],
     });
   }
@@ -57,6 +65,16 @@ export function createRendererRpc(options: {
       return call;
     },
   };
+}
+
+function inspectorBindings(value: string): readonly ActionBinding[] {
+  const selection = recipients(value);
+  return [
+    { action: readInspectorAction, selection },
+    { action: configureInspectorAction, selection },
+    { action: markInspectorAction, selection },
+    { action: resetInspectorAction, selection },
+  ];
 }
 
 export function recipients(value: string): BroadcastInvocationOptions['selection'] {
