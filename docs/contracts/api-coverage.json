@@ -2407,7 +2407,7 @@
       ]
     },
     {
-      "id": "devframe-client-type-and-unmapped-contracts",
+      "id": "devframe-built-client-declaration-contracts",
       "apis": [
         "@devkit/devframe/client:ActionBinding",
         "@devkit/devframe/client:ActionBinding.action.kind",
@@ -2416,11 +2416,22 @@
         "@devkit/devframe/client:RpcProviderConnection",
         "@devkit/devframe/client:RpcProviderConnectionOptions"
       ],
-      "examples": [],
-      "evidence": [],
+      "examples": [
+        "examples/webext",
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/devframe",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public Devframe client declarations preserves native client composition and portable action binding types",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        }
+      ],
       "gaps": [
-        "Exported type declarations still need exact positive and negative compile-time evidence; a runtime test or report does not establish their complete typing contracts.",
-        "ActionBinding.action.kind still lacks a directly linked binding/type assertion. Contract realm/provider defaults and explicit binding routing/selection now have local binding evidence; their native browser-host defaults and remaining policy forms remain separate obligations."
+        "A strict TypeScript 7 Bundler consumer compiles the built public client subpath through its package manifest. Selected positive declarations and eight expected errors establish native client composition, ordinary/routed/broadcast action bindings, required connection identity and numeric action/capability inference; they do not establish every optional or generic member or NodeNext resolution.",
+        "This compiler fixture does not establish native auth, catalog synchronization, connection lifetime, renderer dispatch or routing behavior. Those obligations require their separately linked runtime and browser evidence."
       ]
     },
     {
