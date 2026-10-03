@@ -1,0 +1,438 @@
+{
+  "browser": "153.0.8010.12",
+  "mode": "production-extension-with-native-development-sibling",
+  "observations": [
+    {
+      "renderer": "reference",
+      "original": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "ffde7b47-5238-418a-bdf9-89d4f1370531",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56046/inspector-fixture",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56046/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "6eade927-d606-4bcc-a04f-f49e1105f794",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56047/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56047/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "rejected": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "ffde7b47-5238-418a-bdf9-89d4f1370531",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "rejected",
+          "reason": {
+            "message": "Operation handler failed"
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "6eade927-d606-4bcc-a04f-f49e1105f794",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56047/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56047/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "recovered": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "ffde7b47-5238-418a-bdf9-89d4f1370531",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56046/inspector-fixture",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56046/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "6eade927-d606-4bcc-a04f-f49e1105f794",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56047/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56047/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "before": {
+        "document": 1790999969016.4,
+        "provider": "{\"id\":\"example.extension\",\"incarnation\":\"ffde7b47-5238-418a-bdf9-89d4f1370531\",\"realm\":{\"id\":\"webext\"}}",
+        "connection": "Connected",
+        "state": [
+          "Target: http://127.0.0.1:56046/inspector-fixture",
+          "Response modification: Native Firefox response filtering is unavailable in this browser",
+          "Modification enabled: false",
+          "Response status: 200",
+          "Response body: fixture:original",
+          "Marker installed: false"
+        ],
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:56046/inspector-fixture\n\nResponse modification: Native Firefox response filtering is unavailable in this browser\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "alert": "",
+        "buttons": 5,
+        "disabled": 0,
+        "custom": false
+      },
+      "failed": {
+        "document": 1790999969016.4,
+        "provider": "{\"id\":\"example.extension\",\"incarnation\":\"ffde7b47-5238-418a-bdf9-89d4f1370531\",\"realm\":{\"id\":\"webext\"}}",
+        "connection": "Connected",
+        "state": [
+          "Target: http://127.0.0.1:56046/inspector-fixture",
+          "Response modification: Native Firefox response filtering is unavailable in this browser",
+          "Modification enabled: false",
+          "Response status: 200",
+          "Response body: fixture:original",
+          "Marker installed: false"
+        ],
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:56046/inspector-fixture\n\nResponse modification: Native Firefox response filtering is unavailable in this browser\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "alert": "",
+        "buttons": 5,
+        "disabled": 0,
+        "custom": false
+      },
+      "after": {
+        "document": 1790999969016.4,
+        "provider": "{\"id\":\"example.extension\",\"incarnation\":\"ffde7b47-5238-418a-bdf9-89d4f1370531\",\"realm\":{\"id\":\"webext\"}}",
+        "connection": "Connected",
+        "state": [
+          "Target: http://127.0.0.1:56046/inspector-fixture",
+          "Response modification: Native Firefox response filtering is unavailable in this browser",
+          "Modification enabled: false",
+          "Response status: 200",
+          "Response body: fixture:original",
+          "Marker installed: false"
+        ],
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:56046/inspector-fixture\n\nResponse modification: Native Firefox response filtering is unavailable in this browser\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "alert": "",
+        "buttons": 5,
+        "disabled": 0,
+        "custom": false
+      },
+      "failedRequests": ["destroyed", "destroyed", "destroyed"]
+    },
+    {
+      "renderer": "custom",
+      "original": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "ffde7b47-5238-418a-bdf9-89d4f1370531",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56046/inspector-fixture",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56046/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "6eade927-d606-4bcc-a04f-f49e1105f794",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56047/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56047/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "rejected": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "ffde7b47-5238-418a-bdf9-89d4f1370531",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "rejected",
+          "reason": {
+            "message": "Operation handler failed"
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "6eade927-d606-4bcc-a04f-f49e1105f794",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56047/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56047/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "recovered": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "ffde7b47-5238-418a-bdf9-89d4f1370531",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56046/inspector-fixture",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56046/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "6eade927-d606-4bcc-a04f-f49e1105f794",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:56047/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:56047/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "before": {
+        "document": 1790999969016.4,
+        "provider": "{\"id\":\"example.extension\",\"incarnation\":\"ffde7b47-5238-418a-bdf9-89d4f1370531\",\"realm\":{\"id\":\"webext\"}}",
+        "connection": "Connected",
+        "state": [
+          "Target: http://127.0.0.1:56046/inspector-fixture",
+          "Response modification: Native Firefox response filtering is unavailable in this browser",
+          "Modification enabled: false",
+          "Response status: 200",
+          "Response body: fixture:original",
+          "Marker installed: false"
+        ],
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:56046/inspector-fixture\n\nResponse modification: Native Firefox response filtering is unavailable in this browser\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "alert": "",
+        "buttons": 5,
+        "disabled": 0,
+        "custom": true
+      },
+      "failed": {
+        "document": 1790999969016.4,
+        "provider": "{\"id\":\"example.extension\",\"incarnation\":\"ffde7b47-5238-418a-bdf9-89d4f1370531\",\"realm\":{\"id\":\"webext\"}}",
+        "connection": "Connected",
+        "state": [
+          "Target: http://127.0.0.1:56046/inspector-fixture",
+          "Response modification: Native Firefox response filtering is unavailable in this browser",
+          "Modification enabled: false",
+          "Response status: 200",
+          "Response body: fixture:original",
+          "Marker installed: false"
+        ],
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:56046/inspector-fixture\n\nResponse modification: Native Firefox response filtering is unavailable in this browser\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "alert": "",
+        "buttons": 5,
+        "disabled": 0,
+        "custom": true
+      },
+      "after": {
+        "document": 1790999969016.4,
+        "provider": "{\"id\":\"example.extension\",\"incarnation\":\"ffde7b47-5238-418a-bdf9-89d4f1370531\",\"realm\":{\"id\":\"webext\"}}",
+        "connection": "Connected",
+        "state": [
+          "Target: http://127.0.0.1:56046/inspector-fixture",
+          "Response modification: Native Firefox response filtering is unavailable in this browser",
+          "Modification enabled: false",
+          "Response status: 200",
+          "Response body: fixture:original",
+          "Marker installed: false"
+        ],
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:56046/inspector-fixture\n\nResponse modification: Native Firefox response filtering is unavailable in this browser\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "alert": "",
+        "buttons": 5,
+        "disabled": 0,
+        "custom": true
+      },
+      "failedRequests": ["destroyed", "destroyed"]
+    }
+  ],
+  "requests": [
+    "completed",
+    "destroyed",
+    "destroyed",
+    "destroyed",
+    "completed",
+    "completed",
+    "destroyed",
+    "destroyed",
+    "completed"
+  ],
+  "pageErrors": [],
+  "checks": [
+    "an actual owned HTTP connection failure rejects the extension provider outcome while the Devframe sibling still returns its own response",
+    "broadcast outcomes preserve authored success semantics: dispatch completion is shown without invoking onError",
+    "the failed fetch preserves prior inspector result and configuration, provider incarnation, document and renderer mount",
+    "Reset and Inspect recover through the same mount and connection in both native reference and framework-free renderers"
+  ],
+  "limitations": [
+    "One extension provider and one real Devframe development sibling; DevTools sibling and other extension surfaces are not exercised",
+    "Provider rejection remains a broadcast outcome with the native generic operation error; the native cause is not exposed through the panel",
+    "The browser may retry the failed native HTTP request; this proof makes no automatic retry, cancellation or rollback policy claim",
+    "Chromium configuration remains false because native response modification is unavailable"
+  ]
+}

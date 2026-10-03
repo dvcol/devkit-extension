@@ -653,6 +653,34 @@
           "host": "packed-chromium-devframe-devtools",
           "mode": "native-development-reference-custom-renderers",
           "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/inspector-errors-chromium.ts",
+          "receiptFile": "artifacts/inspector/errors-chromium.json",
+          "checks": [
+            "an actual owned HTTP connection failure rejects the extension provider outcome while the Devframe sibling still returns its own response",
+            "broadcast outcomes preserve authored success semantics: dispatch completion is shown without invoking onError",
+            "the failed fetch preserves prior inspector result and configuration, provider incarnation, document and renderer mount",
+            "Reset and Inspect recover through the same mount and connection in both native reference and framework-free renderers"
+          ],
+          "host": "chromium-extension-devframe",
+          "mode": "production-extension-native-development-sibling-reference-custom",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/inspector-errors-firefox.ts",
+          "receiptFile": "artifacts/inspector/errors-firefox.json",
+          "checks": [
+            "an actual owned HTTP connection failure rejects the extension provider outcome while the Devframe sibling still returns its own response",
+            "broadcast outcomes preserve authored success semantics: dispatch completion is shown without invoking onError",
+            "the failed fetch preserves prior inspector result and configuration, provider incarnation, document and renderer mount",
+            "Reset and Inspect recover through the same mount and connection in both native reference and framework-free renderers"
+          ],
+          "host": "firefox-extension-devframe",
+          "mode": "production-extension-native-development-sibling-reference-custom",
+          "requirePageErrors": false
         }
       ]
     },
@@ -4488,6 +4516,34 @@
           "host": "firefox-webext",
           "mode": "production-extension/native-development-servers",
           "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/inspector-errors-chromium.ts",
+          "receiptFile": "artifacts/inspector/errors-chromium.json",
+          "checks": [
+            "an actual owned HTTP connection failure rejects the extension provider outcome while the Devframe sibling still returns its own response",
+            "broadcast outcomes preserve authored success semantics: dispatch completion is shown without invoking onError",
+            "the failed fetch preserves prior inspector result and configuration, provider incarnation, document and renderer mount",
+            "Reset and Inspect recover through the same mount and connection in both native reference and framework-free renderers"
+          ],
+          "host": "chromium-extension-devframe",
+          "mode": "production-extension-native-development-sibling-reference-custom",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/inspector-errors-firefox.ts",
+          "receiptFile": "artifacts/inspector/errors-firefox.json",
+          "checks": [
+            "an actual owned HTTP connection failure rejects the extension provider outcome while the Devframe sibling still returns its own response",
+            "broadcast outcomes preserve authored success semantics: dispatch completion is shown without invoking onError",
+            "the failed fetch preserves prior inspector result and configuration, provider incarnation, document and renderer mount",
+            "Reset and Inspect recover through the same mount and connection in both native reference and framework-free renderers"
+          ],
+          "host": "firefox-extension-devframe",
+          "mode": "production-extension-native-development-sibling-reference-custom",
+          "requirePageErrors": false
         }
       ]
     },
@@ -5174,6 +5230,34 @@
           ],
           "host": "firefox-webext",
           "mode": "production-extension",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/inspector-errors-chromium.ts",
+          "receiptFile": "artifacts/inspector/errors-chromium.json",
+          "checks": [
+            "an actual owned HTTP connection failure rejects the extension provider outcome while the Devframe sibling still returns its own response",
+            "broadcast outcomes preserve authored success semantics: dispatch completion is shown without invoking onError",
+            "the failed fetch preserves prior inspector result and configuration, provider incarnation, document and renderer mount",
+            "Reset and Inspect recover through the same mount and connection in both native reference and framework-free renderers"
+          ],
+          "host": "chromium-extension-devframe",
+          "mode": "production-extension-native-development-sibling-reference-custom",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/inspector-errors-firefox.ts",
+          "receiptFile": "artifacts/inspector/errors-firefox.json",
+          "checks": [
+            "an actual owned HTTP connection failure rejects the extension provider outcome while the Devframe sibling still returns its own response",
+            "broadcast outcomes preserve authored success semantics: dispatch completion is shown without invoking onError",
+            "the failed fetch preserves prior inspector result and configuration, provider incarnation, document and renderer mount",
+            "Reset and Inspect recover through the same mount and connection in both native reference and framework-free renderers"
+          ],
+          "host": "firefox-extension-devframe",
+          "mode": "production-extension-native-development-sibling-reference-custom",
           "requirePageErrors": false
         }
       ]
