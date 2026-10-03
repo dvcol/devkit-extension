@@ -1614,7 +1614,6 @@
         "@devkit/core:ActivationScope",
         "@devkit/core:ActivationScope.onDispose",
         "@devkit/core:ActivationScope.signal",
-        "@devkit/core:AvailabilityReason",
         "@devkit/core:Awaitable",
         "@devkit/core:BindingContext.access",
         "@devkit/core:BindingContext.execution",
@@ -1636,7 +1635,6 @@
         "@devkit/core:BroadcastOutcome.reason",
         "@devkit/core:BroadcastOutcome.status",
         "@devkit/core:BroadcastOutcome.value",
-        "@devkit/core:CapabilityBinding",
         "@devkit/core:CapabilityBinding.context",
         "@devkit/core:CapabilityBinding.context.access",
         "@devkit/core:CapabilityBinding.context.execution",
@@ -1662,8 +1660,6 @@
         "@devkit/core:CapabilityInvocationRequest.operation",
         "@devkit/core:CapabilityInvocationRequest.signal",
         "@devkit/core:CapabilityRequirements",
-        "@devkit/core:CapabilityResolution.binding",
-        "@devkit/core:CapabilityResolution.binding.api",
         "@devkit/core:CapabilityResolution.binding.context",
         "@devkit/core:CapabilityResolution.binding.context.access",
         "@devkit/core:CapabilityResolution.binding.context.execution",
@@ -1675,16 +1671,12 @@
         "@devkit/core:CapabilityResolution.binding.context.provider.incarnation",
         "@devkit/core:CapabilityResolution.binding.context.provider.realm",
         "@devkit/core:CapabilityResolution.binding.context.provider.realm.id",
-        "@devkit/core:CapabilityResolution.diagnostic",
         "@devkit/core:CapabilityResolution.diagnostic.code",
         "@devkit/core:CapabilityResolution.diagnostic.contributionId",
-        "@devkit/core:CapabilityResolution.diagnostic.message",
         "@devkit/core:CapabilityResolution.diagnostic.phase",
         "@devkit/core:CapabilityResolution.diagnostic.pluginId",
         "@devkit/core:CapabilityResolution.diagnostic.providerId",
         "@devkit/core:CapabilityResolution.diagnostic.severity",
-        "@devkit/core:CapabilityResolution.reason",
-        "@devkit/core:CapabilityResolution.status",
         "@devkit/core:CapabilityResolutionRequest",
         "@devkit/core:CapabilityResolutionRequest.capability",
         "@devkit/core:CapabilityResolutionRequest.capability.id",
@@ -4588,6 +4580,71 @@
       ],
       "gaps": [
         "The strict TypeScript consumer resolves the built public exports and installed Chrome/WXT declarations without path aliases. WXT generates Chrome-derived types; this does not establish compatibility with independent Firefox declaration sources or other browser/version combinations. Native Firefox execution remains separate runtime evidence."
+      ]
+    },
+    {
+      "id": "capability-availability-declarations",
+      "apis": [
+        "@devkit/core:AvailabilityReason",
+        "@devkit/core:CapabilityBinding",
+        "@devkit/core:CapabilityResolution.binding",
+        "@devkit/core:CapabilityResolution.binding.api",
+        "@devkit/core:CapabilityResolution.diagnostic",
+        "@devkit/core:CapabilityResolution.diagnostic.message",
+        "@devkit/core:CapabilityResolution.reason",
+        "@devkit/core:CapabilityResolution.status"
+      ],
+      "examples": [
+        "examples/contribution",
+        "examples/server-contexts"
+      ],
+      "evidence": [
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations accepts capability availability narrowing and optional diagnostic display",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a capability binding before narrowing availability",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects a capability binding after narrowing to unavailable",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an unavailable reason on an available capability",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an undeclared capability availability reason",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an unavailable capability diagnostic without checking its presence",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        }
+      ],
+      "gaps": [
+        "Strict TypeScript 7 Bundler consumers resolve built public exports and establish available/unavailable narrowing, the correlated read API and guarded optional diagnostic message access. They do not prove every capability binding/context or diagnostic metadata member, NodeNext or other compiler versions.",
+        "One unknown reason rejection establishes the declared reason type, not every supported cause occurring at runtime. Native availability changes, routing races, diagnostic delivery/UI and transport/host-mode behavior require their separate executed evidence."
       ]
     }
   ]

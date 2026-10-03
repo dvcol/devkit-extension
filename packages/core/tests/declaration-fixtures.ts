@@ -32,6 +32,22 @@ export const transformedAction = defineActionContract({
 
 export const acceptedConsumers = [
   {
+    name: 'capability availability narrowing and optional diagnostic display',
+    source: `
+import type { AvailabilityReason, CapabilityBinding, CapabilityResolution } from '@devkit/core';
+import { capability } from './contracts.js';
+
+export async function displayRead(resolution: CapabilityResolution<typeof capability>): Promise<string> {
+  if (resolution.status === 'available') {
+    const binding: CapabilityBinding<typeof capability> = resolution.binding;
+    return binding.api.read({ prefix: 'Title: ' });
+  }
+  const reason: AvailabilityReason = resolution.reason;
+  return resolution.diagnostic?.message ?? reason;
+}
+`,
+  },
+  {
     name: 'transform setup requirements native context and explicit scope cleanup',
     source: `
 import { definePlugin, defineTransform } from '@devkit/core';

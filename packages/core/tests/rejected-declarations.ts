@@ -1,7 +1,9 @@
+import { rejectedAvailabilityConsumers } from './rejected-availability.js';
 import { rejectedScriptConsumers } from './rejected-scripts.js';
 import { rejectedTransformConsumers } from './rejected-transforms.js';
 
 export const rejectedConsumers = [
+  ...rejectedAvailabilityConsumers,
   ...rejectedScriptConsumers,
   ...rejectedTransformConsumers,
   {
