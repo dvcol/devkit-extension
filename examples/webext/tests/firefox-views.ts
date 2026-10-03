@@ -74,6 +74,38 @@ export async function clickRetainedViewButton(driver: Driver): Promise<void> {
   });
 }
 
+/** Keep the actual DOM node in the page because WebDriver rejects detached element references. */
+export async function retainDomainButton(driver: Driver): Promise<void> {
+  await driver.executeScript(() => {
+    const root = document.querySelector('#renderer')?.shadowRoot;
+    const button = Array.from(root?.querySelectorAll('button') ?? []).find(
+      (element) => element.textContent.trim() === 'Increase matching domain',
+    );
+    if (!(button instanceof HTMLButtonElement) || !button.isConnected || button.disabled)
+      throw new Error('Active domain button is unavailable');
+    if (root?.querySelector('input')?.value !== 'shared.example.test')
+      throw new Error('Domain input must match both live providers');
+    Reflect.set(window, '__devkitRetainedDomainButton', button);
+  });
+}
+
+export async function clickRetainedDomainButton(driver: Driver): Promise<void> {
+  await driver.wait(
+    () =>
+      driver.executeScript<boolean>(
+        () => !document.querySelector('#renderer')?.shadowRoot?.querySelector('button'),
+      ),
+    10_000,
+  );
+  await driver.executeScript(() => {
+    const button: unknown = Reflect.get(window, '__devkitRetainedDomainButton');
+    Reflect.deleteProperty(window, '__devkitRetainedDomainButton');
+    if (!(button instanceof HTMLButtonElement)) throw new Error('Domain button is unavailable');
+    if (button.isConnected) throw new Error('Domain button is still mounted');
+    button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
+}
+
 export async function viewText(driver: Driver, providerId: string, value: number): Promise<void> {
   const selector = `[data-provider="${providerId}"] [data-view]`;
   await driver.wait(until.elementLocated(By.css(selector)), 10_000);

@@ -2169,7 +2169,7 @@
       "gaps": [
         "Node tests cover native passthrough and argument preservation, duplicate IDs, unavailable versions, cancellation, contract realm/provider defaults over client defaults, explicit binding overrides and independent broadcast selection. Browser references separately prove native renderer dispatch through actual Ports and authenticated native server connections; neither establishes all host/mode cells or other routing-policy forms at this binding boundary.",
         "Linked browser assertions cover explicit routing, broadcast selection, provider-owned applicability, partial failures, absence of backend effects from detached buttons and native input/success/error callbacks. Browser contract routing defaults, complete renderer built-ins, duplicate/malformed bindings in browser hosts and output-validation failure parity still require exact evidence.",
-        "Firefox does not yet retain a detached domain-action button across unmount as the Chromium matrix does. Mixed-backend development HMR and production-server preview remain separate obligations."
+        "Chromium and Firefox production now retain a detached domain-action button across native unmount and assert no live backend effect. This does not prove retained native handlers cease to run; Firefox WebDriver Classic has no global page-error capture. Mixed-backend development HMR and production-server preview remain separate obligations."
       ],
       "browserEvidence": [
         {
@@ -2216,7 +2216,8 @@
             "native JSON input reaches provider-owned domain applicability on all three backends",
             "native JSON explicit provider filter excludes other recipients",
             "native JSON broadcast preserves successful siblings after server disconnect",
-            "native renderer clears its failed-action alert when the same action is retried successfully"
+            "native renderer clears its failed-action alert when the same action is retried successfully",
+            "detached domain-action button cannot dispatch to live extension or server providers after native unmount; reconnect preserves counters and a fresh view action applies once"
           ],
           "host": "firefox-webext",
           "mode": "production-extension/native-development-servers",

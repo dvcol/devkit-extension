@@ -27,13 +27,19 @@ if (process.env.FIREFOX_BINARY !== undefined) options.setBinary(process.env.FIRE
 const service = new ServiceBuilder().addArguments('--allow-system-access');
 const driver = Driver.createSession(options, service.build());
 const origin = `moz-extension://${extensionUuid}`;
-const capabilityChecks = [
+const actionChecks = [
   'portable action, capability and explicit routing',
   'broadcast and catalog disable/enable reach both pages',
   'native capability broadcast reads independent values from all three providers',
   'native capability broadcast honors realm and explicit provider selection',
   'native capability broadcast preserves successful servers while the extension service is disabled and recovers after enable',
   'native capability broadcast preserves successful recipients after server disconnect',
+  'native JSON controls broadcast to selected devserver and all-realm recipients',
+  'native renderer clears its failed-action alert when the same action is retried successfully',
+  'native JSON input reaches provider-owned domain applicability on all three backends',
+  'native JSON explicit provider filter excludes other recipients',
+  'native JSON broadcast preserves successful siblings after server disconnect',
+  'detached domain-action button cannot dispatch to live extension or server providers after native unmount; reconnect preserves counters and a fresh view action applies once',
 ];
 
 try {
@@ -268,13 +274,8 @@ async function saveEvidence(surfaceChecks: string[]): Promise<void> {
       'worker-initiated disconnect leaves peer usable',
       'native origin admission and authentication reject unauthorized connections',
       'isolated Devframe and DevTools connections coexist with the extension provider',
-      'native JSON controls broadcast to selected devserver and all-realm recipients',
-      'native renderer clears its failed-action alert when the same action is retried successfully',
-      'native JSON input reaches provider-owned domain applicability on all three backends',
-      'native JSON explicit provider filter excludes other recipients',
-      'native JSON broadcast preserves successful siblings after server disconnect',
       'explicit provider preference, disconnect fallback and partial broadcast failure',
-      ...capabilityChecks,
+      ...actionChecks,
       'late native view publication on both server connections',
       'identical native view keys retain separate state and action ownership',
       'view removal and republication leave one working mount',

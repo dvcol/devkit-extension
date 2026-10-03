@@ -5,9 +5,11 @@ import { By, until } from 'selenium-webdriver';
 import type { Driver } from 'selenium-webdriver/firefox.js';
 import {
   checkFirefoxViews,
+  clickRetainedDomainButton,
   clickRetainedViewButton,
   clickView,
   retainViewButton,
+  retainDomainButton,
   viewText,
 } from './firefox-views.ts';
 
@@ -54,14 +56,20 @@ export async function checkFirefoxServers(driver: Driver): Promise<void> {
 
 async function checkReconnectedView(driver: Driver, host: ServerHost): Promise<void> {
   const providerId = host.provider.provider.id;
+  await counter(driver, 16);
+  await driver.findElement(By.css('#json-selection option[value="all"]')).click();
+  await retainDomainButton(driver);
   await retainViewButton(driver, providerId);
   await driver.findElement(By.css('#disconnect')).click();
   await result(driver, /^Disconnected$/u, '#status');
   assert.equal((await driver.findElements(By.css('#server-views > *'))).length, 0);
+  await clickRetainedDomainButton(driver);
   await clickRetainedViewButton(driver);
   assert.equal(await readCounter(host), 4);
   await driver.navigate().refresh();
   await result(driver, /^Connected$/u, '#status');
+  await counter(driver, 16);
+  await result(driver, /^$/u, '#json-result');
   await connect(driver, host, host.token);
   await result(driver, /^"Connected example\.devtools"$/u);
   await viewText(driver, providerId, 4);
