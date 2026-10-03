@@ -37,6 +37,8 @@ jobs:
         run: pnpm --filter @devkit/example-webext test:json-views
       - name: Broadcast the shared inspector across extension and native server providers
         run: pnpm --filter @devkit/example-webext exec node tests/mixed-inspector.ts
+      - name: Run the shared inspector with the packaged framework-free extension renderer
+        run: pnpm --filter @devkit/example-webext exec node tests/custom-inspector.ts
       - name: Reject untrusted extension callers and stale browser documents
         run: pnpm --filter @devkit/example-webext test:trust:chromium
       - name: Run native Vite browser actions, state and HTML timing
@@ -104,6 +106,12 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-webext exec node tests/mixed-inspector-firefox.ts
+      - name: Run the shared inspector with the framework-free extension renderer in Firefox
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-webext exec node tests/custom-inspector-firefox.ts
       - name: Verify opt-in Firefox counter persistence
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

@@ -1,0 +1,509 @@
+{
+  "browser": "157.0",
+  "mode": "production-extension-custom-renderer",
+  "checks": [
+    "packaged framework-free renderer mounts the unchanged shared inspector and dispatches all four actions through existing native bindings",
+    "custom-rendered actions preserve realm-only, explicit provider and all-provider broadcast selection with independent native state",
+    "all three native providers modify their own response and native reference server cards update independently",
+    "reference/custom replacement preserves backend state and detached custom reset buttons cannot dispatch",
+    "custom marker and reset actions affect the next actual owned document and clear projected state",
+    "disconnect disposes the custom mount, disables selection and prevents retained buttons from changing server state"
+  ],
+  "observations": {
+    "selection": {
+      "configured": [
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "9bbcafde-ef8f-4a7d-8cd0-9860b5647335",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "18e8014e-870c-441d-81d2-359238f41183",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "explicit": [
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "9bbcafde-ef8f-4a7d-8cd0-9860b5647335",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "all": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "59f88c36-4405-4ae9-abdc-d3c8859807e7",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62477/inspector-fixture",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "9bbcafde-ef8f-4a7d-8cd0-9860b5647335",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "18e8014e-870c-441d-81d2-359238f41183",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "inspected": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "59f88c36-4405-4ae9-abdc-d3c8859807e7",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62477/inspector-fixture",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62477/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "9bbcafde-ef8f-4a7d-8cd0-9860b5647335",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62478/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62478/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "18e8014e-870c-441d-81d2-359238f41183",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62481/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62481/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ]
+    },
+    "replacement": {
+      "preserved": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "59f88c36-4405-4ae9-abdc-d3c8859807e7",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62477/inspector-fixture",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62477/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "9bbcafde-ef8f-4a7d-8cd0-9860b5647335",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62478/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62478/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "18e8014e-870c-441d-81d2-359238f41183",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62481/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62481/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "detachedConnected": false
+    },
+    "marker": {
+      "installed": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "59f88c36-4405-4ae9-abdc-d3c8859807e7",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62477/inspector-fixture",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62477/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": true
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "9bbcafde-ef8f-4a7d-8cd0-9860b5647335",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62478/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62478/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": true
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "18e8014e-870c-441d-81d2-359238f41183",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62481/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62481/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": true
+          }
+        }
+      ],
+      "active": {
+        "currentMarker": "loading",
+        "firstScript": {
+          "marker": "loading",
+          "readyState": "loading"
+        }
+      },
+      "reset": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "59f88c36-4405-4ae9-abdc-d3c8859807e7",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "9bbcafde-ef8f-4a7d-8cd0-9860b5647335",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "18e8014e-870c-441d-81d2-359238f41183",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "afterReset": {
+        "currentMarker": null,
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        }
+      }
+    },
+    "disconnected": {
+      "states": [
+        {
+          "provider": "example.devframe",
+          "state": {
+            "target": "http://127.0.0.1:62478/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62478/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": "example.devtools",
+          "state": {
+            "target": "http://127.0.0.1:62481/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62481/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "detachedConnected": false
+    }
+  },
+  "limitations": [
+    "Native development contexts use initHub on owned Vite fixtures, not plugin bootstrap",
+    "Server cards use the native reference renderer",
+    "No global page-error capture through WebDriver Classic"
+  ]
+}

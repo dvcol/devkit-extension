@@ -1,0 +1,506 @@
+{
+  "browser": "153.0.8010.12",
+  "mode": "production-extension-custom-renderer",
+  "checks": [
+    "packaged framework-free renderer mounts the unchanged shared inspector and dispatches all four actions through existing native bindings",
+    "custom-rendered actions preserve realm-only, explicit provider and all-provider broadcast selection with independent native state",
+    "Chromium configure rejection remains beside server successes and the native success callback displays broadcast completion",
+    "custom inspection shows actual owned response bytes while native reference server cards update independently",
+    "reference/custom replacement preserves backend state and detached custom reset buttons cannot dispatch",
+    "custom marker and reset actions affect the next actual owned document and clear projected state",
+    "disconnect disposes the custom mount, disables selection and prevents retained buttons from changing server state"
+  ],
+  "observations": {
+    "selection": {
+      "configured": [
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "f9b224b7-3549-4a6d-bbbf-d46a89b7fe67",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "9bc17cc5-1467-4eaa-a9e1-a4a71ff2e677",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "explicit": [
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "f9b224b7-3549-4a6d-bbbf-d46a89b7fe67",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "all": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "b6c390c3-1cb7-4986-896a-063c61ce0b89",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "rejected",
+          "reason": {
+            "message": "Operation handler failed"
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "f9b224b7-3549-4a6d-bbbf-d46a89b7fe67",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "9bc17cc5-1467-4eaa-a9e1-a4a71ff2e677",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "inspected": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "b6c390c3-1cb7-4986-896a-063c61ce0b89",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62631/inspector-fixture",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62631/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "f9b224b7-3549-4a6d-bbbf-d46a89b7fe67",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62634/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62634/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "9bc17cc5-1467-4eaa-a9e1-a4a71ff2e677",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62635/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62635/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ]
+    },
+    "replacement": {
+      "preserved": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "b6c390c3-1cb7-4986-896a-063c61ce0b89",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62631/inspector-fixture",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62631/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "f9b224b7-3549-4a6d-bbbf-d46a89b7fe67",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62634/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62634/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "9bc17cc5-1467-4eaa-a9e1-a4a71ff2e677",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62635/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62635/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "detachedConnected": false
+    },
+    "marker": {
+      "installed": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "b6c390c3-1cb7-4986-896a-063c61ce0b89",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62631/inspector-fixture",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62631/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": true
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "f9b224b7-3549-4a6d-bbbf-d46a89b7fe67",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62634/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62634/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": true
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "9bc17cc5-1467-4eaa-a9e1-a4a71ff2e677",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:62635/inspector-response",
+            "configuration": {
+              "enabled": true
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62635/inspector-response",
+              "status": 200,
+              "body": "native:fixture:original"
+            },
+            "marker": true
+          }
+        }
+      ],
+      "active": {
+        "firstScript": {
+          "marker": "loading",
+          "readyState": "loading"
+        },
+        "currentMarker": "loading"
+      },
+      "reset": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "b6c390c3-1cb7-4986-896a-063c61ce0b89",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devframe",
+            "incarnation": "f9b224b7-3549-4a6d-bbbf-d46a89b7fe67",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        },
+        {
+          "provider": {
+            "id": "example.devtools",
+            "incarnation": "9bc17cc5-1467-4eaa-a9e1-a4a71ff2e677",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "afterReset": {
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "currentMarker": null
+      }
+    },
+    "disconnected": {
+      "states": [
+        {
+          "provider": "example.devframe",
+          "state": {
+            "target": "http://127.0.0.1:62634/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62634/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        },
+        {
+          "provider": "example.devtools",
+          "state": {
+            "target": "http://127.0.0.1:62635/inspector-response",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "available"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:62635/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": false
+          }
+        }
+      ],
+      "detachedConnected": false
+    }
+  },
+  "pageErrors": [],
+  "limitations": [
+    "Native development contexts use initHub on owned Vite fixtures, not plugin bootstrap",
+    "Chromium response modification remains explicitly unavailable; server cards use the native reference renderer"
+  ]
+}

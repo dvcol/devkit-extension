@@ -18,10 +18,14 @@
     "./inspector": {
       "types": "./dist/inspector.d.ts",
       "import": "./dist/inspector.js"
+    },
+    "./renderer": {
+      "types": "./dist/renderer/renderer.d.ts",
+      "import": "./dist/renderer.js"
     }
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "build": "vite build && tsc -p tsconfig.build.json && tsc -p tsconfig.renderer-build.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src browser tests vite.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check .",

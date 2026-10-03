@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "rootDir": "browser",
+    "outDir": "dist/renderer"
+  },
+  "include": ["browser/renderer.ts"]
+}

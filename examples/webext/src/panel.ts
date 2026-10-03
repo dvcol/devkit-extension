@@ -5,6 +5,7 @@ import { mountPermissionControls } from './permissions';
 import { JSON_RENDER_INDEX_KEY } from '@devframes/json-render';
 import type { JsonRenderIndex, JsonRenderIndexEntry } from '@devframes/json-render';
 import renderer from '@devframes/json-render-ui/renderer';
+import { mountInspectorRendererControl, selectedInspectorRenderer } from './inspector-renderer';
 import { createClient } from '@devkit/client';
 import { createRpcProviderConnection } from '@devkit/devframe/client';
 import type { RpcProviderConnection } from '@devkit/devframe/client';
@@ -98,6 +99,15 @@ try {
       catalog?.capabilities[0]?.status ?? 'Disconnected';
   });
   status.textContent = 'Connected';
+  mountInspectorRendererControl({
+    signal: viewLifetime.signal,
+    async replace() {
+      const entry = Object.values(index.value()).find((view) => view.id === 'response-inspector');
+      if (entry !== undefined) await mountedViews.get(entry.stateKey)?.dispose();
+      if (!backgroundClosed) await updateViews(index.value());
+    },
+    reportFailure: reportViewFailure,
+  });
 } catch (error) {
   closeBackground();
   if (!listeners.signal.aborted)
@@ -149,7 +159,9 @@ function mountView(
   async function render(): Promise<void> {
     await previous?.dispose();
     if (lifetime.signal.aborted) return;
-    const instance = await renderer({
+    let renderView = renderer;
+    if (entry.id === 'response-inspector') renderView = selectedInspectorRenderer();
+    mounted = await renderView({
       entry: {
         id: entry.id,
         title: entry.title,
@@ -166,7 +178,6 @@ function mountView(
         }),
       },
     });
-    mounted = instance;
   }
   /** A pending native get can cache its state after removal; evict only after it has settled. */
   function cleanup(): void {
