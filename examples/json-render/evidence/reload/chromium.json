@@ -3,30 +3,52 @@
   "observations": [
     {
       "mode": "devframe",
-      "documentBefore": 1790986928322.5,
-      "documentAfter": 1790986928817.2,
+      "documentBefore": 1790988510702.7,
+      "failure": {
+        "document": 1790988511397.9,
+        "message": "Transform failed with 1 error:\n\n[PARSE_ERROR] Unexpected token\n    ╭─[ .conformance/renderer-reload-WuQcrt/site/renderer.ts:35:32 ]\n    │\n 35 │ export const invalidRenderer = ;\n    │                                ┬  \n    │                                ╰── \n────╯",
+        "mounts": 0,
+        "rendererDisabled": true,
+        "rendererResponseStatus": 500,
+        "backendBefore": 2,
+        "backendAfter": 3
+      },
+      "documentAfter": 1790988511497.5,
       "cssMountRetained": true,
       "providerRetained": true,
       "rendererAfterReload": "reference",
-      "finalValue": 3,
+      "finalValue": 4,
       "pageErrors": []
     },
     {
       "mode": "devtools",
-      "documentBefore": 1790986929032.9,
-      "documentAfter": 1790986929444.7,
+      "documentBefore": 1790988511697.3,
+      "failure": {
+        "document": 1790988512296,
+        "message": "Transform failed with 1 error:\n\n[PARSE_ERROR] Unexpected token\n    ╭─[ .conformance/renderer-reload-R5Ka3h/site/renderer.ts:35:32 ]\n    │\n 35 │ export const invalidRenderer = ;\n    │                                ┬  \n    │                                ╰── \n────╯",
+        "mounts": 0,
+        "rendererDisabled": true,
+        "rendererResponseStatus": 500,
+        "backendBefore": 2,
+        "backendAfter": 3
+      },
+      "documentAfter": 1790988512395.3,
       "cssMountRetained": true,
       "providerRetained": true,
       "rendererAfterReload": "reference",
-      "finalValue": 3,
+      "finalValue": 4,
       "pageErrors": []
     }
   ],
   "checks": [
     "devframe: native CSS HMR retains document and custom mount with shared backend state",
+    "devframe: invalid renderer source shows the native error overlay with no mount and disabled renderer control",
+    "devframe: valid source recovers backend actions made during the native transform failure without replay",
     "devframe: native renderer-module reload creates a fresh document and retains provider state without replay",
     "devframe: updated custom renderer remounts once and each action has one backend effect",
     "devtools: native CSS HMR retains document and custom mount with shared backend state",
+    "devtools: invalid renderer source shows the native error overlay with no mount and disabled renderer control",
+    "devtools: valid source recovers backend actions made during the native transform failure without replay",
     "devtools: native renderer-module reload creates a fresh document and retains provider state without replay",
     "devtools: updated custom renderer remounts once and each action has one backend effect"
   ],

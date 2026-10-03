@@ -7,6 +7,8 @@ import { serve } from './browser-fixture.ts';
 
 export const reloadChecks = [
   'native CSS HMR retains document and custom mount with shared backend state',
+  'invalid renderer source shows the native error overlay with no mount and disabled renderer control',
+  'valid source recovers backend actions made during the native transform failure without replay',
   'native renderer-module reload creates a fresh document and retains provider state without replay',
   'updated custom renderer remounts once and each action has one backend effect',
 ];
@@ -40,6 +42,8 @@ export async function createReloadFixture(mode: 'devframe' | 'devtools') {
     example,
     origin,
     updateStyle: () => writeFile(stylePath, 'h1 { color: rgb(4, 5, 6); }\n'),
+    invalidateRenderer: () =>
+      writeFile(rendererPath, `${renderer}\nexport const invalidRenderer = ;\n`),
     updateRenderer: () =>
       writeFile(
         rendererPath,

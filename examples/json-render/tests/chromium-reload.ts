@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { styleText } from 'node:util';
+import { increaseCounterAction } from '@devkit/example-contribution';
 import { chromium, expect } from '@playwright/test';
 import type { Browser, Page } from '@playwright/test';
 import { createReloadFixture, reloadChecks } from './reload-fixture.ts';
@@ -46,29 +47,81 @@ async function checkHost(browserInstance: Browser, mode: 'devframe' | 'devtools'
   await counter(page, 1);
   const documentBefore = await page.evaluate(() => performance.timeOrigin);
   await checkStyle(page, fixture, documentBefore);
-  await fixture.updateRenderer();
-  await expect.poll(() => page.evaluate(() => performance.timeOrigin)).not.toBe(documentBefore);
-  await counter(page, 2);
-  await expect(page.locator('#renderer')).toHaveValue('reference');
-  await page.locator('#renderer').selectOption('custom');
-  await expect(custom).toHaveAttribute('data-source-version', 'updated');
-  await counter(page, 2);
-  await expect(page.getByRole('button', { name: 'Increase counter', exact: true })).toHaveCount(1);
-  await page.getByRole('button', { name: 'Increase counter', exact: true }).click();
-  await counter(page, 3);
-  assert.deepEqual(fixture.example.view.value().state, { value: 3 });
+  const failure = await checkFailure(page, fixture, documentBefore);
+  await checkRecovery(page, fixture, failure.document);
+  assert.deepEqual(fixture.example.view.value().state, { value: 4 });
   assert.deepEqual(fixture.example.host.provider.provider, provider);
   assert.deepEqual(pageErrors, []);
   return {
     mode,
     documentBefore,
+    failure,
     documentAfter: await page.evaluate(() => performance.timeOrigin),
     cssMountRetained: true,
     providerRetained: true,
     rendererAfterReload: 'reference',
-    finalValue: 3,
+    finalValue: 4,
     pageErrors,
   };
+}
+
+async function checkFailure(
+  page: Page,
+  fixture: Awaited<ReturnType<typeof createReloadFixture>>,
+  documentBefore: number,
+) {
+  const response = page.waitForResponse(
+    (received) => new URL(received.url()).pathname === '/renderer.ts' && received.status() === 500,
+  );
+  await fixture.invalidateRenderer();
+  const rendererResponse = await response;
+  await expect(page.locator('vite-error-overlay')).toBeVisible();
+  const failure = await page.evaluate(() => ({
+    document: performance.timeOrigin,
+    message:
+      document.querySelector('vite-error-overlay')?.shadowRoot?.querySelector('.message-body')
+        ?.textContent ?? '',
+    mounts: document.querySelectorAll('#view > div').length,
+    rendererDisabled: document.querySelector('#renderer')?.matches(':disabled') === true,
+  }));
+  assert.notEqual(failure.document, documentBefore);
+  assert.match(failure.message, /\[PARSE_ERROR\] Unexpected token/u);
+  assert.match(failure.message, /export const invalidRenderer = ;/u);
+  assert.equal(failure.mounts, 0);
+  assert.equal(failure.rendererDisabled, true);
+  assert.deepEqual(fixture.example.view.value().state, { value: 2 });
+  await fixture.example.host.provider.invoke({
+    action: increaseCounterAction,
+    input: { amount: 1 },
+  });
+  assert.deepEqual(fixture.example.view.value().state, { value: 3 });
+  return {
+    ...failure,
+    rendererResponseStatus: rendererResponse.status(),
+    backendBefore: 2,
+    backendAfter: 3,
+  };
+}
+
+async function checkRecovery(
+  page: Page,
+  fixture: Awaited<ReturnType<typeof createReloadFixture>>,
+  failedDocument: number,
+): Promise<void> {
+  await fixture.updateRenderer();
+  await expect.poll(() => page.evaluate(() => performance.timeOrigin)).not.toBe(failedDocument);
+  await expect(page.locator('vite-error-overlay')).toHaveCount(0);
+  await counter(page, 3);
+  await expect(page.locator('#renderer')).toHaveValue('reference');
+  await page.locator('#renderer').selectOption('custom');
+  await expect(page.locator('[data-renderer="custom"]')).toHaveAttribute(
+    'data-source-version',
+    'updated',
+  );
+  await counter(page, 3);
+  await expect(page.getByRole('button', { name: 'Increase counter', exact: true })).toHaveCount(1);
+  await page.getByRole('button', { name: 'Increase counter', exact: true }).click();
+  await counter(page, 4);
 }
 
 async function checkStyle(
