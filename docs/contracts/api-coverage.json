@@ -1409,6 +1409,7 @@
         "@devkit/core:ActionInvocationRequest",
         "@devkit/core:ActionInvocationRequest.action",
         "@devkit/core:ActionInvocationRequest.input",
+        "@devkit/core:ActivationScope.onDispose",
         "@devkit/core:BindingContext",
         "@devkit/core:BroadcastInvocationOptions.routing",
         "@devkit/core:BroadcastInvocationOptions.selection",
@@ -1431,6 +1432,7 @@
         "@devkit/core:OperationValue",
         "@devkit/core:RequirementBindings",
         "@devkit/core:ServiceDefinition.setup",
+        "@devkit/core:SetupContext.scope.onDispose",
         "@devkit/core:SetupContext.services"
       ],
       "examples": [
@@ -1605,13 +1607,28 @@
           "fullName": "built public core declarations rejects an unknown property from a typed native lookup",
           "host": "typescript-consumer",
           "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an eagerly executed synchronous cleanup during setup",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
+        },
+        {
+          "workspace": "packages/core",
+          "testFile": "tests/declarations.test.ts",
+          "fullName": "built public core declarations rejects an eagerly executed asynchronous cleanup during setup",
+          "host": "typescript-consumer",
+          "mode": "declaration-compatibility"
         }
       ],
       "gaps": [
         "These consumers resolve the built package export under pinned TypeScript 7 with Bundler resolution. Packed NodeNext consumers remain separate evidence; other compiler versions and resolution modes are not proved here.",
         "The tests cover operation/input/result correlation, broadcast selection and outcome narrowing, guard-only schema types, named requirements and local/remote native context access. They do not prove every member, overload, readonly constraint or runtime lifecycle of the linked contracts.",
         "Declaration compilation does not establish native RPC serialization, provider execution, browser behavior or the full host/mode matrix.",
-        "The request fixtures accept matching imported action/capability descriptors and reject mismatched operation payloads; they do not establish every malformed descriptor shape or the runtime meaning of descriptor identity and routing fields."
+        "The request fixtures accept matching imported action/capability descriptors and reject mismatched operation payloads; they do not establish every malformed descriptor shape or the runtime meaning of descriptor identity and routing fields.",
+        "Cleanup consumers accept returned synchronous unsubscribe and asynchronous callbacks, and reject eagerly executed cleanup results typed void or Promise<void>. This proves the callback-versus-result typing boundary, not arbitrary side-effect detection, callback timing/order, completed asynchronous teardown, JavaScript inputs or real-host cleanup."
       ]
     },
     {
@@ -1716,7 +1733,6 @@
         "@devkit/core:ActionInvocationRequest.action.version",
         "@devkit/core:ActionInvocationRequest.signal",
         "@devkit/core:ActivationScope",
-        "@devkit/core:ActivationScope.onDispose",
         "@devkit/core:ActivationScope.signal",
         "@devkit/core:Awaitable",
         "@devkit/core:BindingContext.access",
@@ -1981,7 +1997,6 @@
         "@devkit/core:SetupContext.provider.realm",
         "@devkit/core:SetupContext.provider.realm.id",
         "@devkit/core:SetupContext.scope",
-        "@devkit/core:SetupContext.scope.onDispose",
         "@devkit/core:SetupContext.scope.signal",
         "@devkit/core:Unsubscribe"
       ],

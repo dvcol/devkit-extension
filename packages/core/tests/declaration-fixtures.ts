@@ -190,11 +190,14 @@ export async function verify(capabilities: CapabilityClient, actions: ActionClie
 import { defineAction, defineService } from '@devkit/core';
 import { capability, action, execution, nativeContext } from './contracts.js';
 
+declare const subscribeToUpdates: () => () => void;
+
 export const service = defineService({
   id: 'example.dependent-service', capability, execution, requires: { records: capability },
   setup({ services, native, scope }) {
     native.get(nativeContext)?.title satisfies string | undefined;
     scope.signal satisfies AbortSignal;
+    scope.onDispose(subscribeToUpdates());
     scope.onDispose(() => Promise.resolve());
     return {
       read(input, context) {
