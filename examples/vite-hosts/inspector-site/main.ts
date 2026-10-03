@@ -13,7 +13,7 @@ import {
 import { createDevframeProviderConnection } from '@devkit/server/client';
 import { connectDevframe } from 'devframe/client';
 import type { DevframeRpcClient } from 'devframe/client';
-import { domRenderer } from '../../json-render/browser/renderer.js';
+import { domRenderer } from '@devkit/example-json-render/renderer';
 
 const lifetime = new AbortController();
 const cleanup = new DisposableStack();

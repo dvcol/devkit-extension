@@ -1,0 +1,137 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "host": "devframe",
+      "origin": "http://127.0.0.1:62998",
+      "provider": {
+        "id": "example.devframe-inspector",
+        "incarnation": "4df16cf4-1d04-45d5-bf34-150718ca516a",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "initial": {
+        "phase": "ready",
+        "attempt": 1,
+        "generation": "generation-e39daadc-562f-40b3-96d8-521801823856",
+        "error": null
+      },
+      "marker": {
+        "outcome": "Marker installation failed",
+        "alert": "Action \"example.response-inspector.marker\" failed: Operation handler failed",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "builtHtmlUnchanged": true,
+        "readStillWorks": true
+      },
+      "failed": {
+        "phase": "failed",
+        "attempt": 2,
+        "generation": "generation-e39daadc-562f-40b3-96d8-521801823856",
+        "error": "Build failed with 1 error:\n\n\u001b[31m[builtin:vite-transform] \u001b[0mUnexpected token\n     \u001b[38;5;246m╭\u001b[0m\u001b[38;5;246m─\u001b[0m\u001b[38;5;246m[\u001b[0m artifacts/inspector-production-s92UEv/site/main.ts:177:33 \u001b[38;5;246m]\u001b[0m\n     \u001b[38;5;246m│\u001b[0m\n \u001b[38;5;246m177 │\u001b[0m \u001b[38;5;249me\u001b[0m\u001b[38;5;249mx\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mi\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249mv\u001b[0m\u001b[38;5;249ma\u001b[0m\u001b[38;5;249ml\u001b[0m\u001b[38;5;249mi\u001b[0m\u001b[38;5;249md\u001b[0m\u001b[38;5;249mI\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249me\u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249m=\u001b[0m\u001b[38;5;249m \u001b[0m;\n \u001b[38;5;240m    │\u001b[0m                                 ┬  \n \u001b[38;5;240m    │\u001b[0m                                 ╰── \n\u001b[38;5;246m─────╯\u001b[0m\n"
+      },
+      "recovered": {
+        "phase": "ready",
+        "attempt": 3,
+        "generation": "generation-4de12a38-11a8-499b-afc0-7d75326d5d43",
+        "error": null
+      },
+      "originalDocumentRetained": true,
+      "oldAssetsRetained": true
+    },
+    {
+      "host": "devtools",
+      "origin": "http://127.0.0.1:63008",
+      "provider": {
+        "id": "example.devtools-inspector",
+        "incarnation": "d796003e-8e3c-484f-b2d2-9ffb36bc2c1b",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "initial": {
+        "phase": "ready",
+        "attempt": 1,
+        "generation": "generation-b06ebeb9-c902-4f2e-89cb-ac7b96a33997",
+        "error": null
+      },
+      "marker": {
+        "outcome": "Marker installation failed",
+        "alert": "Action \"example.response-inspector.marker\" failed: Operation handler failed",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "builtHtmlUnchanged": true,
+        "readStillWorks": true
+      },
+      "failed": {
+        "phase": "failed",
+        "attempt": 2,
+        "generation": "generation-b06ebeb9-c902-4f2e-89cb-ac7b96a33997",
+        "error": "Build failed with 1 error:\n\n\u001b[31m[builtin:vite-transform] \u001b[0mUnexpected token\n     \u001b[38;5;246m╭\u001b[0m\u001b[38;5;246m─\u001b[0m\u001b[38;5;246m[\u001b[0m artifacts/inspector-production-OLJudR/site/main.ts:177:33 \u001b[38;5;246m]\u001b[0m\n     \u001b[38;5;246m│\u001b[0m\n \u001b[38;5;246m177 │\u001b[0m \u001b[38;5;249me\u001b[0m\u001b[38;5;249mx\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mi\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249mv\u001b[0m\u001b[38;5;249ma\u001b[0m\u001b[38;5;249ml\u001b[0m\u001b[38;5;249mi\u001b[0m\u001b[38;5;249md\u001b[0m\u001b[38;5;249mI\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249me\u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249m=\u001b[0m\u001b[38;5;249m \u001b[0m;\n \u001b[38;5;240m    │\u001b[0m                                 ┬  \n \u001b[38;5;240m    │\u001b[0m                                 ╰── \n\u001b[38;5;246m─────╯\u001b[0m\n"
+      },
+      "recovered": {
+        "phase": "ready",
+        "attempt": 3,
+        "generation": "generation-88c7d7e9-eaa3-4404-bada-deaeb617f88c",
+        "error": null
+      },
+      "originalDocumentRetained": true,
+      "oldAssetsRetained": true
+    }
+  ],
+  "checks": [
+    "preview starts before assets and serves real Vite-built inspector generations through either native backend",
+    "built reference and custom renderers share live inspector actions and native state",
+    "runtime marker requests reject visibly without modifying state or built HTML",
+    "a genuine syntax failure publishes failed status while preserving complete assets and live provider state",
+    "fresh clients during failure receive the previous generation and current native state",
+    "a valid edit publishes new assets without replacing the old document or provider, and old URLs retain their bytes",
+    "preview shutdown removes both native views and disables renderer controls"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    {
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:63008/__devframes/__connection.json"
+    },
+    {
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:63008/__devframes/__connection.json"
+    },
+    {
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:63008/__devframes/__connection.json"
+    },
+    {
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:63008/__devframes/__connection.json"
+    }
+  ],
+  "httpErrors": [
+    {
+      "url": "http://127.0.0.1:63008/__devframes/__connection.json",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:63008/__devframes/__connection.json",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:63008/__devframes/__connection.json",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:63008/__devframes/__connection.json",
+      "status": 404
+    }
+  ],
+  "limitations": [
+    "No automatic production-page reload; Vite serves explicit navigation to completed generations",
+    "Native DevTools discovery probes the absent Devframe metadata endpoint first; its actual 404 responses and console messages are retained"
+  ]
+}

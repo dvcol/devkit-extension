@@ -1,0 +1,101 @@
+{
+  "browser": "157.0",
+  "driver": "0.37.1",
+  "observations": [
+    {
+      "host": "devframe",
+      "origin": "http://127.0.0.1:65242",
+      "provider": {
+        "id": "example.devframe-inspector",
+        "incarnation": "03289608-8e54-4113-8432-725b19d1fc09",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "initial": {
+        "phase": "ready",
+        "attempt": 1,
+        "generation": "generation-71556f37-8381-4d7e-935d-bc1281a02753",
+        "error": null
+      },
+      "marker": {
+        "outcome": "Marker installation failed",
+        "alert": "Action \"example.response-inspector.marker\" failed: Operation handler failed",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "builtHtmlUnchanged": true,
+        "readStillWorks": true
+      },
+      "failed": {
+        "phase": "failed",
+        "attempt": 2,
+        "generation": "generation-71556f37-8381-4d7e-935d-bc1281a02753",
+        "error": "Build failed with 1 error:\n\n\u001b[31m[builtin:vite-transform] \u001b[0mUnexpected token\n     \u001b[38;5;246m╭\u001b[0m\u001b[38;5;246m─\u001b[0m\u001b[38;5;246m[\u001b[0m artifacts/inspector-production-q6n5nI/site/main.ts:177:33 \u001b[38;5;246m]\u001b[0m\n     \u001b[38;5;246m│\u001b[0m\n \u001b[38;5;246m177 │\u001b[0m \u001b[38;5;249me\u001b[0m\u001b[38;5;249mx\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mi\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249mv\u001b[0m\u001b[38;5;249ma\u001b[0m\u001b[38;5;249ml\u001b[0m\u001b[38;5;249mi\u001b[0m\u001b[38;5;249md\u001b[0m\u001b[38;5;249mI\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249me\u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249m=\u001b[0m\u001b[38;5;249m \u001b[0m;\n \u001b[38;5;240m    │\u001b[0m                                 ┬  \n \u001b[38;5;240m    │\u001b[0m                                 ╰── \n\u001b[38;5;246m─────╯\u001b[0m\n"
+      },
+      "recovered": {
+        "phase": "ready",
+        "attempt": 3,
+        "generation": "generation-2d9a1290-cda9-4489-9d8b-91325fe46cd5",
+        "error": null
+      },
+      "originalDocumentRetained": true,
+      "oldAssetsRetained": true
+    },
+    {
+      "host": "devtools",
+      "origin": "http://127.0.0.1:65267",
+      "provider": {
+        "id": "example.devtools-inspector",
+        "incarnation": "2519a937-2f43-459e-ac96-ab7299a7bf09",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "initial": {
+        "phase": "ready",
+        "attempt": 1,
+        "generation": "generation-7318dbfb-ce6c-45e1-9677-af4b35a7468c",
+        "error": null
+      },
+      "marker": {
+        "outcome": "Marker installation failed",
+        "alert": "Action \"example.response-inspector.marker\" failed: Operation handler failed",
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "builtHtmlUnchanged": true,
+        "readStillWorks": true
+      },
+      "failed": {
+        "phase": "failed",
+        "attempt": 2,
+        "generation": "generation-7318dbfb-ce6c-45e1-9677-af4b35a7468c",
+        "error": "Build failed with 1 error:\n\n\u001b[31m[builtin:vite-transform] \u001b[0mUnexpected token\n     \u001b[38;5;246m╭\u001b[0m\u001b[38;5;246m─\u001b[0m\u001b[38;5;246m[\u001b[0m artifacts/inspector-production-oeFXN6/site/main.ts:177:33 \u001b[38;5;246m]\u001b[0m\n     \u001b[38;5;246m│\u001b[0m\n \u001b[38;5;246m177 │\u001b[0m \u001b[38;5;249me\u001b[0m\u001b[38;5;249mx\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249mi\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249mv\u001b[0m\u001b[38;5;249ma\u001b[0m\u001b[38;5;249ml\u001b[0m\u001b[38;5;249mi\u001b[0m\u001b[38;5;249md\u001b[0m\u001b[38;5;249mI\u001b[0m\u001b[38;5;249mn\u001b[0m\u001b[38;5;249ms\u001b[0m\u001b[38;5;249mp\u001b[0m\u001b[38;5;249me\u001b[0m\u001b[38;5;249mc\u001b[0m\u001b[38;5;249mt\u001b[0m\u001b[38;5;249mo\u001b[0m\u001b[38;5;249mr\u001b[0m\u001b[38;5;249m \u001b[0m\u001b[38;5;249m=\u001b[0m\u001b[38;5;249m \u001b[0m;\n \u001b[38;5;240m    │\u001b[0m                                 ┬  \n \u001b[38;5;240m    │\u001b[0m                                 ╰── \n\u001b[38;5;246m─────╯\u001b[0m\n"
+      },
+      "recovered": {
+        "phase": "ready",
+        "attempt": 3,
+        "generation": "generation-0330df6e-a24a-4726-ab2e-d611599413db",
+        "error": null
+      },
+      "originalDocumentRetained": true,
+      "oldAssetsRetained": true
+    }
+  ],
+  "checks": [
+    "preview starts before assets and serves real Vite-built inspector generations through either native backend",
+    "built reference and custom renderers share live inspector actions and native state",
+    "runtime marker requests reject visibly without modifying state or built HTML",
+    "a genuine syntax failure publishes failed status while preserving complete assets and live provider state",
+    "fresh clients during failure receive the previous generation and current native state",
+    "a valid edit publishes new assets without replacing the old document or provider, and old URLs retain their bytes",
+    "preview shutdown removes both native views and disables renderer controls"
+  ],
+  "limitations": [
+    "No global page-error, browser-console or discovery-request capture through WebDriver Classic",
+    "No automatic production-page reload; Vite serves explicit navigation to completed generations"
+  ]
+}

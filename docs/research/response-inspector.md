@@ -98,7 +98,7 @@ The first parser script captures `responseInspectorMarker` and `document.readySt
 
 Requested configuration and native support are separate state fields. Each provider owns its own configuration, latest result and marker state. The shared JSON projects those fields without merging providers. Its local completion text reports dispatch completion; per-provider fulfilled/rejected results remain in the host's existing result output. Native remote operation failures retain the generic `Operation handler failed` message; exact native causes are available in local logs and focused service tests. No parallel error-disclosure policy was added.
 
-The Vite feature rejects a runtime marker request on preview because Vite serves already-built HTML there. [The preview proof](../../examples/vite-hosts/tests/inspector-preview.test.ts) builds a real HTML document, starts each maintained native preview host, then dynamically installs the shared inspector actions and native feature. Both hosts return original, modified and reset response bytes. The marker request rejects with the native cause before changing state; the served HTML remains byte-for-byte equal to the build output. Separate script, transform and service disposal cases verify response admission, capability availability and action dependency status. This is native HTTP/provider evidence, not a browser renderer or watched-inspector build proof. The standalone inspector configuration still supports development servers only.
+The Vite feature rejects a runtime marker request on preview because Vite serves already-built HTML there. [The preview proof](../../examples/vite-hosts/tests/inspector-preview.test.ts) builds a real HTML document, starts each maintained native preview host, then dynamically installs the shared inspector actions and native feature. Both hosts return original, modified and reset response bytes. The marker request rejects with the native cause before changing state; the served HTML remains byte-for-byte equal to the build output. Separate script, transform and service disposal cases verify response admission, capability availability and action dependency status. This is native HTTP/provider evidence, not a browser renderer or watched-inspector build proof. The inspector configuration now also builds browser assets independently and attaches the same declarations to either native preview backend. The CLI and browser watch proofs below reuse the existing production publication helpers.
 
 ## Run and reproduce
 
@@ -112,13 +112,26 @@ pnpm --filter @devkit/example-vite-hosts inspector:devtools
 
 Open the printed loopback URL and grant access through Devframe's native authentication UI. The page mounts the native reference renderer after authentication. Click **Inspect response**, **Enable response modification**, and **Inspect response** again. The body changes from `fixture:original` to `native:fixture:original`. Click **Install page marker**, then navigate to `/inspector-fixture`. Its first-parser observation becomes `loading`. Click **Reset inspector** and reload that fixture page; the marker is absent and the next response is original.
 
+For built production assets, start the watcher and preview independently or use the combined pnpm command. `DEVKIT_HOST=devtools` selects the native DevTools backend; the default is Devframe.
+
+```sh
+pnpm --filter @devkit/example-vite-hosts inspector:build:watch
+pnpm --filter @devkit/example-vite-hosts inspector:preview
+pnpm --filter @devkit/example-vite-hosts inspector:dev:production
+DEVKIT_HOST=devtools pnpm --filter @devkit/example-vite-hosts inspector:dev:production
+```
+
+The combined command runs the two matching scripts in parallel. A direct CLI check started both native variants, observed ready build status and real built inspector HTML, then stopped their owned previews. Vite still owns the watcher and preview. The example attaches its native backend to the preview HTTP lifecycle and uses the maintained last-complete-build publication helper; it adds no recovery supervisor.
+
 The automated server command uses the native temporary authentication code and checks both simultaneous backends:
 
 ```sh
 pnpm --filter @devkit/example-vite-hosts test:inspector
 pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-errors.ts
+pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-production.ts
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts test:inspector:firefox
 FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-errors-firefox.ts
+FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts exec node tests/inspector-production-firefox.ts
 ```
 
 The extension proof starts and closes its owned fixture server and disposable browser profile. It loads the built example extension, opens `panel.html` and clicks the same five authored buttons:
@@ -159,6 +172,10 @@ The page's **Renderer** selector mounts either the unchanged native reference re
 
 The extension inspector's **Renderer** selector now mounts the same authored view with either the native reference renderer or the packaged framework-free `@devkit/example-json-render/renderer` export. Both choices use the existing action bindings, recipient controls, native state and mount disposal. Chrome and Firefox execute all four actions through the custom mount, preserve realm/provider/all-provider selection, and switch back to the reference renderer without resetting backend state. Detached controls cannot dispatch after replacement or disconnect. The server cards remain native reference renderers, so their independent projection updates provide a second observation of the same dispatch. [Chrome's seven checks](../../examples/webext/evidence/inspector/custom-chromium.json) retain its partial configuration rejection; [Firefox's six checks](../../examples/webext/evidence/inspector/custom-firefox.json) observe three modified responses. These are packaged extension builds using workspace-built example exports; complete tarball/browser consumption remains separate.
 
+[Chrome](../../examples/vite-hosts/tests/inspector-production.ts) and [Firefox](../../examples/vite-hosts/tests/inspector-production-firefox.ts) each verify seven watched-production scenarios on both native backends. Preview first starts without assets. A genuine source syntax error then leaves the last complete generation, its asset bytes and live provider state available. Fresh clients during failure read that generation and current state. Repair publishes a new generation; existing documents, provider identities and old asset URLs remain intact. Both reference and custom renderers execute the shared actions. Shutdown removes publications and disables controls. Runtime marker requests reject before changing state or built HTML; an independent read still succeeds. Native renderer errors belong to the failed action, so successful reads do not clear a previous marker error. This retains upstream behavior.
+
+Production preview does not automatically reload an existing document. Navigate explicitly to the new complete generation. The private preview fixture supports HTTP/1 without TLS. DevTools discovery first probes the absent Devframe metadata endpoint, which returns an actual 404 under static preview. Chrome records and permits only that exact request/status and matching console message; all other errors fail the proof. [Its retained receipt](../../examples/vite-hosts/evidence/inspector-production-chromium.json) contains the actual failures and recoveries. [Firefox's receipt](../../examples/vite-hosts/evidence/inspector-production-firefox.json) records visible state and connection checks; WebDriver Classic does not capture global page/console errors or discovery requests.
+
 The packed-contract check, `node scripts/check-example-package.ts`, installs real tarballs outside the workspace. Strict Bundler and NodeNext consumers preserve boolean configure input/result types and execute all four shared actions through packed runtime. A separate browser contract bundle imports the schema/descriptors and rejects backend, Node or framework leakage. This proves packed contracts and their local runtime composition, not packed renderer/native host composition.
 
 The maintained native artifact gate, `node scripts/check-native-packages.ts`, now also installs the packed shared actions and JSON view together on actual Devframe and DevTools contexts. Strict Bundler and NodeNext consumers check the native publication index, exact action references/inputs, action-driven projection changes, view subscription/publication disposal and retained business state. Its consumer-local service uses native shared state and explicitly performs no HTTP interception or document injection. This proves installed native-context/action/view composition, not browser mounting or the complete inspector host feature. The unchanged JSON example manifest requires the packed server-contexts example as well; all three example tarballs are installed without workspace links or manifest edits. The existing six-SDK browser graph and native RPC checks remain enforced.
@@ -179,4 +196,4 @@ Done for this slice:
 
 The affected Vite example suite now passes 42 tests, including eight real-preview cases across Devframe and DevTools.
 
-The full ticket remains open. Packed complete browser/native host I/O consumption, extension error recovery, development edits, watched inspector production builds and browser preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
+The full ticket remains open. Packed complete browser/native host I/O consumption, extension error recovery, development edits, broader inspector development/reload transitions, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
