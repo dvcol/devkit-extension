@@ -37,13 +37,14 @@ async function compileConsumer(source: string) {
 }
 
 describe('built public core declarations', () => {
+  /** Keep assertions and cleanup inside their test after the compiler's 30-second bound. */
   for (const { name, source } of acceptedConsumers) {
     it(`accepts ${name}`, async () => {
       expect.assertions(2);
       const result = await compileConsumer(source);
       expect(result.error).toBeUndefined();
       expect({ status: result.status, output: result.output }).toEqual({ status: 0, output: '' });
-    });
+    }, 35_000);
   }
 
   for (const { name, source, diagnostic, code } of rejectedConsumers) {
@@ -54,6 +55,6 @@ describe('built public core declarations', () => {
       expect(result.status).toBe(1);
       expect(result.output).toContain(diagnostic);
       expect(result.output.match(/error TS\d+/gu)).toEqual([`error ${code}`]);
-    });
+    }, 35_000);
   }
 });
