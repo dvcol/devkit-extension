@@ -1,3 +1,5 @@
+export { inspectorNativeConsumer } from './inspector-native-consumer.ts';
+
 export const nativeServerConsumer = `
 import { join } from 'node:path';
 import { createHubContext } from '@devframes/hub/node';
@@ -8,6 +10,7 @@ import type { InstallationHandle } from '@devkit/core';
 import { createDevframeProvider, createDevToolsProvider, serverExecution } from '@devkit/server';
 import type { ServerProviderHandle } from '@devkit/server';
 import { action } from './browser.js';
+import { checkInspectorComposition } from './inspector.js';
 
 export async function runServers(directory: string): Promise<void> {
   for (const mode of ['devframe', 'devtools']) {
@@ -51,6 +54,7 @@ async function checkProvider(provider: ServerProviderHandle<true>): Promise<void
     const value: number = await provider.invoke({ action, input: 41 });
     if (value !== 42) throw new Error('Packed server action returned the wrong result');
     await handle.dispose();
+    await checkInspectorComposition(provider);
   } finally { await provider.dispose(); }
 }
 `;

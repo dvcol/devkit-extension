@@ -157,6 +157,8 @@ The page's **Renderer** selector mounts either the unchanged native reference re
 
 The packed-contract check, `node scripts/check-example-package.ts`, installs real tarballs outside the workspace. Strict Bundler and NodeNext consumers preserve boolean configure input/result types and execute all four shared actions through packed runtime. A separate browser contract bundle imports the schema/descriptors and rejects backend, Node or framework leakage. This proves packed contracts and their local runtime composition, not packed renderer/native host composition.
 
+The maintained native artifact gate, `node scripts/check-native-packages.ts`, now also installs the packed shared actions and JSON view together on actual Devframe and DevTools contexts. Strict Bundler and NodeNext consumers check the native publication index, exact action references/inputs, action-driven projection changes, view subscription/publication disposal and retained business state. Its consumer-local service uses native shared state and explicitly performs no HTTP interception or document injection. This proves installed native-context/action/view composition, not browser mounting or the complete inspector host feature. The unchanged JSON example manifest requires the packed server-contexts example as well; all three example tarballs are installed without workspace links or manifest edits. The existing six-SDK browser graph and native RPC checks remain enforced.
+
 The contribution tests use built public exports and real runtime operations. The server tests use actual native contexts, HTTP responses, HTML hooks, independent contribution controls, dependency loss/restoration and malformed-state rejection before effects. The extension service tests replace only native browser I/O and assert selection/permission failures, filtering boundaries and resource disposal. These focused tests complement the live receipts; they do not substitute for unexecuted host cells.
 
 Ready for this slice:
@@ -173,4 +175,4 @@ Done for this slice:
 
 The affected Vite example suite now passes 42 tests, including eight real-preview cases across Devframe and DevTools.
 
-The full ticket remains open. Packed complete host consumption, extension custom-renderer placement, development edits, watched inspector production builds and browser preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
+The full ticket remains open. Packed complete browser/native host I/O consumption, extension custom-renderer placement, development edits, watched inspector production builds and browser preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.

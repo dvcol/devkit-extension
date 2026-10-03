@@ -7,11 +7,21 @@ import { pathToFileURL } from 'node:url';
 import { styleText } from 'node:util';
 import { build } from 'vite';
 import { nativeBrowserConsumer } from './fixtures/native-browser-consumer.ts';
-import { nativeServerConsumer } from './fixtures/native-server-consumer.ts';
+import {
+  inspectorNativeConsumer,
+  nativeServerConsumer,
+} from './fixtures/native-server-consumer.ts';
 
 const repository = resolvePath(import.meta.dirname, '..');
 const consumer = await realpath(await mkdtemp(join(tmpdir(), 'devkit-native-consumer-')));
 const packages = ['core', 'runtime', 'client', 'devframe', 'server', 'webext'] as const;
+const packedPackages = [
+  ...packages.map((name) => ({ name, directory: `packages/${name}` })),
+  { name: 'example-contribution', directory: 'examples/contribution' },
+  { name: 'example-json-render', directory: 'examples/json-render' },
+  /** Required by the unchanged JSON example manifest, even for its inspector subpath. */
+  { name: 'example-server-contexts', directory: 'examples/server-contexts' },
+];
 
 function run(command: string, arguments_: readonly string[]): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -42,9 +52,9 @@ async function installConsumer(): Promise<void> {
     vite: '8.3.0',
     zod: '4.6.5',
   };
-  for (const name of packages) {
+  for (const { name, directory } of packedPackages) {
     const artifact = join(consumer, `${name}.tgz`);
-    await run('pnpm', ['--dir', join(repository, 'packages', name), 'pack', '--out', artifact]);
+    await run('pnpm', ['--dir', join(repository, directory), 'pack', '--out', artifact]);
     overrides[`@devkit/${name}`] = `file:${artifact}`;
     dependencies[`@devkit/${name}`] = `file:${artifact}`;
   }
@@ -79,7 +89,7 @@ async function checkIsolation(): Promise<void> {
     assert.ok(!entries.includes('node_modules'), `Ancestor could supply dependencies: ${ancestor}`);
     if (ancestor === dirname(ancestor)) break;
   }
-  for (const name of packages) {
+  for (const { name } of packedPackages) {
     const directory = await realpath(join(consumer, 'node_modules', '@devkit', name));
     assertInside(directory);
     const files = await readdir(directory);
@@ -133,7 +143,7 @@ async function checkTypes(mode: 'Bundler' | 'NodeNext'): Promise<void> {
         verbatimModuleSyntax: true,
         outDir: output,
       },
-      include: ['browser.ts', 'server.ts'],
+      include: ['browser.ts', 'server.ts', 'inspector.ts'],
     }),
   );
   await run(process.execPath, [
@@ -202,12 +212,13 @@ try {
   await checkIsolation();
   await writeFile(join(consumer, 'browser.ts'), nativeBrowserConsumer);
   await writeFile(join(consumer, 'server.ts'), nativeServerConsumer);
+  await writeFile(join(consumer, 'inspector.ts'), inspectorNativeConsumer);
   await checkTypes('Bundler');
   await checkTypes('NodeNext');
   await checkBrowserBundle();
   console.info(
     styleText('green', '✅ [native-artifacts]'),
-    'Packed exports, strict Bundler/NodeNext types, native hosts and browser RPC passed.',
+    'Packed exports, strict Bundler/NodeNext types, native inspector publication/actions/disposal and browser RPC passed.',
   );
 } finally {
   await rm(consumer, { recursive: true, force: true });
