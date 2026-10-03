@@ -534,7 +534,7 @@
         }
       ],
       "gaps": [
-        "The common API owns native setup and cleanup. All three native stages now cover MAIN/ISOLATED, allFrames false/true, top/same-origin/cross-origin children, an ungranted matching child and the tested nonce CSP in Chromium/Firefox production/development. Native install/disable/enable/dispose, preserved old effects and absent fresh-document markers are directly observed. The separate held-resource fixture proves document_end before load; no common idle scheduling order is imposed. Blank/blob/sandboxed frames, origin fallback, broader CSP operations, permission transitions, browser restart, dependency loss during real registration and cleanup failure remain issue #11 obligations.",
+        "The common API owns native setup and cleanup. All three native stages now cover MAIN/ISOLATED, allFrames false/true, top/same-origin/cross-origin children, an ungranted matching child and the tested nonce CSP in Chromium/Firefox production/development. Native install/disable/enable/dispose, preserved old effects and absent fresh-document markers are directly observed. The separate held-resource fixture proves document_end before load; no common idle scheduling order is imposed. Blank/blob/sandboxed frames, origin fallback, broader CSP operations, remaining permission transitions, browser restart, dependency loss during real registration and cleanup failure remain issue #11 obligations. A native Firefox production MAIN/document_start top-level case now keeps the same registration across permission revoke/regrant and observes fresh-document injection stop/resume without reinstall; other worlds/stages/frames, development and Chrome remain separate cells.",
         "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP response implementations remain separate native work."
       ],
       "browserEvidence": [
@@ -860,6 +860,17 @@
           ],
           "host": "firefox",
           "mode": "development",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-trust.ts",
+          "receiptFile": "artifacts/trust/firefox.json",
+          "checks": [
+            "active MAIN document_start registration retains its identity and options across native host-permission revoke and regrant; fresh documents stop and resume injection without reinstall; disposal empties the registry"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension-native-permission-ui",
           "requirePageErrors": false
         }
       ]

@@ -63,6 +63,19 @@ Each receipt contains six world/stage cells, ten exact checks, native lifecycle 
 
 CI already runs all four commands and retains their artifact directories. The API matrix now requires the exact ten checks from each generated `script-stages.json`. Full Linux acceptance runs after the issue-scoped commit. Fixture servers, tabs and disposable browser sessions close after the maintained commands.
 
+## Native optional-host permission transition
+
+The existing Firefox trust command now verifies one native optional-host permission transition with MAIN/document_start in a top-level production document. It installs the common script contribution once, then uses the real permission prompt and remove control:
+
+```text
+Granted → fresh document injects at loading
+Revoked → same native registration remains; fresh document has no injected marker
+Regranted → same registration injects at loading, without reinstall
+Dispose → native registry empty; contribution generation remained 1
+```
+
+Run `pnpm --filter @devkit/example-webext test:trust:firefox` with the existing Firefox/driver environment. The [retained native receipt](../../examples/webext/evidence/trust/firefox.json) has eleven named checks and records all three permission, registration and first-script snapshots. The registration/options remain identical. This adds no SDK permission observer, automatic disable or retry. It does not establish rollback of already executed code, other worlds/stages/child frames, development or Chrome. Firefox WebDriver Classic has no global page-error capture here.
+
 ## Remaining scope
 
-This held-resource proof covers top-level documents. The separate [frame/CSP proof](./native-script-contexts.md) now covers all three native stages across both worlds, frame-inclusion settings, granted/ungranted children and the tested nonce policy. Its idle timing differs from this fixture and remains native. Blank/blob/sandboxed frames, origin fallback, permission transitions, browser restart, dependency loss during native registration and cleanup failure are separate obligations. Unregistering cannot undo already executed page effects. Firefox WebDriver Classic still lacks global page-error capture here.
+This held-resource proof covers top-level documents. The separate [frame/CSP proof](./native-script-contexts.md) now covers all three native stages across both worlds, frame-inclusion settings, granted/ungranted children and the tested nonce policy. Its idle timing differs from this fixture and remains native. Blank/blob/sandboxed frames, origin fallback, remaining permission transitions, browser restart, dependency loss during native registration and cleanup failure are separate obligations. Unregistering cannot undo already executed page effects. Firefox WebDriver Classic still lacks global page-error capture here.

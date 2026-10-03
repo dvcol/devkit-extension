@@ -4,7 +4,15 @@ import { resolve } from 'node:path';
 import { styleText } from 'node:util';
 import { By } from 'selenium-webdriver';
 import { Context, Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
-import { startTimingServer } from './script-timing.ts';
+import {
+  checkTimingInstallation,
+  checkTimingRegistration,
+  checkTimingSnapshot,
+  readTimingRegistration,
+  readTimingSnapshot,
+  startTimingServer,
+} from './script-timing.ts';
+import { readOptionalHostPermission } from './script-contexts.ts';
 import { createDeniedRequests, findTab, probeCaller, readDocument } from './trust-fixture.ts';
 import { openPanel, panelScript, closePanel } from './firefox-devtools.ts';
 
@@ -110,6 +118,7 @@ try {
   assert.equal(restored.documentId, granted.documentId);
   await driver.switchTo().window(peer);
   await waitText('#permission-status', 'Granted');
+  const scriptPermission = await checkRegisteredScriptPermissions({ extension, source });
   await driver.switchTo().window(source);
   await driver.setContext(Context.CHROME);
   await openPanel(driver);
@@ -128,6 +137,7 @@ try {
   await driver.setContext(Context.CONTENT);
   const receipt = {
     browser: (await driver.getCapabilities()).getBrowserVersion(),
+    scriptPermission,
     checks: [
       'wrong channel and forged content sender reject native action/state requests without replies',
       'admitted panel retains working service after denied disable request',
@@ -138,6 +148,7 @@ try {
       'removing permission rejects next injection on the same tab',
       'regrant permits the same native operation without reconnect or replay',
       'native permission events update a second open extension page',
+      'active MAIN document_start registration retains its identity and options across native host-permission revoke and regrant; fresh documents stop and resume injection without reinstall; disposal empties the registry',
       'DevTools without the native permissions API disables those controls and still connects',
     ],
   };
@@ -145,6 +156,67 @@ try {
   console.info(styleText('green', '✅ [trust/firefox]'), receipt);
 } finally {
   await driver.quit();
+}
+
+async function checkRegisteredScriptPermissions(pages: { extension: string; source: string }) {
+  await driver.switchTo().window(pages.extension);
+  const installed = await scriptControl('script-main', 'ready');
+  checkTimingRegistration(installed.registrations, 'MAIN');
+  const observations = [];
+  let disposed;
+  try {
+    observations.push(await scriptPermissionSnapshot({ ...pages, granted: true }));
+    await driver.findElement(By.id('permission-remove')).click();
+    await waitText('#permission-result', 'Access removed');
+    await waitText('#permission-status', 'Not granted');
+    observations.push(await scriptPermissionSnapshot({ ...pages, granted: false }));
+    await requestPermission(true);
+    await waitText('#permission-result', 'Access granted');
+    await waitText('#permission-status', 'Granted');
+    observations.push(await scriptPermissionSnapshot({ ...pages, granted: true }));
+    for (const observation of observations)
+      assert.deepEqual(observation.registrations, installed.registrations);
+  } finally {
+    await driver.switchTo().window(pages.extension);
+    disposed = await scriptControl('script-dispose', 'disposed');
+    assert.deepEqual(disposed.registrations, []);
+  }
+  return { installed, observations, disposed };
+}
+
+async function scriptPermissionSnapshot(snapshotOptions: {
+  extension: string;
+  source: string;
+  granted: boolean;
+}) {
+  await driver.switchTo().window(snapshotOptions.extension);
+  const permission = await driver.executeScript<boolean>(readOptionalHostPermission);
+  assert.equal(permission, snapshotOptions.granted);
+  const registrations =
+    await driver.executeScript<Awaited<ReturnType<typeof readTimingRegistration>>>(
+      readTimingRegistration,
+    );
+  await driver.switchTo().window(snapshotOptions.source);
+  await driver.navigate().refresh();
+  const snapshot: unknown = await driver.executeScript(readTimingSnapshot);
+  checkTimingSnapshot(snapshot, snapshotOptions.granted ? 'MAIN' : undefined);
+  await driver.switchTo().window(snapshotOptions.extension);
+  return { permission, registrations, snapshot };
+}
+
+async function scriptControl(identifier: string, status: string) {
+  await driver.findElement(By.id(identifier)).click();
+  await driver.wait(
+    async () => (await driver.findElement(By.id('result')).getText()) !== 'Pending',
+    10_000,
+  );
+  const snapshot: unknown = JSON.parse(await driver.findElement(By.id('result')).getText());
+  checkTimingInstallation(snapshot, status, 1);
+  const registrations =
+    await driver.executeScript<Awaited<ReturnType<typeof readTimingRegistration>>>(
+      readTimingRegistration,
+    );
+  return { snapshot, registrations };
 }
 
 async function waitText(selector: string, value: string): Promise<void> {

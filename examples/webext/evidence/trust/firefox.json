@@ -1,5 +1,163 @@
 {
   "browser": "157.0",
+  "scriptPermission": {
+    "installed": {
+      "snapshot": {
+        "installation": {
+          "id": "example.bootstrap",
+          "status": "ready",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 1,
+              "enabled": true,
+              "status": "active",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "registrations": [
+          {
+            "id": "example-script-timing",
+            "allFrames": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "matchOriginAsFallback": false,
+            "runAt": "document_start",
+            "world": "MAIN",
+            "persistAcrossSessions": false,
+            "cssOrigin": "author",
+            "js": ["script-timing.js"]
+          }
+        ]
+      },
+      "registrations": [
+        {
+          "allFrames": false,
+          "cssOrigin": "author",
+          "id": "example-script-timing",
+          "js": ["script-timing.js"],
+          "matchOriginAsFallback": false,
+          "matches": [
+            "http://127.0.0.1/index.html",
+            "http://localhost/index.html",
+            "http://127.0.0.1/frame.html",
+            "http://localhost/frame.html"
+          ],
+          "persistAcrossSessions": false,
+          "runAt": "document_start",
+          "world": "MAIN"
+        }
+      ]
+    },
+    "observations": [
+      {
+        "permission": true,
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "MAIN"
+          }
+        ],
+        "snapshot": {
+          "injectedGlobal": "loading",
+          "injectedReadyState": "loading",
+          "pageReadyState": "loading"
+        }
+      },
+      {
+        "permission": false,
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "MAIN"
+          }
+        ],
+        "snapshot": {
+          "injectedGlobal": null,
+          "injectedReadyState": null,
+          "pageReadyState": "loading"
+        }
+      },
+      {
+        "permission": true,
+        "registrations": [
+          {
+            "allFrames": false,
+            "cssOrigin": "author",
+            "id": "example-script-timing",
+            "js": ["script-timing.js"],
+            "matchOriginAsFallback": false,
+            "matches": [
+              "http://127.0.0.1/index.html",
+              "http://localhost/index.html",
+              "http://127.0.0.1/frame.html",
+              "http://localhost/frame.html"
+            ],
+            "persistAcrossSessions": false,
+            "runAt": "document_start",
+            "world": "MAIN"
+          }
+        ],
+        "snapshot": {
+          "injectedGlobal": "loading",
+          "injectedReadyState": "loading",
+          "pageReadyState": "loading"
+        }
+      }
+    ],
+    "disposed": {
+      "snapshot": {
+        "installation": {
+          "id": "example.bootstrap",
+          "status": "disposed",
+          "contributions": [
+            {
+              "id": "example.bootstrap",
+              "kind": "script",
+              "generation": 1,
+              "enabled": false,
+              "status": "disposed",
+              "diagnostics": []
+            }
+          ],
+          "diagnostics": []
+        },
+        "registrations": []
+      },
+      "registrations": []
+    }
+  },
   "checks": [
     "wrong channel and forged content sender reject native action/state requests without replies",
     "admitted panel retains working service after denied disable request",
@@ -10,6 +168,7 @@
     "removing permission rejects next injection on the same tab",
     "regrant permits the same native operation without reconnect or replay",
     "native permission events update a second open extension page",
+    "active MAIN document_start registration retains its identity and options across native host-permission revoke and regrant; fresh documents stop and resume injection without reinstall; disposal empties the registry",
     "DevTools without the native permissions API disables those controls and still connects"
   ]
 }
