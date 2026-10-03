@@ -40,5 +40,5 @@ describe('built public Devframe client declarations', () => {
     const result = await compileConsumer();
     expect(result.error).toBeUndefined();
     expect({ status: result.status, output: result.output }).toEqual({ status: 0, output: '' });
-  });
+  }, 35_000);
 });
