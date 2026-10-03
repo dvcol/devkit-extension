@@ -85,7 +85,7 @@ The first parser script captures `responseInspectorMarker` and `document.readySt
 
 Requested configuration and native support are separate state fields. Each provider owns its own configuration, latest result and marker state. The shared JSON projects those fields without merging providers. Its local completion text reports dispatch completion; per-provider fulfilled/rejected results remain in the host's existing result output. Native remote operation failures retain the generic `Operation handler failed` message; exact native causes are available in local logs and focused service tests. No parallel error-disclosure policy was added.
 
-The Vite feature explicitly rejects a runtime marker request on preview because Vite serves already-built HTML there. This guard has not yet been exercised by this inspector proof. The standalone inspector configuration deliberately supports development servers only. Existing production/counter examples remain available, but do not establish the inspector's production behavior.
+The Vite feature rejects a runtime marker request on preview because Vite serves already-built HTML there. [The preview proof](../../examples/vite-hosts/tests/inspector-preview.test.ts) builds a real HTML document, starts each maintained native preview host, then dynamically installs the shared inspector actions and native feature. Both hosts return original, modified and reset response bytes. The marker request rejects with the native cause before changing state; the served HTML remains byte-for-byte equal to the build output. Separate script, transform and service disposal cases verify response admission, capability availability and action dependency status. This is native HTTP/provider evidence, not a browser renderer or watched-inspector build proof. The standalone inspector configuration still supports development servers only.
 
 ## Run and reproduce
 
@@ -113,15 +113,22 @@ pnpm --filter @devkit/example-webext exec node tests/chromium-inspector.ts
 SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-webext exec node tests/firefox-inspector.ts
 ```
 
+The native preview proof runs through the affected package suite or directly:
+
+```sh
+pnpm --filter @devkit/example-vite-hosts exec vitest run tests/inspector-preview.test.ts
+```
+
 Set `FIREFOX_BINARY` when Firefox is outside the driver's discovery path. The browser runners require their existing installed browser/driver dependencies. The in-app browser cannot load these native extensions, so their actual browser tests use disposable native browser profiles.
 
 ## Executed evidence and limits
 
-| Run                                                    | Version                            | Retained evidence                                                                                                     |
-| ------------------------------------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Devframe and DevTools reference UI, native development | Chromium 153.0.8010.12             | [18 checks with both renderers, zero page/console errors](../../examples/vite-hosts/evidence/inspector-chromium.json) |
-| Native packaged extension                              | Chromium 153.0.8010.12             | [6 checks, zero page errors](../../examples/webext/evidence/inspector/chromium.json)                                  |
-| Native packaged extension                              | Firefox 157.0 / geckodriver 0.37.1 | [7 checks, actual response filtering](../../examples/webext/evidence/inspector/firefox.json)                          |
+| Run                                                           | Version                            | Retained evidence                                                                                                     |
+| ------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Devframe and DevTools reference UI, native development        | Chromium 153.0.8010.12             | [18 checks with both renderers, zero page/console errors](../../examples/vite-hosts/evidence/inspector-chromium.json) |
+| Devframe and DevTools reference/custom UI, native development | Firefox 157.0 / geckodriver 0.37.1 | [20 checks through both native hosts](../../examples/vite-hosts/evidence/inspector-firefox.json)                      |
+| Native packaged extension                                     | Chromium 153.0.8010.12             | [6 checks, zero page errors](../../examples/webext/evidence/inspector/chromium.json)                                  |
+| Native packaged extension                                     | Firefox 157.0 / geckodriver 0.37.1 | [7 checks, actual response filtering](../../examples/webext/evidence/inspector/firefox.json)                          |
 
 Receipts are written only after successful assertions and resource cleanup. The server proof observes distinct provider identities and independent state. Extension failures preserve the prior inspection result, independent counter and provider incarnation. Firefox WebDriver Classic does not capture global page errors, so its receipt makes no zero-error claim.
 
@@ -143,4 +150,6 @@ Done for this slice:
 - [x] Future marker timing, reset and independent provider state have direct observations.
 - [x] Maintained native browser commands and CI steps retain the actual receipts.
 
-The full ticket remains open. Packed complete host consumption, extension custom-renderer placement, inspector mixed-provider selection/broadcast and partial failures, development edits, watched production/preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
+The affected Vite example suite now passes 42 tests, including eight real-preview cases across Devframe and DevTools.
+
+The full ticket remains open. Packed complete host consumption, extension custom-renderer placement, inspector mixed-provider selection/broadcast and partial failures, development edits, watched inspector production builds and browser preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
