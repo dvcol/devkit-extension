@@ -98,6 +98,12 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-webext exec node tests/firefox-inspector.ts
+      - name: Broadcast the shared inspector across Firefox and native server providers
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-webext exec node tests/mixed-inspector-firefox.ts
       - name: Verify opt-in Firefox counter persistence
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

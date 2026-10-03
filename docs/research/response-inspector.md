@@ -38,7 +38,7 @@ flowchart TD
   BrowserState --> UI
 ```
 
-The standalone server page selects its one provider. [The mixed Chromium proof](../../examples/webext/tests/mixed-inspector.ts) connects one packaged extension panel to both native backends through its existing recipient controls. Realm selection changes both servers while leaving the extension unchanged; explicit provider selection resets only Devframe. An all-provider configuration returns the Chromium rejection alongside both server successes. Each provider selects resources inside its own capability. The SDK does not interpret fixture URLs or tab identities. Closing Devframe produces a catalog-unknown rejection while DevTools and the extension still inspect their own responses; no call reroutes to a sibling.
+The standalone server page selects its one provider. [The mixed Chromium proof](../../examples/webext/tests/mixed-inspector.ts) connects one packaged extension panel to both native backends through its existing recipient controls. Realm selection changes both servers while leaving the extension unchanged; explicit provider selection resets only Devframe. An all-provider configuration returns the Chromium rejection alongside both server successes. Each provider selects resources inside its own capability. The SDK does not interpret fixture URLs or tab identities. Closing Devframe produces a catalog-unknown rejection while DevTools and the extension still inspect their own responses; no call reroutes to a sibling. [The Firefox counterpart](../../examples/webext/tests/mixed-inspector-firefox.ts) checks the same realm/provider selection and lifecycle boundaries; all three providers support configuration and return modified bytes from their own endpoints.
 
 The implemented declaration calls are:
 
@@ -127,6 +127,7 @@ The extension proof starts and closes its owned fixture server and disposable br
 pnpm --filter @devkit/example-webext exec node tests/chromium-inspector.ts
 pnpm --filter @devkit/example-webext exec node tests/mixed-inspector.ts
 SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-webext exec node tests/firefox-inspector.ts
+SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-webext exec node tests/mixed-inspector-firefox.ts
 ```
 
 The native preview proof runs through the affected package suite or directly:
@@ -139,15 +140,16 @@ Set `FIREFOX_BINARY` when Firefox is outside the driver's discovery path. The br
 
 ## Executed evidence and limits
 
-| Run                                                                       | Version                            | Retained evidence                                                                                                     |
-| ------------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Devframe and DevTools reference UI, native development                    | Chromium 153.0.8010.12             | [18 checks with both renderers, zero page/console errors](../../examples/vite-hosts/evidence/inspector-chromium.json) |
-| Devframe and DevTools reference/custom UI, native development             | Firefox 157.0 / geckodriver 0.37.1 | [20 checks through both native hosts](../../examples/vite-hosts/evidence/inspector-firefox.json)                      |
-| Packaged extension panel with both standalone native server contexts      | Chromium 153.0.8010.12             | [9 checks, separate state and partial failure](../../examples/webext/evidence/inspector/mixed-chromium.json)          |
-| Native routed inspector rejection/recovery, both hosts and both renderers | Chromium 153.0.8010.12             | [4 cells, 3 checks, expected visible errors](../../examples/vite-hosts/evidence/inspector-errors-chromium.json)       |
-| Native routed inspector rejection/recovery, both hosts and both renderers | Firefox 157.0 / geckodriver 0.37.1 | [4 cells, 3 checks, visible error/recovery](../../examples/vite-hosts/evidence/inspector-errors-firefox.json)         |
-| Native packaged extension                                                 | Chromium 153.0.8010.12             | [6 checks, zero page errors](../../examples/webext/evidence/inspector/chromium.json)                                  |
-| Native packaged extension                                                 | Firefox 157.0 / geckodriver 0.37.1 | [7 checks, actual response filtering](../../examples/webext/evidence/inspector/firefox.json)                          |
+| Run                                                                       | Version                            | Retained evidence                                                                                                            |
+| ------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Devframe and DevTools reference UI, native development                    | Chromium 153.0.8010.12             | [18 checks with both renderers, zero page/console errors](../../examples/vite-hosts/evidence/inspector-chromium.json)        |
+| Devframe and DevTools reference/custom UI, native development             | Firefox 157.0 / geckodriver 0.37.1 | [20 checks through both native hosts](../../examples/vite-hosts/evidence/inspector-firefox.json)                             |
+| Packaged extension panel with both standalone native server contexts      | Chromium 153.0.8010.12             | [9 checks, separate state and partial failure](../../examples/webext/evidence/inspector/mixed-chromium.json)                 |
+| Native routed inspector rejection/recovery, both hosts and both renderers | Chromium 153.0.8010.12             | [4 cells, 3 checks, expected visible errors](../../examples/vite-hosts/evidence/inspector-errors-chromium.json)              |
+| Native routed inspector rejection/recovery, both hosts and both renderers | Firefox 157.0 / geckodriver 0.37.1 | [4 cells, 3 checks, visible error/recovery](../../examples/vite-hosts/evidence/inspector-errors-firefox.json)                |
+| Packaged extension panel with both standalone native server contexts      | Firefox 157.0                      | [8 checks, separate modified responses and isolated disconnect](../../examples/webext/evidence/inspector/mixed-firefox.json) |
+| Native packaged extension                                                 | Chromium 153.0.8010.12             | [6 checks, zero page errors](../../examples/webext/evidence/inspector/chromium.json)                                         |
+| Native packaged extension                                                 | Firefox 157.0 / geckodriver 0.37.1 | [7 checks, actual response filtering](../../examples/webext/evidence/inspector/firefox.json)                                 |
 
 Receipts are written only after successful assertions and resource cleanup. The server proof observes distinct provider identities and independent state. Extension failures preserve the prior inspection result, independent counter and provider incarnation. Firefox WebDriver Classic does not capture global page errors, so its receipt makes no zero-error claim.
 
@@ -171,4 +173,4 @@ Done for this slice:
 
 The affected Vite example suite now passes 42 tests, including eight real-preview cases across Devframe and DevTools.
 
-The full ticket remains open. Packed complete host consumption, extension custom-renderer placement, Firefox mixed-provider inspector composition, development edits, watched inspector production builds and browser preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
+The full ticket remains open. Packed complete host consumption, extension custom-renderer placement, development edits, watched inspector production builds and browser preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
