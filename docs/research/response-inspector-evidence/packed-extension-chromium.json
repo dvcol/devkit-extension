@@ -1,0 +1,177 @@
+{
+  "browser": "153.0.8010.12",
+  "mode": "production-extension",
+  "checks": [
+    "shared native JSON inspector returns the actual owned response URL and status and displays its body",
+    "zero and multiple owned fixture tabs reject per provider without requesting a response or changing prior results",
+    "marker registration affects the next owned document before its first parser script",
+    "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact",
+    "inspector failures preserve the independent counter state and provider incarnation",
+    "Chromium reports response modification unavailable, rejects enabling and preserves actual response bytes"
+  ],
+  "observations": {
+    "absent": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "4c418a08-1895-4b49-adc7-3edf3a03cc36",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "rejected",
+        "reason": {
+          "message": "Operation handler failed"
+        }
+      }
+    ],
+    "original": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "4c418a08-1895-4b49-adc7-3edf3a03cc36",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "fulfilled",
+        "value": {
+          "target": "http://127.0.0.1:57249/inspector-fixture",
+          "configuration": {
+            "enabled": false
+          },
+          "modification": {
+            "status": "unavailable",
+            "reason": "Native Firefox response filtering is unavailable in this browser"
+          },
+          "latest": {
+            "url": "http://127.0.0.1:57249/inspector-response",
+            "status": 200,
+            "body": "fixture:original"
+          },
+          "marker": false
+        }
+      }
+    ],
+    "ambiguous": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "4c418a08-1895-4b49-adc7-3edf3a03cc36",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "rejected",
+        "reason": {
+          "message": "Operation handler failed"
+        }
+      }
+    ],
+    "unsupported": [
+      {
+        "provider": {
+          "id": "example.extension",
+          "incarnation": "4c418a08-1895-4b49-adc7-3edf3a03cc36",
+          "realm": {
+            "id": "webext"
+          }
+        },
+        "status": "rejected",
+        "reason": {
+          "message": "Operation handler failed"
+        }
+      }
+    ],
+    "unchanged": {
+      "url": "http://127.0.0.1:57249/inspector-response",
+      "status": 200,
+      "body": "fixture:original"
+    },
+    "otherDocument": {
+      "url": "http://127.0.0.1:57249/inspector-response",
+      "status": 200,
+      "body": "fixture:original"
+    },
+    "beforeMarker": {
+      "firstScript": {
+        "marker": null,
+        "readyState": "loading"
+      },
+      "currentMarker": null
+    },
+    "marker": {
+      "installed": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "4c418a08-1895-4b49-adc7-3edf3a03cc36",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": "http://127.0.0.1:57249/inspector-fixture",
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": {
+              "url": "http://127.0.0.1:57249/inspector-response",
+              "status": 200,
+              "body": "fixture:original"
+            },
+            "marker": true
+          }
+        }
+      ],
+      "active": {
+        "firstScript": {
+          "marker": "loading",
+          "readyState": "loading"
+        },
+        "currentMarker": "loading"
+      },
+      "reset": [
+        {
+          "provider": {
+            "id": "example.extension",
+            "incarnation": "4c418a08-1895-4b49-adc7-3edf3a03cc36",
+            "realm": {
+              "id": "webext"
+            }
+          },
+          "status": "fulfilled",
+          "value": {
+            "target": null,
+            "configuration": {
+              "enabled": false
+            },
+            "modification": {
+              "status": "unavailable",
+              "reason": "Native Firefox response filtering is unavailable in this browser"
+            },
+            "latest": null,
+            "marker": false
+          }
+        }
+      ],
+      "afterReset": {
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "currentMarker": null
+      }
+    }
+  },
+  "pageErrors": [],
+  "limitations": [
+    "Panel rejection messages retain the native generic operation error; precise target-selection causes are covered by service tests",
+    "One extension provider; mixed-host inspector broadcast remains a separate proof"
+  ]
+}

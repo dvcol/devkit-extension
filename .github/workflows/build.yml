@@ -76,6 +76,12 @@ jobs:
         uses: browser-actions/setup-firefox@v1
         with:
           firefox-version: '157.0'
+      - name: Verify the extension inspector from installed tarballs in both browsers
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: node scripts/check-native-packages.ts --extension-browser
       - name: Run custom and reference renderers on both native backends in Firefox
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
@@ -205,6 +211,7 @@ jobs:
           path: |
             .conformance/report.json
             artifacts/native-inspector/*.json
+            artifacts/packed-extension/*.json
             packages/*/.conformance/vitest.json
             examples/*/.conformance/vitest.json
             examples/debugger/artifacts/*.json

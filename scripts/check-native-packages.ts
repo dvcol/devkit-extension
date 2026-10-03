@@ -8,13 +8,16 @@ import { styleText } from 'node:util';
 import { build } from 'vite';
 import { nativeBrowserConsumer } from './fixtures/native-browser-consumer.ts';
 import {
+  checkPackedExtension,
   inspectorNativeConsumer,
   nativeServerConsumer,
+  packedExtensionDependencies,
   packedInspectorFiles,
 } from './fixtures/native-server-consumer.ts';
 
 const repository = resolvePath(import.meta.dirname, '..');
 const browserRequested = process.argv.includes('--browser');
+const extensionRequested = process.argv.includes('--extension-browser');
 const consumer = await realpath(await mkdtemp(join(tmpdir(), 'devkit-native-consumer-')));
 const packages = ['core', 'runtime', 'client', 'devframe', 'server', 'webext'] as const;
 const packedPackages = [
@@ -55,7 +58,8 @@ async function installConsumer(): Promise<void> {
     vite: '8.3.0',
     zod: '4.6.5',
   };
-  if (browserRequested) dependencies['@playwright/test'] = '1.63.0';
+  if (browserRequested || extensionRequested) dependencies['@playwright/test'] = '1.63.0';
+  if (extensionRequested) Object.assign(dependencies, packedExtensionDependencies);
   for (const { name, directory } of packedPackages) {
     const artifact = join(consumer, `${name}.tgz`);
     await run('pnpm', ['--dir', join(repository, directory), 'pack', '--out', artifact]);
@@ -74,11 +78,13 @@ async function installConsumer(): Promise<void> {
   await writeFile(join(consumer, '.npmrc'), 'registry=https://registry.npmjs.org\n');
   /** Patches are explicit consumer installation policy, never assumed to propagate through tarballs. */
   const workspace = await readFile(join(repository, 'pnpm-workspace.yaml'), 'utf8');
-  /** This consumer does not install the examples' debugger or extension development dependencies. */
-  const runtimeWorkspace = workspace.replaceAll(
-    /^  (?:'@(?:wxt-dev\/browser|dvcol\/cdb(?:-extension)?)@[^']+'|wxt@[^:]+):.*\n/gmu,
-    '',
-  );
+  /** Debugger dependencies are absent; extension tooling is installed only for its browser proof. */
+  let runtimeWorkspace = workspace.replaceAll(/^  '@dvcol\/cdb(?:-extension)?@[^']+':.*\n/gmu, '');
+  if (!extensionRequested)
+    runtimeWorkspace = runtimeWorkspace.replaceAll(
+      /^  (?:'@wxt-dev\/browser@[^']+'|wxt@[^:]+):.*\n/gmu,
+      '',
+    );
   await writeFile(
     join(consumer, 'pnpm-workspace.yaml'),
     `${runtimeWorkspace}\noverrides: ${JSON.stringify(overrides)}\n`,
@@ -220,7 +226,7 @@ await writeFile('packed-browser.json', JSON.stringify(receipt, null, 2) + '\\n')
   return readFile(join(consumer, 'packed-browser.json'), 'utf8');
 }
 
-let browserReceipt: string | undefined;
+const receipts: Record<string, string> = {};
 try {
   console.info(
     styleText('cyan', '📦 [native-artifacts]'),
@@ -237,7 +243,9 @@ try {
   await checkTypes('Bundler');
   await checkTypes('NodeNext');
   await checkBrowserBundle();
-  if (browserRequested) browserReceipt = await checkPackedBrowser();
+  if (browserRequested) receipts['native-inspector/chromium.json'] = await checkPackedBrowser();
+  if (extensionRequested)
+    Object.assign(receipts, await checkPackedExtension({ repository, consumer, run }));
   console.info(
     styleText('green', '✅ [native-artifacts]'),
     'Packed exports, strict Bundler/NodeNext types, native inspector publication/actions/disposal and browser RPC passed.',
@@ -245,13 +253,13 @@ try {
 } finally {
   await rm(consumer, { recursive: true, force: true });
 }
-if (browserReceipt !== undefined) {
-  const directory = join(repository, 'artifacts/native-inspector');
-  await mkdir(directory, { recursive: true });
-  await writeFile(join(directory, 'chromium.json'), browserReceipt);
+for (const [name, receipt] of Object.entries(receipts)) {
+  const file = join(repository, 'artifacts', name);
+  await mkdir(dirname(file), { recursive: true });
+  await writeFile(file, receipt);
   console.info(
     styleText('green', '✅ [native-artifacts]'),
-    'Packed inspector HTTP/WebSocket and both real DOM renderers passed; receipt:',
-    join(directory, 'chromium.json'),
+    'Packed native browser proof passed; receipt:',
+    file,
   );
 }

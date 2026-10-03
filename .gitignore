@@ -13,3 +13,4 @@ coverage/
 .wxt/
 .output/
 artifacts/native-inspector/
+artifacts/packed-extension/

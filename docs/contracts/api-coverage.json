@@ -285,7 +285,7 @@
       "gaps": [
         "Linked evidence proves declaration typing and provider lifecycle, native publication on both server hosts, and browser publication removal/reenable through the same recipe. Chromium and Firefox custom/reference renderers now have native actions, error feedback, unmount/remount, replacement, dependency-loss and host-close evidence. Firefox delayed-response replacement and global page-error capture, full surface placement, catalog compatibility, self-accepting renderer replacement and every supported preview failure case remain separate obligations. Native CSS HMR, renderer-module page reload and invalid-source recovery now have maintained real Chromium/Firefox development evidence on both native server hosts; they preserve backend/provider state and native form behavior.",
         "A view setup recipe registers owned cleanup explicitly through its activation scope. Structural JavaScript return values are not adopted. Transform registration uses the same native setup contract; complete native transformation mechanisms and failure cases remain separate work. Script registration now has its own native setup contract and evidence group.",
-        "The response-inspector proof links the exact shared JSON spec/actions, reference/custom rendering, mount-local callbacks, peer projections and real owned response/marker effects across both native server hosts and packaged Chromium/Firefox extensions. Both browsers now verify one panel with all three native providers, realm/provider selection, independent state and isolated disconnect; Chromium configuration returns a partial rejection while Firefox succeeds on all providers. Real HTTP failure/recovery runs on both browsers and both server renderers. Eight native preview tests verify response changes/reset, marker rejection before state/HTML mutation and independent resource disposal. Packed contracts compile and execute separately; the installed native artifact consumer now composes packed actions and view publication/state/disposal on both context types in Bundler and NodeNext, without claiming browser mounting or HTTP effects. Packed browser/native host I/O composition, extension error recovery, broader inspector development/reload transitions, cancellation races and an optional CDB profile remain open. Standalone mixed hosts use public initHub origin/auth options; the native Vite wrapper is not covered by that composition. Firefox Classic receipts claim visible-state checks, not global error capture. Extension custom rendering now has Chrome/Firefox native broadcast, replacement and disconnect evidence. Chrome/Firefox watched inspector production proofs now cover both native preview hosts, reference/custom actions, failed-build retention, recovery and close; existing documents do not automatically reload.",
+        "The bounded inspector now links shared JSON/actions, both native server hosts, Chrome/Firefox extensions, replacement rendering, recipient selection, independent state, real HTTP effects and future markers. Native preview and watched production proofs retain last-complete assets and require explicit navigation. Both browsers cover routed and extension-broadcast failures plus native development module edit/failure/recovery. Installed tarballs supply actual native Chromium HTTP/WebSocket/renderers and the Chrome/Firefox extension application. Optional CDB is a separate capability profile. These owned fixtures do not prove arbitrary HTTP interception, backend-source HMR, every extension surface or broader lifecycle races. Standalone native compositions use public hub origin/auth options; Firefox Classic cannot claim global page/console capture. Human prototype review remains pending.",
         "Chrome/Firefox pinned inspector caller-disconnect proofs observe native sender socket closure, one completed held HTTP request, unchanged provider incarnation and alternate host, and retained state at observer/remount. They configure no available fallback selector and do not inspect the abandoned Promise, promise backend cancellation/rollback, or cover extension/preview races."
       ],
       "browserEvidence": [
@@ -717,6 +717,39 @@
           "host": "firefox-devframe-devtools",
           "mode": "native-development-main-module-edit-reload-failure-recovery",
           "requirePageErrors": false
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/packed-extension/chromium.json",
+          "checks": [
+            "shared native JSON inspector returns the actual owned response URL and status and displays its body",
+            "zero and multiple owned fixture tabs reject per provider without requesting a response or changing prior results",
+            "marker registration affects the next owned document before its first parser script",
+            "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact",
+            "inspector failures preserve the independent counter state and provider incarnation",
+            "Chromium reports response modification unavailable, rejects enabling and preserves actual response bytes"
+          ],
+          "host": "packed-chromium-extension",
+          "mode": "production-reference-renderer",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/packed-extension/firefox.json",
+          "checks": [
+            "shared native JSON inspector returns the actual owned response URL and status and displays its body",
+            "zero and multiple owned fixture tabs reject per provider without requesting a response or changing prior results",
+            "marker registration affects the next owned document before its first parser script",
+            "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact",
+            "inspector failures preserve the independent counter state and provider incarnation",
+            "Firefox modifies actual page-fetch response bytes only for the selected top-level fixture document",
+            "the same tab navigating to another document receives the original body while modification remains enabled"
+          ],
+          "host": "packed-firefox-extension",
+          "mode": "production-reference-renderer",
+          "requirePageErrors": false
         }
       ]
     },
@@ -904,7 +937,7 @@
       "gaps": [
         "The common API owns native setup and cleanup. All three native stages now cover MAIN/ISOLATED, allFrames false/true, top/same-origin/cross-origin children, an ungranted matching child and the tested nonce CSP in Chromium/Firefox production/development. Native install/disable/enable/dispose, preserved old effects and absent fresh-document markers are directly observed. The separate held-resource fixture proves document_end before load; no common idle scheduling order is imposed. Blank/blob/sandboxed frames, origin fallback, broader CSP operations, remaining permission transitions, browser restart, dependency loss during real registration and cleanup failure remain issue #11 obligations. A native Firefox production MAIN/document_start top-level case now keeps the same registration across permission revoke/regrant and observes fresh-document injection stop/resume without reinstall; other worlds/stages/frames, development and Chrome remain separate cells.",
         "Native packaging is host configuration. A live backend cannot remove code from completed build output or undo already-executed page effects. Arbitrary HTTP response implementations remain separate native work.",
-        "The response-inspector proof links the exact shared JSON spec/actions, reference/custom rendering, mount-local callbacks, peer projections and real owned response/marker effects across both native server hosts and packaged Chromium/Firefox extensions. Both browsers now verify one panel with all three native providers, realm/provider selection, independent state and isolated disconnect; Chromium configuration returns a partial rejection while Firefox succeeds on all providers. Real HTTP failure/recovery runs on both browsers and both server renderers. Eight native preview tests verify response changes/reset, marker rejection before state/HTML mutation and independent resource disposal. Packed contracts compile and execute separately; the installed native artifact consumer now composes packed actions and view publication/state/disposal on both context types in Bundler and NodeNext, without claiming browser mounting or HTTP effects. Packed browser/native host I/O composition, extension error recovery, broader inspector development/reload transitions, cancellation races and an optional CDB profile remain open. Standalone mixed hosts use public initHub origin/auth options; the native Vite wrapper is not covered by that composition. Firefox Classic receipts claim visible-state checks, not global error capture. Extension custom rendering now has Chrome/Firefox native broadcast, replacement and disconnect evidence. Chrome/Firefox watched inspector production proofs now cover both native preview hosts, reference/custom actions, failed-build retention, recovery and close; existing documents do not automatically reload."
+        "The bounded inspector now links shared JSON/actions, both native server hosts, Chrome/Firefox extensions, replacement rendering, recipient selection, independent state, real HTTP effects and future markers. Native preview and watched production proofs retain last-complete assets and require explicit navigation. Both browsers cover routed and extension-broadcast failures plus native development module edit/failure/recovery. Installed tarballs supply actual native Chromium HTTP/WebSocket/renderers and the Chrome/Firefox extension application. Optional CDB is a separate capability profile. These owned fixtures do not prove arbitrary HTTP interception, backend-source HMR, every extension surface or broader lifecycle races. Standalone native compositions use public hub origin/auth options; Firefox Classic cannot claim global page/console capture. Human prototype review remains pending."
       ],
       "browserEvidence": [
         {
@@ -1378,6 +1411,30 @@
           "host": "packed-chromium-devframe-devtools",
           "mode": "native-development-reference-custom-renderers",
           "requirePageErrors": true
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/packed-extension/chromium.json",
+          "checks": [
+            "marker registration affects the next owned document before its first parser script",
+            "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact"
+          ],
+          "host": "packed-chromium-extension",
+          "mode": "production-reference-renderer",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/packed-extension/firefox.json",
+          "checks": [
+            "marker registration affects the next owned document before its first parser script",
+            "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact"
+          ],
+          "host": "packed-firefox-extension",
+          "mode": "production-reference-renderer",
+          "requirePageErrors": false
         }
       ]
     },
@@ -1916,13 +1973,38 @@
           "host": "packed-chromium-devframe-devtools",
           "mode": "native-development-reference-custom-renderers",
           "requirePageErrors": true
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/packed-extension/chromium.json",
+          "checks": [
+            "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact",
+            "Chromium reports response modification unavailable, rejects enabling and preserves actual response bytes"
+          ],
+          "host": "packed-chromium-extension",
+          "mode": "production-reference-renderer",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/packed-extension/firefox.json",
+          "checks": [
+            "reset clears configuration and result, unregisters future injection and leaves the existing document marker intact",
+            "Firefox modifies actual page-fetch response bytes only for the selected top-level fixture document",
+            "the same tab navigating to another document receives the original body while modification remains enabled"
+          ],
+          "host": "packed-firefox-extension",
+          "mode": "production-reference-renderer",
+          "requirePageErrors": false
         }
       ],
       "gaps": [
         "The common API owns native registration and cleanup. Bounded Vite HTML, native Chromium/Firefox DNR header and same-origin redirect examples, and Firefox byte-stream filtering establish their own timing, independent lifecycle and native failures in supported development/production modes. Chromium explicitly rejects the unavailable Firefox filtering method. No common response pipeline or cross-mechanism order is claimed.",
         "Firefox server execution, frames/CSP, permission revocation, rule limits, native cleanup failure, worker/restart restoration, persistent response-listener wakeup and brotli/zstd, malformed/truncated encodings, range responses, caching and HTTP/2/3 still need exact native evidence. Admitted Firefox stream completion after disposal is covered. Firefox WebDriver Classic lacks global page-error capture. Native mechanisms retain their own outcomes. Valid gzip/deflate with fixed-length and chunked framing now have exact delivered-byte/header evidence in both Firefox modes; original encoded headers remain visible, with no SDK header-normalization promise.",
         "Running-background Firefox loopback streams now have distinct native reader-cancellation and Fetch-abort evidence in production and development. Reader cancellation is a bounded consumption observation, not an upstream cancellation guarantee; Fetch abort reaches native onstop without a filter error. Page destruction, other consumers, cancellation with other encodings/protocols and idle wakeup remain unproved. No SDK cancellation policy is inferred.",
-        "The response-inspector proof links the exact shared JSON spec/actions, reference/custom rendering, mount-local callbacks, peer projections and real owned response/marker effects across both native server hosts and packaged Chromium/Firefox extensions. Both browsers now verify one panel with all three native providers, realm/provider selection, independent state and isolated disconnect; Chromium configuration returns a partial rejection while Firefox succeeds on all providers. Real HTTP failure/recovery runs on both browsers and both server renderers. Eight native preview tests verify response changes/reset, marker rejection before state/HTML mutation and independent resource disposal. Packed contracts compile and execute separately; the installed native artifact consumer now composes packed actions and view publication/state/disposal on both context types in Bundler and NodeNext, without claiming browser mounting or HTTP effects. Packed browser/native host I/O composition, extension error recovery, broader inspector development/reload transitions, cancellation races and an optional CDB profile remain open. Standalone mixed hosts use public initHub origin/auth options; the native Vite wrapper is not covered by that composition. Firefox Classic receipts claim visible-state checks, not global error capture. Extension custom rendering now has Chrome/Firefox native broadcast, replacement and disconnect evidence. Chrome/Firefox watched inspector production proofs now cover both native preview hosts, reference/custom actions, failed-build retention, recovery and close; existing documents do not automatically reload."
+        "The bounded inspector now links shared JSON/actions, both native server hosts, Chrome/Firefox extensions, replacement rendering, recipient selection, independent state, real HTTP effects and future markers. Native preview and watched production proofs retain last-complete assets and require explicit navigation. Both browsers cover routed and extension-broadcast failures plus native development module edit/failure/recovery. Installed tarballs supply actual native Chromium HTTP/WebSocket/renderers and the Chrome/Firefox extension application. Optional CDB is a separate capability profile. These owned fixtures do not prove arbitrary HTTP interception, backend-source HMR, every extension surface or broader lifecycle races. Standalone native compositions use public hub origin/auth options; Firefox Classic cannot claim global page/console capture. Human prototype review remains pending."
       ]
     },
     {
