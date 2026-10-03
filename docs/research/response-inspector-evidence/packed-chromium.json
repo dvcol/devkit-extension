@@ -1,0 +1,173 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "host": "devframe",
+      "origin": "http://127.0.0.1:53135",
+      "renderers": [
+        {
+          "renderer": "custom",
+          "original": {
+            "target": "Target: http://127.0.0.1:53135/inspector-response",
+            "body": "Response body: fixture:original",
+            "configuration": "Modification enabled: false",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          },
+          "modified": {
+            "target": "Target: http://127.0.0.1:53135/inspector-response",
+            "body": "Response body: native:fixture:original",
+            "configuration": "Modification enabled: true",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          },
+          "marked": {
+            "target": "Target: http://127.0.0.1:53135/inspector-response",
+            "body": "Response body: native:fixture:original",
+            "configuration": "Modification enabled: true",
+            "marker": "Marker installed: true",
+            "firstScript": "{\"marker\":\"loading\",\"readyState\":\"loading\"}"
+          },
+          "reset": {
+            "target": "Target: No response inspected",
+            "body": "Response body: No response inspected",
+            "configuration": "Modification enabled: false",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          }
+        },
+        {
+          "renderer": "reference",
+          "original": {
+            "target": "Target: http://127.0.0.1:53135/inspector-response",
+            "body": "Response body: fixture:original",
+            "configuration": "Modification enabled: false",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          },
+          "modified": {
+            "target": "Target: http://127.0.0.1:53135/inspector-response",
+            "body": "Response body: native:fixture:original",
+            "configuration": "Modification enabled: true",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          },
+          "marked": {
+            "target": "Target: http://127.0.0.1:53135/inspector-response",
+            "body": "Response body: native:fixture:original",
+            "configuration": "Modification enabled: true",
+            "marker": "Marker installed: true",
+            "firstScript": "{\"marker\":\"loading\",\"readyState\":\"loading\"}"
+          },
+          "reset": {
+            "target": "Target: No response inspected",
+            "body": "Response body: No response inspected",
+            "configuration": "Modification enabled: false",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          }
+        }
+      ]
+    },
+    {
+      "host": "devtools",
+      "origin": "http://127.0.0.1:53136",
+      "renderers": [
+        {
+          "renderer": "custom",
+          "original": {
+            "target": "Target: http://127.0.0.1:53136/inspector-response",
+            "body": "Response body: fixture:original",
+            "configuration": "Modification enabled: false",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          },
+          "modified": {
+            "target": "Target: http://127.0.0.1:53136/inspector-response",
+            "body": "Response body: native:fixture:original",
+            "configuration": "Modification enabled: true",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          },
+          "marked": {
+            "target": "Target: http://127.0.0.1:53136/inspector-response",
+            "body": "Response body: native:fixture:original",
+            "configuration": "Modification enabled: true",
+            "marker": "Marker installed: true",
+            "firstScript": "{\"marker\":\"loading\",\"readyState\":\"loading\"}"
+          },
+          "reset": {
+            "target": "Target: No response inspected",
+            "body": "Response body: No response inspected",
+            "configuration": "Modification enabled: false",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          }
+        },
+        {
+          "renderer": "reference",
+          "original": {
+            "target": "Target: http://127.0.0.1:53136/inspector-response",
+            "body": "Response body: fixture:original",
+            "configuration": "Modification enabled: false",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          },
+          "modified": {
+            "target": "Target: http://127.0.0.1:53136/inspector-response",
+            "body": "Response body: native:fixture:original",
+            "configuration": "Modification enabled: true",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          },
+          "marked": {
+            "target": "Target: http://127.0.0.1:53136/inspector-response",
+            "body": "Response body: native:fixture:original",
+            "configuration": "Modification enabled: true",
+            "marker": "Marker installed: true",
+            "firstScript": "{\"marker\":\"loading\",\"readyState\":\"loading\"}"
+          },
+          "reset": {
+            "target": "Target: No response inspected",
+            "body": "Response body: No response inspected",
+            "configuration": "Modification enabled: false",
+            "marker": "Marker installed: false",
+            "firstScript": "{\"marker\":null,\"readyState\":\"loading\"}"
+          }
+        }
+      ]
+    }
+  ],
+  "sockets": [
+    "ws://127.0.0.1:53135/",
+    "ws://127.0.0.1:53135/__packed/__ws",
+    "ws://127.0.0.1:53136/",
+    "ws://127.0.0.1:53136/__packed/__ws"
+  ],
+  "pageErrors": [],
+  "checks": [
+    "devframe: both packed renderers consume the unchanged inspector publication through native authenticated WebSockets",
+    "devframe: both renderers invoke all four actions and share actual HTTP response, configuration and marker projections",
+    "devframe: owned HTTP response bytes change on enable and return to the original value on reset",
+    "devframe: the native HTML marker precedes the first parser script only in new documents while enabled",
+    "devframe: reset clears the result and future marker without rolling back an existing document",
+    "devframe: renderer disposal removes controls and a retained detached custom control cannot alter the provider",
+    "devtools: both packed renderers consume the unchanged inspector publication through native authenticated WebSockets",
+    "devtools: both renderers invoke all four actions and share actual HTTP response, configuration and marker projections",
+    "devtools: owned HTTP response bytes change on enable and return to the original value on reset",
+    "devtools: the native HTML marker precedes the first parser script only in new documents while enabled",
+    "devtools: reset clears the result and future marker without rolling back an existing document",
+    "devtools: renderer disposal removes controls and a retained detached custom control cannot alter the provider"
+  ],
+  "cleanup": {
+    "browserClosed": true,
+    "providersDisposed": true,
+    "hubsClosed": true,
+    "serversClosed": true
+  },
+  "limitations": [
+    "Chromium and native development hosts only; packed extension installation and Firefox are not exercised",
+    "The private native contexts use public initHub on owned Vite servers rather than the Vite integration plugins",
+    "The owned endpoint generates fixture responses; it does not intercept arbitrary third-party HTTP output"
+  ]
+}

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { cp, mkdtemp, readFile, readdir, realpath, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve as resolvePath } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -10,9 +10,11 @@ import { nativeBrowserConsumer } from './fixtures/native-browser-consumer.ts';
 import {
   inspectorNativeConsumer,
   nativeServerConsumer,
+  packedInspectorFiles,
 } from './fixtures/native-server-consumer.ts';
 
 const repository = resolvePath(import.meta.dirname, '..');
+const browserRequested = process.argv.includes('--browser');
 const consumer = await realpath(await mkdtemp(join(tmpdir(), 'devkit-native-consumer-')));
 const packages = ['core', 'runtime', 'client', 'devframe', 'server', 'webext'] as const;
 const packedPackages = [
@@ -21,6 +23,7 @@ const packedPackages = [
   { name: 'example-json-render', directory: 'examples/json-render' },
   /** Required by the unchanged JSON example manifest, even for its inspector subpath. */
   { name: 'example-server-contexts', directory: 'examples/server-contexts' },
+  { name: 'example-vite-hosts', directory: 'examples/vite-hosts' },
 ];
 
 function run(command: string, arguments_: readonly string[]): Promise<string> {
@@ -52,6 +55,7 @@ async function installConsumer(): Promise<void> {
     vite: '8.3.0',
     zod: '4.6.5',
   };
+  if (browserRequested) dependencies['@playwright/test'] = '1.63.0';
   for (const { name, directory } of packedPackages) {
     const artifact = join(consumer, `${name}.tgz`);
     await run('pnpm', ['--dir', join(repository, directory), 'pack', '--out', artifact]);
@@ -72,7 +76,7 @@ async function installConsumer(): Promise<void> {
   const workspace = await readFile(join(repository, 'pnpm-workspace.yaml'), 'utf8');
   /** This consumer does not install the examples' debugger or extension development dependencies. */
   const runtimeWorkspace = workspace.replaceAll(
-    /^  (?:'@(?:wxt-dev\/browser|dvcol\/cdb(?:-extension)?|vitejs\/devtools)@[^']+'|wxt@[^:]+):.*\n/gmu,
+    /^  (?:'@(?:wxt-dev\/browser|dvcol\/cdb(?:-extension)?)@[^']+'|wxt@[^:]+):.*\n/gmu,
     '',
   );
   await writeFile(
@@ -143,7 +147,7 @@ async function checkTypes(mode: 'Bundler' | 'NodeNext'): Promise<void> {
         verbatimModuleSyntax: true,
         outDir: output,
       },
-      include: ['browser.ts', 'server.ts', 'inspector.ts'],
+      include: ['browser.ts', 'server.ts', 'inspector.ts', 'packed-*.ts'],
     }),
   );
   await run(process.execPath, [
@@ -203,6 +207,20 @@ async function checkBrowserBundle(): Promise<void> {
   await execute(join(consumer, 'output-browser/browser.js'), false);
 }
 
+async function checkPackedBrowser(): Promise<string> {
+  const driver = pathToFileURL(join(consumer, 'output-NodeNext/packed-driver.js')).href;
+  await run(process.execPath, [
+    '--input-type=module',
+    '--eval',
+    `import { writeFile } from 'node:fs/promises';
+const { runPackedBrowser } = await import(${JSON.stringify(driver)});
+const receipt = await runPackedBrowser(${JSON.stringify(consumer)});
+await writeFile('packed-browser.json', JSON.stringify(receipt, null, 2) + '\\n');`,
+  ]);
+  return readFile(join(consumer, 'packed-browser.json'), 'utf8');
+}
+
+let browserReceipt: string | undefined;
 try {
   console.info(
     styleText('cyan', '📦 [native-artifacts]'),
@@ -213,13 +231,27 @@ try {
   await writeFile(join(consumer, 'browser.ts'), nativeBrowserConsumer);
   await writeFile(join(consumer, 'server.ts'), nativeServerConsumer);
   await writeFile(join(consumer, 'inspector.ts'), inspectorNativeConsumer);
+  if (browserRequested)
+    for (const [name, source] of Object.entries(packedInspectorFiles))
+      await writeFile(join(consumer, name), source);
   await checkTypes('Bundler');
   await checkTypes('NodeNext');
   await checkBrowserBundle();
+  if (browserRequested) browserReceipt = await checkPackedBrowser();
   console.info(
     styleText('green', '✅ [native-artifacts]'),
     'Packed exports, strict Bundler/NodeNext types, native inspector publication/actions/disposal and browser RPC passed.',
   );
 } finally {
   await rm(consumer, { recursive: true, force: true });
+}
+if (browserReceipt !== undefined) {
+  const directory = join(repository, 'artifacts/native-inspector');
+  await mkdir(directory, { recursive: true });
+  await writeFile(join(directory, 'chromium.json'), browserReceipt);
+  console.info(
+    styleText('green', '✅ [native-artifacts]'),
+    'Packed inspector HTTP/WebSocket and both real DOM renderers passed; receipt:',
+    join(directory, 'chromium.json'),
+  );
 }

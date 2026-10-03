@@ -631,6 +631,28 @@
           "host": "firefox-devframe-and-devtools",
           "mode": "development-pinned-caller-disconnect",
           "requirePageErrors": false
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/native-inspector/chromium.json",
+          "checks": [
+            "devframe: both packed renderers consume the unchanged inspector publication through native authenticated WebSockets",
+            "devframe: both renderers invoke all four actions and share actual HTTP response, configuration and marker projections",
+            "devframe: owned HTTP response bytes change on enable and return to the original value on reset",
+            "devframe: the native HTML marker precedes the first parser script only in new documents while enabled",
+            "devframe: reset clears the result and future marker without rolling back an existing document",
+            "devframe: renderer disposal removes controls and a retained detached custom control cannot alter the provider",
+            "devtools: both packed renderers consume the unchanged inspector publication through native authenticated WebSockets",
+            "devtools: both renderers invoke all four actions and share actual HTTP response, configuration and marker projections",
+            "devtools: owned HTTP response bytes change on enable and return to the original value on reset",
+            "devtools: the native HTML marker precedes the first parser script only in new documents while enabled",
+            "devtools: reset clears the result and future marker without rolling back an existing document",
+            "devtools: renderer disposal removes controls and a retained detached custom control cannot alter the provider"
+          ],
+          "host": "packed-chromium-devframe-devtools",
+          "mode": "native-development-reference-custom-renderers",
+          "requirePageErrors": true
         }
       ]
     },
@@ -1278,6 +1300,20 @@
           "host": "firefox-devframe-and-devtools-reference-and-custom",
           "mode": "watched-production-preview",
           "requirePageErrors": false
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/native-inspector/chromium.json",
+          "checks": [
+            "devframe: the native HTML marker precedes the first parser script only in new documents while enabled",
+            "devframe: reset clears the result and future marker without rolling back an existing document",
+            "devtools: the native HTML marker precedes the first parser script only in new documents while enabled",
+            "devtools: reset clears the result and future marker without rolling back an existing document"
+          ],
+          "host": "packed-chromium-devframe-devtools",
+          "mode": "native-development-reference-custom-renderers",
+          "requirePageErrors": true
         }
       ]
     },
@@ -1802,6 +1838,20 @@
           "host": "firefox-devframe-and-devtools-reference-and-custom",
           "mode": "watched-production-preview",
           "requirePageErrors": false
+        },
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/native-inspector/chromium.json",
+          "checks": [
+            "devframe: owned HTTP response bytes change on enable and return to the original value on reset",
+            "devframe: reset clears the result and future marker without rolling back an existing document",
+            "devtools: owned HTTP response bytes change on enable and return to the original value on reset",
+            "devtools: reset clears the result and future marker without rolling back an existing document"
+          ],
+          "host": "packed-chromium-devframe-devtools",
+          "mode": "native-development-reference-custom-renderers",
+          "requirePageErrors": true
         }
       ],
       "gaps": [
@@ -4943,6 +4993,20 @@
       "gaps": [
         "Native browser panels, Vite development/restart, production build/preview and complete failure-mode obligations remain to be linked from maintained examples. These Node host tests do not satisfy those cells.",
         "The tests exercise actual authenticated HTTP/WebSocket connections from Node to a Devframe hub. Browser storage, real document lifetimes and DevTools remote-host parity require their own receipts."
+      ],
+      "browserEvidence": [
+        {
+          "workspace": ".",
+          "testFile": "scripts/check-native-packages.ts",
+          "receiptFile": "artifacts/native-inspector/chromium.json",
+          "checks": [
+            "devframe: both packed renderers consume the unchanged inspector publication through native authenticated WebSockets",
+            "devtools: both packed renderers consume the unchanged inspector publication through native authenticated WebSockets"
+          ],
+          "host": "packed-chromium-devframe-devtools",
+          "mode": "native-development-reference-custom-renderers",
+          "requirePageErrors": true
+        }
       ]
     },
     {

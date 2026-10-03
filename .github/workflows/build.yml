@@ -19,6 +19,8 @@ jobs:
         run: pnpm run ci
       - name: Install Chromium for the extension example
         run: pnpm --filter @devkit/example-webext exec playwright install --with-deps chromium
+      - name: Verify packed inspector HTTP, native RPC and both renderers in Chromium
+        run: node scripts/check-native-packages.ts --browser
       - name: Run the Chromium extension browser test
         run: pnpm --filter @devkit/example-webext test:browser
       - name: Verify opt-in Chromium counter persistence
@@ -184,6 +186,7 @@ jobs:
           include-hidden-files: true
           path: |
             .conformance/report.json
+            artifacts/native-inspector/*.json
             packages/*/.conformance/vitest.json
             examples/*/.conformance/vitest.json
             examples/debugger/artifacts/*.json

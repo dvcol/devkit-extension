@@ -1,4 +1,5 @@
 export { inspectorNativeConsumer } from './inspector-native-consumer.ts';
+export { packedInspectorFiles } from './packed-inspector-consumer.ts';
 
 export const nativeServerConsumer = `
 import { join } from 'node:path';

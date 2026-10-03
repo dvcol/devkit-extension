@@ -12,3 +12,4 @@ coverage/
 .devkit-production/
 .wxt/
 .output/
+artifacts/native-inspector/
