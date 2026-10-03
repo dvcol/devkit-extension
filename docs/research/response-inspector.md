@@ -103,6 +103,7 @@ The automated server command uses the native temporary authentication code and c
 
 ```sh
 pnpm --filter @devkit/example-vite-hosts test:inspector
+FIREFOX_BINARY=/path/to/firefox SE_DRIVER_VERSION=0.37.1 SE_SKIP_DRIVER_IN_PATH=true pnpm --filter @devkit/example-vite-hosts test:inspector:firefox
 ```
 
 The extension proof starts and closes its owned fixture server and disposable browser profile. It loads the built example extension, opens `panel.html` and clicks the same five authored buttons:
@@ -116,13 +117,17 @@ Set `FIREFOX_BINARY` when Firefox is outside the driver's discovery path. The br
 
 ## Executed evidence and limits
 
-| Run                                                    | Version                            | Retained evidence                                                                                 |
-| ------------------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Devframe and DevTools reference UI, native development | Chromium 153.0.8010.12             | [10 checks, zero page/console errors](../../examples/vite-hosts/evidence/inspector-chromium.json) |
-| Native packaged extension                              | Chromium 153.0.8010.12             | [6 checks, zero page errors](../../examples/webext/evidence/inspector/chromium.json)              |
-| Native packaged extension                              | Firefox 157.0 / geckodriver 0.37.1 | [7 checks, actual response filtering](../../examples/webext/evidence/inspector/firefox.json)      |
+| Run                                                    | Version                            | Retained evidence                                                                                                     |
+| ------------------------------------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Devframe and DevTools reference UI, native development | Chromium 153.0.8010.12             | [18 checks with both renderers, zero page/console errors](../../examples/vite-hosts/evidence/inspector-chromium.json) |
+| Native packaged extension                              | Chromium 153.0.8010.12             | [6 checks, zero page errors](../../examples/webext/evidence/inspector/chromium.json)                                  |
+| Native packaged extension                              | Firefox 157.0 / geckodriver 0.37.1 | [7 checks, actual response filtering](../../examples/webext/evidence/inspector/firefox.json)                          |
 
 Receipts are written only after successful assertions and resource cleanup. The server proof observes distinct provider identities and independent state. Extension failures preserve the prior inspection result, independent counter and provider incarnation. Firefox WebDriver Classic does not capture global page errors, so its receipt makes no zero-error claim.
+
+The page's **Renderer** selector mounts either the unchanged native reference renderer or the existing framework-free DOM renderer through the native renderer contract. Both consume the exact authored inspector spec. Public JSON core helpers execute state-setting callbacks; their presentation outcomes stay local to each mount. Both browser proofs observe peer projection updates retaining those outcomes, all five custom buttons dispatching, fresh mount-local outcome reset and a disposed button producing no provider effect. Existing counter renderer error/recovery and disposal regressions also pass on both browsers. Inspector error-callback recovery remains unverified.
+
+The packed-contract check, `node scripts/check-example-package.ts`, installs real tarballs outside the workspace. Strict Bundler and NodeNext consumers preserve boolean configure input/result types and execute all four shared actions through packed runtime. A separate browser contract bundle imports the schema/descriptors and rejects backend, Node or framework leakage. This proves packed contracts and their local runtime composition, not packed renderer/native host composition.
 
 The contribution tests use built public exports and real runtime operations. The server tests use actual native contexts, HTTP responses, HTML hooks, independent contribution controls, dependency loss/restoration and malformed-state rejection before effects. The extension service tests replace only native browser I/O and assert selection/permission failures, filtering boundaries and resource disposal. These focused tests complement the live receipts; they do not substitute for unexecuted host cells.
 
@@ -138,4 +143,4 @@ Done for this slice:
 - [x] Future marker timing, reset and independent provider state have direct observations.
 - [x] Maintained native browser commands and CI steps retain the actual receipts.
 
-The full ticket remains open. Packed consumption, replacement-renderer compatibility for this exact spec, inspector mixed-provider selection/broadcast and partial failures, standalone Firefox server UI, development edits, watched production/preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.
+The full ticket remains open. Packed complete host consumption, extension custom-renderer placement, inspector mixed-provider selection/broadcast and partial failures, development edits, watched production/preview retention, cancellation/disconnection races and an actual optional CDB profile still need their own evidence. No generic CDB plumbing belongs in this feature. Human review is required before resolving the prototype.

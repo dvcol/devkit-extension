@@ -1,12 +1,13 @@
 import type { DevframeJsonRenderSpec } from '@devframes/json-render';
 import { resolveElementProps } from '@json-render/core';
-import type { ActionBinding } from '@json-render/core';
+import type { ActionBinding, StateModel } from '@json-render/core';
 import type { Immutable } from 'devframe/utils/shared-state';
 
 export type ReadableSpec = DevframeJsonRenderSpec | Immutable<DevframeJsonRenderSpec>;
 
 interface RenderContext {
   spec: ReadableSpec;
+  stateModel: StateModel;
   signal: AbortSignal;
   invoke: (binding: ActionBinding) => Promise<void>;
 }
@@ -22,7 +23,7 @@ export function renderElement(
   if (element === undefined) throw new Error(`Missing element: ${identifier}`);
   if (element.repeat !== undefined || element.visible !== undefined || element.watch !== undefined)
     throw new Error('The example DOM renderer does not implement repeat, visibility or watch');
-  const properties = resolveElementProps(element.props, { stateModel: context.spec.state ?? {} });
+  const properties = resolveElementProps(element.props, { stateModel: context.stateModel });
   const node = component(element.type, properties);
   if (element.type === 'Button') bindPress(node, element.on?.['press'], context);
   const path = new Set([...ancestors, identifier]);
@@ -30,16 +31,31 @@ export function renderElement(
   return node;
 }
 
+/** These actions belong to the native renderer's local providers, which this catalog omits. */
+const localActions = new Set([
+  'setState',
+  'pushState',
+  'removeState',
+  'validateForm',
+  'push',
+  'pop',
+]);
+
 function bindPress(
   node: HTMLElement,
   binding: ActionBinding | ActionBinding[] | Immutable<ActionBinding | ActionBinding[]> | undefined,
   context: RenderContext,
 ): void {
   if (binding === undefined) return;
-  if (!('action' in binding) || binding.confirm || binding.onSuccess || binding.onError)
-    throw new Error('The example DOM renderer supports one RPC press action without callbacks');
-  /** Namespaced RPC actions only; native local built-ins belong to a fuller renderer. */
-  if (!binding.action.includes(':')) throw new Error(`Unsupported local action: ${binding.action}`);
+  if (!('action' in binding) || binding.confirm)
+    throw new Error('The example DOM renderer supports one RPC press action without confirmation');
+  if (
+    (binding.onSuccess !== undefined && !('set' in binding.onSuccess)) ||
+    (binding.onError !== undefined && !('set' in binding.onError))
+  )
+    throw new Error('The example DOM renderer supports only state-setting action callbacks');
+  if (localActions.has(binding.action))
+    throw new Error(`Unsupported local action: ${binding.action}`);
   node.addEventListener(
     'click',
     () => {

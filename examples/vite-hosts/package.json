@@ -27,6 +27,7 @@
     "test": "vitest run --reporter=default --reporter=json --outputFile=.conformance/vitest.json",
     "test:browser": "node tests/browser.ts",
     "test:inspector": "node tests/inspector-browser.ts",
+    "test:inspector:firefox": "node tests/inspector-firefox.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --config ../../.oxlintrc.json --type-aware --deny-warnings src site inspector-site tests vite.config.ts host.config.ts inspector.config.ts",
     "format:check": "oxfmt --config ../../.oxfmtrc.json --check ."
@@ -49,6 +50,8 @@
     "vite": "8.3.0"
   },
   "devDependencies": {
-    "@playwright/test": "1.63.0"
+    "@playwright/test": "1.63.0",
+    "@types/selenium-webdriver": "4.35.7",
+    "selenium-webdriver": "4.49.0"
   }
 }

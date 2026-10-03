@@ -1,0 +1,448 @@
+{
+  "browser": "157.0",
+  "driver": "0.37.1",
+  "observations": [
+    {
+      "host": "devframe",
+      "origin": "http://127.0.0.1:51145",
+      "original": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "customViews": 0,
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "overlay": "",
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:51145/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "target": "Target: http://127.0.0.1:51145/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false"
+      },
+      "modified": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "customViews": 0,
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "overlay": "",
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:51145/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "target": "Target: http://127.0.0.1:51145/inspector-response",
+        "configuration": "Modification enabled: true",
+        "body": "Response body: native:fixture:original",
+        "marker": "Marker installed: false"
+      },
+      "marked": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "customViews": 0,
+        "firstScript": {
+          "marker": "loading",
+          "readyState": "loading"
+        },
+        "overlay": "",
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:51145/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: true\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector",
+        "target": "Target: http://127.0.0.1:51145/inspector-response",
+        "configuration": "Modification enabled: true",
+        "body": "Response body: native:fixture:original",
+        "marker": "Marker installed: true"
+      },
+      "reset": {
+        "reset": {
+          "alert": "",
+          "buttons": 5,
+          "connection": "Connected",
+          "customViews": 0,
+          "firstScript": {
+            "marker": "loading",
+            "readyState": "loading"
+          },
+          "overlay": "",
+          "provider": {
+            "id": "example.devframe-inspector",
+            "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "text": "Response inspector\n\nTarget: No response inspected\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: No response inspected\n\nResponse body: No response inspected\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nReset dispatch complete",
+          "target": "Target: No response inspected",
+          "configuration": "Modification enabled: false",
+          "body": "Response body: No response inspected",
+          "marker": "Marker installed: false"
+        },
+        "freshDocument": {
+          "alert": "",
+          "buttons": 5,
+          "connection": "Connected",
+          "customViews": 0,
+          "firstScript": {
+            "marker": null,
+            "readyState": "loading"
+          },
+          "overlay": "",
+          "provider": {
+            "id": "example.devframe-inspector",
+            "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "text": "Response inspector\n\nTarget: http://127.0.0.1:51145/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector",
+          "target": "Target: http://127.0.0.1:51145/inspector-response",
+          "configuration": "Modification enabled: false",
+          "body": "Response body: fixture:original",
+          "marker": "Marker installed: false"
+        }
+      },
+      "unaffected": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "customViews": 0,
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "overlay": "",
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:51146/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "target": "Target: http://127.0.0.1:51146/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false"
+      }
+    },
+    {
+      "host": "devtools",
+      "origin": "http://127.0.0.1:51146",
+      "original": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "customViews": 0,
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "overlay": "",
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:51146/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "target": "Target: http://127.0.0.1:51146/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false"
+      },
+      "modified": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "customViews": 0,
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "overlay": "",
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:51146/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "target": "Target: http://127.0.0.1:51146/inspector-response",
+        "configuration": "Modification enabled: true",
+        "body": "Response body: native:fixture:original",
+        "marker": "Marker installed: false"
+      },
+      "marked": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "customViews": 0,
+        "firstScript": {
+          "marker": "loading",
+          "readyState": "loading"
+        },
+        "overlay": "",
+        "provider": {
+          "id": "example.devtools-inspector",
+          "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:51146/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: true\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector",
+        "target": "Target: http://127.0.0.1:51146/inspector-response",
+        "configuration": "Modification enabled: true",
+        "body": "Response body: native:fixture:original",
+        "marker": "Marker installed: true"
+      },
+      "reset": {
+        "reset": {
+          "alert": "",
+          "buttons": 5,
+          "connection": "Connected",
+          "customViews": 0,
+          "firstScript": {
+            "marker": "loading",
+            "readyState": "loading"
+          },
+          "overlay": "",
+          "provider": {
+            "id": "example.devtools-inspector",
+            "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "text": "Response inspector\n\nTarget: No response inspected\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: No response inspected\n\nResponse body: No response inspected\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nReset dispatch complete",
+          "target": "Target: No response inspected",
+          "configuration": "Modification enabled: false",
+          "body": "Response body: No response inspected",
+          "marker": "Marker installed: false"
+        },
+        "freshDocument": {
+          "alert": "",
+          "buttons": 5,
+          "connection": "Connected",
+          "customViews": 0,
+          "firstScript": {
+            "marker": null,
+            "readyState": "loading"
+          },
+          "overlay": "",
+          "provider": {
+            "id": "example.devtools-inspector",
+            "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "text": "Response inspector\n\nTarget: http://127.0.0.1:51146/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector",
+          "target": "Target: http://127.0.0.1:51146/inspector-response",
+          "configuration": "Modification enabled: false",
+          "body": "Response body: fixture:original",
+          "marker": "Marker installed: false"
+        }
+      },
+      "unaffected": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "customViews": 0,
+        "firstScript": {
+          "marker": null,
+          "readyState": "loading"
+        },
+        "overlay": "",
+        "provider": {
+          "id": "example.devframe-inspector",
+          "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+          "realm": {
+            "id": "devserver"
+          }
+        },
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:51145/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "target": "Target: http://127.0.0.1:51145/inspector-response",
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original",
+        "marker": "Marker installed: false"
+      }
+    }
+  ],
+  "rendererObservations": [
+    {
+      "host": "devframe",
+      "provider": {
+        "id": "example.devframe-inspector",
+        "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "projection": {
+        "modified": {
+          "alert": "",
+          "buttons": 5,
+          "connection": "Connected",
+          "customViews": 1,
+          "firstScript": {
+            "marker": null,
+            "readyState": "loading"
+          },
+          "overlay": "",
+          "provider": {
+            "id": "example.devframe-inspector",
+            "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "text": "Response inspector\n\nTarget: http://127.0.0.1:51145/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+          "target": "Target: http://127.0.0.1:51145/inspector-response",
+          "configuration": "Modification enabled: true",
+          "body": "Response body: native:fixture:original",
+          "marker": "Marker installed: false"
+        },
+        "enabled": {
+          "alert": "",
+          "buttons": 5,
+          "connection": "Connected",
+          "customViews": 1,
+          "firstScript": {
+            "marker": null,
+            "readyState": "loading"
+          },
+          "overlay": "",
+          "provider": {
+            "id": "example.devframe-inspector",
+            "incarnation": "6948f161-5a3d-442b-8e1a-e2db58cc6fe7",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "text": "Response inspector\n\nTarget: http://127.0.0.1:51145/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nConfiguration dispatch complete",
+          "target": "Target: http://127.0.0.1:51145/inspector-response",
+          "configuration": "Modification enabled: true",
+          "body": "Response body: native:fixture:original",
+          "marker": "Marker installed: false"
+        }
+      },
+      "detached": {
+        "connected": false,
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original"
+      }
+    },
+    {
+      "host": "devtools",
+      "provider": {
+        "id": "example.devtools-inspector",
+        "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "projection": {
+        "modified": {
+          "alert": "",
+          "buttons": 5,
+          "connection": "Connected",
+          "customViews": 1,
+          "firstScript": {
+            "marker": null,
+            "readyState": "loading"
+          },
+          "overlay": "",
+          "provider": {
+            "id": "example.devtools-inspector",
+            "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "text": "Response inspector\n\nTarget: http://127.0.0.1:51146/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+          "target": "Target: http://127.0.0.1:51146/inspector-response",
+          "configuration": "Modification enabled: true",
+          "body": "Response body: native:fixture:original",
+          "marker": "Marker installed: false"
+        },
+        "enabled": {
+          "alert": "",
+          "buttons": 5,
+          "connection": "Connected",
+          "customViews": 1,
+          "firstScript": {
+            "marker": null,
+            "readyState": "loading"
+          },
+          "overlay": "",
+          "provider": {
+            "id": "example.devtools-inspector",
+            "incarnation": "61854dfc-213e-45f9-9769-b11ce67629c3",
+            "realm": {
+              "id": "devserver"
+            }
+          },
+          "text": "Response inspector\n\nTarget: http://127.0.0.1:51146/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nConfiguration dispatch complete",
+          "target": "Target: http://127.0.0.1:51146/inspector-response",
+          "configuration": "Modification enabled: true",
+          "body": "Response body: native:fixture:original",
+          "marker": "Marker installed: false"
+        }
+      },
+      "detached": {
+        "connected": false,
+        "configuration": "Modification enabled: false",
+        "body": "Response body: fixture:original"
+      }
+    }
+  ],
+  "checks": [
+    "devframe: the unchanged native renderer dispatches shared inspector actions through the selected provider",
+    "devframe: inspect reads actual original and configured response bytes from the owned Vite endpoint",
+    "devframe: marker registration affects a fresh document before its first parser script without changing the existing document",
+    "devframe: reset restores baseline configuration and future HTML while preserving provider identity",
+    "devframe: the two live backends retain distinct provider identities and native business state",
+    "devframe: visible native renderer alerts, Vite overlays and connection failures fail the proof",
+    "devframe: the unchanged inspector uses dotted action IDs and native state-setting callbacks in the custom DOM renderer",
+    "devframe: peer projection updates preserve each renderer mount's local action outcome",
+    "devframe: renderer replacement disposes the old control and a fresh custom mount resets its local outcome",
+    "devframe: all five shared inspector buttons remain usable without changing provider identity",
+    "devtools: the unchanged native renderer dispatches shared inspector actions through the selected provider",
+    "devtools: inspect reads actual original and configured response bytes from the owned Vite endpoint",
+    "devtools: marker registration affects a fresh document before its first parser script without changing the existing document",
+    "devtools: reset restores baseline configuration and future HTML while preserving provider identity",
+    "devtools: the two live backends retain distinct provider identities and native business state",
+    "devtools: visible native renderer alerts, Vite overlays and connection failures fail the proof",
+    "devtools: the unchanged inspector uses dotted action IDs and native state-setting callbacks in the custom DOM renderer",
+    "devtools: peer projection updates preserve each renderer mount's local action outcome",
+    "devtools: renderer replacement disposes the old control and a fresh custom mount resets its local outcome",
+    "devtools: all five shared inspector buttons remain usable without changing provider identity"
+  ],
+  "limitations": [
+    "No global page-error or browser-console capture through WebDriver Classic",
+    "Native development only; preview and packed host artifacts are not exercised"
+  ]
+}

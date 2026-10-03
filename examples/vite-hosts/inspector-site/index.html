@@ -23,6 +23,11 @@
     <p>Enter the native authentication code printed by the running host when prompted.</p>
     <p id="connection" role="status">Connecting…</p>
     <output id="provider"></output>
+    <label for="inspector-renderer">Renderer</label>
+    <select id="inspector-renderer" disabled>
+      <option value="reference">Reference</option>
+      <option value="custom">Custom DOM</option>
+    </select>
     <section id="inspector"></section>
     <p>First parser-script observation: <output id="marker-observation"></output></p>
     <a href="/inspector-fixture">Open a fresh fixture document</a>

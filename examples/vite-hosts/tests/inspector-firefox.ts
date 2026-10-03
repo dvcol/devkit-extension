@@ -2,13 +2,10 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
-import { chromium } from '@playwright/test';
+import { Driver, Options, ServiceBuilder } from 'selenium-webdriver/firefox.js';
 import { createServer } from 'vite';
-import {
-  checkInspectorRenderer,
-  inspectorRendererChecks,
-} from '../../json-render/tests/inspector-renderer.ts';
-import { checkInspector, connectInspector, inspectOriginal } from './inspector-browser-actions.ts';
+import { checkInspector, connectInspector, inspectOriginal } from './inspector-firefox-actions.ts';
+import { checkInspectorRenderer, inspectorRendererChecks } from './inspector-firefox-renderer.ts';
 
 await using cleanup = new AsyncDisposableStack();
 const servers = [];
@@ -25,22 +22,17 @@ for (const host of ['devframe', 'devtools'] as const) {
   assert.ok(address !== null && address !== undefined && typeof address !== 'string');
   servers.push({ host, origin: `http://127.0.0.1:${address.port}` });
 }
-const browser = await chromium.launch({ headless: true });
-cleanup.defer(() => browser.close());
-const version = browser.version();
-const context = await browser.newContext();
-const pageErrors: string[] = [];
-const consoleErrors: string[] = [];
-context.on('weberror', (error) => pageErrors.push(error.error().message));
+const options = new Options().addArguments('-headless');
+if (process.env.FIREFOX_BINARY !== undefined) options.setBinary(process.env.FIREFOX_BINARY);
+const driver = Driver.createSession(options, new ServiceBuilder().build());
+cleanup.defer(() => driver.quit());
+const capabilities = await driver.getCapabilities();
 const pages = [];
 for (const server of servers) {
-  const page = await context.newPage();
-  page.on('console', (message) => {
-    if (message.type() === 'error') consoleErrors.push(message.text());
-  });
-  const current = { ...server, page };
+  await driver.switchTo().newWindow('tab');
+  const current = { ...server, driver, window: await driver.getWindowHandle() };
   const provider = await connectInspector(current);
-  await inspectOriginal(page);
+  await inspectOriginal(current);
   pages.push({ ...current, provider });
 }
 const [devframe, devtools] = pages;
@@ -52,35 +44,39 @@ const observations = [
 ];
 const rendererObservations = [];
 for (const primary of pages) {
-  const peer = await context.newPage();
-  await connectInspector({ ...primary, page: peer });
+  await driver.switchTo().newWindow('tab');
+  const peer = { ...primary, window: await driver.getWindowHandle() };
+  await connectInspector(peer);
   rendererObservations.push({
     host: primary.host,
-    ...(await checkInspectorRenderer(primary.page, peer)),
+    ...(await checkInspectorRenderer(primary, peer)),
   });
-  await peer.close();
+  await driver.switchTo().window(peer.window);
+  await driver.close();
+  await driver.switchTo().window(primary.window);
 }
 await cleanup.disposeAsync();
-assert.deepEqual(pageErrors, []);
-assert.deepEqual(consoleErrors, []);
 const checks = [
   'the unchanged native renderer dispatches shared inspector actions through the selected provider',
   'inspect reads actual original and configured response bytes from the owned Vite endpoint',
   'marker registration affects a fresh document before its first parser script without changing the existing document',
   'reset restores baseline configuration and future HTML while preserving provider identity',
   'the two live backends retain distinct provider identities and native business state',
+  'visible native renderer alerts, Vite overlays and connection failures fail the proof',
 ];
 const receipt = {
-  browser: version,
+  browser: capabilities.getBrowserVersion(),
+  driver: capabilities.get('moz:geckodriverVersion') as unknown,
   observations,
   rendererObservations,
   checks: servers.flatMap(({ host }) =>
     [...checks, ...inspectorRendererChecks].map((check) => `${host}: ${check}`),
   ),
-  pageErrors,
-  consoleErrors,
-  limitations: ['Native development only; preview and packed host artifacts are not exercised'],
+  limitations: [
+    'No global page-error or browser-console capture through WebDriver Classic',
+    'Native development only; preview and packed host artifacts are not exercised',
+  ],
 };
 await mkdir('artifacts', { recursive: true });
-await writeFile('artifacts/inspector-chromium.json', JSON.stringify(receipt, null, 2) + '\n');
-console.info(styleText('green', '✅ [vite-hosts/inspector]'), receipt);
+await writeFile('artifacts/inspector-firefox.json', JSON.stringify(receipt, null, 2) + '\n');
+console.info(styleText('green', '✅ [vite-hosts/inspector/firefox]'), receipt);

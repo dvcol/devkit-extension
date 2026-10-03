@@ -13,10 +13,12 @@ import {
 import { createDevframeProviderConnection } from '@devkit/server/client';
 import { connectDevframe } from 'devframe/client';
 import type { DevframeRpcClient } from 'devframe/client';
+import { domRenderer } from '../../json-render/browser/renderer.js';
 
 const lifetime = new AbortController();
 const cleanup = new DisposableStack();
 const status = document.querySelector<HTMLElement>('#connection')!;
+const rendererSelect = document.querySelector<HTMLSelectElement>('#inspector-renderer')!;
 
 function dispose(): void {
   lifetime.abort();
@@ -86,7 +88,7 @@ async function mountInspector({
     markInspectorAction,
     resetInspectorAction,
   ];
-  const instance = await renderer({
+  await selectRenderer({
     entry: {
       id: view.id,
       title: view.title,
@@ -110,8 +112,53 @@ async function mountInspector({
       },
     },
   });
-  own(() => instance.dispose?.());
-  if (!lifetime.signal.aborted) status.textContent = 'Connected';
+}
+
+/** A renderer switch owns one native mount and preserves the provider's published spec/state. */
+async function selectRenderer(options: Parameters<typeof renderer>[0]): Promise<void> {
+  let unmount: (() => void) | undefined;
+  own(() => {
+    rendererSelect.disabled = true;
+    unmount?.();
+  });
+  async function replace(): Promise<void> {
+    rendererSelect.disabled = true;
+    unmount?.();
+    unmount = undefined;
+    const next = await mountSelection(options);
+    if (lifetime.signal.aborted) {
+      next.dispose();
+      return;
+    }
+    unmount = () => {
+      next.dispose();
+    };
+    rendererSelect.disabled = false;
+    status.textContent = 'Connected';
+  }
+  rendererSelect.addEventListener(
+    'change',
+    () => {
+      void replace().catch((error: unknown) => {
+        status.textContent = `Renderer failed: ${String(error)}`;
+      });
+    },
+    { signal: lifetime.signal },
+  );
+  await replace();
+}
+
+async function mountSelection(options: Parameters<typeof renderer>[0]) {
+  using resources = new DisposableStack();
+  const target = document.createElement('div');
+  options.container.append(target);
+  resources.defer(() => {
+    target.remove();
+  });
+  const render = rendererSelect.value === 'custom' ? domRenderer : renderer;
+  const instance = await render({ ...options, container: target });
+  resources.defer(() => instance.dispose?.());
+  return resources.move();
 }
 
 window.addEventListener('pagehide', dispose, { once: true });

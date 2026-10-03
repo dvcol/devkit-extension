@@ -1,5 +1,5 @@
 import type { JsonRenderRpcContext } from '@devframes/json-render/hub';
-import { resolveAction } from '@json-render/core';
+import { createStateStore, diffToPatches, executeAction, resolveAction } from '@json-render/core';
 import type { ActionBinding } from '@json-render/core';
 import { renderElement } from './components.js';
 import type { ReadableSpec } from './components.js';
@@ -9,6 +9,7 @@ export class DomView {
   readonly root = document.createElement('section');
   private readonly content = document.createElement('div');
   private readonly error = document.createElement('p');
+  private readonly state = createStateStore();
   private events = new AbortController();
   private disposed = false;
   private pending = false;
@@ -25,6 +26,15 @@ export class DomView {
   }
 
   render(spec: ReadableSpec): void {
+    /** Remote projection changes leave unchanged mount-local callback values intact. */
+    this.state.update(
+      Object.fromEntries(
+        diffToPatches(this.spec?.state ?? {}, spec.state ?? {}).map((patch) => [
+          patch.path,
+          patch.op === 'remove' ? undefined : patch.value,
+        ]),
+      ),
+    );
     this.spec = spec;
     this.events.abort();
     this.events = new AbortController();
@@ -32,6 +42,7 @@ export class DomView {
     this.content.append(
       renderElement(spec.root, {
         spec,
+        stateModel: this.state.getSnapshot(),
         signal: this.events.signal,
         invoke: (binding) => this.invoke(binding),
       }),
@@ -60,14 +71,28 @@ export class DomView {
     this.error.textContent = '';
     this.update(this.spec);
     try {
-      const action = resolveAction(binding, this.spec.state ?? {});
-      /** Dynamic JSON method names use the native call unchanged; the backend validates input. */
-      await Reflect.apply(this.rpc.call, this.rpc, [action.action, action.params]);
+      const action = resolveAction(binding, this.state.getSnapshot());
+      await executeAction({
+        action,
+        handler: (params) => this.call(action.action, params),
+        setState: this.state.set,
+      });
     } catch (cause) {
       if (!this.disposed) this.error.textContent = String(cause);
     } finally {
       this.pending = false;
       if (!this.disposed) this.update(this.spec);
+    }
+  }
+
+  private async call(action: string, params: Record<string, unknown>): Promise<unknown> {
+    try {
+      /** Dynamic JSON method names use the native call unchanged; the backend validates input. */
+      return await Reflect.apply(this.rpc.call, this.rpc, [action, params]);
+    } catch (cause) {
+      /** The RPC failure stays visible even when a native onError callback handles it. */
+      if (!this.disposed) this.error.textContent = String(cause);
+      throw cause;
     }
   }
 }

@@ -64,6 +64,12 @@ jobs:
           SE_DRIVER_VERSION: '0.37.1'
           SE_SKIP_DRIVER_IN_PATH: 'true'
         run: pnpm --filter @devkit/example-json-render test:firefox
+      - name: Run the shared inspector through both native server hosts in Firefox
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+        run: pnpm --filter @devkit/example-vite-hosts test:inspector:firefox
       - name: Verify native renderer source and style updates in Firefox
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
