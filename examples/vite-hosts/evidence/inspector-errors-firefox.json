@@ -1,0 +1,231 @@
+{
+  "browser": "157.0",
+  "driver": "0.37.1",
+  "observations": [
+    {
+      "host": "devframe",
+      "renderer": "reference",
+      "provider": {
+        "id": "example.devframe-inspector",
+        "incarnation": "9c62f842-ffe4-484b-8116-b2d45fe808ea",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "before": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": false,
+        "disabled": 0,
+        "document": 1790994827388,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devframe-inspector\",\"incarnation\":\"9c62f842-ffe4-484b-8116-b2d45fe808ea\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57480/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "outcome": "Inspection dispatch complete"
+      },
+      "failed": {
+        "alert": "Action \"example.response-inspector.read\" failed: Operation handler failed",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": false,
+        "disabled": 0,
+        "document": 1790994827388,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devframe-inspector\",\"incarnation\":\"9c62f842-ffe4-484b-8116-b2d45fe808ea\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Action \"example.response-inspector.read\" failed: Operation handler failed\nResponse inspector\n\nTarget: http://127.0.0.1:57480/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection failed",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "outcome": "Inspection failed"
+      },
+      "recovery": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": false,
+        "disabled": 0,
+        "document": 1790994827388,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devframe-inspector\",\"incarnation\":\"9c62f842-ffe4-484b-8116-b2d45fe808ea\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57480/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "body": "Response body: fixture:original",
+        "configuration": "Modification enabled: false",
+        "outcome": "Inspection dispatch complete"
+      },
+      "failedRequests": 1
+    },
+    {
+      "host": "devframe",
+      "renderer": "custom",
+      "provider": {
+        "id": "example.devframe-inspector",
+        "incarnation": "9c62f842-ffe4-484b-8116-b2d45fe808ea",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "before": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": true,
+        "disabled": 0,
+        "document": 1790994827388,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devframe-inspector\",\"incarnation\":\"9c62f842-ffe4-484b-8116-b2d45fe808ea\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57480/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "outcome": "Inspection dispatch complete"
+      },
+      "failed": {
+        "alert": "Error: Operation handler failed",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": true,
+        "disabled": 0,
+        "document": 1790994827388,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devframe-inspector\",\"incarnation\":\"9c62f842-ffe4-484b-8116-b2d45fe808ea\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57480/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection failed\n\nError: Operation handler failed",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "outcome": "Inspection failed"
+      },
+      "recovery": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": true,
+        "disabled": 0,
+        "document": 1790994827388,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devframe-inspector\",\"incarnation\":\"9c62f842-ffe4-484b-8116-b2d45fe808ea\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57480/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "body": "Response body: fixture:original",
+        "configuration": "Modification enabled: false",
+        "outcome": "Inspection dispatch complete"
+      },
+      "failedRequests": 1
+    },
+    {
+      "host": "devtools",
+      "renderer": "reference",
+      "provider": {
+        "id": "example.devtools-inspector",
+        "incarnation": "552c1c95-9242-4053-a581-bae969d79775",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "before": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": false,
+        "disabled": 0,
+        "document": 1790994828798,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devtools-inspector\",\"incarnation\":\"552c1c95-9242-4053-a581-bae969d79775\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57496/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "outcome": "Inspection dispatch complete"
+      },
+      "failed": {
+        "alert": "Action \"example.response-inspector.read\" failed: Operation handler failed",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": false,
+        "disabled": 0,
+        "document": 1790994828798,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devtools-inspector\",\"incarnation\":\"552c1c95-9242-4053-a581-bae969d79775\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Action \"example.response-inspector.read\" failed: Operation handler failed\nResponse inspector\n\nTarget: http://127.0.0.1:57496/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection failed",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "outcome": "Inspection failed"
+      },
+      "recovery": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": false,
+        "disabled": 0,
+        "document": 1790994828798,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devtools-inspector\",\"incarnation\":\"552c1c95-9242-4053-a581-bae969d79775\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57496/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "body": "Response body: fixture:original",
+        "configuration": "Modification enabled: false",
+        "outcome": "Inspection dispatch complete"
+      },
+      "failedRequests": 1
+    },
+    {
+      "host": "devtools",
+      "renderer": "custom",
+      "provider": {
+        "id": "example.devtools-inspector",
+        "incarnation": "552c1c95-9242-4053-a581-bae969d79775",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "before": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": true,
+        "disabled": 0,
+        "document": 1790994828798,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devtools-inspector\",\"incarnation\":\"552c1c95-9242-4053-a581-bae969d79775\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57496/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "outcome": "Inspection dispatch complete"
+      },
+      "failed": {
+        "alert": "Error: Operation handler failed",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": true,
+        "disabled": 0,
+        "document": 1790994828798,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devtools-inspector\",\"incarnation\":\"552c1c95-9242-4053-a581-bae969d79775\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57496/inspector-response\n\nResponse modification: Available\n\nModification enabled: true\n\nResponse status: 200\n\nResponse body: native:fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection failed\n\nError: Operation handler failed",
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "outcome": "Inspection failed"
+      },
+      "recovery": {
+        "alert": "",
+        "buttons": 5,
+        "connection": "Connected",
+        "custom": true,
+        "disabled": 0,
+        "document": 1790994828798,
+        "overlay": false,
+        "provider": "{\"id\":\"example.devtools-inspector\",\"incarnation\":\"552c1c95-9242-4053-a581-bae969d79775\",\"realm\":{\"id\":\"devserver\"}}",
+        "text": "Response inspector\n\nTarget: http://127.0.0.1:57496/inspector-response\n\nResponse modification: Available\n\nModification enabled: false\n\nResponse status: 200\n\nResponse body: fixture:original\n\nMarker installed: false\n\nInspect response\nEnable response modification\nDisable response modification\nInstall page marker\nReset inspector\n\nInspection dispatch complete",
+        "body": "Response body: fixture:original",
+        "configuration": "Modification enabled: false",
+        "outcome": "Inspection dispatch complete"
+      },
+      "failedRequests": 1
+    }
+  ],
+  "checks": [
+    "an actual owned-endpoint connection failure executes the authored inspector onError callback and displays the native error in both renderers",
+    "failed reads preserve prior provider state, document and renderer mount",
+    "reset and a fresh read recover through the same provider and renderer and clear the visible alert"
+  ],
+  "limitations": [
+    "No global page-error or browser-console capture through WebDriver Classic",
+    "Native development with routed single-provider actions; broadcast recipient errors are results, not rejected calls"
+  ]
+}

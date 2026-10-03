@@ -1,0 +1,147 @@
+{
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "host": "devframe",
+      "renderer": "reference",
+      "provider": {
+        "id": "example.devframe-inspector",
+        "incarnation": "78994a86-02a9-4135-8cb9-ace6f68d2de4",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "before": {
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "alert": "",
+        "outcome": "Inspection dispatch complete",
+        "document": 1790994658030.4
+      },
+      "failed": {
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "alert": "Action \"example.response-inspector.read\" failed: Operation handler failed",
+        "outcome": "Inspection failed",
+        "document": 1790994658030.4
+      },
+      "recovery": {
+        "body": "Response body: fixture:original",
+        "configuration": "Modification enabled: false",
+        "alert": "",
+        "outcome": "Inspection dispatch complete",
+        "document": 1790994658030.4
+      },
+      "failedRequests": 1
+    },
+    {
+      "host": "devframe",
+      "renderer": "custom",
+      "provider": {
+        "id": "example.devframe-inspector",
+        "incarnation": "78994a86-02a9-4135-8cb9-ace6f68d2de4",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "before": {
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "alert": "",
+        "outcome": "Inspection dispatch complete",
+        "document": 1790994658030.4
+      },
+      "failed": {
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "alert": "Error: Operation handler failed",
+        "outcome": "Inspection failed",
+        "document": 1790994658030.4
+      },
+      "recovery": {
+        "body": "Response body: fixture:original",
+        "configuration": "Modification enabled: false",
+        "alert": "",
+        "outcome": "Inspection dispatch complete",
+        "document": 1790994658030.4
+      },
+      "failedRequests": 1
+    },
+    {
+      "host": "devtools",
+      "renderer": "reference",
+      "provider": {
+        "id": "example.devtools-inspector",
+        "incarnation": "a2ff06eb-9209-43b5-a366-2a7a3586657d",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "before": {
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "alert": "",
+        "outcome": "Inspection dispatch complete",
+        "document": 1790994658914.2
+      },
+      "failed": {
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "alert": "Action \"example.response-inspector.read\" failed: Operation handler failed",
+        "outcome": "Inspection failed",
+        "document": 1790994658914.2
+      },
+      "recovery": {
+        "body": "Response body: fixture:original",
+        "configuration": "Modification enabled: false",
+        "alert": "",
+        "outcome": "Inspection dispatch complete",
+        "document": 1790994658914.2
+      },
+      "failedRequests": 1
+    },
+    {
+      "host": "devtools",
+      "renderer": "custom",
+      "provider": {
+        "id": "example.devtools-inspector",
+        "incarnation": "a2ff06eb-9209-43b5-a366-2a7a3586657d",
+        "realm": {
+          "id": "devserver"
+        }
+      },
+      "before": {
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "alert": "",
+        "outcome": "Inspection dispatch complete",
+        "document": 1790994658914.2
+      },
+      "failed": {
+        "body": "Response body: native:fixture:original",
+        "configuration": "Modification enabled: true",
+        "alert": "Error: Operation handler failed",
+        "outcome": "Inspection failed",
+        "document": 1790994658914.2
+      },
+      "recovery": {
+        "body": "Response body: fixture:original",
+        "configuration": "Modification enabled: false",
+        "alert": "",
+        "outcome": "Inspection dispatch complete",
+        "document": 1790994658914.2
+      },
+      "failedRequests": 1
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "checks": [
+    "an actual owned-endpoint connection failure rejects the native inspector read and executes its authored onError callback",
+    "failed reads preserve prior provider state, document and renderer mount",
+    "reset and a fresh read recover through the same provider and renderer without an unhandled page error"
+  ],
+  "limitations": [
+    "Native development with routed single-provider actions; broadcast recipient errors are results, not rejected calls"
+  ]
+}
