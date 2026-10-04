@@ -5462,6 +5462,20 @@
           "fullName": "rejects an initial state request when its native connection closes",
           "host": "node-messagechannel-fixture",
           "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/channel.test.ts",
+          "fullName": "reports a handler failure after closing native json RPC without posting a reply",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
+        },
+        {
+          "workspace": "packages/webext",
+          "testFile": "tests/channel.test.ts",
+          "fullName": "reports a handler failure after closing native clone RPC without posting a reply",
+          "host": "node-messagechannel-fixture",
+          "mode": "integration"
         }
       ],
       "gaps": [

@@ -42,6 +42,12 @@ The `devframe@1.0.0` patch also suppresses a received server snapshot/patch's re
 
 Both existing client factory entry files receive the same private receive-scope correction. No declarations, serializer, state-key format, renderer or SDK state engine change. The maintained native adapter tests first reproduce 6→5 on the previous installed package and pass with this correction. Remove it when an unpatched native release passes those public-API and affected browser checks. The owner-approved [upstream draft #422](https://github.com/devframes/devframe/pull/422) contains the native source correction at `de9c518f` and reproducible baseline/fixed commands. The workspace patch still does not automatically reach published consumers.
 
+## Native RPC reply after closure
+
+The exact-version `devframe@1.0.0` patch adds a closed-state guard to both bundled birpc copies before incoming response serialization/posting. A handler admitted before panel navigation otherwise completes after native RPC closure and attempts a reply through Chrome's disconnected Port. The existing `onFunctionError` callback still reports handler failures; admitted work still completes normally. No public API, cancellation, replay or SDK transport policy is added.
+
+The [diagnosis and source candidate](../docs/research/native-rpc-late-reply.md) reproduce this against unchanged birpc source and the previous installed native package. JSON and structured-clone native Port tests cover late success, late failure, ordinary replies and listener cleanup. Rebuilt actual Chromium navigation captures no page or worker errors; Firefox navigation and both browsers' pending-idle checks pass. The guard covers closure during awaited handler/resolver execution, not every asynchronous transport-post race. Remove it when an unpatched native release passes those checks. The source fix belongs in birpc followed by a Devframe rebuild; no upstream PR has been opened. This remains private workspace installation policy.
+
 ## Native JSON view and renderer exports
 
 The exact-version patches for `@devframes/json-render@1.0.0` and `@devframes/json-render-ui@1.0.0` backport [draft 411](https://github.com/devframes/devframe/pull/411) at `f6c36c33`. `@devframes/json-render/view` re-exports the existing view factory, preserving its registry and index identity with the node entry. Its declarations accept native shared state directly. Default custom-renderer declarations retain the full client context.

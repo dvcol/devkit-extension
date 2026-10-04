@@ -7,7 +7,7 @@ import { createPortPair } from './port-fixture';
 it.each(['json', 'clone'] as const)(
   'uses native RPC through %s Port messages',
   async (encoding) => {
-    expect.assertions(12);
+    expect.assertions(14);
     const pair = createPortPair(encoding);
     let started = false;
     let release: (() => void) | undefined;
@@ -60,12 +60,85 @@ it.each(['json', 'clone'] as const)(
       expect(completed).toBe(0);
       release?.();
       await expect.poll(() => completed).toBe(1);
+      await pair.second.completeDeliveries();
+      expect(pair.second.postsAfterDisconnect()).toBe(0);
+      expect(pair.second.errors).toEqual([]);
       await expect(connection.$call('echo', 'after close')).rejects.toThrow('closed');
       expect(completed).toBe(1);
     } finally {
       release?.();
       connection.$close();
       for (const servingConnection of group.clients) servingConnection.$close();
+      group.updateChannels((channels) => {
+        channels.splice(0);
+      });
+      pair.disconnect();
+    }
+  },
+);
+
+it.each(['json', 'clone'] as const)(
+  'reports a handler failure after closing native %s RPC without posting a reply',
+  async (encoding) => {
+    expect.assertions(7);
+    const pair = createPortPair(encoding);
+    const failure = new Error('Handler failed after its caller disconnected');
+    const reportedErrors: unknown[] = [];
+    let started = false;
+    let release: (() => void) | undefined;
+    const completion = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const functions = {
+      wait: async () => {
+        started = true;
+        await completion;
+        throw failure;
+      },
+    };
+    const group = createRpcServer<Record<string, never>, typeof functions>(functions, {
+      rpcOptions: {
+        onFunctionError: (error) => {
+          reportedErrors.push(error);
+        },
+      },
+    });
+    group.updateChannels((channels) => {
+      channels.push(
+        createPortChannel({
+          port: pair.second.port,
+          onDisconnect: () => {
+            for (const connection of group.clients) connection.$close();
+          },
+        }),
+      );
+    });
+    const connection = createRpcClient<typeof functions>(
+      {},
+      {
+        channel: createPortChannel({
+          port: pair.first.port,
+          onDisconnect: () => {
+            connection.$close();
+          },
+        }),
+      },
+    );
+    try {
+      const pending = connection.$call('wait');
+      await expect.poll(() => started).toBe(true);
+      pair.disconnect();
+      await expect(pending).rejects.toThrow('closed');
+      release?.();
+      await pair.second.completeDeliveries();
+      expect(reportedErrors).toEqual([failure]);
+      expect(pair.first.listenerCount()).toBe(0);
+      expect(pair.second.listenerCount()).toBe(0);
+      expect(pair.second.postsAfterDisconnect()).toBe(0);
+      expect(pair.second.errors).toEqual([]);
+    } finally {
+      release?.();
+      connection.$close();
       group.updateChannels((channels) => {
         channels.splice(0);
       });

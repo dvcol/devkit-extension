@@ -269,6 +269,18 @@ index c7d302ef2197084e76f035343de25330ffb63ce6..532428b26005756af2072cd8873b03dc
  		}
  	});
  	rpc.register({
+diff --git a/dist/dist-CO98PBnQ.mjs b/dist/dist-CO98PBnQ.mjs
+index f3146b06bb31b07074a9381925f5d0e4339cfe4e..b2c6cb64c6119ddd3976ece4e28b1381ccf5b443 100644
+--- a/dist/dist-CO98PBnQ.mjs
++++ b/dist/dist-CO98PBnQ.mjs
+@@ -170,6 +170,7 @@ function createBirpc($functions, options) {
+ 				if (error && options.onFunctionError) {
+ 					if (options.onFunctionError.call(rpc, error, method, args) === true) return;
+ 				}
++				if ($closed) return;
+ 				if (!error) try {
+ 					await post(serialize({
+ 						t: "s",
 diff --git a/dist/rpc/shared-state.d.mts b/dist/rpc/shared-state.d.mts
 new file mode 100644
 index 0000000000000000000000000000000000000000..e87bca08f32eed08db6839413bbe43fa607765d5
@@ -1094,6 +1106,18 @@ index 0000000000000000000000000000000000000000..cda66f2c3f427144204d25dcc73763c7
 +}
 +//#endregion
 +export { createRpcSharedStateClientHost, createRpcSharedStateServerHost };
+diff --git a/dist/tool-input-BAQXvvqL.mjs b/dist/tool-input-BAQXvvqL.mjs
+index f12499ba894885162922a9777c2c7ccf5a6d97ec..118e1a77accaedf6d2dad12e9f29f07cbcffcd15 100644
+--- a/dist/tool-input-BAQXvvqL.mjs
++++ b/dist/tool-input-BAQXvvqL.mjs
+@@ -266,6 +266,7 @@ function createBirpc($functions, options) {
+ 				if (error && options.onFunctionError) {
+ 					if (options.onFunctionError.call(rpc, error, method, args) === true) return;
+ 				}
++				if ($closed) return;
+ 				if (!error) try {
+ 					await post(serialize({
+ 						t: "s",
 diff --git a/dist/validation-BzxTTYaV.mjs b/dist/validation-BzxTTYaV.mjs
 index d27315a7d32f913033803658cab3077ebd724829..f4f059d67e54a059de96a1d46524c51fa07cf8b5 100644
 --- a/dist/validation-BzxTTYaV.mjs
