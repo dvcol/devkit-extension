@@ -1,0 +1,172 @@
+{
+  "date": "2026-10-04",
+  "browser": "Codex in-app browser",
+  "scope": "Manual live confirmation using existing native browser demo and actual controls; not an automated browser-conformance receipt",
+  "hosts": {
+    "devframe": {
+      "initial": [
+        {
+          "command": "No command sent by this tab.",
+          "status": "Connected. Observing native shared state.",
+          "value": {
+            "provider": {
+              "id": "example.remote",
+              "incarnation": "79b633d7-9a42-441c-aeb1-1e71c8304a5d",
+              "realm": {
+                "id": "devserver"
+              }
+            },
+            "value": 0
+          }
+        },
+        {
+          "command": "No command sent by this tab.",
+          "status": "Connected. Observing native shared state.",
+          "value": {
+            "provider": {
+              "id": "example.remote",
+              "incarnation": "79b633d7-9a42-441c-aeb1-1e71c8304a5d",
+              "realm": {
+                "id": "devserver"
+              }
+            },
+            "value": 0
+          }
+        }
+      ],
+      "final": [
+        {
+          "command": "Last command returned 1.",
+          "status": "Connected. Observing native shared state.",
+          "value": {
+            "provider": {
+              "id": "example.remote",
+              "incarnation": "79b633d7-9a42-441c-aeb1-1e71c8304a5d",
+              "realm": {
+                "id": "devserver"
+              }
+            },
+            "value": 2
+          }
+        },
+        {
+          "command": "Last command returned 2.",
+          "status": "Connected. Observing native shared state.",
+          "value": {
+            "provider": {
+              "id": "example.remote",
+              "incarnation": "79b633d7-9a42-441c-aeb1-1e71c8304a5d",
+              "realm": {
+                "id": "devserver"
+              }
+            },
+            "value": 2
+          }
+        }
+      ],
+      "failedWrite": {
+        "nativeDiagnostic": "DF0035",
+        "filesystemError": "ENOTDIR",
+        "liveValue": 1,
+        "obstructionPreserved": true
+      },
+      "pathRepair": {
+        "actor": "Caller/test",
+        "counterFilePresentImmediatelyAfterRepair": false
+      },
+      "physicalSavedRecord": {
+        "value": 2
+      },
+      "independentFile": "Caller-owned independent file",
+      "screenshot": "devframe.jpg"
+    },
+    "devtools": {
+      "initial": [
+        {
+          "command": "No command sent by this tab.",
+          "status": "Connected. Observing native shared state.",
+          "value": {
+            "provider": {
+              "id": "example.remote",
+              "incarnation": "072eb7d1-db70-4ecc-8c11-2de2af92478a",
+              "realm": {
+                "id": "devserver"
+              }
+            },
+            "value": 0
+          }
+        },
+        {
+          "command": "No command sent by this tab.",
+          "status": "Connected. Observing native shared state.",
+          "value": {
+            "provider": {
+              "id": "example.remote",
+              "incarnation": "072eb7d1-db70-4ecc-8c11-2de2af92478a",
+              "realm": {
+                "id": "devserver"
+              }
+            },
+            "value": 0
+          }
+        }
+      ],
+      "final": [
+        {
+          "command": "Last command returned 1.",
+          "status": "Connected. Observing native shared state.",
+          "value": {
+            "provider": {
+              "id": "example.remote",
+              "incarnation": "072eb7d1-db70-4ecc-8c11-2de2af92478a",
+              "realm": {
+                "id": "devserver"
+              }
+            },
+            "value": 2
+          }
+        },
+        {
+          "command": "Last command returned 2.",
+          "status": "Connected. Observing native shared state.",
+          "value": {
+            "provider": {
+              "id": "example.remote",
+              "incarnation": "072eb7d1-db70-4ecc-8c11-2de2af92478a",
+              "realm": {
+                "id": "devserver"
+              }
+            },
+            "value": 2
+          }
+        }
+      ],
+      "failedWrite": {
+        "nativeDiagnostic": "DF0035",
+        "filesystemError": "ENOTDIR",
+        "liveValue": 1,
+        "obstructionPreserved": true
+      },
+      "pathRepair": {
+        "actor": "Caller/test",
+        "counterFilePresentImmediatelyAfterRepair": false
+      },
+      "physicalSavedRecord": {
+        "value": 2
+      },
+      "independentFile": "Caller-owned independent file",
+      "screenshot": "devtools.jpg"
+    }
+  },
+  "limitations": [
+    "No browser version or global page-error observation was captured for this manual IAB check.",
+    "No SDK, browser frontend or native persistence implementation changed.",
+    "This establishes a later explicit mutation after path repair, not automatic retry or interrupted-write durability.",
+    "There was no reload, reconnect control, provider replacement or host restart during the observed recovery flow."
+  ],
+  "cleanup": {
+    "testCreatedTabsClosed": 4,
+    "nativeDemoProcessesExited": 2,
+    "disposableStorageRemoved": true
+  }
+}

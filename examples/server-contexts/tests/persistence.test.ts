@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createRemoteHost } from '@devkit/example-server-contexts';
@@ -114,5 +114,52 @@ describe.each(['devframe', 'devtools'] as const)('%s native persistent counter',
     await server.close();
     const fresh = await connectState(await host(mode, filepath), cleanup);
     expect(fresh.state.value()).toEqual({ value: 0 });
+  });
+
+  it('persists a later explicit mutation after path repair without replacing live clients', async () => {
+    expect.assertions(17);
+    const directory = await storageDirectory();
+    const obstruction = join(directory, 'not-a-directory');
+    const filepath = join(obstruction, 'counter.json');
+    const unrelatedPath = join(directory, 'unrelated.txt');
+    await writeFile(obstruction, 'Caller-owned obstruction');
+    await writeFile(unrelatedPath, 'Caller-owned independent file');
+    const diagnostic = vi.spyOn(console, 'error');
+    const server = await host(mode, filepath);
+    const writer = await connectState(server, cleanup);
+    const peer = await connectState(server, cleanup);
+    const originalIncarnation = server.provider.provider.incarnation;
+
+    await expect(writer.increase(3)).resolves.toBe(3);
+    await expect.poll(() => peer.state.value()).toEqual({ value: 3 });
+    await expect
+      .poll(() => diagnostic.mock.calls.flat().map(String).join('\n'))
+      .toContain('DF0035');
+    await expect(readFile(filepath, 'utf8')).rejects.toMatchObject({ code: 'ENOTDIR' });
+    expect(await readFile(obstruction, 'utf8')).toBe('Caller-owned obstruction');
+
+    await rm(obstruction);
+    await mkdir(obstruction);
+    await expect(readFile(filepath, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
+    await expect(writer.increase(1)).resolves.toBe(4);
+    await expect.poll(() => peer.state.value()).toEqual({ value: 4 });
+    await expect.poll(() => stored(filepath)).toEqual({ value: 4 });
+    expect(writer.nativeClient.status).toBe('connected');
+    expect(peer.nativeClient.status).toBe('connected');
+    expect(server.provider.provider.incarnation).toBe(originalIncarnation);
+
+    peer.state.mutate((state) => {
+      state.value = 7;
+    });
+    await expect.poll(() => writer.state.value()).toEqual({ value: 7 });
+    await expect.poll(() => stored(filepath)).toEqual({ value: 7 });
+    expect(await readFile(unrelatedPath, 'utf8')).toBe('Caller-owned independent file');
+    writer.close();
+    peer.close();
+    await server.close();
+    const replacement = await host(mode, filepath);
+    const restored = await connectState(replacement, cleanup);
+    expect(restored.state.value()).toEqual({ value: 7 });
+    expect(replacement.provider.provider.incarnation).not.toBe(originalIncarnation);
   });
 });

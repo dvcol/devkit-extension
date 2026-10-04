@@ -4216,10 +4216,24 @@
           "fullName": "ordinary provider routing keeps resolved bindings pinned after connection replacement",
           "host": "custom-local-provider",
           "mode": "unit"
+        },
+        {
+          "workspace": "examples/server-contexts",
+          "testFile": "tests/persistence.test.ts",
+          "fullName": "devframe native persistent counter persists a later explicit mutation after path repair without replacing live clients",
+          "host": "native-devframe",
+          "mode": "unit"
+        },
+        {
+          "workspace": "examples/server-contexts",
+          "testFile": "tests/persistence.test.ts",
+          "fullName": "devtools native persistent counter persists a later explicit mutation after path repair without replacing live clients",
+          "host": "native-devtools",
+          "mode": "unit"
         }
       ],
       "gaps": [
-        "These tests dispatch through local ProviderConnection objects backed by the real contribution runtime. Native Devframe, DevTools and browser transport evidence has not been linked to this group.",
+        "The local provider tests exercise action/capability dispatch. Two real native Devframe/DevTools WebSocket tests additionally prove routed actions after filesystem failure and repair on the same clients/provider, continuing native peer mutations and actual saved-file restoration. Native remote capability dispatch and broader failure cases remain unlinked in this group.",
         "The examples exercise these client calls, but this group does not yet link their development, production or reload runs. Exported interface type guarantees are recorded separately."
       ]
     },
