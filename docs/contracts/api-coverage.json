@@ -5481,7 +5481,7 @@
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
         "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet or waiting native RPC clients, explicit fresh connections, and ordinary production-panel navigation with peer closure are linked. Navigation retains the admitted handler, native provider and sibling caller; returning creates a fresh document/caller with current state and no replay. Back-forward cache, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
-        "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium/Firefox idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. Reduced native Firefox quota now has exact visible-failure, retained-record, same-client explicit recovery and native-reload evidence. Default-size Firefox quota and interrupted-write durability remain unproved. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
+        "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium/Firefox idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. Both browsers now link malformed-record startup rejection without overwrite and explicit native recovery; Firefox separately proves that correcting storage alone leaves failed documents disconnected. Reduced native Firefox quota has exact visible-failure, retained-record, same-client explicit recovery and native-reload evidence. Default-size Firefox quota and interrupted-write durability remain unproved. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
       ],
       "browserEvidence": [
         {
@@ -5519,8 +5519,13 @@
           "testFile": "tests/chromium-persistence.ts",
           "receiptFile": "artifacts/persistence/chromium.json",
           "checks": [
+            "two native clients share action and native-state updates written to storage.local",
             "forced worker termination restores the saved counter under a fresh provider incarnation without replay",
-            "restored clients have one counter and management mount, while domain UI state remains ephemeral"
+            "restored clients have one counter and management mount, while domain UI state remains ephemeral",
+            "a separate storage key remains unchanged",
+            "native storage quota failure is visible without rollback or retry, and the next explicit mutation can persist",
+            "invalid stored input rejects native startup without overwrite and an explicit fresh worker can recover",
+            "a full Chromium restart with the same profile restores saved state for two fresh clients and preserves an independent key"
           ],
           "host": "chromium-webext",
           "mode": "production-extension-opt-in-storage",
@@ -5666,6 +5671,21 @@
           ],
           "host": "firefox-webext",
           "mode": "production-extension-opt-in-storage-navigation-pending-rpc-peer-closure",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-invalid-storage.ts",
+          "receiptFile": "artifacts/persistence/firefox-invalid-storage.json",
+          "checks": [
+            "actual malformed native storage remains unchanged while both fresh panel startups reject visibly and mount no counter or management view",
+            "correcting the saved record alone leaves both failed documents disconnected with their original error and no mounts",
+            "explicit native extension reload closes both failed panels before fresh callers restore the corrected counter under a new provider incarnation",
+            "one explicit rendered action saves the next value in both fresh peers while the independent key is retained and execution state resets",
+            "the production artifact and native process/session/profile stay unchanged until owned cleanup precedes successful receipt publication"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension-opt-in-storage-native-malformed-record-explicit-recovery",
           "requirePageErrors": false
         }
       ]

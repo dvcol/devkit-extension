@@ -128,6 +128,18 @@ Firefox 157.0 naturally suspended the actual event page 30,045 ms after observat
 
 The native operation only waits; it has no external side effect. This proves observable pending-call rejection after native owner loss and explicit fresh-client recovery, not remote cancellation, rollback or interrupted physical storage durability. Confirmed writes precede suspension. Temporary installation and WebDriver Classic's lack of global page-error capture retain their existing limits. [The seven-check receipt](./evidence/persistence/firefox-pending-idle.json) is published only after the observer is removed, the owned Firefox process exits and its disposable profile is removed. [Restored UI](./evidence/persistence/firefox-pending-idle.png). CI runs the same direct command and retains its generated artifacts.
 
+## Native Firefox malformed saved data
+
+```sh
+VITE_COUNTER_STORAGE_KEY=example.persisted-counter pnpm --filter @devkit/example-webext exec node tests/firefox-invalid-storage.ts
+```
+
+Use the production Firefox artifact built with the same key and set `FIREFOX_BINARY` when needed. The runner first confirms saved counter 10, independent key 44 and a completed diagnostic action. It writes an actual malformed `{ value: 'invalid' }` record through native `storage.local`, then calls the public native extension reload API. Both old panels close. Two replacement panels display `Stored counter must contain only an integer value`, disconnect and mount no counter or management view. The invalid record and independent key remain unchanged.
+
+Writing corrected record 7 through native storage alone leaves both failed documents disconnected with the same error and no mounts. A second explicit native extension reload closes those documents. Fresh panels restore 7 under a new provider incarnation with one mount per view; one rendered action saves 8 in both peers. Diagnostic execution state resets and independent key 44 remains. The Firefox process, session, profile and production artifact stay unchanged until cleanup.
+
+Firefox 157.0 passed this sequence. The successful receipt is published only after the owned process exits and its disposable profile is removed. Saved-shape validation belongs to this example; the test adds no SDK retry, migration or conflict policy. Confirmed native writes precede reload; physical interrupted I/O, crash durability, permanent installation and global Firefox page-error capture remain unproved. CI runs the same direct command and retains its artifacts. [Receipt](./evidence/persistence/firefox-invalid-storage.json), [first failed panel](./evidence/persistence/firefox-invalid-storage-failure-0.png), [second failed panel](./evidence/persistence/firefox-invalid-storage-failure-1.png), [explicit recovery](./evidence/persistence/firefox-invalid-storage-recovery.png).
+
 ## Native panel navigation and peer closure
 
 ```sh

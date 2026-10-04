@@ -1,0 +1,118 @@
+{
+  "browser": "157.0",
+  "processId": 34544,
+  "sessionId": "3b62e690-0c63-4a0b-b2fc-989ec456feea",
+  "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-native-idle-0icCdE",
+  "origin": "moz-extension://cff04a41-2985-4e46-8ca6-6dfd1ca6cee6",
+  "artifactHash": "7da661683e488c450249594c255afcc8e21cef42c836de53cde2b0d85908f86f",
+  "storageKey": "example.persisted-counter",
+  "previous": {
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "d53335d7-f92e-441a-a2a9-225b2ff48ad2",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "documents": [
+      {
+        "handle": "f0fb32ac-6254-4eee-aaf0-f5c04d213393",
+        "timeOrigin": 1791078754803
+      },
+      {
+        "handle": "ae86d331-71e6-49a5-8bcb-a334968d2001",
+        "timeOrigin": 1791078755194
+      }
+    ],
+    "callers": [
+      {
+        "id": 0,
+        "url": "moz-extension://cff04a41-2985-4e46-8ca6-6dfd1ca6cee6/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "moz-extension://cff04a41-2985-4e46-8ca6-6dfd1ca6cee6/panel.html"
+      }
+    ],
+    "confirmedCounter": {
+      "value": 10
+    },
+    "independentCounter": {
+      "value": 44
+    },
+    "executions": "{\"started\":1,\"completed\":1}"
+  },
+  "failure": {
+    "documents": [
+      {
+        "handle": "b55d7ce8-09b2-40fa-a66b-b38c5cd440d2",
+        "error": "Stored counter must contain only an integer value",
+        "snapshot": {
+          "counterMounts": 0,
+          "domain": "",
+          "managementMounts": 0,
+          "status": "Disconnected",
+          "timeOrigin": 1791078755943
+        }
+      },
+      {
+        "handle": "e3cca646-64af-4d46-9e66-b03b498cfb97",
+        "error": "Stored counter must contain only an integer value",
+        "snapshot": {
+          "counterMounts": 0,
+          "domain": "",
+          "managementMounts": 0,
+          "status": "Disconnected",
+          "timeOrigin": 1791078756049
+        }
+      }
+    ],
+    "savedCounter": {
+      "value": "invalid"
+    }
+  },
+  "correctedRecordBeforeReload": {
+    "value": 7
+  },
+  "recovery": {
+    "documents": [
+      {
+        "handle": "80615756-982b-426e-b37a-51e0e03eb8c7",
+        "timeOrigin": 1791078756170
+      },
+      {
+        "handle": "34a2e939-ffc2-4eaa-8482-e46d606e8ddb",
+        "timeOrigin": 1791078756472
+      }
+    ],
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "10aa3f6c-4c7d-41fc-9537-d878a6ec2cd7",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "savedCounter": {
+      "value": 8
+    },
+    "snapshot": {
+      "counterMounts": 1,
+      "domain": "shared.example.test",
+      "managementMounts": 1,
+      "status": "Connected",
+      "timeOrigin": 1791078756472
+    }
+  },
+  "checks": [
+    "actual malformed native storage remains unchanged while both fresh panel startups reject visibly and mount no counter or management view",
+    "correcting the saved record alone leaves both failed documents disconnected with their original error and no mounts",
+    "explicit native extension reload closes both failed panels before fresh callers restore the corrected counter under a new provider incarnation",
+    "one explicit rendered action saves the next value in both fresh peers while the independent key is retained and execution state resets",
+    "the production artifact and native process/session/profile stay unchanged until owned cleanup precedes successful receipt publication"
+  ],
+  "limitations": [
+    "Native malformed-record startup and explicit recovery after confirmed writes, not interrupted physical I/O, crash durability or permanent installation",
+    "Saved-record validation and persistence belong to the example; this adds no SDK migration, retry or conflict policy",
+    "Firefox WebDriver Classic does not provide global page-error capture"
+  ]
+}
