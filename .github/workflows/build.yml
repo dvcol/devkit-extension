@@ -175,6 +175,13 @@ jobs:
           SE_SKIP_DRIVER_IN_PATH: 'true'
           VITE_COUNTER_STORAGE_KEY: example.persisted-counter
         run: pnpm --filter @devkit/example-webext test:persistence:firefox:idle
+      - name: Verify natural Firefox suspension during pending native RPC
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+          VITE_COUNTER_STORAGE_KEY: example.persisted-counter
+        run: pnpm --filter @devkit/example-webext exec node tests/firefox-pending-idle.ts
       - name: Verify native reduced Firefox quota and explicit recovery
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

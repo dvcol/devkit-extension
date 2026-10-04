@@ -5466,7 +5466,7 @@
       ],
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
-        "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet native Ports, and explicit fresh connections are linked. Navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
+        "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet native Ports, natural Firefox suspension with a waiting native RPC, and explicit fresh connections are linked. Navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
         "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium/Firefox idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. Reduced native Firefox quota now has exact visible-failure, retained-record, same-client explicit recovery and native-reload evidence. Default-size Firefox quota and interrupted-write durability remain unproved. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
       ],
       "browserEvidence": [
@@ -5585,6 +5585,23 @@
           ],
           "host": "stable-firefox-webext",
           "mode": "production-extension-opt-in-storage-reduced-native-quota-explicit-recovery",
+          "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-pending-idle.ts",
+          "receiptFile": "artifacts/persistence/firefox-pending-idle.json",
+          "checks": [
+            "an actual native RPC is admitted and remains pending while the two production Port panels become quiet",
+            "Firefox naturally suspends the event page at its unchanged idle timer with the native RPC still waiting",
+            "the old caller reports connection closure and both unchanged panel documents dispose their mounted views",
+            "fresh native callers restore the confirmed saved counter under a new background context and provider incarnation",
+            "ephemeral execution state resets and releasing the old work cannot replay it in the fresh background",
+            "one explicit rendered action updates both fresh peers and native storage while the independent key is retained",
+            "the owned Firefox process exits and its disposable profile is removed before the successful receipt is published"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension-opt-in-storage",
           "requirePageErrors": false
         }
       ]

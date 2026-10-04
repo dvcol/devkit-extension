@@ -1,0 +1,209 @@
+{
+  "browser": "157.0",
+  "processId": 10313,
+  "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-native-idle-lBMrB6",
+  "sessionId": "6a242177-c0bd-4560-b1f8-9cbc5239a1eb",
+  "extensionId": "devkit-native-port@example.invalid",
+  "origin": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764",
+  "storageKey": "example.persisted-counter",
+  "artifactHash": "b910be60d509685f2040b5ec665f09402e6d5f11dd31b9753d594f6fde96ff65",
+  "timer": {
+    "idleTimeoutHasUserValue": false,
+    "idleTimeoutMilliseconds": 30000
+  },
+  "previous": {
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "3dc4e608-8c46-4a88-918c-f57ba1aabc22",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "documents": [
+      {
+        "handle": "9cf95f8a-153f-495f-b9ce-043ed0faf7f9",
+        "timeOrigin": 1791075084807
+      },
+      {
+        "handle": "9335834b-e796-4ee3-a47c-ba384a3a8a72",
+        "timeOrigin": 1791075085253
+      }
+    ],
+    "callers": [
+      {
+        "id": 0,
+        "url": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/panel.html"
+      }
+    ],
+    "confirmedCounter": {
+      "value": 10
+    },
+    "independentCounter": {
+      "value": 44
+    },
+    "executions": "{\"started\":1,\"completed\":1}"
+  },
+  "pendingExecutions": "{\"started\":2,\"completed\":1}",
+  "pendingResult": "[birpc] rpc is closed, cannot call \"probe:wait\"",
+  "idle": {
+    "initial": {
+      "addonId": "devkit-native-port@example.invalid",
+      "contextId": 157,
+      "hasShutdown": false,
+      "origin": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/",
+      "persistentBackground": false,
+      "policyActive": true,
+      "state": "running",
+      "toolboxAttached": false
+    },
+    "stopped": {
+      "addonId": "devkit-native-port@example.invalid",
+      "contextId": null,
+      "hasShutdown": false,
+      "origin": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/",
+      "persistentBackground": false,
+      "policyActive": true,
+      "state": "stopped",
+      "toolboxAttached": false
+    },
+    "idleStartedAt": 1791075086107,
+    "events": [
+      {
+        "isRunning": true,
+        "observedAt": 1791075084753
+      },
+      {
+        "isRunning": false,
+        "observedAt": 1791075116152
+      }
+    ],
+    "suspends": [
+      {
+        "addonId": "devkit-native-port@example.invalid",
+        "contextId": 157,
+        "hasShutdown": false,
+        "observedAt": 1791075116151,
+        "origin": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/",
+        "persistentBackground": false,
+        "policyActive": true,
+        "state": "suspending",
+        "toolboxAttached": false
+      }
+    ],
+    "elapsedMilliseconds": 30045
+  },
+  "disconnected": [
+    {
+      "handle": "9cf95f8a-153f-495f-b9ce-043ed0faf7f9",
+      "counterMounts": 0,
+      "domain": "",
+      "managementMounts": 0,
+      "status": "Disconnected",
+      "timeOrigin": 1791075084807
+    },
+    {
+      "handle": "9335834b-e796-4ee3-a47c-ba384a3a8a72",
+      "counterMounts": 0,
+      "domain": "",
+      "managementMounts": 0,
+      "status": "Disconnected",
+      "timeOrigin": 1791075085253
+    }
+  ],
+  "replacement": {
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "2b816263-d9f0-4f50-a2a4-a02b91e666a3",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "documents": [
+      {
+        "handle": "58039bc0-8975-4365-96af-14072bf10546",
+        "timeOrigin": 1791075116256
+      },
+      {
+        "handle": "3efb4a6e-7295-4ae3-b5f7-ea767dbb14c8",
+        "timeOrigin": 1791075116637
+      }
+    ],
+    "callers": [
+      {
+        "id": 0,
+        "url": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/panel.html"
+      }
+    ],
+    "restored": 10,
+    "savedCounter": {
+      "value": 11
+    },
+    "independentCounter": {
+      "value": 44
+    },
+    "executions": "{\"started\":0,\"completed\":0}"
+  },
+  "lifecycle": {
+    "current": {
+      "addonId": "devkit-native-port@example.invalid",
+      "contextId": 161,
+      "hasShutdown": false,
+      "origin": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/",
+      "persistentBackground": false,
+      "policyActive": true,
+      "state": "running",
+      "toolboxAttached": false
+    },
+    "events": [
+      {
+        "isRunning": true,
+        "observedAt": 1791075084753
+      },
+      {
+        "isRunning": false,
+        "observedAt": 1791075116152
+      },
+      {
+        "isRunning": true,
+        "observedAt": 1791075116339
+      }
+    ],
+    "suspends": [
+      {
+        "addonId": "devkit-native-port@example.invalid",
+        "contextId": 157,
+        "hasShutdown": false,
+        "observedAt": 1791075116151,
+        "origin": "moz-extension://e7f7c2ee-2cb0-4ab3-8c28-d82252722764/",
+        "persistentBackground": false,
+        "policyActive": true,
+        "state": "suspending",
+        "toolboxAttached": false
+      }
+    ]
+  },
+  "checks": [
+    "an actual native RPC is admitted and remains pending while the two production Port panels become quiet",
+    "Firefox naturally suspends the event page at its unchanged idle timer with the native RPC still waiting",
+    "the old caller reports connection closure and both unchanged panel documents dispose their mounted views",
+    "fresh native callers restore the confirmed saved counter under a new background context and provider incarnation",
+    "ephemeral execution state resets and releasing the old work cannot replay it in the fresh background",
+    "one explicit rendered action updates both fresh peers and native storage while the independent key is retained",
+    "the owned Firefox process exits and its disposable profile is removed before the successful receipt is published"
+  ],
+  "limitations": [
+    "Pending native handler suspension, not interruption of physical storage I/O or browser crashes",
+    "The pending probe has no external side effect; this does not promise remote cancellation or rollback",
+    "Confirmed writes precede suspension and recovery requires explicit fresh clients",
+    "The unchanged artifact is temporarily installed; permanent installation and automatic availability are unverified",
+    "WebDriver Classic does not provide global page-error capture"
+  ]
+}
