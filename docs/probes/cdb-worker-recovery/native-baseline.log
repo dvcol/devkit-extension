@@ -1,0 +1,121 @@
+
+ RUN  v4.1.10 /private/tmp/devkit-cdb-worker-upstream/packages/extension
+
+ ❯ |unit-node:extension| test/selected-tab-demand-cleanup.test.ts (4 tests | 2 failed) 8ms
+   × releases detached child demand Runtime.consoleAPICalled without accepting missing-child activation 6ms
+   × releases detached child demand Runtime. without accepting missing-child activation 0ms
+ ❯ |unit-node:extension| test/chrome-recovery.test.ts (10 tests | 4 failed) 62ms
+   × does not detach when the extension ownership probe fails 3ms
+   × resets a verified surviving attachment before publishing a fresh generation 0ms
+   × propagates owned reset failure without reattachment or publication 0ms
+   × propagates fresh attachment failure without publication 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit-node:extension| test/chrome-recovery.test.ts > does not detach when the extension ownership probe fails
+AssertionError: expected Error: Another debugger is already attach… to be Error: Debugger is not attached to the ta… // Object.is equality
+
+- Expected
++ Received
+
+  Error {
+-   "message": "Debugger is not attached to the tab with id: 42.",
++   "message": "Another debugger is already attached to the tab with id: 42.",
+  }
+
+ ❯ test/chrome-recovery.test.ts:59:39
+     57|   const error = new Error('Debugger is not attached to the tab with id…
+     58|   const value = fixture({ attachError: attachmentConflict, probeError:…
+     59|   expect((await value.outcome).error).toBe(error);
+       |                                       ^
+     60|   expect(value.calls).toEqual(['attach', 'Runtime.getIsolateId']);
+     61|   expect(value.publications).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |unit-node:extension| test/chrome-recovery.test.ts > resets a verified surviving attachment before publishing a fresh generation
+AssertionError: expected Error: Another debugger is already attach… to be undefined
+
+- Expected:
+undefined
+
++ Received:
+Error {
+  "message": "Another debugger is already attached to the tab with id: 42.",
+}
+
+ ❯ test/chrome-recovery.test.ts:68:24
+     66|   const value = fixture({ attachError: attachmentConflict });
+     67|   const result = await value.outcome;
+     68|   expect(result.error).toBeUndefined();
+       |                        ^
+     69|   await ready(value);
+     70|   expect(value.calls).toEqual([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |unit-node:extension| test/chrome-recovery.test.ts > propagates owned reset failure without reattachment or publication
+AssertionError: expected Error: Another debugger is already attach… to be Error: Detach failed. // Object.is equality
+
+- Expected
++ Received
+
+  Error {
+-   "message": "Detach failed.",
++   "message": "Another debugger is already attached to the tab with id: 42.",
+  }
+
+ ❯ test/chrome-recovery.test.ts:85:39
+     83|   const error = new Error('Detach failed.');
+     84|   const value = fixture({ attachError: attachmentConflict, detachError…
+     85|   expect((await value.outcome).error).toBe(error);
+       |                                       ^
+     86|   expect(value.calls).toEqual(['attach', 'Runtime.getIsolateId', 'deta…
+     87|   expect(value.publications).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |unit-node:extension| test/chrome-recovery.test.ts > propagates fresh attachment failure without publication
+AssertionError: expected Error: Another debugger is already attach… to be Error: Fresh attachment failed. // Object.is equality
+
+- Expected
++ Received
+
+  Error {
+-   "message": "Fresh attachment failed.",
++   "message": "Another debugger is already attached to the tab with id: 42.",
+  }
+
+ ❯ test/chrome-recovery.test.ts:94:39
+     92|   const error = new Error('Fresh attachment failed.');
+     93|   const value = fixture({ attachError: attachmentConflict, reattachErr…
+     94|   expect((await value.outcome).error).toBe(error);
+       |                                       ^
+     95|   expect(value.calls).toEqual(['attach', 'Runtime.getIsolateId', 'deta…
+     96|   expect(value.publications).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |unit-node:extension| test/selected-tab-demand-cleanup.test.ts > releases detached child demand Runtime.consoleAPICalled without accepting missing-child activation
+ FAIL  |unit-node:extension| test/selected-tab-demand-cleanup.test.ts > releases detached child demand Runtime. without accepting missing-child activation
+AssertionError: promise rejected "Error: The requested session is not avail…" instead of resolving
+ ❯ test/selected-tab-demand-cleanup.test.ts:39:75
+     37|       sessionId: 'private-frame-session',
+     38|     });
+     39|     await expect(publisher.setSubscriptionDemand(method, false, child.…
+       |                                                                           ^
+     40|     expect(sendCommand).not.toHaveBeenCalled();
+     41|     await expect(publisher.setSubscriptionDemand(method, true, child.i…
+
+Caused by: Error: The requested session is not available.
+ ❯ Object.setSubscriptionDemand src/selected-tab-publisher.ts:348:73
+ ❯ test/selected-tab-demand-cleanup.test.ts:39:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  6 failed | 36 passed (42)
+   Start at  12:25:53
+   Duration  355ms (transform 335ms, setup 0ms, import 506ms, tests 87ms, environment 0ms)
+

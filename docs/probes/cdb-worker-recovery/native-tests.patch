@@ -1,0 +1,350 @@
+diff --git a/packages/extension/test/chrome-recovery.test.ts b/packages/extension/test/chrome-recovery.test.ts
+new file mode 100644
+index 0000000..4d367db
+--- /dev/null
++++ b/packages/extension/test/chrome-recovery.test.ts
+@@ -0,0 +1,97 @@
++import { afterEach, expect, it, vi } from 'vitest';
++
++import { attachmentConflict, createRecoveryFixture } from './chrome-recovery-fixture.js';
++
++const fixtures: ReturnType<typeof createRecoveryFixture>[] = [];
++
++function fixture(options?: Parameters<typeof createRecoveryFixture>[0]) {
++  const value = createRecoveryFixture(options);
++  fixtures.push(value);
++  return value;
++}
++
++afterEach(async () => {
++  await Promise.all(fixtures.splice(0).map(async value => value.provider.dispose()));
++  vi.unstubAllGlobals();
++});
++
++async function ready(value: ReturnType<typeof createRecoveryFixture>) {
++  await vi.waitFor(() => {
++    if (value.provider.state !== 'ready') throw new Error('Provider is not ready.');
++  });
++}
++
++it('preserves normal attachment without probing or detaching', async () => {
++  expect.assertions(3);
++  const value = fixture();
++  await value.outcome;
++  await ready(value);
++  expect(value.calls).toEqual(['attach', 'Target.setAutoAttach']);
++  expect(value.publications[0]).toMatchObject({ id: 'target', generation: 4 });
++  expect(value.error()).toBeUndefined();
++});
++
++it('does not reset a conflicting tab absent from persisted target identities', async () => {
++  expect.assertions(3);
++  const value = fixture({ restored: false, attachError: attachmentConflict });
++  expect((await value.outcome).error).toBe(attachmentConflict);
++  expect(value.calls).toEqual(['attach']);
++  expect(value.publications).toEqual([]);
++});
++
++it.each([
++  new Error('Host access is restricted by policy.'),
++  new Error('Requested protocol version is not supported: 1.3.'),
++  new Error('Another debugger is already attached to the tab with id: 43.'),
++  'Another debugger is already attached to the tab with id: 42.',
++])('propagates unrelated attachment failure %s', async (error) => {
++  expect.assertions(3);
++  const value = fixture({ attachError: error });
++  expect((await value.outcome).error).toBe(error);
++  expect(value.calls).toEqual(['attach']);
++  expect(value.publications).toEqual([]);
++});
++
++it('does not detach when the extension ownership probe fails', async () => {
++  expect.assertions(3);
++  const error = new Error('Debugger is not attached to the tab with id: 42.');
++  const value = fixture({ attachError: attachmentConflict, probeError: error });
++  expect((await value.outcome).error).toBe(error);
++  expect(value.calls).toEqual(['attach', 'Runtime.getIsolateId']);
++  expect(value.publications).toEqual([]);
++});
++
++it('resets a verified surviving attachment before publishing a fresh generation', async () => {
++  expect.assertions(4);
++  const value = fixture({ attachError: attachmentConflict });
++  const result = await value.outcome;
++  expect(result.error).toBeUndefined();
++  await ready(value);
++  expect(value.calls).toEqual([
++    'attach',
++    'Runtime.getIsolateId',
++    'detach',
++    'attach',
++    'Target.setAutoAttach',
++  ]);
++  expect(value.publications).toHaveLength(1);
++  expect(value.publications[0]).toMatchObject({ id: 'target', generation: 4 });
++});
++
++it('propagates owned reset failure without reattachment or publication', async () => {
++  expect.assertions(3);
++  const error = new Error('Detach failed.');
++  const value = fixture({ attachError: attachmentConflict, detachError: error });
++  expect((await value.outcome).error).toBe(error);
++  expect(value.calls).toEqual(['attach', 'Runtime.getIsolateId', 'detach']);
++  expect(value.publications).toEqual([]);
++});
++
++it('propagates fresh attachment failure without publication', async () => {
++  expect.assertions(3);
++  const error = new Error('Fresh attachment failed.');
++  const value = fixture({ attachError: attachmentConflict, reattachError: error });
++  expect((await value.outcome).error).toBe(error);
++  expect(value.calls).toEqual(['attach', 'Runtime.getIsolateId', 'detach', 'attach']);
++  expect(value.publications).toEqual([]);
++});
+diff --git a/packages/extension/test/chrome-recovery-fixture.ts b/packages/extension/test/chrome-recovery-fixture.ts
+new file mode 100644
+index 0000000..cc36677
+--- /dev/null
++++ b/packages/extension/test/chrome-recovery-fixture.ts
+@@ -0,0 +1,241 @@
++import type { AgentToBrokerMessage, BrokerToAgentMessage, PublishedTarget } from '@dvcol/cdb';
++
++import type { ProviderConnection } from '../src/provider-connection.js';
++
++import { vi } from 'vitest';
++
++import { createChromeProvider } from '../src/chrome.js';
++
++export type BrokerState = Awaited<ReturnType<ProviderConnection['snapshot']>>;
++
++export interface RecoveryFixtureOptions {
++  readonly restored?: boolean;
++  readonly attachError?: unknown;
++  readonly probeError?: Error;
++  readonly detachError?: Error;
++  readonly reattachError?: Error;
++}
++
++const recoveredTarget = { tabId: 42, id: 'target', generation: 3, scopeId: 'publication' };
++const approvedScope = {
++  id: 'approval',
++  principalId: 'caller',
++  principalLabel: 'Caller',
++  level: 'debug',
++  navigation: 'same-origin',
++  createdAt: 1,
++  expiresAt: null,
++  state: 'pending',
++  providerId: 'provider',
++} as const;
++const brokerState: BrokerState = {
++  revision: 1,
++  providers: [],
++  principals: [],
++  requests: [],
++  targets: [],
++  grants: [],
++  leases: [],
++  scopes: [approvedScope],
++};
++
++export const attachmentConflict = new Error(
++  'Another debugger is already attached to the tab with id: 42.',
++);
++
++function nativeEvent(): { addListener: (listener: unknown) => void; removeListener: (listener: unknown) => void } {
++  const listeners = new Set<unknown>();
++  return {
++    addListener(listener) {
++      listeners.add(listener);
++    },
++    removeListener(listener) {
++      listeners.delete(listener);
++    },
++  };
++}
++
++function debuggerBoundary(options: RecoveryFixtureOptions, calls: string[]): {
++  onEvent: ReturnType<typeof nativeEvent>;
++  onDetach: ReturnType<typeof nativeEvent>;
++  attach: () => Promise<void>;
++  detach: () => Promise<void>;
++  sendCommand: (target: unknown, method: string) => Promise<object>;
++} {
++  const attachResponse = vi.fn<() => Promise<void>>().mockResolvedValue();
++  if (options.attachError !== undefined) attachResponse.mockRejectedValueOnce(options.attachError);
++  if (options.reattachError !== undefined) attachResponse.mockRejectedValue(options.reattachError);
++  return {
++    onEvent: nativeEvent(),
++    onDetach: nativeEvent(),
++    async attach() {
++      calls.push('attach');
++      return attachResponse();
++    },
++    async detach() {
++      calls.push('detach');
++      if (options.detachError !== undefined) return Promise.reject(options.detachError);
++      return Promise.resolve();
++    },
++    async sendCommand(_target: unknown, method: string) {
++      calls.push(method);
++      if (method !== 'Runtime.getIsolateId') return Promise.resolve({});
++      if (options.probeError !== undefined) return Promise.reject(options.probeError);
++      return Promise.resolve({ id: 'isolate' });
++    },
++  };
++}
++
++function sessionStorage(restored: boolean | undefined): {
++  get: () => Promise<unknown>;
++  set: () => Promise<void>;
++  remove: () => Promise<void>;
++} {
++  const recovery = {
++    version: 1,
++    brokerId: 'broker',
++    scopes: [
++      {
++        requestId: approvedScope.id,
++        selector: { kind: 'explicit-tabs', tabIds: [recoveredTarget.tabId] },
++      },
++    ],
++    targets: restored === false ? [] : [recoveredTarget],
++  };
++  return {
++    get: async () => Promise.resolve({ recovery }),
++    set: async () => Promise.resolve(),
++    remove: async () => Promise.resolve(),
++  };
++}
++
++/** Replace Chrome I/O while the native provider, recovery loop and publisher run unchanged. */
++function chromeBoundary(options: RecoveryFixtureOptions, calls: string[]): void {
++  vi.stubGlobal('chrome', {
++    debugger: debuggerBoundary(options, calls),
++    tabs: {
++      onCreated: nativeEvent(),
++      onUpdated: nativeEvent(),
++      onRemoved: nativeEvent(),
++      query: async () =>
++        Promise.resolve([
++          {
++            id: recoveredTarget.tabId,
++            incognito: false,
++            active: true,
++            windowId: 1,
++            url: 'https://example.com/',
++          },
++        ]),
++    },
++    tabGroups: { onRemoved: nativeEvent(), onUpdated: nativeEvent() },
++    windows: { onRemoved: nativeEvent() },
++    webNavigation: { onCommitted: nativeEvent() },
++    alarms: { onAlarm: nativeEvent() },
++    storage: { session: sessionStorage(options.restored) },
++  });
++}
++
++type AgentHello = Extract<AgentToBrokerMessage, { method: 'agent.hello' }>;
++
++function helloResponse(message: AgentHello): BrokerToAgentMessage {
++  return {
++    kind: 'response',
++    method: 'agent.hello',
++    requestId: message.requestId,
++    protocolVersion: 1,
++    result: {
++      connectionGeneration: 2,
++      protocolVersion: 1,
++      features: [],
++      broker: { name: 'Broker', version: '1', instanceId: 'broker', role: 'broker' },
++      heartbeat: { intervalMilliseconds: 15_000, timeoutMilliseconds: 45_000 },
++      limits: {
++        maximumArtifactBytes: 16_777_216,
++        maximumInlineResultBytes: 65_536,
++        maximumMessageBytes: 67_108_864,
++      },
++    },
++  };
++}
++
++function messageBoundary(publications: PublishedTarget[]): Pick<ProviderConnection, 'onMessage' | 'send'> {
++  const listeners = new Set<(message: BrokerToAgentMessage) => void>();
++  return {
++    onMessage(listener: (message: BrokerToAgentMessage) => void) {
++      listeners.add(listener);
++      return () => {
++        listeners.delete(listener);
++      };
++    },
++    async send(message: AgentToBrokerMessage) {
++      if (message.kind === 'request' && message.method === 'agent.hello') {
++        for (const listener of listeners) listener(helloResponse(message));
++      }
++      if (message.kind === 'notification' && message.method === 'targets.publish')
++        publications.push(message.parameters.target);
++      return Promise.resolve();
++    },
++  };
++}
++
++function createConnection(publications: PublishedTarget[]): ProviderConnection {
++  const closed = Promise.withResolvers<{ code: number; reason: string }>();
++  return {
++    ...messageBoundary(publications),
++    brokerId: 'broker',
++    generation: 2,
++    registration: {
++      id: 'provider',
++      instanceId: 'installation',
++      maximumLevel: 'debug',
++      name: 'Provider',
++      version: '1',
++    },
++    closed: closed.promise,
++    close(code = 1000, reason = 'closed') {
++      closed.resolve({ code, reason });
++    },
++    snapshot: async () => Promise.resolve(brokerState),
++    claim: async () => Promise.reject(new Error('Restoration must not require another approval.')),
++    release: async () => Promise.resolve(),
++    approve: async () => Promise.resolve(brokerState),
++    reconcile: async () => Promise.resolve(brokerState),
++    reconcileScope: async () => Promise.resolve(),
++    revokeScope: async () => Promise.resolve(),
++    async watch(listener) {
++      listener(brokerState);
++      return Promise.resolve(vi.fn<() => void>());
++    },
++  };
++}
++
++export function createRecoveryFixture(options: RecoveryFixtureOptions = {}): {
++  calls: string[];
++  outcome: Promise<{ readonly error?: unknown }>;
++  publications: PublishedTarget[];
++  provider: ReturnType<typeof createChromeProvider>;
++  error: () => unknown;
++} {
++  const calls: string[] = [];
++  const outcome = Promise.withResolvers<{ readonly error?: unknown }>();
++  const publications: PublishedTarget[] = [];
++  let failure: unknown;
++  const connection = createConnection(publications);
++  chromeBoundary(options, calls);
++  const provider = createChromeProvider({
++    connect: async () => Promise.resolve(connection),
++    maximumLevel: 'debug',
++    recoveryStorageKey: 'recovery',
++    authorizeApproval: () => false,
++    onState() {
++      outcome.resolve({});
++    },
++    onError(error) {
++      failure = error;
++      outcome.resolve({ error });
++    },
++  });
++  provider.start();
++  return { calls, outcome: outcome.promise, publications, provider, error: () => failure };
++}

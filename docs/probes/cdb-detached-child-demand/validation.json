@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-04",
+  "revision": "4053273d6d15ddb17abc3e1b14fc8d58122cb49a",
+  "source": "packages/extension/src/selected-tab-publisher.ts",
+  "sha256": "d1a0f40a7ff3c6687a20728b51c03bca39851c38a10aefa10c3d59a6790dd5c5",
+  "productionDiff": {
+    "added": 2,
+    "removed": 2
+  },
+  "focusedCases": {
+    "baseline": {
+      "passed": 2,
+      "failed": 2
+    },
+    "candidate": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "combinedNativeValidation": "../cdb-worker-recovery/native-validation.json",
+  "limits": [
+    "Already-detached child cleanup only; pending child commands and child interception are separate gaps.",
+    "Normal native error wrapping remains unchanged."
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-04",
+  "upstream": "https://github.com/dvcol/chrome-debugger-bridge",
+  "revision": "4053273d6d15ddb17abc3e1b14fc8d58122cb49a",
+  "scope": "Native extension candidates applied together; no SDK production changes",
+  "tooling": {
+    "pnpm": "11.25.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10",
+    "eslint": "10.8.0",
+    "tsdown": "0.22.14"
+  },
+  "files": {
+    "packages/extension/src/chrome.ts": "ce773928b658378f9a39fcaf389b0337902fecd1dd469799f7795f06f33e8c81",
+    "packages/extension/src/selected-tab-publisher.ts": "d1a0f40a7ff3c6687a20728b51c03bca39851c38a10aefa10c3d59a6790dd5c5",
+    "packages/extension/test/chrome-recovery.test.ts": "b3121ddcb34eb8afadc164864a02f3bc1e28b2318b718fda488b0b0f46943ad1",
+    "packages/extension/test/chrome-recovery-fixture.ts": "5579f1da63785fd1a050abe4350eab90342b33102cd644c0e78490882b35badb",
+    "packages/extension/test/selected-tab-demand-cleanup.test.ts": "4a2a72f7c39080dd4d91e3407e88ce7bf36ccbef2157d75772e6212613fdb928",
+    "pnpm-lock.yaml": "823a30f0c53035e89d8f2b444004351b720c47d7997af74cb4eb4b2ab26fb481",
+    "pnpm-workspace.yaml": "faaf244386d3a15c3f8e0ecfbbc9de93f3643b536aa1a6bcd46096aef92cb545",
+    "package.json": "dfff522a1ababd659b31b6e78839b1a153421ce4791a323a8f61cdb60bbbc2e9"
+  },
+  "installation": {
+    "command": [
+      "pnpm",
+      "--filter",
+      "@dvcol/cdb-extension...",
+      "install",
+      "--frozen-lockfile"
+    ],
+    "result": "passed",
+    "selectedProjects": 4,
+    "totalProjects": 17,
+    "verificationPolicy": "unchanged",
+    "manifestsAndLockfile": "unchanged"
+  },
+  "checks": {
+    "baseline": {
+      "scope": [
+        "chrome-recovery.test.ts",
+        "selected-tab-demand-cleanup.test.ts",
+        "selected-tab-publisher.test.ts",
+        "agent-recovery.test.ts"
+      ],
+      "passed": 36,
+      "failed": 6,
+      "workerRegressionFailures": 4,
+      "detachedChildRegressionFailures": 2
+    },
+    "finalNativeExtensionTests": {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@dvcol/cdb-extension",
+        "test"
+      ],
+      "files": 21,
+      "passed": 106,
+      "failed": 0
+    },
+    "changedFileLint": {
+      "files": 5,
+      "result": "passed"
+    },
+    "sourceTypes": {
+      "result": "passed",
+      "receipt": "./native-source-types.json",
+      "exactCandidateHashesVerified": true,
+      "nativeConfigChanged": false
+    },
+    "focusedTestTypes": {
+      "compiler": "native TypeScript 5.9.3",
+      "result": "passed",
+      "project": "./native-test-types.json",
+      "types": [
+        "node",
+        "chrome"
+      ],
+      "composite": false,
+      "note": "Temporary focused project extends native config; actual installed native typeRoots supplied because the project lives outside checkout"
+    },
+    "extensionBuild": {
+      "command": [
+        "pnpm",
+        "--filter",
+        "@dvcol/cdb-extension",
+        "build"
+      ],
+      "result": "passed"
+    }
+  },
+  "limits": [
+    "The 106-test package pass and native build include both independent candidates.",
+    "No full upstream repository check or new live-browser run is claimed by this source handoff.",
+    "Existing real Chromium receipts validate the installed byte-equivalent worker and child fixes.",
+    "Worker ownership follows the native single-manager assumption; no competing-manager arbitration is added.",
+    "An earlier independent copy called candidate actually had baseline hashes; corrected source type evidence verifies both fixed hashes before and after compilation.",
+    "Earlier missing-ambient-global diagnostics did not reproduce on hash-verified cold baseline/candidate copies; historical cause remains unknown."
+  ]
+}

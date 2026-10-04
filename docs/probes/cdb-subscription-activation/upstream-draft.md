@@ -14,6 +14,6 @@ The production change is confined to the broker, with 14 added and 5 removed lin
 
 ## Verification (Testing)
 
-Seven of eight focused cases fail against the original broker; all eight and the 80 affected core tests pass with the fix. A real Chromium reproduction holds completion of an actual successful `Fetch.enable` call while a matching response pauses. The patched subscriber receives that event and the client reads and fulfills the response before cleanup. The test controls ordering, not the browser event or response.
+Seven of eight focused cases fail against the original broker; all eight and the current 138 affected core tests pass with the fix against upstream `4053273d` and its unchanged frozen dependency graph. A real Chromium reproduction holds completion of an actual successful `Fetch.enable` call while a matching response pauses. The patched subscriber receives that event and the client reads and fulfills the response before cleanup. The test controls ordering, not the browser event or response.
 
 Affected-file lint, core and test-inclusive type checks, and the core build pass. Full repository checks remain for upstream CI. In-flight body reads, child sessions and broader concurrent activation behavior are outside this change.

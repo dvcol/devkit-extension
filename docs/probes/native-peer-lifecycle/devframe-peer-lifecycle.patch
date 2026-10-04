@@ -1,0 +1,133 @@
+diff --git a/packages/hub/src/node/initiate.ts b/packages/hub/src/node/initiate.ts
+index 3edb91e..90ad97a 100644
+--- a/packages/hub/src/node/initiate.ts
++++ b/packages/hub/src/node/initiate.ts
+@@ -1,3 +1,4 @@
++import type { InitDevframeOptions } from 'devframe/initiate'
+ import type { AgenticMcpModule, DevframeInstanceRecord, InstanceShellApi, ResolvedMcpConfig } from 'devframe/internal'
+ import type { DevframeAuthHandler } from 'devframe/node/auth'
+ import type { AuthBannerFunction } from 'devframe/recipes/interactive-auth'
+@@ -296,6 +297,10 @@ export interface InitHubOptions {
+   allowedOrigins?: readonly string[] | WsOriginRegistry | false
+   /** Destroy off-route upgrades on a shared `server` devframe's adapter owns outright. */
+   destroyUnmatchedUpgrades?: boolean
++  /** Called after a native RPC connection's session is created. */
++  onPeerConnect?: InitDevframeOptions['onPeerConnect']
++  /** Called after a native RPC connection closes. */
++  onPeerDisconnect?: InitDevframeOptions['onPeerDisconnect']
+ }
+ 
+ export interface HubInstance {
+@@ -425,6 +430,8 @@ export function initHub(options: InitHubOptions): HubInstance {
+     sse: options.sse,
+     allowedOrigins: options.allowedOrigins,
+     destroyUnmatchedUpgrades: options.destroyUnmatchedUpgrades,
++    onPeerConnect: options.onPeerConnect,
++    onPeerDisconnect: options.onPeerDisconnect,
+     register: resolveInstanceRegister(options.register, {
+       id: options.name ?? 'devframes-hub',
+       ...(options.name !== undefined ? { name: options.name } : {}),
+diff --git a/packages/hub/src/node/__tests__/initiate-peer-lifecycle.test.ts b/packages/hub/src/node/__tests__/initiate-peer-lifecycle.test.ts
+new file mode 100644
+index 0000000..8c07442
+--- /dev/null
++++ b/packages/hub/src/node/__tests__/initiate-peer-lifecycle.test.ts
+@@ -0,0 +1,98 @@
++import type { InitDevframeOptions } from 'devframe/initiate'
++import type { DevframeNodeRpcSession } from 'devframe/types'
++import { createRpcClient } from 'devframe/rpc/client'
++import { createWsRpcChannel } from 'devframe/rpc/transports/ws-client'
++import { getPort } from 'get-port-please'
++import { describe, expect, it, vi } from 'vitest'
++import { DEVFRAMES_HUB_BASE, initHub } from '../initiate'
++
++interface PeerProbeFunctions {
++  'peer-lifecycle:session': () => string | undefined
++}
++
++describe('initHub peer lifecycle', () => {
++  it('forwards the native connection, session, and disconnect metadata', async () => {
++    expect.assertions(8)
++    const port = await getPort({ host: '127.0.0.1' })
++    const disconnected = Promise.withResolvers<void>()
++    const lifecycle: string[] = []
++    const onPeerConnect = vi.fn<NonNullable<InitDevframeOptions['onPeerConnect']>>(() => {
++      lifecycle.push('connect')
++    })
++    const onPeerDisconnect = vi.fn<NonNullable<InitDevframeOptions['onPeerDisconnect']>>(() => {
++      lifecycle.push('disconnect')
++      disconnected.resolve()
++    })
++    const hub = initHub({
++      base: DEVFRAMES_HUB_BASE,
++      auth: false,
++      host: '127.0.0.1',
++      ws: { port },
++      onPeerConnect,
++      onPeerDisconnect,
++    })
++
++    await hub.ready
++    const context = await hub.context
++    let currentSession: DevframeNodeRpcSession | undefined
++    context.rpc.register({
++      name: 'peer-lifecycle:session',
++      type: 'query',
++      handler: () => {
++        currentSession = context.rpc.getCurrentRpcSession()
++        return currentSession?.meta.id
++      },
++    })
++    const channel = createWsRpcChannel({ url: `ws://127.0.0.1:${port}/__ws` })
++    const client = createRpcClient<PeerProbeFunctions>({}, { channel })
++
++    try {
++      const sessionId = await client.$call('peer-lifecycle:session')
++      expect(onPeerConnect).toHaveBeenCalledOnce()
++      const [connection, session] = onPeerConnect.mock.calls[0]!
++      expect(connection.transport).toBe('websocket')
++      expect(connection.id).toBe(sessionId)
++      expect(session.meta).toBe(currentSession?.meta)
++      expect(session.rpc).toBe(currentSession?.rpc)
++
++      client.$close()
++      channel.close()
++      await disconnected.promise
++      expect(onPeerDisconnect).toHaveBeenCalledOnce()
++      expect(onPeerDisconnect).toHaveBeenCalledWith(connection, session.meta)
++      expect(lifecycle).toEqual(['connect', 'disconnect'])
++    }
++    finally {
++      client.$close()
++      channel.close()
++      await hub.close()
++    }
++  })
++
++  it('keeps RPC connection and cleanup working when callbacks are omitted', async () => {
++    expect.assertions(1)
++    const port = await getPort({ host: '127.0.0.1' })
++    const hub = initHub({ base: DEVFRAMES_HUB_BASE, auth: false, host: '127.0.0.1', ws: { port } })
++    await hub.ready
++    const context = await hub.context
++    context.rpc.register({ name: 'peer-lifecycle:session', type: 'query', handler: () => 'connected' })
++    const disconnected = Promise.withResolvers<void>()
++    const channel = createWsRpcChannel({
++      url: `ws://127.0.0.1:${port}/__ws`,
++      onDisconnected: () => disconnected.resolve(),
++    })
++    const client = createRpcClient<PeerProbeFunctions>({}, { channel })
++
++    try {
++      await expect(client.$call('peer-lifecycle:session')).resolves.toBe('connected')
++      client.$close()
++      channel.close()
++      await disconnected.promise
++    }
++    finally {
++      client.$close()
++      channel.close()
++      await hub.close()
++    }
++  })
++})

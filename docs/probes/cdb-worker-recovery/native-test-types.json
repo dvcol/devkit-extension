@@ -1,0 +1,19 @@
+{
+  "extends": "/private/tmp/devkit-cdb-worker-upstream/packages/extension/tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "types": [
+      "node",
+      "chrome"
+    ],
+    "typeRoots": [
+      "/private/tmp/devkit-cdb-worker-upstream/node_modules/@types"
+    ]
+  },
+  "include": [
+    "/private/tmp/devkit-cdb-worker-upstream/packages/extension/src/**/*.ts",
+    "/private/tmp/devkit-cdb-worker-upstream/packages/extension/test/chrome-recovery.test.ts",
+    "/private/tmp/devkit-cdb-worker-upstream/packages/extension/test/chrome-recovery-fixture.ts",
+    "/private/tmp/devkit-cdb-worker-upstream/packages/extension/test/selected-tab-demand-cleanup.test.ts"
+  ]
+}

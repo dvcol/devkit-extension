@@ -1,0 +1,73 @@
+{
+  "correction": "All earlier cases labeled candidate contained baseline source; they establish baseline readiness only. This case verifies the fixed source hashes.",
+  "sourceFiles": [
+    {
+      "path": "packages/extension/src/chrome.ts",
+      "before": "878882c22596ac776aa948b5fcac9140cfa57458d02202f573962c8d412e6b6b",
+      "copied": "ce773928b658378f9a39fcaf389b0337902fecd1dd469799f7795f06f33e8c81",
+      "after": "ce773928b658378f9a39fcaf389b0337902fecd1dd469799f7795f06f33e8c81"
+    },
+    {
+      "path": "packages/extension/src/selected-tab-publisher.ts",
+      "before": "24fc6aecb0c2b2c709fc89286fb7508aed18e6e58bf6832bbb7dbff09e3e0ad4",
+      "copied": "d1a0f40a7ff3c6687a20728b51c03bca39851c38a10aefa10c3d59a6790dd5c5",
+      "after": "d1a0f40a7ff3c6687a20728b51c03bca39851c38a10aefa10c3d59a6790dd5c5"
+    }
+  ],
+  "configuration": [
+    {
+      "path": "packages/extension/tsconfig.json",
+      "candidate": "447c55c2710c578e755790cf90cfcd22a5a5a82aa8ad86324a107b48d644f96a",
+      "original": "447c55c2710c578e755790cf90cfcd22a5a5a82aa8ad86324a107b48d644f96a",
+      "identical": true
+    },
+    {
+      "path": "tsconfig.base.json",
+      "candidate": "118b124673e850b77d70537ba97595ea33c3944744f1bf1139deb02d7ee33ee5",
+      "original": "118b124673e850b77d70537ba97595ea33c3944744f1bf1139deb02d7ee33ee5",
+      "identical": true
+    }
+  ],
+  "command": [
+    "/opt/homebrew/bin/node",
+    "/private/tmp/devkit-cdb-worker-upstream/node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--project",
+    "tsconfig.json"
+  ],
+  "cwd": "/private/tmp/cdb-type-diagnosis.kxcbikvw/candidate/packages/extension",
+  "exitCode": 0,
+  "durationSeconds": 0.756,
+  "diagnostics": "",
+  "compilerVersion": "5.9.3",
+  "composite": true,
+  "nativeOptions": {
+    "allowJs": false,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "exactOptionalPropertyTypes": true,
+    "module": 99,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": 11,
+    "useDefineForClassFields": true,
+    "verbatimModuleSyntax": true
+  },
+  "inputFileCount": 337,
+  "extensionSourceFileCount": 21,
+  "ambientInputs": [
+    "../../../../devkit-cdb-worker-upstream/node_modules/.pnpm/@types+chrome@0.3.0/node_modules/@types/chrome/index.d.ts",
+    "../../../../devkit-cdb-worker-upstream/node_modules/.pnpm/@types+node@26.1.2/node_modules/@types/node/web-globals/url.d.ts",
+    "../../../../devkit-cdb-worker-upstream/node_modules/.pnpm/@types+node@26.1.2/node_modules/@types/node/index.d.ts"
+  ],
+  "afterRunHashes": {
+    "packages/extension/src/chrome.ts": "ce773928b658378f9a39fcaf389b0337902fecd1dd469799f7795f06f33e8c81",
+    "packages/extension/src/selected-tab-publisher.ts": "d1a0f40a7ff3c6687a20728b51c03bca39851c38a10aefa10c3d59a6790dd5c5"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "revisions": {
+    "devframe": "72d917d5a57837b748bc9c950a0216049d13363e",
+    "devtools": "cc09170e6e41ae555b9bfdaaae52219cf2b0c445"
+  },
+  "versions": {
+    "node": "v26.9.0",
+    "packageManager": "pnpm@12.8.1",
+    "devframe": {
+      "vitest": "5.0.3",
+      "typescript": "6.0.3",
+      "eslint": "10.11.0"
+    },
+    "devtools": {
+      "vitest": "5.0.3",
+      "typescript": "6.0.3",
+      "eslint": "10.11.0"
+    }
+  },
+  "freshFrozenInstalls": {
+    "devframe": {
+      "passed": true,
+      "selectedProjects": 4,
+      "totalProjects": 51,
+      "additionalCompositionGraphSelectedProjects": 5
+    },
+    "devtools": {
+      "passed": true,
+      "selectedProjects": 8,
+      "totalProjects": 16
+    }
+  },
+  "checks": {
+    "devframeNativeLint": "passed",
+    "devtoolsNativeLint": "passed",
+    "devframeHubTypes": "passed",
+    "devtoolsCoreWithCandidateHubTypes": "passed",
+    "devtoolsUnchangedProductionWithReleasedHubTypes": "passed",
+    "devtoolsCandidateWithReleasedHubTypes": "fails with exactly 5 missing callback field diagnostics"
+  },
+  "unitReports": {
+    "devframe-candidate.json": {
+      "success": true,
+      "numPassedTests": 2,
+      "numFailedTests": 0,
+      "startTime": 1791082570656
+    },
+    "devframe-baseline.json": {
+      "success": false,
+      "numPassedTests": 1,
+      "numFailedTests": 1,
+      "startTime": 1791082693510
+    },
+    "devtools-candidate.json": {
+      "success": true,
+      "numPassedTests": 2,
+      "numFailedTests": 0,
+      "startTime": 1791082568842
+    },
+    "devtools-baseline.json": {
+      "success": false,
+      "numPassedTests": 1,
+      "numFailedTests": 1,
+      "startTime": 1791082843296
+    },
+    "devtools-live-candidate-final.json": {
+      "success": true,
+      "numPassedTests": 1,
+      "numFailedTests": 0,
+      "startTime": 1791082797144
+    },
+    "devtools-live-baseline.json": {
+      "success": false,
+      "numPassedTests": 0,
+      "numFailedTests": 1,
+      "startTime": 1791082845817
+    }
+  },
+  "limits": [
+    "No full-repository local checks or upstream CI were run.",
+    "DevTools needs a callback-capable hub dependency before it can typecheck against released packages.",
+    "The live check validates Node host authentication and peer lifecycle, not browser rendering.",
+    "Host startup uses unchanged freshly installed native 1.2.0 UI assets through read-only symlinks into the disposable source checkout."
+  ],
+  "manifestsAndLockfilesUnchanged": true
+}

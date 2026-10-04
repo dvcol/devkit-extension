@@ -1,0 +1,19 @@
+diff --git a/packages/extension/src/selected-tab-publisher.ts b/packages/extension/src/selected-tab-publisher.ts
+index e7fd201..3bac9fd 100644
+--- a/packages/extension/src/selected-tab-publisher.ts
++++ b/packages/extension/src/selected-tab-publisher.ts
+@@ -344,12 +344,12 @@ export function createSelectedTabPublisher(options: SelectedTabPublisherOptions)
+     }
+     const domain = methodPrefix.split('.', 1)[0];
+     if (domain === undefined || !domainNamePattern.test(domain)) throw new Error('The subscription method is invalid.');
+-    const chromeSessionId = sessionId === undefined ? undefined : childSessionRouter.resolve(sessionId);
+-    if (sessionId !== undefined && chromeSessionId === undefined) throw new Error('The requested session is not available.');
+     const demands = sessionId === undefined
+       ? activeRootSubscriptionDemands
+       : activeChildSubscriptionDemands.get(sessionId) ?? new Set<string>();
+     if (active === demands.has(methodPrefix)) return;
++    const chromeSessionId = sessionId === undefined ? undefined : childSessionRouter.resolve(sessionId);
++    if (sessionId !== undefined && chromeSessionId === undefined) throw new Error('The requested session is not available.');
+     const hadDomainDemand = [...demands].some(demand => demand.startsWith(`${domain}.`));
+     if (active) demands.add(methodPrefix);
+     else demands.delete(methodPrefix);

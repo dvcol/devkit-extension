@@ -1,0 +1,100 @@
+diff --git a/packages/core/src/node/server.ts b/packages/core/src/node/server.ts
+index c449cb3..bc369c9 100644
+--- a/packages/core/src/node/server.ts
++++ b/packages/core/src/node/server.ts
+@@ -1,4 +1,4 @@
+-import type { HubInstance } from '@devframes/hub/initiate'
++import type { HubInstance, InitHubOptions } from '@devframes/hub/initiate'
+ import type { ConnectionMeta, DockRendererRegistration, ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
+ import type { ViteDevToolsHost } from '@vitejs/devtools-kit/node'
+ import type { Server as NodeHttpServer } from 'node:http'
+@@ -30,6 +30,10 @@ export interface CreateDevToolsHubOptions {
+   host?: string
+   /** Pin the side-car WS port (standalone); auto-allocated when omitted. */
+   wsPort?: number
++  /** Called after a native RPC connection's session is created. */
++  onPeerConnect?: InitHubOptions['onPeerConnect']
++  /** Called after a native RPC connection closes. */
++  onPeerDisconnect?: InitHubOptions['onPeerDisconnect']
+ }
+ 
+ /** Absolute path of the hub's top-level connection meta (`/__devtools/__connection.json`). */
+@@ -104,6 +108,8 @@ export async function createDevToolsHub(options: CreateDevToolsHubOptions): Prom
+     // hooks; repeating it here covers a context assembled elsewhere.
+     ...(context.viteServer ? { clientModuleResolution: DEVTOOLS_CLIENT_MODULE_RESOLUTION } : {}),
+     auth: authDisabled ? false : getAuthHandler(context),
++    onPeerConnect: options.onPeerConnect,
++    onPeerDisconnect: options.onPeerDisconnect,
+     ...(allowedOrigins ? { allowedOrigins } : {}),
+     ...(mcp !== undefined ? { mcp } : {}),
+     ...(options.server
+diff --git a/packages/core/src/node/__tests__/server-peer-lifecycle.test.ts b/packages/core/src/node/__tests__/server-peer-lifecycle.test.ts
+new file mode 100644
+index 0000000..ca677a8
+--- /dev/null
++++ b/packages/core/src/node/__tests__/server-peer-lifecycle.test.ts
+@@ -0,0 +1,64 @@
++import type { InitHubOptions } from '@devframes/hub/initiate'
++import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
++import { beforeEach, describe, expect, it, vi } from 'vitest'
++import { createDevToolsHub } from '../server'
++
++const initHub = vi.hoisted(() => vi.fn())
++
++vi.mock('@devframes/hub/initiate', () => ({ initHub }))
++
++vi.mock('@devframes/json-render-ui/hub', () => ({
++  jsonRenderUiRenderer: () => ({ type: 'json-render', file: '/builtin-json-render.mjs' }),
++}))
++
++vi.mock('../ui', () => ({ createViteDevToolsUi: () => ({}) }))
++
++vi.mock('../auth-handler', () => ({
++  getAuthHandler: () => ({ rpcFunctions: [] }),
++  isClientAuthDisabled: () => false,
++  isBuildCapabilityAuth: () => false,
++  getBuildCapabilityToken: () => 'test-capability-token',
++}))
++
++function createContext(): ViteDevToolsNodeContext {
++  return {
++    mode: 'dev',
++    viteConfig: { devtools: undefined },
++    host: { provideConnectionMeta: vi.fn() },
++  } as unknown as ViteDevToolsNodeContext
++}
++
++describe('createDevToolsHub peer lifecycle forwarding', () => {
++  beforeEach(() => {
++    vi.clearAllMocks()
++    initHub.mockReturnValue({
++      ready: Promise.resolve(),
++      connectionMeta: () => ({}),
++      nodeMiddleware: vi.fn(),
++      close: vi.fn(),
++    })
++  })
++
++  it('forwards both callbacks unchanged alongside the supplied context', async () => {
++    expect.assertions(4)
++    const context = createContext()
++    const onPeerConnect = vi.fn<NonNullable<InitHubOptions['onPeerConnect']>>()
++    const onPeerDisconnect = vi.fn<NonNullable<InitHubOptions['onPeerDisconnect']>>()
++
++    await createDevToolsHub({ context, onPeerConnect, onPeerDisconnect })
++
++    expect(initHub).toHaveBeenCalledOnce()
++    expect(initHub.mock.calls[0]![0].context).toBe(context)
++    expect(initHub.mock.calls[0]![0].onPeerConnect).toBe(onPeerConnect)
++    expect(initHub.mock.calls[0]![0].onPeerDisconnect).toBe(onPeerDisconnect)
++  })
++
++  it('leaves peer lifecycle callbacks unset by default', async () => {
++    expect.assertions(3)
++    await createDevToolsHub({ context: createContext() })
++
++    expect(initHub).toHaveBeenCalledOnce()
++    expect(initHub.mock.calls[0]![0].onPeerConnect).toBeUndefined()
++    expect(initHub.mock.calls[0]![0].onPeerDisconnect).toBeUndefined()
++  })
++})

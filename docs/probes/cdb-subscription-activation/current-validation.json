@@ -1,0 +1,138 @@
+{
+  "source": "/private/tmp/cdb-readiness.JJ3EjO/source",
+  "commit": "4053273d6d15ddb17abc3e1b14fc8d58122cb49a",
+  "scope": "@dvcol/cdb only; changed-file native lint",
+  "steps": {
+    "install": {
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/private/tmp/cdb-readiness.JJ3EjO/tools/pnpm-11.25.0/package/bin/pnpm.cjs",
+        "--filter",
+        "@dvcol/cdb...",
+        "install",
+        "--frozen-lockfile"
+      ],
+      "cwd": "/private/tmp/cdb-readiness.JJ3EjO/source",
+      "exitCode": 0,
+      "durationSeconds": 11.642
+    },
+    "baseline": {
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/private/tmp/cdb-readiness.JJ3EjO/source/node_modules/vitest/vitest.mjs",
+        "run",
+        "test/subscription-activation.test.ts",
+        "--config",
+        "vitest.config.ts",
+        "--maxWorkers=1",
+        "--reporter=verbose"
+      ],
+      "cwd": "/private/tmp/cdb-readiness.JJ3EjO/source/packages/core",
+      "exitCode": 1,
+      "durationSeconds": 2.334
+    },
+    "candidate": {
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/private/tmp/cdb-readiness.JJ3EjO/source/node_modules/vitest/vitest.mjs",
+        "run",
+        "test/subscription-activation.test.ts",
+        "--config",
+        "vitest.config.ts",
+        "--maxWorkers=1",
+        "--reporter=verbose"
+      ],
+      "cwd": "/private/tmp/cdb-readiness.JJ3EjO/source/packages/core",
+      "exitCode": 0,
+      "durationSeconds": 0.61
+    },
+    "core-tests": {
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/private/tmp/cdb-readiness.JJ3EjO/tools/pnpm-11.25.0/package/bin/pnpm.cjs",
+        "run",
+        "test",
+        "--maxWorkers=1",
+        "--reporter=verbose"
+      ],
+      "cwd": "/private/tmp/cdb-readiness.JJ3EjO/source/packages/core",
+      "exitCode": 0,
+      "durationSeconds": 4.035
+    },
+    "lint": {
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/private/tmp/cdb-readiness.JJ3EjO/source/node_modules/eslint/bin/eslint.js",
+        "packages/core/src/broker.ts",
+        "packages/core/test/subscription-activation.test.ts"
+      ],
+      "cwd": "/private/tmp/cdb-readiness.JJ3EjO/source",
+      "exitCode": 0,
+      "durationSeconds": 6.07
+    },
+    "typecheck": {
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/private/tmp/cdb-readiness.JJ3EjO/tools/pnpm-11.25.0/package/bin/pnpm.cjs",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/private/tmp/cdb-readiness.JJ3EjO/source/packages/core",
+      "exitCode": 0,
+      "durationSeconds": 2.076
+    },
+    "test-typecheck": {
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/private/tmp/cdb-readiness.JJ3EjO/source/node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--project",
+        "/private/tmp/cdb-readiness.JJ3EjO/typecheck-subscription.json"
+      ],
+      "cwd": "/private/tmp/cdb-readiness.JJ3EjO/source",
+      "exitCode": 0,
+      "durationSeconds": 0.802
+    },
+    "build": {
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/private/tmp/cdb-readiness.JJ3EjO/tools/pnpm-11.25.0/package/bin/pnpm.cjs",
+        "run",
+        "build"
+      ],
+      "cwd": "/private/tmp/cdb-readiness.JJ3EjO/source/packages/core",
+      "exitCode": 0,
+      "durationSeconds": 3.324
+    }
+  },
+  "results": {
+    "baseline": {
+      "passed": 1,
+      "failed": 7
+    },
+    "candidate": {
+      "passed": 8,
+      "failed": 0
+    },
+    "core": {
+      "files": 17,
+      "passed": 138,
+      "failed": 0
+    }
+  },
+  "limits": [
+    "Validated on Node26.9.0, within upstream >=24 engine range; separate Node24 CI not run.",
+    "No full-repository, transport/browser, packaging, upstream CI or publication actions run."
+  ],
+  "changes": "Only exact supplied broker.patch and tests.patch applied in disposable source. All manifests, lockfile and policy are unchanged.",
+  "tooling": {
+    "node": "v26.9.0",
+    "pnpm": "11.25.0",
+    "commit": "4053273d6d15ddb17abc3e1b14fc8d58122cb49a",
+    "typescript": "5.9.3",
+    "eslint": "10.8.0",
+    "vitest": "4.1.10",
+    "@dvcol/eslint-config": "1.8.6",
+    "tsdown": "0.22.14"
+  }
+}

@@ -51,3 +51,15 @@ Preparation verifies all 18 extension runtime sources present in released maps a
 | Tested installed `dist/chrome.js` | `8c2c6cbeab1e76cd792594fa0a70a7a1f8fe9900713725b3704ebfc0ea29ca60` |
 
 The original source path is `packages/extension/src/chrome.ts` in `dvcol/chrome-debugger-bridge`. The installed package is `@dvcol/cdb-extension@0.3.0`; its emitted patch is maintained separately in the workspace dependency policy. Test records contain no authentication credentials.
+
+## Current native handoff, 2026-10-04
+
+The same production candidate applies to current upstream `4053273d`, with 14 additions and 2 removals in one file. [Native test patch](./native-tests.patch) places the ten regressions in the native extension package and consolidates Chrome/connection setup into one test helper. It imports only native CDB contracts and source. There is no SDK code in the proposed upstream change.
+
+Fresh scoped frozen installation uses native pnpm 11.25.0 without dependency-policy, manifest or lockfile changes. Original source with both independent regression sets has six failures and 36 passing controls; the worker cases account for four failures. With both the worker and detached-child cleanup candidates applied, all 106 native extension cases pass. Changed-file native lint, native source TypeScript 5.9.3 with unchanged composite configuration, focused regression types and extension build pass. [Validation](./native-validation.json), [exact source type receipt](./native-source-types.json), [baseline log](./native-baseline.log), [package test log](./native-extension-tests.log).
+
+The retained [focused test project](./native-test-types.json) contains the actual temporary paths used during validation; it is evidence rather than a directly portable checkout configuration. For replay in a clean native checkout, apply `chrome.patch` and `native-tests.patch`, run the extension package tests and source typecheck, and lint its changed source/test files. Source-only upstream typechecking excludes tests; the focused project adds just these regressions using the installed native Node and Chrome ambient types.
+
+An initial independent copy labeled candidate actually contained baseline source. The corrected cold check verifies both final source hashes before and after compilation. Earlier missing-global diagnostics did not reproduce in that exact candidate or in the baseline; their historical cause remains unknown. No production compiler options or declarations were changed to hide them.
+
+The [prepared upstream draft](./upstream-draft.md) includes native reproduction and ownership limits. Publication needs owner approval. The [detached-child candidate](../cdb-detached-child-demand/README.md) remains a separate small fix, so each can be reviewed and committed independently. These readiness checks do not claim a new browser run or full upstream repository gate.

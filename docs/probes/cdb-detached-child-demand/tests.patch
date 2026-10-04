@@ -1,0 +1,74 @@
+diff --git a/packages/extension/test/selected-tab-demand-cleanup.test.ts b/packages/extension/test/selected-tab-demand-cleanup.test.ts
+new file mode 100644
+index 0000000..3421682
+--- /dev/null
++++ b/packages/extension/test/selected-tab-demand-cleanup.test.ts
+@@ -0,0 +1,68 @@
++import type { ChromeDebuggerPort, SelectedTabPublisher } from '../src/selected-tab-publisher.js';
++
++import { afterEach, expect, it, vi } from 'vitest';
++
++import { createSelectedTabPublisher } from '../src/selected-tab-publisher.js';
++
++const publishers: SelectedTabPublisher[] = [];
++
++afterEach(async () => {
++  await Promise.all(publishers.splice(0).map(async publisher => publisher.revoke()));
++});
++
++async function createPublisher() {
++  const sendCommand = vi.fn<ChromeDebuggerPort['sendCommand']>(async () => ({}));
++  const publisher = createSelectedTabPublisher({
++    capabilities: { level: 'unsafe' },
++    scopeId: '40000000-0000-4000-8000-000000000001',
++    chromeDebugger: { attach() {}, detach() {}, sendCommand },
++    publishTarget() {},
++    revokeTarget() {},
++    updateTarget() {},
++  });
++  publishers.push(publisher);
++  await publisher.publish({ tabId: 42, incognito: false, url: 'https://example.test/' });
++  return { publisher, sendCommand };
++}
++
++it.each(['Runtime.consoleAPICalled', 'Runtime.'])(
++  'releases detached child demand %s without accepting missing-child activation',
++  async (method) => {
++    expect.assertions(4);
++    const { publisher, sendCommand } = await createPublisher();
++    const child = publisher.attachChildSession('private-frame-session');
++    await publisher.setSubscriptionDemand(method, true, child.id);
++    sendCommand.mockClear();
++    publisher.debuggerEvent({ tabId: 42 }, 'Target.detachedFromTarget', {
++      sessionId: 'private-frame-session',
++    });
++    await expect(publisher.setSubscriptionDemand(method, false, child.id)).resolves.toBeUndefined();
++    expect(sendCommand).not.toHaveBeenCalled();
++    await expect(publisher.setSubscriptionDemand(method, true, child.id)).rejects.toThrow('The requested session is not available.');
++    expect(sendCommand).not.toHaveBeenCalled();
++  },
++);
++
++it('disables a live child domain once and preserves method validation', async () => {
++  expect.assertions(3);
++  const { publisher, sendCommand } = await createPublisher();
++  const child = publisher.attachChildSession('private-frame-session');
++  await publisher.setSubscriptionDemand('Runtime.consoleAPICalled', true, child.id);
++  sendCommand.mockClear();
++  await publisher.setSubscriptionDemand('Runtime.consoleAPICalled', false, child.id);
++  await publisher.setSubscriptionDemand('Runtime.consoleAPICalled', false, child.id);
++  expect(sendCommand.mock.calls).toEqual([[{ tabId: 42, sessionId: 'private-frame-session' }, 'Runtime.disable']]);
++  await expect(publisher.setSubscriptionDemand('invalid-method', false, child.id)).rejects.toThrow('The subscription method is invalid.');
++  expect(sendCommand).toHaveBeenCalledTimes(1);
++});
++
++it('preserves native disable failures for a live child', async () => {
++  expect.assertions(2);
++  const { publisher, sendCommand } = await createPublisher();
++  const child = publisher.attachChildSession('private-frame-session');
++  await publisher.setSubscriptionDemand('Runtime.consoleAPICalled', true, child.id);
++  const failure = new Error('Native child disable failed');
++  sendCommand.mockRejectedValueOnce(failure);
++  await expect(publisher.setSubscriptionDemand('Runtime.consoleAPICalled', false, child.id)).rejects.toThrow('Native child disable failed');
++  await expect(publisher.setSubscriptionDemand('Runtime.consoleAPICalled', false, child.id)).resolves.toBeUndefined();
++});

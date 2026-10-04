@@ -56,3 +56,9 @@ The second browser case closes a subscription after a completed body read. The r
 The browser result covers a root session, a fixed host response pattern and a completed body read. In-flight body-read cancellation, other simultaneous domain demand, child sessions, streams, queue overload and failed native teardown remain separate acceptance work. Registering earlier does not repair a later dropped event.
 
 The [prepared draft description](../probes/cdb-subscription-activation/upstream-draft.md), source diff and tests are ready for review. No CDB PR has been opened. Remove the local patch once an upstream release passes the same regressions unmodified. The patch remains private workspace installation policy and does not accompany a published consumer automatically.
+
+## Current native readiness, 2026-10-04
+
+The unchanged candidate applies cleanly to upstream release commit `4053273d`. A fresh scoped frozen install using declared pnpm 11.25.0 passes existing verification without manifest, lockfile or policy changes. Native Vitest 4.1.10 reproduces seven failures and one passing control on unchanged source, then passes all eight new cases and all 138 tests in the affected core package. Changed-file ESLint 10.8.0, package and focused-test TypeScript 5.9.3, and the core build pass on Node 26.9.0. [Current validation receipt](../probes/cdb-subscription-activation/current-validation.json).
+
+The earlier 80-test checkpoint remains historical evidence from its then-selected scope. No full-repository or new browser run is claimed for this readiness refresh. The retained actual Chromium reproduction still establishes the native Fetch event-loss ordering. Publication requires owner approval; this remains a generic CDB bug fix with no SDK contract change.
