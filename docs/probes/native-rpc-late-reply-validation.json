@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-10-04",
+  "repository": "https://github.com/antfu-collective/birpc",
+  "baseCommit": "e62dda59fd278a3af2f87bd7de77ff6d59419221",
+  "packageVersion": "4.2.0",
+  "tooling": {
+    "node": "26.9.0",
+    "pnpm": "11.21.0",
+    "vitest": "4.1.10",
+    "eslint": "10.8.1",
+    "typescript": "6.0.3",
+    "tsdown": "0.22.14"
+  },
+  "installation": {
+    "command": "pnpm install --frozen-lockfile",
+    "passed": true,
+    "manifestsChanged": false,
+    "lockfileChanged": false,
+    "lockfileSha256": "5e0b7f519373d5f80d085dc5bb5596f9cf3855facb38ad27357c4fa6a624932b"
+  },
+  "candidate": {
+    "sourcePatch": "native-rpc-late-reply.patch",
+    "sourcePatchSha256": "08d6ff3e4deaa84ad08489726048125a6485438ad7b3126e38a4af43d652cba3",
+    "productionFiles": [
+      "src/main.ts"
+    ],
+    "testFiles": [
+      "test/close.test.ts"
+    ],
+    "productionAdditions": 3,
+    "productionDeletions": 0,
+    "publicApiChanged": false,
+    "src/main.tsSha256": "913c138fc502b71c378308b0d7c00a16c68dd629d78c46889d185c780ec61035",
+    "test/close.test.tsSha256": "d38124e8ef9dc2eca1f0d86ef1ea6ba4292cb255d0c5f19a35b777f778530406"
+  },
+  "tests": {
+    "command": "pnpm exec vitest run test/close.test.ts test/error.test.ts test/resolver.test.ts",
+    "unchangedSource": {
+      "passed": 8,
+      "failed": 2,
+      "failingTests": [
+        "does not reply when an incoming handler finishes with resolve after close",
+        "does not reply when an incoming handler finishes with reject after close"
+      ]
+    },
+    "fixedSource": {
+      "passed": 10,
+      "failed": 0
+    }
+  },
+  "checks": [
+    {
+      "command": "pnpm exec eslint src/main.ts test/close.test.ts",
+      "passed": true
+    },
+    {
+      "command": "pnpm run typecheck",
+      "passed": true
+    },
+    {
+      "command": "pnpm run build",
+      "passed": true
+    },
+    {
+      "command": "git diff --check",
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Full upstream CI was not run.",
+    "The guard covers closure while awaiting a resolver or handler, not every asynchronous transport-post race.",
+    "Admitted backend work and existing error callbacks still complete.",
+    "Publication requires owner approval."
+  ]
+}

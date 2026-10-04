@@ -37,7 +37,18 @@ pnpm --filter @devkit/webext exec vitest run tests/channel.test.ts
 
 On the previous installed package, both JSON and structured-clone cases complete their admitted handler and attempt one post after disconnect, failing the zero-post assertion. With the guard, both pass. Two additional cases let a handler fail after closure and verify that `onFunctionError` still receives that error while no reply is attempted. Normal open-connection replies, closed caller rejection, one handler completion and listener cleanup retain their checks.
 
-The separate source candidate adds deferred success/failure cases to birpc's existing `test/close.test.ts`. Applying only its tests to pinned unchanged native source reproduces both late replies; applying the production guard passes the same tests, including zero response serialization. These source checks use the workspace's installed Vitest 5.0.1, not a fresh install of birpc's current lockfile. Native upstream lint, TypeScript and full CI have not been claimed.
+The separate source candidate adds deferred success/failure cases to birpc's existing `test/close.test.ts`. Applying only its tests to pinned unchanged native source reproduces both late replies; applying the production guard passes the same tests, including zero response serialization. The initial checks used workspace Vitest 5.0.1. On 2026-10-04, a fresh upstream checkout at `e62dda59` installed its unchanged frozen lockfile with pnpm 11.21.0. Upstream Vitest 4.1.10 reproduces both failures with eight existing controls passing, then passes all ten cases with the guard. Native ESLint 10.8.1 on the two changed files, TypeScript 6.0.3 and the single-package tsdown build pass. The lockfile and manifests remain unchanged. [Exact validation receipt](../probes/native-rpc-late-reply-validation.json) and [prepared draft description](../probes/native-rpc-late-reply-draft.md).
+
+```sh
+# In the pinned upstream checkout after applying the candidate:
+pnpm install --frozen-lockfile
+pnpm exec vitest run test/close.test.ts test/error.test.ts test/resolver.test.ts
+pnpm exec eslint src/main.ts test/close.test.ts
+pnpm run typecheck
+pnpm run build
+```
+
+Only the three affected test files and two changed lint files were checked locally. Full upstream CI has not been run or claimed.
 
 Rebuilt production extensions pass actual Chromium and Firefox navigation through two independently connected native panels. The returning document receives a fresh caller, current state and one mount per view. The original sibling keeps its caller and provider, completes admitted work once, then closes while the returning panel continues. Chromium captures no page or worker errors. Firefox retains its WebDriver Classic global-error-capture limitation. Both browsers also pass the existing natural-suspension scenario with a waiting RPC after this correction. Storage writes precede these interactions; physical interrupted-write and crash durability remain unproved.
 
