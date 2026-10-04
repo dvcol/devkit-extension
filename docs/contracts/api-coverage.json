@@ -5480,7 +5480,7 @@
       ],
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
-        "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet native Ports, natural Chromium/Firefox suspension with a waiting native RPC, and explicit fresh connections are linked. Navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
+        "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet or waiting native RPC clients, explicit fresh connections, and ordinary production-panel navigation with peer closure are linked. Navigation retains the admitted handler, native provider and sibling caller; returning creates a fresh document/caller with current state and no replay. Back-forward cache, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
         "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium/Firefox idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. Reduced native Firefox quota now has exact visible-failure, retained-record, same-client explicit recovery and native-reload evidence. Default-size Firefox quota and interrupted-write durability remain unproved. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
       ],
       "browserEvidence": [
@@ -5635,6 +5635,38 @@
           "host": "chromium-webext",
           "mode": "production-extension-opt-in-storage",
           "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-navigation.ts",
+          "receiptFile": "artifacts/persistence/chromium-navigation.json",
+          "checks": [
+            "one production panel navigates to an actual blank document while its admitted native RPC is waiting",
+            "the sibling retains its document, native caller and provider, updates state and completes admitted backend work after the caller leaves",
+            "returning in the same native target creates a fresh document and caller with one mount per view and the current counter state",
+            "returning resets local UI input without replaying the completed operation or replacing the native worker and provider",
+            "closing the sibling target leaves the returning caller usable and an explicit rendered action saves the next counter while the independent key is retained",
+            "actual page and worker errors remain empty and owned process/profile cleanup precedes successful receipt publication"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension-opt-in-storage-navigation-pending-rpc-peer-closure",
+          "requirePageErrors": true
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/firefox-navigation.ts",
+          "receiptFile": "artifacts/persistence/firefox-navigation.json",
+          "checks": [
+            "one production panel navigates to an actual blank document while its admitted native RPC is waiting",
+            "the sibling keeps its native caller and provider identity, updates state and completes the admitted backend work after the caller document leaves",
+            "returning in the same browser tab creates a fresh document and native caller with one mount per view and the current counter state",
+            "returning resets local UI input without replaying the completed operation or replacing the native provider",
+            "closing the sibling tab leaves the returning caller usable and an explicit rendered action saves the next counter while the independent key is retained",
+            "the unchanged artifact and native process/session/profile are retained until owned cleanup precedes successful receipt publication"
+          ],
+          "host": "firefox-webext",
+          "mode": "production-extension-opt-in-storage-navigation-pending-rpc-peer-closure",
+          "requirePageErrors": false
         }
       ]
     },

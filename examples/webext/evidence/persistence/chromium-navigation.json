@@ -1,0 +1,132 @@
+{
+  "browser": "Chrome/153.0.8010.12",
+  "pageErrors": [],
+  "workerErrors": [],
+  "attachedWorkers": [],
+  "processId": 29475,
+  "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/chromium-native-idle-CmVXEc",
+  "artifactHash": "74aa4e7e88a0d630d0cd1f6f529212e7ec7488f24b76fa7102f4f11495ba5bf6",
+  "storageKey": "example.persisted-counter",
+  "worker": {
+    "targetId": "D68C70A19E0C604D694195FFA17CE743",
+    "type": "service_worker",
+    "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/background.js",
+    "attached": false
+  },
+  "previous": {
+    "panels": [
+      {
+        "targetId": "FE9982D8A804C74BBEA903047587C201",
+        "sessionId": "EFF43146E28DFFD65ECD63564B5E06F1"
+      },
+      {
+        "targetId": "242E71FAB28946CF5920184B84479CA5",
+        "sessionId": "DD05A09C18172F2AB5C99D2743E24006"
+      }
+    ],
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "c9f990d9-b053-475f-9897-2f1af0f0fa78",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "callers": [
+      {
+        "id": 0,
+        "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/panel.html"
+      }
+    ],
+    "documents": [
+      {
+        "status": "Connected",
+        "catalog": "active",
+        "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c9f990d9-b053-475f-9897-2f1af0f0fa78\",\"realm\":{\"id\":\"webext\"}}",
+        "counter": "Native extension counter\n\nCounter: 10\n\nIncrease counter\nDomain\nIncrease matching domain",
+        "counterMounts": 1,
+        "managementMounts": 1,
+        "result": "",
+        "timeOrigin": 1791077853954.4,
+        "domain": "ephemeral.example.test"
+      },
+      {
+        "status": "Connected",
+        "catalog": "active",
+        "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c9f990d9-b053-475f-9897-2f1af0f0fa78\",\"realm\":{\"id\":\"webext\"}}",
+        "counter": "Native extension counter\n\nCounter: 10\n\nIncrease counter\nDomain\nIncrease matching domain",
+        "counterMounts": 1,
+        "managementMounts": 1,
+        "result": "{\"started\":1,\"completed\":1}",
+        "timeOrigin": 1791077854122.1,
+        "domain": "shared.example.test"
+      }
+    ],
+    "panelUrl": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/panel.html"
+  },
+  "navigation": {
+    "departed": {
+      "url": "about:blank",
+      "timeOrigin": 1791077854366.1
+    },
+    "surviving": {
+      "status": "Connected",
+      "catalog": "active",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c9f990d9-b053-475f-9897-2f1af0f0fa78\",\"realm\":{\"id\":\"webext\"}}",
+      "counter": "Native extension counter\n\nCounter: 11\n\nIncrease counter\nDomain\nIncrease matching domain",
+      "counterMounts": 1,
+      "managementMounts": 1,
+      "result": "{\"started\":2,\"completed\":2}",
+      "timeOrigin": 1791077854122.1,
+      "domain": "shared.example.test"
+    }
+  },
+  "returning": {
+    "caller": {
+      "id": 2,
+      "url": "chrome-extension://elcdeaipcekjajpaonkiglbhlapgnccd/panel.html"
+    },
+    "document": {
+      "status": "Connected",
+      "catalog": "active",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c9f990d9-b053-475f-9897-2f1af0f0fa78\",\"realm\":{\"id\":\"webext\"}}",
+      "counter": "Native extension counter\n\nCounter: 11\n\nIncrease counter\nDomain\nIncrease matching domain",
+      "counterMounts": 1,
+      "managementMounts": 1,
+      "result": "",
+      "timeOrigin": 1791077854487.7,
+      "domain": "shared.example.test"
+    },
+    "surviving": {
+      "status": "Connected",
+      "catalog": "active",
+      "provider": "{\"id\":\"example.extension\",\"incarnation\":\"c9f990d9-b053-475f-9897-2f1af0f0fa78\",\"realm\":{\"id\":\"webext\"}}",
+      "counter": "Native extension counter\n\nCounter: 13\n\nIncrease counter\nDomain\nIncrease matching domain",
+      "counterMounts": 1,
+      "managementMounts": 1,
+      "result": "{\"started\":2,\"completed\":2}",
+      "timeOrigin": 1791077854487.7,
+      "domain": "shared.example.test"
+    },
+    "savedCounter": {
+      "value": 13
+    }
+  },
+  "checks": [
+    "one production panel navigates to an actual blank document while its admitted native RPC is waiting",
+    "the sibling retains its document, native caller and provider, updates state and completes admitted backend work after the caller leaves",
+    "returning in the same native target creates a fresh document and caller with one mount per view and the current counter state",
+    "returning resets local UI input without replaying the completed operation or replacing the native worker and provider",
+    "closing the sibling target leaves the returning caller usable and an explicit rendered action saves the next counter while the independent key is retained",
+    "actual page and worker errors remain empty and owned process/profile cleanup precedes successful receipt publication"
+  ],
+  "limitations": [
+    "Ordinary panel navigation and closure, not back-forward cache restoration, permission revocation or background suspension",
+    "The destroyed document promise cannot be inspected; completion is observed independently through the surviving native peer",
+    "The waiting handler has no external side effect; navigation does not promise remote cancellation or rollback",
+    "The test captures native page exceptions but does not prove exact browser listener counts"
+  ]
+}

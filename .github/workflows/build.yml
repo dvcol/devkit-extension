@@ -37,6 +37,10 @@ jobs:
         env:
           VITE_COUNTER_STORAGE_KEY: example.persisted-counter
         run: pnpm --filter @devkit/example-webext exec node tests/chromium-idle.ts --pending
+      - name: Verify native Chromium panel navigation during pending RPC
+        env:
+          VITE_COUNTER_STORAGE_KEY: example.persisted-counter
+        run: pnpm --filter @devkit/example-webext exec node tests/chromium-navigation.ts
       - name: Run native JSON actions across extension and server providers
         run: pnpm --filter @devkit/example-webext test:json-actions
       - name: Discover native provider views in the extension
@@ -186,6 +190,13 @@ jobs:
           SE_SKIP_DRIVER_IN_PATH: 'true'
           VITE_COUNTER_STORAGE_KEY: example.persisted-counter
         run: pnpm --filter @devkit/example-webext exec node tests/firefox-pending-idle.ts
+      - name: Verify native Firefox panel navigation during pending RPC
+        env:
+          FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}
+          SE_DRIVER_VERSION: '0.37.1'
+          SE_SKIP_DRIVER_IN_PATH: 'true'
+          VITE_COUNTER_STORAGE_KEY: example.persisted-counter
+        run: pnpm --filter @devkit/example-webext exec node tests/firefox-navigation.ts
       - name: Verify native reduced Firefox quota and explicit recovery
         env:
           FIREFOX_BINARY: ${{ steps.firefox.outputs.firefox-path }}

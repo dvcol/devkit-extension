@@ -1,0 +1,93 @@
+{
+  "browser": "157.0",
+  "processId": 25947,
+  "sessionId": "5311bdaa-84d4-4352-a66b-eaf8fe92951c",
+  "profile": "/var/folders/4y/5mvy0qfx6yd8z1lllg4_n5340000gp/T/firefox-native-idle-YpCt3Y",
+  "origin": "moz-extension://a76d4b80-2f63-455e-8c8c-8a29bdc8d00a",
+  "artifactHash": "7da661683e488c450249594c255afcc8e21cef42c836de53cde2b0d85908f86f",
+  "storageKey": "example.persisted-counter",
+  "previous": {
+    "provider": {
+      "id": "example.extension",
+      "incarnation": "05a15299-aed5-45c4-bff4-049cc04bf02c",
+      "realm": {
+        "id": "webext"
+      }
+    },
+    "documents": [
+      {
+        "handle": "ab3b505b-9e21-48d3-9441-2d345aadbff1",
+        "timeOrigin": 1791077314453
+      },
+      {
+        "handle": "47b168bf-a718-48c0-a595-01f4ea153325",
+        "timeOrigin": 1791077314846
+      }
+    ],
+    "callers": [
+      {
+        "id": 0,
+        "url": "moz-extension://a76d4b80-2f63-455e-8c8c-8a29bdc8d00a/panel.html"
+      },
+      {
+        "id": 1,
+        "url": "moz-extension://a76d4b80-2f63-455e-8c8c-8a29bdc8d00a/panel.html"
+      }
+    ],
+    "confirmedCounter": {
+      "value": 10
+    },
+    "independentCounter": {
+      "value": 44
+    },
+    "executions": "{\"started\":1,\"completed\":1}"
+  },
+  "navigation": {
+    "departedDocument": 1791077315683,
+    "surviving": {
+      "counterMounts": 1,
+      "domain": "shared.example.test",
+      "managementMounts": 1,
+      "status": "Connected",
+      "timeOrigin": 1791077314846
+    },
+    "executions": "{\"started\":2,\"completed\":2}"
+  },
+  "returning": {
+    "caller": {
+      "id": 2,
+      "url": "moz-extension://a76d4b80-2f63-455e-8c8c-8a29bdc8d00a/panel.html"
+    },
+    "document": {
+      "counterMounts": 1,
+      "domain": "shared.example.test",
+      "managementMounts": 1,
+      "status": "Connected",
+      "timeOrigin": 1791077315967
+    },
+    "surviving": {
+      "counterMounts": 1,
+      "domain": "shared.example.test",
+      "managementMounts": 1,
+      "status": "Connected",
+      "timeOrigin": 1791077315967
+    },
+    "savedCounter": {
+      "value": 13
+    }
+  },
+  "checks": [
+    "one production panel navigates to an actual blank document while its admitted native RPC is waiting",
+    "the sibling keeps its native caller and provider identity, updates state and completes the admitted backend work after the caller document leaves",
+    "returning in the same browser tab creates a fresh document and native caller with one mount per view and the current counter state",
+    "returning resets local UI input without replaying the completed operation or replacing the native provider",
+    "closing the sibling tab leaves the returning caller usable and an explicit rendered action saves the next counter while the independent key is retained",
+    "the unchanged artifact and native process/session/profile are retained until owned cleanup precedes successful receipt publication"
+  ],
+  "limitations": [
+    "Ordinary panel navigation and closure, not back-forward cache restoration, permission revocation or background suspension",
+    "The destroyed document promise cannot be inspected; completion is observed independently through the surviving native peer",
+    "The waiting handler has no external side effect; navigation does not promise remote cancellation or rollback",
+    "Temporary add-on installation and WebDriver Classic lack of global page-error capture retain their existing limits"
+  ]
+}

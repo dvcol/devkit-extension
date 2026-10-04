@@ -112,6 +112,10 @@ export function click(control: BrowserConnection, panel: Panel, selector: string
   );
 }
 
+export function increaseCounter(control: BrowserConnection, panel: Panel) {
+  return evaluate(control, panel.sessionId, `${rendererRoot}.querySelector('button').click()`);
+}
+
 export function record(control: BrowserConnection, panel: Panel, key: string): Promise<unknown> {
   return evaluate(
     control,
@@ -189,7 +193,7 @@ export async function checkRecoveredCounter(
     async () => (await snapshot(control, panels[0]!)).result === '{"started":0,"completed":0}',
     'discarded diagnostic execution state',
   );
-  await evaluate(control, panels[0]!.sessionId, `${rendererRoot}.querySelector('button').click()`);
+  await increaseCounter(control, panels[0]!);
   await checkClients(control, panels, 11);
   await saved(control, panels[0]!, key, 11);
   assert.deepEqual(await record(control, panels[1]!, `${key}.independent`), { value: 44 });

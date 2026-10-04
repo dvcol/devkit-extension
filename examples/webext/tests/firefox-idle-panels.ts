@@ -128,7 +128,7 @@ interface PanelSnapshot {
   domain: string;
 }
 
-function snapshot(driver: Driver): Promise<PanelSnapshot> {
+export function snapshot(driver: Driver): Promise<PanelSnapshot> {
   return driver.executeScript<PanelSnapshot>(`
     const counter = document.querySelector('#renderer')?.shadowRoot;
     const management = document.querySelector('#management')?.shadowRoot;
