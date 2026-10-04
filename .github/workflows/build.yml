@@ -33,6 +33,10 @@ jobs:
         env:
           VITE_COUNTER_STORAGE_KEY: example.persisted-counter
         run: pnpm --filter @devkit/example-webext test:persistence:chromium:idle
+      - name: Verify natural Chromium worker idle during pending native RPC
+        env:
+          VITE_COUNTER_STORAGE_KEY: example.persisted-counter
+        run: pnpm --filter @devkit/example-webext exec node tests/chromium-idle.ts --pending
       - name: Run native JSON actions across extension and server providers
         run: pnpm --filter @devkit/example-webext test:json-actions
       - name: Discover native provider views in the extension

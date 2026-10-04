@@ -7,6 +7,7 @@ import type { BrowserConnection } from './chromium-idle-cdp.ts';
 import { observeWorker, runningWorker, waitForNativeIdle } from './chromium-idle-lifecycle.ts';
 import {
   checkRecoveredCounter,
+  click,
   openPanel,
   prepareCounter,
   readCaller,
@@ -24,32 +25,35 @@ import {
 
 const storageKey = process.env.VITE_COUNTER_STORAGE_KEY;
 assert.ok(storageKey !== undefined && storageKey !== '', 'Use the storage key from the build');
+const pendingCallRequested = process.argv.includes('--pending');
+const scenarioName = pendingCallRequested ? 'chromium-pending-idle' : 'chromium-idle';
 const extensionPath = resolve('dist/chromium-persistent');
 const artifactHash = await hashArtifact(extensionPath);
 const session = await startBrowser(extensionPath);
 let control: BrowserConnection | undefined;
+let nativeResult: Awaited<ReturnType<typeof checkNativeIdle>>;
 try {
   control = await connectBrowser(await browserEndpoint(session));
-  const result = await checkNativeIdle(control, storageKey);
+  nativeResult = await checkNativeIdle(control, storageKey);
   assert.equal(
     await hashArtifact(extensionPath),
     artifactHash,
     'The existing build changed during the test',
   );
-  const receipt = {
-    ...result,
-    executable: session.executable,
-    profile: session.profile,
-    processId: session.browser.pid,
-    processStart: session.processStart,
-    artifactHash,
-  };
-  await mkdir('artifacts/persistence', { recursive: true });
-  await writeFile('artifacts/persistence/chromium-idle.json', JSON.stringify(receipt, null, 2));
-  console.info(styleText('green', '✅ [webext/chromium-idle]'), receipt);
 } finally {
   await closeBrowser(session, control);
 }
+const receipt = {
+  ...nativeResult,
+  executable: session.executable,
+  profile: session.profile,
+  processId: session.browser.pid,
+  processStart: session.processStart,
+  artifactHash,
+};
+await mkdir('artifacts/persistence', { recursive: true });
+await writeFile(`artifacts/persistence/${scenarioName}.json`, JSON.stringify(receipt, null, 2));
+console.info(styleText('green', `✅ [webext/${scenarioName}]`), receipt);
 
 async function checkNativeIdle(connection: BrowserConnection, key: string) {
   const observation = await observeWorker(connection);
@@ -62,9 +66,19 @@ async function checkNativeIdle(connection: BrowserConnection, key: string) {
     originalWorker,
   );
   const previous = await prepareClients(connection, panelURL, key);
+  let pending: { executions: string; error?: string } | undefined;
+  if (pendingCallRequested)
+    pending = { executions: await startPendingCall(connection, previous.panels) };
   const worker = await runningWorker(connection, originalWorker.url);
   const idle = await waitForNativeIdle(connection, observation, worker);
   await checkDisconnected(connection, previous.panels, previous.documents);
+  if (pending !== undefined) {
+    await waitFor(
+      async () => (await snapshot(connection, previous.panels[0]!)).result.includes('closed'),
+      'native rejection of the waiting caller after worker loss',
+    );
+    pending.error = (await snapshot(connection, previous.panels[0]!)).result;
+  }
   const replacement = await restoreClients(connection, panelURL, key, previous);
   const replacementWorker = await runningWorker(connection, originalWorker.url);
   assert.notEqual(replacementWorker.targetId, worker.targetId);
@@ -78,6 +92,7 @@ async function checkNativeIdle(connection: BrowserConnection, key: string) {
     browserDetails,
     pageErrors: observation.pageErrors,
     storageKey: key,
+    pending,
     previous: { ...previous, worker },
     replacement: { ...replacement, worker: replacementWorker },
     idle: {
@@ -87,6 +102,23 @@ async function checkNativeIdle(connection: BrowserConnection, key: string) {
     },
     ...scope(),
   };
+}
+
+async function startPendingCall(
+  connection: BrowserConnection,
+  panels: readonly Panel[],
+): Promise<string> {
+  await click(connection, panels[0]!, '#wait');
+  await waitFor(
+    async () => (await snapshot(connection, panels[0]!)).result === 'Pending',
+    'waiting native caller',
+  );
+  await click(connection, panels[1]!, '#executions');
+  await waitFor(
+    async () => (await snapshot(connection, panels[1]!)).result === '{"started":2,"completed":1}',
+    'one admitted native RPC remains pending before natural idle',
+  );
+  return (await snapshot(connection, panels[1]!)).result;
 }
 
 async function prepareClients(connection: BrowserConnection, url: string, key: string) {
@@ -170,23 +202,38 @@ async function saveScreenshot(connection: BrowserConnection, panel: Panel): Prom
     await connection.command('Page.captureScreenshot', {}, panel.sessionId),
   );
   await mkdir('artifacts/persistence', { recursive: true });
-  await writeFile('artifacts/persistence/chromium-idle.png', readString(result.data), 'base64');
+  await writeFile(`artifacts/persistence/${scenarioName}.png`, readString(result.data), 'base64');
 }
 
 function scope() {
+  const checks = [
+    'an unattached Chromium extension worker naturally disappears while two native Port clients are idle',
+    'native stopped status and target destruction agree; old documents disconnect and dispose both mounted views',
+    'explicit fresh callers restore confirmed counter state under a new native worker and provider incarnation',
+    'fresh clients mount each view once, discard ephemeral UI/execution state and apply one rendered action exactly once',
+    'an independent native storage key is preserved and completed diagnostic actions are not replayed',
+  ];
+  const limitations = [
+    'Natural idle after confirmed writes; no interrupted native write or browser crash is exercised',
+    'Explicit fresh clients perform recovery; the fixture adds no automatic reconnect or replay',
+    'Page sessions observe native Runtime.exceptionThrown; no DevTools session attaches to the worker',
+  ];
+  if (pendingCallRequested) {
+    checks.push(
+      'one admitted native RPC remains pending until natural worker loss and the old caller reports connection closure',
+      'ephemeral execution counts reset and releasing old work in the fresh background cannot replay the waiting operation',
+      'the owned browser process exits and its disposable profile is removed before the successful receipt is published',
+    );
+    limitations.push(
+      'The pending probe has no external side effect; no remote cancellation or rollback is promised',
+    );
+  } else {
+    limitations.push(
+      'Completed operations precede idle; pending RPC suspension has separate evidence',
+    );
+  }
   return {
-    checks: [
-      'an unattached Chromium extension worker naturally disappears while two native Port clients are idle',
-      'native stopped status and target destruction agree; old documents disconnect and dispose both mounted views',
-      'explicit fresh callers restore confirmed counter state under a new native worker and provider incarnation',
-      'fresh clients mount each view once, discard ephemeral UI/execution state and apply one rendered action exactly once',
-      'an independent native storage key is preserved and completed diagnostic actions are not replayed',
-    ],
-    limitations: [
-      'Natural idle after confirmed writes; no interrupted native write or browser crash is exercised',
-      'Explicit fresh clients perform recovery; the fixture adds no automatic reconnect or replay',
-      'Completed operations precede idle; a pending RPC may affect native keepalive and is tested separately by forced-worker acceptance',
-      'Page sessions observe native Runtime.exceptionThrown; no DevTools session attaches to the worker',
-    ],
+    checks,
+    limitations,
   };
 }

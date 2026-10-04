@@ -5466,7 +5466,7 @@
       ],
       "gaps": [
         "Native production receipts prove observable connection cleanup and independent callers, not exact native listener counts. Node fixtures separately assert listener cleanup.",
-        "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet native Ports, natural Firefox suspension with a waiting native RPC, and explicit fresh connections are linked. Navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
+        "Forced Chromium service-worker termination, natural Chromium/Firefox idle with quiet native Ports, natural Chromium/Firefox suspension with a waiting native RPC, and explicit fresh connections are linked. Navigation, permission revocation and development/reload modes retain separate obligations. Disconnect does not cancel already dispatched backend work; forced worker termination does not establish remote side-effect rollback.",
         "Opt-in storage evidence proves explicit reconnection after forced Chromium worker termination, natural Chromium/Firefox idle, clean Chromium browser restart, native Firefox extension reload and stable Firefox browser restart with explicit native temporary fixture loading, all following confirmed writes. Reduced native Firefox quota now has exact visible-failure, retained-record, same-client explicit recovery and native-reload evidence. Default-size Firefox quota and interrupted-write durability remain unproved. Stable Firefox permanent installation and automatic availability remain unverified. Firefox WebDriver Classic does not provide global page-error capture. Storage is example-owned native behavior, not a public SDK persistence contract."
       ],
       "browserEvidence": [
@@ -5603,6 +5603,24 @@
           "host": "firefox-webext",
           "mode": "production-extension-opt-in-storage",
           "requirePageErrors": false
+        },
+        {
+          "workspace": "examples/webext",
+          "testFile": "tests/chromium-idle.ts",
+          "receiptFile": "artifacts/persistence/chromium-pending-idle.json",
+          "checks": [
+            "an unattached Chromium extension worker naturally disappears while two native Port clients are idle",
+            "native stopped status and target destruction agree; old documents disconnect and dispose both mounted views",
+            "explicit fresh callers restore confirmed counter state under a new native worker and provider incarnation",
+            "fresh clients mount each view once, discard ephemeral UI/execution state and apply one rendered action exactly once",
+            "an independent native storage key is preserved and completed diagnostic actions are not replayed",
+            "one admitted native RPC remains pending until natural worker loss and the old caller reports connection closure",
+            "ephemeral execution counts reset and releasing old work in the fresh background cannot replay the waiting operation",
+            "the owned browser process exits and its disposable profile is removed before the successful receipt is published"
+          ],
+          "host": "chromium-webext",
+          "mode": "production-extension-opt-in-storage",
+          "requirePageErrors": true
         }
       ]
     },
